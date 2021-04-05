@@ -11,9 +11,9 @@
 		</div>
 
 		<div class="gb-full">
-				<div class="gb-33"><h3>{featured_title}</h3>{featured_content}</div>
-				<div class="gb-33"><h3>{recent_title}</h3>{recent_content}</div>
-				<div class="gb-33"><h3>{random_title}</h3>{random_content}</div>
+				<div class="gb-33">{MENU: path=efiction/featured}</div>
+				<div class="gb-33">{MENU: path=efiction/recent}</div>
+				<div class="gb-33">{MENU: path=efiction/random}</div>
 		</div>
 		
 	<!-- START BLOCK : footer -->

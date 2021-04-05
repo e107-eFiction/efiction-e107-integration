@@ -46,27 +46,27 @@ if (class_exists('efiction')) {
         echo e107::getMessage()->addInfo('efiction class is available')->render();
     }
 
+	$template = e107::getTemplate('efiction', 'storyblock', 'random');
+
     $blocks = efiction::blocks();
 
-    $caption = $blocks['recent']['title'];
+    $caption = $blocks['random']['title'];
+	$var = array('BLOCK_CAPTION' => $caption);
+	$caption = e107::getParser()->simpleParse($template['caption'], $var);
 
     $sc = e107::getScParser()->getScObject('efiction_shortcodes', 'efiction', false);
     $text = '';
-
-    $use_tpl = isset($blocks['recent']['tpl']) && $blocks['recent']['tpl'] ? true : false;
-    if (isset($blocks['recent']['num'])) {
-        $numupdated = $blocks['recent']['num'];
-    } else {
-        $numupdated = 1;
-    }
-
-    $query = _STORYQUERY." ORDER BY stories.updated DESC LIMIT $numupdated";
+ 
+	$limit = isset($blocks['random']['limit']) && $blocks['random']['limit'] > 0 ? $blocks['random']['limit'] : 1;
+ 
+    $query = _STORYQUERY." ORDER BY rand( ) DESC LIMIT $limit";
     $result = e107::getDb()->retrieve($query, true);
-
-    $template = e107::getTemplate('efiction', 'storyblock', 'recent');
+ 
+	$start = $template['start']; 
+	$end = $template['end'];
 
     foreach ($result as $stories) {
-        if (!isset($blocks['recent']['allowtags'])) {
+        if (!isset($blocks['random']['allowtags'])) {
             $stories['summary'] = e107::getParser()->toText($stories['summary']);
         } else {
             $stories['summary'] = e107::getParser()->toHTML($this->var['summary'], true, 'SUMMARY');
@@ -81,4 +81,4 @@ if (class_exists('efiction')) {
     }
 }
 
-e107::getRender()->tablerender($caption, $text);
+e107::getRender()->tablerender($caption, $start.$text.$end);

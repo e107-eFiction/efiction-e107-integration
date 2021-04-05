@@ -26,22 +26,5 @@
 if(!defined("_CHARSET")) exit( );
 
 
-if(!defined("_CHARSET")) exit( );
-	$content = "";
-	$count = 0;
-	$limit = isset($blocks['featured']['limit']) ? $blocks['featured']['limit'] : false;
-	$use_tpl = isset($blocks['featured']['tpl']) && $blocks['featured']['tpl'] ? true : false;
-	$query = dbquery(_STORYQUERY." AND stories.featured = '1'".($limit ? " LIMIT $limit" : ""));
-	while($stories = dbassoc($query))
-	{
-		if(!isset($blocks['featured']['allowtags'])) $stories['summary'] = strip_tags($stories['summary']);
-		$stories['summary'] = truncate_text(stripslashes($stories['summary']), (isset($blocks['featured']['sumlength']) ? $blocks['featured']['sumlength'] : 75));
-		if(!$use_tpl) $content .= "<div class='featuredstory'>".title_link($stories)." "._BY." ".author_link($stories)." ".$ratingslist[$stories['rid']]['name']."<br />".$stories['summary']."</div>";
-		else {
-			$tpl->newBlock("featuredblock");
-			include(_BASEDIR."includes/storyblock.php");
-		}
-	}
-	if($use_tpl && dbnumrows($query) > 0) $tpl->gotoBlock("_ROOT");	
-
+define ("_NUMUPDATED", "Number of stories");
 ?>

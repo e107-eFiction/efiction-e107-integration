@@ -38,6 +38,12 @@ echo $output;
 
 Note: added possibility to template caption to be able have the same look 
 
+3. replace random block
+{random_content} with {MENU: path=efiction/random}
+
+4. replace featured block
+{featured_content} with {MENU: path=efiction/featured}
+
 
 
 

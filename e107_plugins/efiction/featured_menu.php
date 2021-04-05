@@ -46,27 +46,28 @@ if (class_exists('efiction')) {
         echo e107::getMessage()->addInfo('efiction class is available')->render();
     }
 
-	$template = e107::getTemplate('efiction', 'storyblock', 'recent');
+	$template = e107::getTemplate('efiction', 'storyblock', 'featured');
 
     $blocks = efiction::blocks();
 
-    $caption = $blocks['recent']['title'];
+    $caption = $blocks['featured']['title'];
 	$var = array('BLOCK_CAPTION' => $caption);
 	$caption = e107::getParser()->simpleParse($template['caption'], $var);
 
     $sc = e107::getScParser()->getScObject('efiction_shortcodes', 'efiction', false);
     $text = '';
  
-    $limit = isset($blocks['recent']['limit']) && $blocks['recent']['limit'] > 0 ? $blocks['recent']['limit'] : 10;
+    $limit = isset($blocks['featured']['limit']) && $blocks['featured']['limit'] > 0 ? $blocks['featured']['limit'] : 1;
 
-    $query = _STORYQUERY." ORDER BY stories.updated DESC LIMIT  $limit";
+    $query = _STORYQUERY." AND stories.featured = '1'".($limit ? " LIMIT $limit" : "");
+ 
     $result = e107::getDb()->retrieve($query, true);
  
 	$start = $template['start']; 
 	$end = $template['end'];
 
     foreach ($result as $stories) {
-        if (!isset($blocks['recent']['allowtags'])) {
+        if (!isset($blocks['featured']['allowtags'])) {
             $stories['summary'] = e107::getParser()->toText($stories['summary']);
         } else {
             $stories['summary'] = e107::getParser()->toHTML($this->var['summary'], true, 'SUMMARY');
