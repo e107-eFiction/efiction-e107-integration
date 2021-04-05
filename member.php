@@ -68,6 +68,9 @@ else if(!empty($action)) {
 }
 else $output = write_error(_NOTAUTHORIZED);
 $tpl->assign( "output", $output );
-$tpl->printToScreen();
+//$tpl->printToScreen();
+$output = $tpl->getOutputContent( );  
+$output = e107::getParser()->parseTemplate($output, true); 
+echo $output;
 dbclose( );
 ?>

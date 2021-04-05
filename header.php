@@ -135,6 +135,7 @@ if(isset($PHP_SELF)) $PHP_SELF = htmlspecialchars(descript($PHP_SELF), ENT_QUOTE
 $agecontsent = false; $viewed = false; 
 
 require_once("includes/get_session_vars.php");
+@ include_once(_BASEDIR."class2.php");
 
 if(isset($_GET['skin'])) {
 	$siteskin = $_GET['skin'];

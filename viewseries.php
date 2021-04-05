@@ -152,6 +152,8 @@ if($scount > $itemsperpage) {
 }
 $tpl->gotoBlock( "_ROOT" );
 $tpl->assign("output", $output);
-$tpl->printToScreen( );
-
+//$tpl->printToScreen();
+$output = $tpl->getOutputContent( );  
+$output = e107::getParser()->parseTemplate($output, true); 
+echo $output;
 ?>

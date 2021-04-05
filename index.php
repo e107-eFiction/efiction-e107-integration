@@ -35,6 +35,11 @@ $query = dbquery("SELECT message_text FROM ".TABLEPREFIX."fanfiction_messages WH
 list($welcome) = dbrow($query);
 $tpl->assign("welcome", stripslashes($welcome));
 
-$tpl->printToScreen();
 dbclose( );
+
+$output = $tpl->getOutputContent( );  
+$output = e107::getParser()->parseTemplate($output, true); 
+//$tpl->printToScreen();
+echo $output;
+
 ?>

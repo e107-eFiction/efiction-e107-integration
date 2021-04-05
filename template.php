@@ -50,6 +50,9 @@ panel in the admin area.*/
 
 //Don't modify below this line	
 $tpl->assign("output", $output);
-$tpl->printToScreen();
+//$tpl->printToScreen();
+$output = $tpl->getOutputContent( );  
+$output = e107::getParser()->parseTemplate($output, true); 
+echo $output;
 dbclose( );
 ?>

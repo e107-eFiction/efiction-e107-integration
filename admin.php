@@ -79,6 +79,9 @@ else include_once("languages/en_admin.php");
 		$output .= write_message(_RUNNINGVERSION);
 	}	
 	$tpl->assign( "output", $output );
-	$tpl->printToScreen();
+	//$tpl->printToScreen();
+    $output = $tpl->getOutputContent( );  
+    $output = e107::getParser()->parseTemplate($output, true); 
+    echo $output;
 	dbclose( );
 ?>

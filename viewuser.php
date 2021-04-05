@@ -122,6 +122,8 @@ while($panel = dbassoc($panelquery)) {
 }
 $tpl->gotoBlock("_ROOT");	
 $tpl->assign( "output", $output );
-$tpl->printToScreen();
+$output = $tpl->getOutputContent( );  
+$output = e107::getParser()->parseTemplate($output, true); 
+echo $output;
 dbclose( );
 ?>

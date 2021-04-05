@@ -40,6 +40,9 @@ else {
 	eval("?>".$text."<?php ");
 	$tpl->assign("output", "<div id='pagetitle'>$title</div>\n\n$text");
 }
-$tpl->printToScreen();
+//$tpl->printToScreen();
+$output = $tpl->getOutputContent( );  
+$output = e107::getParser()->parseTemplate($output, true); 
+echo $output;
 dbclose( );
 ?>

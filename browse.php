@@ -343,5 +343,8 @@ else  {
 	$output .= "</div>".($displaycolumns ? "</div>" : "")."<div class='cleaner'>&nbsp;</div></div>";
 }
 $tpl->assign("output", $output);
-$tpl->printToScreen( );
+//$tpl->printToScreen( );
+$output = $tpl->getOutputContent( );  
+$output = e107::getParser()->parseTemplate($output, true); 
+echo $output;
 ?>

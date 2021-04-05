@@ -399,7 +399,10 @@ $codeblocks = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE 
 while($code = dbassoc($codeblocks)) {
 	eval($code['code_text']);
 }
-$tpl->printToScreen();
+//$tpl->printToScreen();
+$output = $tpl->getOutputContent( );  
+$output = e107::getParser()->parseTemplate($output, true); 
+echo $output;
 dbclose( );
 
 ?>
