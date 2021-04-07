@@ -33,15 +33,14 @@ if(!defined("_CHARSET")) exit( );
 		$tinyMCE = isset($_POST['tinyMCE']) && $_POST['tinyMCE'] == "on" ? 1 : 0;
 		$storyindex = isset($_POST['storyindex']) && $_POST['storyindex'] == "on" ? 1 : 0;
 		$sortby = isset($_POST['sortby']) && $_POST['sortby'] == 1 ? 1 : 0;
-		$skinnew = descript(strip_tags($_POST['skinnew']));
-		if($skinnew != $skin) $_SESSION[$sitekey."_skin"] = $skinnew;
-		dbquery("UPDATE ".TABLEPREFIX."fanfiction_authorprefs SET alertson = '$useralertson', newreviews = '$newreviews', newrespond = '$newrespond', ageconsent = '$ageconsent', tinyMCE ='$tinyMCE', userskin = '$skinnew', storyindex = '$storyindex', sortby = '$sortby' WHERE uid = '".USERUID."'");
+ 
+		dbquery("UPDATE ".TABLEPREFIX."fanfiction_authorprefs SET alertson = '$useralertson', newreviews = '$newreviews', newrespond = '$newrespond', ageconsent = '$ageconsent', tinyMCE ='$tinyMCE', userskin = '', storyindex = '$storyindex', sortby = '$sortby' WHERE uid = '".USERUID."'");
 		$output .= write_message(_ACTIONSUCCESSFUL." "._BACK2ACCT);
 	}
 	else {
 		$result = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_authorprefs WHERE uid = '".USERUID."' LIMIT 1");
 		if(dbnumrows($result) == 0) {
-			dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_authorprefs(`uid`, `userskin`) VALUES('".USERUID."', '$skin')");
+			dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_authorprefs(`uid`, `userskin`) VALUES('".USERUID."', '')");
 			$result = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_authorprefs WHERE uid = '".USERUID."' LIMIT 1");
 		}
 		$user = dbassoc($result);
