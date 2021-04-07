@@ -22,9 +22,12 @@
 //
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
+ 
 
-if(!defined("_CHARSET")) exit( );
 
-
-define ("_NUMUPDATED", "Number of stories");
-?>
+define ("_SHORT", "Short Form");
+define ("_LONG", "Long Form");
+define ("_ACCTLINK", "Display '".$pagelinks['login']['text']."' link:");
+define ("_DEFAULTOPTS", "Default Display Options");
+define ("_LOGINNOTE", "The 'short form' will not include the register and lost password links while the 'long form' will.  You may also use the textbox to customize the display."); 
+ 

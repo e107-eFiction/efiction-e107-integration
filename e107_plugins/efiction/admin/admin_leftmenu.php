@@ -9,19 +9,11 @@ class efiction_adminArea extends e_admin_dispatcher
 
 
 		'main'	=> array(
-			'controller' 	=> 'fanfiction_messages_ui',
+			'controller' 	=> 'admin_settings_ui',
 			'path' 			=> null,
-			'ui' 			=> 'fanfiction_messages_form_ui',
+			'ui' 			=> 'admin_settings_form_ui',
 			'uipath' 		=> null
 		),
-
-		'tools'	=> array(
-			'controller' 	=> 'fanfiction_messages_ui',
-			'path' 			=> null,
-			'ui' 			=> 'fanfiction_messages_form_ui',
-			'uipath' 		=> null
-		),
-		
  
 		'messages'	=> array(
 			'controller' 	=> 'fanfiction_messages_ui',
@@ -30,7 +22,12 @@ class efiction_adminArea extends e_admin_dispatcher
 			'uipath' 		=> null
 		),
 		
-
+		'blocks'	=> array(
+			'controller' 	=> 'fanfiction_blocks_ui',
+			'path' 			=> null,
+			'ui' 			=> 'fanfiction_blocks_form_ui',
+			'uipath' 		=> null
+		),
  	
 	);
 	
@@ -38,10 +35,12 @@ class efiction_adminArea extends e_admin_dispatcher
 
 	//	'main/list'			=> array('caption'=> LAN_MANAGE, 'perm' => 'P'),  
 	//	'main/create'		=> array('caption'=> LAN_CREATE, 'perm' => 'P'),
-    //    'divider2'          => array('divider'=>	true),
+        'main/dasboard'		=> array('caption'=> 'SETTINGS', 'perm' => 'P',  'perm' => '0', 'url'=>'admin_settings.php'),    
+        'divider2'          => array('divider'=>	true),
         'messages/list'		=> array('caption'=> LAN_EFICTION_CUSTPAGES, 'perm' => 'P',  'perm' => '0', 'url'=>'admin_messages.php'),  
 		'messages/create'	=> array('caption'=> LAN_EFICTION_ADDCUSTPAGE, 'perm' => 'P',  'perm' => '0', 'url'=>'admin_messages.php'),   
-        
+        'blocks/list'		=> array('caption'=> LAN_EFICTION_BLOCKS, 'perm' => 'P',  'perm' => '0', 'url'=>'admin_blocks.php'),  
+		'blockscreate'		=> array('caption'=> LAN_EFICTION_ADDBLOCK, 'perm' => 'P',  'perm' => '0', 'url'=>'admin_blocks.php'),         
  
 		// 'main/div0'      => array('divider'=> true),
 		// 'main/custom'		=> array('caption'=> 'Custom Page', 'perm' => 'P'),
