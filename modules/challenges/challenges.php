@@ -292,7 +292,7 @@ else {
 		$challenges->assign("characters", $chars ? charlist($chars) : _NONE);
 		$challenges->assign("category", $cat > 0 ? catlist($cat) : _NONE);
 		$challenges->assign("respond", "<div class=\"respond\"><a href=\"challenges.php?action=respond&amp;chalid=$chalid\">"._RESPOND2CHALLENGE."</a></div>");
-		$challenges->assign("reportthis", "[<a href=\""._BASEDIR."contact.php?action=report&amp;url=modules/challenges/challenges.php?chalid=".$chalid."\">"._REPORTTHIS."</a>]");
+		$challenges->assign("reportthis", "[<a href=\""._BASEDIR."report.php?action=report&amp;url=modules/challenges/challenges.php?chalid=".$chalid."\">"._REPORTTHIS."</a>]");
 		$output .= $challenges->getOutputContent( );
 		$tpl->gotoBlock( "_ROOT" );
 		$tpl->newBlock("listings");

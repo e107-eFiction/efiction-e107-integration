@@ -84,7 +84,7 @@ else include_once(_BASEDIR."modules/challenges/languages/en.php");
 			$challenges->assign("characters", $challenge['characters'] ? charlist($challenge['characters']) : _NONE);
 			$challenges->assign("category"   , ($challenge['catid'] > 0 ? catlist($challenge['catid']) : _NONE) );
 			if(isMEMBER) $challenges->assign("respond", "<div class=\"respond\"><a href=\"modules/challenges/challenges.php?action=respond&amp;chalid=".$challenge['chalid']."\">"._RESPOND2CHALLENGE."</a></div>");
-			$challenges->assign("reportthis", "[<a href=\""._BASEDIR."contact.php?action=report&amp;url=modules/challenges/challenges.php?chalid=".$challenge['chalid']."\">"._REPORTTHIS."</a>]");
+			$challenges->assign("reportthis", "[<a href=\""._BASEDIR."report.php?action=report&amp;url=modules/challenges/challenges.php?chalid=".$challenge['chalid']."\">"._REPORTTHIS."</a>]");
 			$codequery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'challengeblock'");
 			while($code = dbassoc($codequery)) {
 				eval($code['code_text']);
