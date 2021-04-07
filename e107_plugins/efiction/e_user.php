@@ -31,15 +31,33 @@ class efiction_user // plugin-folder + '_user'
         return $fields;
 
 	}
+
+	
+	function profile($udata)  // display on user profile page.
+	{
+		$author_uid = $udata['user_plugin_efiction_author'];
+		$where = " uid = ".$author_uid; 
+		if($author_uid > 0) {
+ 			$author = e107::getDb()->retrieve("fanfiction_authors", "penname", $where  );
+			$var = array(
+				0 => array('label' => "Author name", 'text' => $author )
+			);
+		}
+ 
+		return $var;
+	}
+
 }	
 
 // (plugin-folder)_user_form - only required when using custom methods.
 class efiction_user_form extends e_form
 {
+
+
 	// user_plugin_(plugin-folder)_(fieldname)
 	public function user_plugin_efiction_author($curVal, $mode, $att=array())
 	{
-        $where = " user_id = ".USERID; 
+        //$where = " user_id = ".USERID; 
  
 		$authors = e107::getDb()->retrieve("fanfiction_authors", "uid, penname", $where, true );
         foreach($authors AS $row)  {

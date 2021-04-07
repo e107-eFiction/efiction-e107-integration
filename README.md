@@ -122,4 +122,10 @@ Now: All members, authors, betareader, site admins
 - [] safety check
 - [] (re)captcha support 
 
+**Beta-reader module**
 
+- [x] replace by UEA field
+- [] fix authors 
+- [] add link with list
+- [] remove AUTORPREFS field
+- [] remove module
