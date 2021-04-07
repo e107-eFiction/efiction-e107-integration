@@ -22,37 +22,42 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-if(!defined("_CHARSET")) exit( );
-// Get session variables from cookie data if not logged in.
-// To bridge to another program replace (or add to) this information with the bridge to your other script.  See examples in the includes/bridges/ folder.
-if (!empty($_COOKIE[$sitekey."_useruid"])) {
-	$userdata = dbassoc(dbquery("SELECT ap.*, "._UIDFIELD." as uid, "._PENNAMEFIELD." as penname, "._EMAILFIELD." as email, "._PASSWORDFIELD." as password FROM "._AUTHORTABLE." LEFT JOIN ".TABLEPREFIX."fanfiction_authorprefs as ap ON ap.uid = "._UIDFIELD." WHERE "._UIDFIELD." = '".$_COOKIE[$sitekey."_useruid"]."'"));
-	if($userdata && $userdata['level'] != -1 && $_COOKIE[$sitekey.'_salt'] == md5($userdata['email'] . $userdata['password'])) {
-		define("USERUID", $userdata['uid']);
-		define("USERPENNAME", $userdata['penname']);
-		// the following line fixes missing authorpref rows
+
+if (!defined('e107_INIT')) { exit; }
  
-		define("uLEVEL", $userdata['level']);
-		define("isADMIN", uLEVEL > 0 ? true : false);
-		define("isMEMBER", true);
-		if(EMPTY($_SESSION[$sitekey."_agecontsent"])) $ageconsent = $userdata['ageconsent'];
-		else $ageconsent = $_SESSION[$sitekey."_agecontsent"];
+if(USERID) {  //fully managed by e107, user is logged in
+	$userdata = e107::User(USERID);
+	$author_uid = $userdata['user_plugin_efiction_author'];
+	if($author_uid > 0) { //user is author
+
+		$authordata = dbassoc(dbquery("SELECT ap.*, "._UIDFIELD." as uid, "._PENNAMEFIELD." as penname, "._EMAILFIELD." as email, "._PASSWORDFIELD." as password FROM "._AUTHORTABLE." LEFT JOIN ".TABLEPREFIX."fanfiction_authorprefs as ap ON ap.uid = "._UIDFIELD." WHERE user_id = '".$author_uid  ."'"));
+
+		if($authordata && $authordata['level'] != -1 ) {
+			define("USERUID", $authordata['uid']);
+			define("USERPENNAME", $authordata['penname']);
+			// the following line fixes missing authorpref rows
+	 
+			define("uLEVEL", $userdata['level']);
+			define("isADMIN", uLEVEL > 0 ? true : false);
+			define("isMEMBER", true);
+			if(EMPTY($_SESSION[$sitekey."_agecontsent"])) $ageconsent = $authordata['ageconsent'];
+			else $ageconsent = $_SESSION[$sitekey."_agecontsent"];
+		}
 	}
+	
+	// author data
+	
+
 }
-if(!empty($_SESSION[$sitekey."_useruid"]) && !defined("USERUID")) {
-	$userdata = dbassoc(dbquery("SELECT ap.*, "._UIDFIELD." as uid, "._PENNAMEFIELD." as penname, "._EMAILFIELD." as email, "._PASSWORDFIELD." as password FROM "._AUTHORTABLE." LEFT JOIN ".TABLEPREFIX."fanfiction_authorprefs as ap ON ap.uid = "._UIDFIELD." WHERE "._UIDFIELD." = '".$_SESSION[$sitekey."_useruid"]."'"));
-	if($userdata && $userdata['level'] != -1 && $_SESSION[$sitekey.'_salt'] == md5($userdata['email'] . $userdata['password'])) {
-		define("USERUID", $userdata['uid']);        
-		define("USERPENNAME", $userdata['penname']);
-		// the following line fixes missing authorpref rows
+else {
+	if(!defined("USERUID")) define("USERUID", 0);
+	if(!defined("USERPENNAME")) define("USERPENNAME", false);
+	if(!defined("uLEVEL")) define("uLEVEL", 0);
+	if(!defined("isMEMBER")) define("isMEMBER", false);
+	if(!defined("isADMIN")) define("isADMIN", false);
+}
+
  
-		define("uLEVEL", $userdata['level']);
-		define("isADMIN", uLEVEL > 0 ? true : false);
-		define("isMEMBER", true);
-		if(!isset($_SESSION[$sitekey."_agecontsent"])) $ageconsent = $userdata['ageconsent'];
-		else $ageconsent = $_SESSION[$sitekey."_agecontsent"];
-	}
-}
 if(!defined("USERUID")) define("USERUID", 0);
 if(!defined("USERPENNAME")) define("USERPENNAME", false);
 if(!defined("uLEVEL")) define("uLEVEL", 0);

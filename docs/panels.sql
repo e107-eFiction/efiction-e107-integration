@@ -1,4 +1,5 @@
-INSERT INTO `fanfiction_panels` (`panel_name`, `panel_title`, `panel_url`, `panel_level`, `panel_order`, `panel_hidden`, `panel_type`) VALUES (1, 'submitted', 'Submissions', '', 3, 5, 0, 'A'),
+INSERT INTO `e107_fanfiction_panels` (`panel_name`, `panel_title`, `panel_url`, `panel_level`, `panel_order`, `panel_hidden`, `panel_type`) VALUES 
+('submitted', 'Submissions', '', 3, 5, 0, 'A'),
 ('versioncheck', 'Version Check', '', 3, 7, 0, 'A'),
 ('newstory', 'Add New Story', 'stories.php?action=newstory&admin=1', 3, 2, 0, 'A'),
 ('addseries', 'Add New Series', 'series.php?action=add', 3, 3, 0, 'A'),
@@ -21,7 +22,7 @@ INSERT INTO `fanfiction_panels` (`panel_name`, `panel_title`, `panel_url`, `pane
 ('links', 'Page Links', '', 1, 3, 0, 'A'),
 ('messages', 'Message Settings', '', 2, 0, 1, 'A'),
 ('login', 'Login', '', 0, 0, 1, 'U'),
-('logout', 'Logout', '', 1, 1, 0, 'U'),
+('logout', 'Logout', 'index.php?logout', 1, 1, 0, 'U'),
 ('revreceived', 'Reviews Received', '', 1, 0, 1, 'U'),
 ('editprefs', 'Edit Preferences', '', 1, 2, 0, 'U'),
 ('lostpassword', 'Lost Password', '', 0, 0, 1, 'U'),
