@@ -31,10 +31,7 @@ if (!empty($_COOKIE[$sitekey."_useruid"])) {
 		define("USERUID", $userdata['uid']);
 		define("USERPENNAME", $userdata['penname']);
 		// the following line fixes missing authorpref rows
-		if(empty($userdata['userskin'] )) dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_authorprefs(uid, userskin, storyindex, sortby, tinyMCE) VALUES('".$userdata['uid']."', '$defaultskin', '$displayindex', '$defaultsort', '$tinyMCE')");
-		if(!isset($_SESSION[$sitekey."_skin"]) && !empty($userdata['userskin'])) $siteskin = $userdata['userskin'];
-		else if(isset($_SESSION[$sitekey."_skin"])) $siteskin = $_SESSION[$sitekey."_skin"];
-		else $siteskin = $defaultskin;
+ 
 		define("uLEVEL", $userdata['level']);
 		define("isADMIN", uLEVEL > 0 ? true : false);
 		define("isMEMBER", true);
@@ -48,10 +45,7 @@ if(!empty($_SESSION[$sitekey."_useruid"]) && !defined("USERUID")) {
 		define("USERUID", $userdata['uid']);        
 		define("USERPENNAME", $userdata['penname']);
 		// the following line fixes missing authorpref rows
-		if(empty($userdata['userskin'] )) dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_authorprefs(uid, userskin, storyindex, sortby, tinyMCE) VALUES('".$userdata['uid']."', '$defaultskin', '$displayindex', '$defaultsort', '$tinyMCE')");
-		if(!isset($_SESSION[$sitekey."_skin"]) && !empty($userdata['userskin'])) $siteskin = $userdata['userskin'];
-		else if(isset($_SESSION[$sitekey."_skin"])) $siteskin = $_SESSION[$sitekey."_skin"];
-		else $siteskin = $defaultskin;
+ 
 		define("uLEVEL", $userdata['level']);
 		define("isADMIN", uLEVEL > 0 ? true : false);
 		define("isMEMBER", true);
@@ -64,6 +58,4 @@ if(!defined("USERPENNAME")) define("USERPENNAME", false);
 if(!defined("uLEVEL")) define("uLEVEL", 0);
 if(!defined("isMEMBER")) define("isMEMBER", false);
 if(!defined("isADMIN")) define("isADMIN", false);
-if(empty($siteskin)) $siteskin = $defaultskin;
-
-?>
+ 

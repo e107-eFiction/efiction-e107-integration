@@ -46,6 +46,8 @@ Note: added possibility to template caption to be able have the same look
 4. replace featured block
 `{featured_content}` with `{MENU: path=efiction/featured}`
 
+5. removed $defaultskin, $globalskin etc
+
 
 
 

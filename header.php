@@ -79,7 +79,7 @@ if(empty($sitekey)) {
 	header("Location: install/install.php");
 	exit( );
 }
-if(isset($skin)) $globalskin = $skin; 
+ 
 $settingsresults = dbquery("SELECT * FROM ".$settingsprefix."fanfiction_settings WHERE sitekey = '".$sitekey."'");
 $settings = dbassoc($settingsresults);
 if(!defined("SITEKEY")) define("SITEKEY", $settings['sitekey']);
@@ -97,10 +97,7 @@ if(isset($_GET['debug'])) $debug = 1;
 if(!$displaycolumns) $displaycolumns = 1; // shouldn't happen, but just in case.
 if($words) $words = explode(", ", $words);
 else $words = array( );
-// Fix for sites with 2.0 or 1.1 running as well as 3.0 with register_globals on.
-$defaultskin = $skin;
-
-if(isset($globalskin)) $skin = $globalskin;
+ 
 
 if(isset($_GET['action'])) $action = strip_tags($_GET['action']);
 else $action = false;
@@ -136,12 +133,7 @@ $agecontsent = false; $viewed = false;
 
 require_once("includes/get_session_vars.php");
 @ include_once(_BASEDIR."class2.php");
-
-if(isset($_GET['skin'])) {
-	$siteskin = $_GET['skin'];
-	$_SESSION[SITEKEY."_skin"] = $siteskin;
-}
-
+ 
 $v = explode(".", $version);
 include("version.php");
 $newV = explode(".", $version);
@@ -158,8 +150,7 @@ foreach($newV AS $k => $l) {
 		}
 	}
 }
-
-if(!empty($_SESSION[SITEKEY."_skin"])) $siteskin = $_SESSION[SITEKEY."_skin"];
+ 
 if($maintenance && !isADMIN && basename($_SERVER['PHP_SELF']) != "maintenance.php" && !(isset($_GET['action']) && $_GET['action'] == "login")) {
 	header("Location: maintenance.php");
 	exit( );
@@ -181,9 +172,9 @@ if(isset($_GET['warning'])) $_SESSION[SITEKEY."_warned"][$_GET['warning']] = 1;
 
 if(file_exists("languages/{$language}.php")) require_once ("languages/{$language}.php");
 else require_once ("languages/en.php");
-if(is_dir(_BASEDIR."skins/$siteskin")) $skindir = _BASEDIR."skins/$siteskin";
-else if(is_dir(_BASEDIR."skins/".$settings['skin'])) $skindir = _BASEDIR."skins/".$defaultskin;
-else $skindir = _BASEDIR."default_tpls";
+
+$skindir = _BASEDIR."default_tpls";
+
 if(USERUID) {
 	$prefs = dbquery("SELECT sortby, storyindex, tinyMCE FROM ".TABLEPREFIX."fanfiction_authorprefs WHERE uid = '".USERUID."'");
 	if(dbnumrows($prefs)) list($defaultsort, $displayindex, $tinyMCE) = dbrow($prefs);

@@ -83,11 +83,7 @@ function random_string ($charset_string, $length)
 					dbquery("INSERT INTO ".substr(_AUTHORTABLE, 0, strpos(_AUTHORTABLE, "as author"))." (penname, realname, bio, email, date, password) VALUES ('".escapestring($penname)."', '".escapestring(strip_tags($_POST['realname']))."', '".strip_tags(escapestring($_POST['bio']), $allowed_tags)."', '$email', now(), '$encryppass')");
 					$useruid = dbinsertid();
 					if($logging) dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_log (`log_action`, `log_uid`, `log_ip`, `log_type`) VALUES('".escapestring(sprintf(_LOG_REGISTER, $penname, $useruid, $_SERVER['REMOTE_ADDR']))."', '".$useruid."', INET_ATON('".$_SERVER['REMOTE_ADDR']."'), 'RG')");
-					if(empty($siteskin)) {
-						$skinquery = dbquery("SELECT skin FROM ".$settingsprefix."fanfiction_settings WHERE sitekey = '".SITEKEY."'");
-						list($skin) = dbrow($skinquery);
-					}
-					else $skin = $siteskin;
+					 
 					dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_authorprefs(uid, userskin, storyindex, sortby, tinyMCE) VALUES('".$useruid."', '$skin', '$displayindex', '$defaultsort', '$tinyMCE')");
 /* The section adds fields from the authorfields table to the authorinfo table allowing dynamic additions to the bio/registration page */
 					$fields = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_authorfields WHERE field_on = '1'");
