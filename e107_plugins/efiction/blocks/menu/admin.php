@@ -1,26 +1,22 @@
 <?php
  
 
-global $language, $pagelinks;
+global  $pagelinks;
 $linkquery = dbquery("SELECT * from ".TABLEPREFIX."fanfiction_pagelinks ORDER BY link_access ASC");
 if(!isset($current)) $current = "";
 
-		$blockquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_blocks WHERE block_name = '$admin'");
-		while($block = dbassoc($blockquery)) {
-			$blocks[$block['block_name']] = unserialize($block['block_variables']);
-			$blocks[$block['block_name']]['title'] = $block['block_title'];
-			$blocks[$block['block_name']]['file'] = $block['block_file'];
-			$blocks[$block['block_name']]['status'] = $block['block_status'];
-		}
-		$content = isset($blocks[$admin]['content']) ? $blocks[$admin]['content'] : array();
+$blocks = eFiction::blocks();
+
+$content = isset($blocks[$admin]['content']) ? $blocks[$admin]['content'] : array();
 
 while($link = dbassoc($linkquery)) {
 	$tpl->assignGlobal($link['link_name'], "<a href=\""._BASEDIR.$link['link_url']."\" title=\"".$link['link_text']."\"".($link['link_target'] ? " target=\"_blank\"" : "").($current == $link['link_name'] ? " id=\"current\"" : "").">".$link['link_text']."</a>");
 	$pagelinks[$link['link_name']] = array("id" => $link['link_id'], "text" => $link['link_text'], "url" => _BASEDIR.$link['link_url'], "link" => "<a href=\""._BASEDIR.$link['link_url']."\" title=\"".$link['link_text']."\"".($link['link_target'] ? " target=\"_blank\"" : "").($current == $link['link_name'] ? " id=\"current\"" : "").">".$link['link_text']."</a>");
 }
 include("blocks/".$blocks[$admin]['file']);
-if(file_exists("blocks/menu/{$language}.php")) include("blocks/menu/{$language}.php");
-else include("blocks/menu/en.php");
+
+e107::includeLan(e_PLUGIN.'efiction/blocks/menu/'.e_LANGUAGE.'.php');
+
 	if(isset($_GET['up'])) {
 		$pos = array_search($_GET['up'], $blocks[$admin]['content']);
 		if($pos >= 1) {
@@ -49,13 +45,8 @@ else include("blocks/menu/en.php");
 		save_blocks( $blocks );
 	}
 	if($admin){
-		$blockquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_blocks WHERE block_name = '$admin'");
-		while($block = dbassoc($blockquery)) {
-			$blocks[$block['block_name']] = unserialize($block['block_variables']);
-			$blocks[$block['block_name']]['title'] = $block['block_title'];
-			$blocks[$block['block_name']]['file'] = $block['block_file'];
-			$blocks[$block['block_name']]['status'] = $block['block_status'];
-		}
+		//$blockxquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_blocks WHERE block_name = '$admin'");
+		 
 		$content = isset($blocks[$admin]['content']) ? $blocks[$admin]['content'] : array();
 		$output .= "<div style=\"width: 300px; margin: 0 auto;\"><form method=\"POST\" enctype=\"multipart/form-data\"action=\"admin.php?action=blocks&admin=$admin\">
 			<table class=\"tblborder\" width=\"100%\"><tr><th>"._TITLE."</th><th colspan=\"2\">"._MOVE."</th></tr>";

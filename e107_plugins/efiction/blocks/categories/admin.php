@@ -22,23 +22,35 @@
 //
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
- 
-require e_PLUGIN."efiction/blocks/".$blocks['categories']['file'] ;
- 
 
-$template = (!empty($blocks['categories']['template']) ? $blocks['categories']['template'] : "{image} {link} [{count}] {description}");
+ 
+$content = "";
+$blocks = eFiction::blocks();
+/*
+if(empty($blocks['categories']['tpl'])) {
+	include("blocks/".$blocks['categories']['file']);
+	$tpl->gotoBlock("_ROOT");
+}
+*/
 
-if(empty($blocks['categories']['tpl'])) $output .= "<div style='text-align: center;'><b>".LAN_EFICTION_CURRENT.":</b><br /><div class=\"tblborder\" style=\"width: 80%; margin: 0 auto; text-align: left;\">$content</div><br /></div>";
+e107::includeLan(e_PLUGIN.'efiction/blocks/categories/'.e_LANGUAGE.'.php');
+
+$output .= "
+<div class='panel panel-primary'>
+	<div class='panel-heading text-center bg-primary'>".LAN_EFICTION_CURRENT.':</div>
+	<div class="panel-body tblborder text-left">'.$content.'</div>
+</div>';
+
 
 $output .= "<div> 
-<textarea name=\"template\" id=\"template\" rows=\"5\" cols=\"40\">$template</textarea><br />";
+	<textarea name=\"template\" id=\"template\" rows=\"5\" cols=\"40\">$template</textarea><br />";
 if($tinyMCE) 
-$output .= "<div class='tinytoggle'><input type='checkbox' name='toggle' onclick=\"toogleEditorMode('template');\"><label for='toggle'>"._TINYMCETOGGLE."</label></div>";	
+	$output .= "<div class='tinytoggle'><input type='checkbox' name='toggle' onclick=\"toogleEditorMode('template');\"><label for='toggle'>"._TINYMCETOGGLE."</label></div>";	
 $output .= "<select name=\"columns\" class=\"textbox\" style='margin: 3px;'><option value=\"0\"".(empty($blocks['categories']['columns']) ? " selected" : "").">"._ONECOLUMN."</option>
-<option value=\"1\"".(!empty($blocks['categories']['columns']) ? " selected" : "").">"._MULTICOLUMN."</option></select> 
-<select name=\"tpl\" class=\"textbox\" style='margin: 3px;'><option value=\"0\"".(empty($blocks['categories']['tpl']) ? " selected" : "").">".LAN_EFICTION_DEFAULT."</option>
-<option value=\"1\"".(!empty($blocks['categories']['tpl']) ? " selected" : "").">".LAN_EFICTION_USETPL."</option></select><br />";
-
-$output .= "<div class='well'>"._CATBLOCKNOTE."</div>";
+			<option value=\"1\"".(!empty($blocks['categories']['columns']) ? " selected" : "").">"._MULTICOLUMN."</option></select> 
+	<select name=\"tpl\" class=\"textbox\" style='margin: 3px;'><option value=\"0\"".(empty($blocks['categories']['tpl']) ? " selected" : "").">".LAN_EFICTION_DEFAULT."</option>
+			<option value=\"1\"".(!empty($blocks['categories']['tpl']) ? " selected" : "").">".LAN_EFICTION_USETPL."</option></select><br />
+	 <div style='clear: both;'>&nbsp;</div>
+<div class='well'>"._CATBLOCKNOTE."</div>";
  
-	
+ 

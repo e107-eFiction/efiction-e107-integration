@@ -18,4 +18,20 @@ CREATE TABLE `fanfiction_blocks` (
   KEY `message_name` (`message_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
+CREATE TABLE `fanfiction_authors` (
+  `uid` int(11) NOT NULL auto_increment,
+  `penname` varchar(200) NOT NULL default '',
+  `realname` varchar(200) NOT NULL default '',
+  `email` varchar(200) NOT NULL default '',
+  `website` varchar(200) NOT NULL default '',
+  `bio` text NOT NULL,
+  `image` varchar(200) NOT NULL default '',
+  `date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `admincreated` int(11) NOT NULL default '0',
+  `password` varchar(40) NOT NULL default '0',
+  `user_id` int(11) NOT NULL
+  PRIMARY KEY  (`uid`),
+  KEY `penname` (`penname`),
+  KEY `admincreated` (`admincreated`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -4,7 +4,7 @@ if(!defined("_CHARSET")) exit( );
 	$longform = "{penname} {password} {rememberme} {go} <div id='loginlinks'>{register} | {lostpwd}</div>";
 	$shortform = "{penname} {password} {rememberme} {go}";
 if(!isMEMBER) {
-	$content = "<form method=\"POST\" id=\"loginblock\" enctype=\"multipart/form-data\" action=\""._BASEDIR."member.php?action=login\">";
+	$content = "<form method=\"POST\" id=\"loginblock\" enctype=\"multipart/form-data\" action=\"".e_LOGIN."\">";
 	$replace = array("<label for=\"penname=\">"._PENNAME.":</label><INPUT type=\"text\" class=\"textbox\" name=\"penname\" id=\"penname\" size=\"15\">", 
 			"<label for=\"password\">"._PASSWORD.":</label><INPUT type=\"password\" class=\"textbox\" name=\"password\" id=\"password\" size=\"15\">",
 			"<span id='rememberme'><INPUT type=\"checkbox\" class=\"checkbox\" name=\"cookiecheck\" id=\"cookiecheck\" value=\"1\"><label for=\"cookiecheck=\">"._REMEMBERME."</label></span>",

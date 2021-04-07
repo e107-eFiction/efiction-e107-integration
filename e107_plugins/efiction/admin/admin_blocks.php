@@ -37,8 +37,8 @@ class fanfiction_blocks_ui extends e_admin_ui
         'block_id' => array('title' => LAN_ID,  'data' => 'int',  'width' => '5%',  'help' => '',  'readParms' => array(),  'writeParms' => array(),  'class' => 'left',  'thclass' => 'left', 'forced' => true, ),
         'block_name' => array('title' => LAN_TITLE,  'type' => 'text',  'data' => 'safestr',  'width' => 'auto',  'inline' => true,  'validate' => true,  'help' => '',  'readParms' => array(),  'writeParms' => array(),  'class' => 'left',  'thclass' => 'left', ),
         'block_title' => array('title' => LAN_TITLE,  'type' => 'text',  'data' => 'safestr',  'width' => 'auto',  'inline' => true,  'help' => '',  'readParms' => array(),  'writeParms' => array(),  'class' => 'left',  'thclass' => 'left', ),
-       
-		'block_file' => array('title' => 'File',  'type' => 'text',  'data' => 'safestr',  'width' => 'auto',  'help' => '',  'readParms' => array(),  'writeParms' => array('size'=>'block-level'),  'class' => 'left',  'thclass' => 'left', ),
+
+        'block_file' => array('title' => 'File',  'type' => 'text',  'data' => 'safestr',  'width' => 'auto',  'help' => '',  'readParms' => array(),  'writeParms' => array('size' => 'block-level'),  'class' => 'left',  'thclass' => 'left', ),
         'block_status' => array('title' => 'Status',  'type' => 'dropdown',  'data' => 'int',  'width' => 'auto',  'batch' => true,  'filter' => true,  'help' => '',  'readParms' => array(),
             'writeParms' => array('optArray' => array(0 => LAN_EFICTION_INACTIVE, 1 => LAN_EFICTION_ACTIVE, 2 => LAN_EFICTION_INDEXONLY)), 'class' => 'left',  'thclass' => 'left', ),
 
@@ -79,9 +79,9 @@ class fanfiction_blocks_ui extends e_admin_ui
     public function beforeUpdate($new_data, $old_data, $id)
     {
         $blockvars = $new_data['block_variables'];
-        $new_data['block_variables'] = addslashes(serialize($blockvars));
+        $new_data['block_variables'] =  serialize($blockvars) ;
 
-		//print_a($new_data); die;
+    
         return $new_data;
     }
 
@@ -146,14 +146,15 @@ class fanfiction_blocks_form_ui extends e_admin_form_ui
         $blocks = eFiction::blocks();
 
         $block_name = $this->getController()->getFieldVar('block_name');
-
+		
         $filepath = e_PLUGIN.'efiction/blocks/'.$block_name.'/admin.php';
+        $optionpath = e_PLUGIN.'efiction/blocks/'.$block_name.'/admin_options.php';
 
         //actual value
         if (!empty($curVal)) {
             $value = unserialize($curVal); //use php way
         }
-
+ 
         switch ($mode) {
             case 'read': // List Page
                 return $curVal;
@@ -161,11 +162,20 @@ class fanfiction_blocks_form_ui extends e_admin_form_ui
 
             case 'write': // Edit Page
 
-                if ((file_exists($filepath))) { 
+                if ((file_exists($filepath))) {
                     require_once $filepath;
-				 
-                    return $output;
+
+                    $text = $output;
                 }
+
+                if ((file_exists($optionpath))) {
+                    require_once $optionpath;
+                    $this->custom_fields = $options;
+                    $options = $this->getFields('block_variables', $value);
+                    $text .= $options;
+                }
+
+                return $text;
 
             break;
 
@@ -181,6 +191,28 @@ class fanfiction_blocks_form_ui extends e_admin_form_ui
         $value = array();
 
         return null;
+    }
+
+    public function getFields($name = '', $value = array())
+    {
+        if ($name == '') {
+            return '';
+        }
+        $textremove = '';
+
+        //single fields, mainly headers
+        $settings = $this->custom_fields;
+
+        if ($settings['fields'] > 0) {
+            $nameitem = 'block_variables';
+            foreach ($settings['fields'] as $fieldkey => $field) {
+                $text .= "<tr><td width='200'>".$field['title'].': </td><td>';
+                $text .= $this->renderElement($nameitem.'['.$fieldkey.']', $value[$fieldkey], $field);
+                $text .= '</td></tr>';
+            }
+        } else {
+        }
+        return $text ;
     }
 }
 
@@ -198,30 +230,5 @@ for later when serialize is solved
 $this->custom_fields = $options;
 $text = $this->getFields('block_variables', $value);
 
-public function getFields($name = '', $value = array())
-    {
-        if ($name == '')
-        {
-            return '';
-        }
-        $textremove = '';
 
-        //single fields, mainly headers
-        $settings = $this->custom_fields;
-
-        if ($settings['fields'] > 0)
-        {
-            $nameitem = 'block_variables';
-            foreach ($settings['fields'] as $fieldkey => $field)
-            {
-
-                $text .= "<tr><td width='200'>" . $field['title'] . ": </td><td>";
-                $text .= $this->renderElement($nameitem . '[' . $fieldkey . ']', $value[$fieldkey], $field);
-                $text .= "</td></tr>";
-
-            }
-        }
-        else {}
-        return $text ;
-    }
 */

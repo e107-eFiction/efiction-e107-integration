@@ -2,8 +2,8 @@
  
 
 	global $dateformat, $tpl;
-	if(file_exists(_BASEDIR."blocks/online/{$language}.php")) include(_BASEDIR."blocks/online/{$language}.php");
-	else include(_BASEDIR."blocks/online/en.php");
+    e107::includeLan(e_PLUGIN.'efiction/blocks/online/'.e_LANGUAGE.'.php');
+    
 	$where = "online_uid=".(USERUID ? USERUID : "0 AND online_ip = INET_ATON('".$_SERVER['REMOTE_ADDR']."')");
 	$result = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_online WHERE $where");
 	if(dbnumrows($result) > 0) dbquery("UPDATE ".TABLEPREFIX."fanfiction_online SET online_timestamp = '".time( )."' WHERE $where");

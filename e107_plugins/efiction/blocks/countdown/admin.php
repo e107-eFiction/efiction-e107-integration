@@ -1,4 +1,8 @@
 <?php
+
+$blocks = eFiction::blocks();
+e107::includeLan(e_PLUGIN.'efiction/blocks/countdown/'.e_LANGUAGE.'.php');
+
 include(e_PLUGIN."efiction/blocks/".$blocks['countdown']['file']); 
  
 $output .= "

@@ -48,6 +48,12 @@ Note: added possibility to template caption to be able have the same look
 
 5. removed $defaultskin, $globalskin, $skinnew etc
 
+User/registration system:
+
+- replacing paths
+- replacing sessions 
+- separating users and authors
+- added fanfiction_authors table to efiction plugin for adding user_id field
 
 
 

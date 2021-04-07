@@ -76,8 +76,8 @@
         {
             $stories = $this->var;
             $text = e107::getParser()->toHTML($this->var['summary'], true, 'TITLE');
-
-            $limit = (!empty($blocks['recent']['sumlength']) ? $blocks['recent']['sumlength'] : 75);
+			 
+            $limit = ($stories['sumlength'] > 0 ? $stories['sumlength'] : 75);  
             if (!empty($parm['limit'])) {
                 $limit = $parm['limit'];
             }
@@ -142,7 +142,9 @@
                         $warning = _AGECHECK.' - '._AGECONSENT.' '.$warningtext.' -- 1';
                     }
                     if ($warninglevel[0] && !isMEMBER) {
-                        $location = 'member.php?action=login&amp;sid='.$stories['sid'];
+                        //FIX THIS!!!
+                        //$location = 'member.php?action=login&amp;sid='.$stories['sid'];
+                        $location = e_LOGIN.'&amp;sid='.$stories['sid'];
                         $warning = _RUSERSONLY." - $warningtext";
                     }
                     if (!empty($warning)) {

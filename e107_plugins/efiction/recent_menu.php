@@ -57,7 +57,8 @@ if (class_exists('efiction')) {
     $sc = e107::getScParser()->getScObject('efiction_shortcodes', 'efiction', false);
     $text = '';
  
-    $limit = isset($blocks['recent']['limit']) && $blocks['recent']['limit'] > 0 ? $blocks['recent']['limit'] : 10;
+    $limit 		= isset($blocks['recent']['limit']) && $blocks['recent']['limit'] > 0 ? $blocks['recent']['limit'] : 10;
+	$sumlength  = isset($blocks['recent']['sumlength']) && $blocks['recent']['sumlength'] > 0 ? $blocks['recent']['sumlength'] :75;
 
     $query = _STORYQUERY." ORDER BY stories.updated DESC LIMIT  $limit";
     $result = e107::getDb()->retrieve($query, true);
@@ -71,7 +72,7 @@ if (class_exists('efiction')) {
         } else {
             $stories['summary'] = e107::getParser()->toHTML($this->var['summary'], true, 'SUMMARY');
         }
-
+		$stories['sumlength'] = $sumlength;
         $sc->setVars($stories);
         $text .= e107::getParser()->parseTemplate($template['item'], true, $sc);
     }

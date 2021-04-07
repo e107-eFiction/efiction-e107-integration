@@ -1,6 +1,128 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <e107Export version="2.3.1 (git)" timestamp="1617382345" >
 	<database>
+	<dbTable name="fanfiction_blocks">
+		<item>
+			<field name="block_id">11</field>
+			<field name="block_name">linktous</field>
+			<field name="block_title">Link to Us</field>
+			<field name="block_file">linktous/linktous.php</field>
+			<field name="block_status">0</field>
+			<field name="block_variables"></field>
+		</item>
+		<item>
+			<field name="block_id">10</field>
+			<field name="block_name">countdown</field>
+			<field name="block_title">Countdown</field>
+			<field name="block_file">countdown/block.php</field>
+			<field name="block_status">0</field>
+			<field name="block_variables"></field>
+		</item>
+		<item>
+			<field name="block_id">9</field>
+			<field name="block_name">news</field>
+			<field name="block_title">Site News</field>
+			<field name="block_file">news/news.php</field>
+			<field name="block_status">1</field>
+			<field name="block_variables">a:1:{s:3:"num";s:1:"1";}</field>
+		</item>
+		<item>
+			<field name="block_id">7</field>
+			<field name="block_name">recent</field>
+			<field name="block_title">Most Recent</field>
+			<field name="block_file">recent/recent.php</field>
+			<field name="block_status">2</field>
+			<field name="block_variables">a:2:{s:3:"num";s:1:"1";s:3:"tpl";i:0;}</field>
+		</item>
+		<item>
+			<field name="block_id">8</field>
+			<field name="block_name">skinchange</field>
+			<field name="block_title">Skin Change</field>
+			<field name="block_file">skinchange/skinchange.php</field>
+			<field name="block_status">1</field>
+			<field name="block_variables"></field>
+		</item>
+		<item>
+			<field name="block_id">5</field>
+			<field name="block_name">menu</field>
+			<field name="block_title">Main Menu</field>
+			<field name="block_file">menu/menu.php</field>
+			<field name="block_status">1</field>
+			<field name="block_variables">a:2:{s:7:"content";a:14:{i:0;s:4:"home";i:1;s:6:"recent";i:2;s:7:"authors";i:3;s:8:"catslink";i:4;s:6:"titles";i:5;s:6:"series";i:6;s:6:"search";i:7;s:4:"tens";i:8;s:10:"challenges";i:9;s:4:"help";i:10;s:9:"contactus";i:11;s:5:"login";i:12;s:6:"logout";i:13;s:9:"adminarea";}s:5:"style";i:1;}</field>
+		</item>
+		<item>
+			<field name="block_id">6</field>
+			<field name="block_name">random</field>
+			<field name="block_title">Random Story</field>
+			<field name="block_file">random/random.php</field>
+			<field name="block_status">2</field>
+			<field name="block_variables"></field>
+		</item>
+		<item>
+			<field name="block_id">3</field>
+			<field name="block_name">info</field>
+			<field name="block_title">Site Info</field>
+			<field name="block_file">info/info.php</field>
+			<field name="block_status">2</field>
+			<field name="block_variables"></field>
+		</item>
+		<item>
+			<field name="block_id">4</field>
+			<field name="block_name">login</field>
+			<field name="block_title">Log In</field>
+			<field name="block_file">login/login.php</field>
+			<field name="block_status">1</field>
+			<field name="block_variables"></field>
+		</item>
+		<item>
+			<field name="block_id">1</field>
+			<field name="block_name">categories</field>
+			<field name="block_title">Categories</field>
+			<field name="block_file">categories/categories.php</field>
+			<field name="block_status">1</field>
+			<field name="block_variables"></field>
+		</item>
+		<item>
+			<field name="block_id">2</field>
+			<field name="block_name">featured</field>
+			<field name="block_title">Featured Stories</field>
+			<field name="block_file">featured/featured.php</field>
+			<field name="block_status">1</field>
+			<field name="block_variables"></field>
+		</item>
+		<item>
+			<field name="block_id">12</field>
+			<field name="block_name">online</field>
+			<field name="block_title">Who's Online</field>
+			<field name="block_file">online/online.php</field>
+			<field name="block_status">0</field>
+			<field name="block_variables"></field>
+		</item>
+		<item>
+			<field name="block_id">13</field>
+			<field name="block_name">poll</field>
+			<field name="block_title">Poll</field>
+			<field name="block_file">poll/poll.php</field>
+			<field name="block_status">0</field>
+			<field name="block_variables"></field>
+		</item>
+		<item>
+			<field name="block_id">14</field>
+			<field name="block_name">search</field>
+			<field name="block_title">Search</field>
+			<field name="block_file">search/search.php</field>
+			<field name="block_status">0</field>
+			<field name="block_variables"></field>
+		</item>
+		<item>
+			<field name="block_id">15</field>
+			<field name="block_name">shoutbox</field>
+			<field name="block_title">Shoutbox</field>
+			<field name="block_file">shoutbox/shoutbox.php</field>
+			<field name="block_status">0</field>
+			<field name="block_variables">{a:3:{s:9:"shoutdate";s:11:"m/d/y h:i a";s:10:"shoutlimit";s:2:"10";s:11:"guestshouts";i:1;}</field>
+		</item>
+	</dbTable>	
 	<dbTable name="fanfiction_messages">
 		<item>
 			<field name="message_id">1</field>

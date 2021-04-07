@@ -58,7 +58,8 @@ if (class_exists('efiction')) {
     $text = '';
  
 	$limit = isset($blocks['random']['limit']) && $blocks['random']['limit'] > 0 ? $blocks['random']['limit'] : 1;
- 
+	$sumlength  = isset($blocks['random']['sumlength']) && $blocks['random']['sumlength'] > 0 ? $blocks['random']['sumlength'] :75;
+
     $query = _STORYQUERY." ORDER BY rand( ) DESC LIMIT $limit";
     $result = e107::getDb()->retrieve($query, true);
  
@@ -71,7 +72,7 @@ if (class_exists('efiction')) {
         } else {
             $stories['summary'] = e107::getParser()->toHTML($this->var['summary'], true, 'SUMMARY');
         }
-
+		$$stories['sumlength'] = $sumlength ;
         $sc->setVars($stories);
         $text .= e107::getParser()->parseTemplate($template['item'], true, $sc);
     }

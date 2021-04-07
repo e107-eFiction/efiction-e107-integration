@@ -1,5 +1,5 @@
 <?php
- 
+$blocks = eFiction::blocks(); 
  
 e107::includeLan(e_PLUGIN.'efiction/blocks/info/'.e_LANGUAGE.'.php');
 

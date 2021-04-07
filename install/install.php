@@ -161,7 +161,7 @@ switch($_GET['step']) {
 				$skinquery = dbquery("SELECT skin FROM ".$settingsprefix."fanfiction_settings WHERE sitekey = '".SITEKEY."'");
 				list($skin) = dbrow($skinquery);
 				$result2 = dbquery("INSERT INTO ".$tableprefix."fanfiction_authorprefs(`uid`, `userskin`, `level`) VALUES('".USERUID."', '$skin', '1')");
-				if($result && $result2) $output .= write_message(_ACTIONSUCCESSFUL."<br /><br />Installation complete!  <a href='../user.php?action=login'>Log in</a> to your site and go to the Admin area to configure your archive. <strong>Note:</strong> Please delete the install/ folder!");
+				if($result && $result2) $output .= write_message(_ACTIONSUCCESSFUL."<br /><br />Installation complete!  <a href='".e_LOGIN."'>Log in</a> to your site and go to the Admin area to configure your archive. <strong>Note:</strong> Please delete the install/ folder!");
 			}
 			else $output .= $fail;
 		}
@@ -275,9 +275,9 @@ switch($_GET['step']) {
 				$pagelist = array(
 					array("home","Home","index.php","0","0"),
 					array("recent","Most Recent","browse.php?type=recent","0","0"),
-					array("login","Login","member.php?action=login","0","0"),
+					array("login","Login","login.php","0","0"),
 					array("adminarea","Admin","admin.php","0","2"),
-					array("logout","Logout","member.php?action=logout","0","1"),
+					array("logout","Logout","index.php?logout","0","1"),
 					array("featured","Featured Stories","browse.php?type=featured","0","0"),
 					array("catslink","Categories","browse.php?type=categories","0","0"),
 					array("members","Members","authors.php?action=list","0","0"),
@@ -293,8 +293,8 @@ switch($_GET['step']) {
 					array("rss","<img src=\'images/xml.gif\' alt=\'RSS\' border=\'0\'>","rss.php","0","0"),
 					array("login","Account Info","member.php","0","1"),
 					array("titles","Titles","browse.php?type=titles","0","0"),
-					array("register","Register","member.php?action=register","0","0"),
-					array("lostpassword","Lost Password","member.php?action=lostpassword","0","0"),
+					array("register","Register","signup.php","0","0"),
+					array("lostpassword","Lost Password","fpw.php","0","0"),
 					array("newsarchive","News Archive","news.php","0","0"),
 					array("browse","Browse","browse.php","0","0"),
 					array("charslink", "Characters", "browse.php?type=characters","0","0"),

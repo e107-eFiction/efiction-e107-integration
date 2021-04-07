@@ -58,6 +58,7 @@ if (class_exists('efiction')) {
     $text = '';
  
     $limit = isset($blocks['featured']['limit']) && $blocks['featured']['limit'] > 0 ? $blocks['featured']['limit'] : 1;
+	$sumlength  = isset($blocks['featured']['sumlength']) && $blocks['featured']['sumlength'] > 0 ? $blocks['featured']['sumlength'] :75;
 
     $query = _STORYQUERY." AND stories.featured = '1'".($limit ? " LIMIT $limit" : "");
  
@@ -72,7 +73,7 @@ if (class_exists('efiction')) {
         } else {
             $stories['summary'] = e107::getParser()->toHTML($this->var['summary'], true, 'SUMMARY');
         }
-
+		$stories['sumlength'] = $sumlength;
         $sc->setVars($stories);
         $text .= e107::getParser()->parseTemplate($template['item'], true, $sc);
     }
