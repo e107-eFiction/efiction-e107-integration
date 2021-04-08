@@ -1,9 +1,6 @@
 <?php
-
 // ----------------------------------------------------------------------
-// eFiction 3.2
 // Copyright (c) 2007 by Tammy Keefer
-// Valid HTML 4.01 Transitional
 // Based on eFiction 1.1
 // Copyright (C) 2003 by Rebecca Smallwood.
 // http://efiction.sourceforge.net/
@@ -22,12 +19,28 @@
 //
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
+
+$current = "home";
+
+require_once(__DIR__ . '/../../header.php'); //inside is class2.php TODO
  
+$tpl = new TemplatePower(__DIR__ . "/../../default_tpls/index.tpl");
+ 
+if(file_exists(__DIR__ . "/../../".$skindir."/index.tpl")) $tpl = new TemplatePower(__DIR__ . "/../../".$skindir."/index.tpl");
+else $tpl = new TemplatePower(__DIR__ . "/../../default_tpls/index.tpl");
+
+include(__DIR__ . "/../../includes/pagesetup.php");
+
+$welcome = e107::getDb()->retrieve("SELECT message_text FROM ".TABLEPREFIX."fanfiction_messages WHERE message_name = 'welcome'");
+ 
+$tpl->assign("welcome", stripslashes($welcome));
+
+$output = $tpl->getOutputContent( );  
+$output = e107::getParser()->parseTemplate($output, true); 
+echo $output;
+require_once(FOOTERF);					// render the footer (everything after the main content area)
+exit; 
 
 
-define ("_SHORT", "Short Form");
-define ("_LONG", "Long Form");
-define ("_ACCTLINK", "Display '".$pagelinks['login']['text']."' link:");
-define ("_DEFAULTOPTS", "Default Display Options");
-define ("_LOGINNOTE", "The 'short form' will not include the register and lost password links while the 'long form' will.  You may also use the textbox to customize the display."); 
- 
+dbclose( );
+?>

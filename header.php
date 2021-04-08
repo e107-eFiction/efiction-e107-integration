@@ -40,7 +40,7 @@ if(!defined("_BASEDIR")) define("_BASEDIR", $folder_level);
 
 @ include_once(_BASEDIR."config.php");
 @ include_once(_BASEDIR."class2.php");
-
+ 
 $settings = efiction::settings();
  
  
@@ -103,8 +103,11 @@ if(isset($_GET['warning'])) e107::getSession()->set(SITEKEY."_warned_{$_GET['war
 if(file_exists("languages/{$language}.php")) require_once ("languages/{$language}.php");
 else require_once ("languages/en.php");
 
-$skindir = _BASEDIR."default_tpls";
-//$skindir = _BASEDIR."skins/Epiphany";
+//$skindir = _BASEDIR."default_tpls";
+$skindir = _BASEDIR."skins/Epiphany";
+//$skindir = _BASEDIR."skins/Sommerbrise";
+//$skindir = _BASEDIR."skins/e107";
+
 
 if(USERUID) {
 	$prefs = dbquery("SELECT sortby, storyindex, tinyMCE FROM ".TABLEPREFIX."fanfiction_authorprefs WHERE uid = '".USERUID."'");
@@ -139,6 +142,39 @@ if($current == "viewuser" && isNumber($uid)) {
 	list($penname) = dbrow($author);
 	$titleinfo = "$sitename :: $penname";
 }
+if(!isset($_GET['action']) || $_GET['action'] != "printable") {
+        
+}
+if(!isset($_GET['action']) || $_GET['action'] != "printable") {
+e107::js('url',  e_HTTP."includes/javascript.js" , 'jquery' );
+}
+//if(isset($displayform) && $displayform == 1) { 
+if(true) {
+e107::js('url',  e_HTTP."includes/xmlhttp.js" , 'jquery' );
+
+    $inlinecode = "
+    lang = new Array( );
+
+lang['Back2Cats'] = '"._BACK2CATS."';
+lang['ChooseCat'] = '"._CHOOSECAT."';
+lang['Categories'] = '"._CATEGORIES."';
+lang['Characters'] = '"._CHARACTERS."';
+lang['MoveTop'] = '"._MOVETOP."';
+lang['TopLevel'] = '"._TOPLEVEL."';
+lang['CatLocked'] = '"._CATLOCKED."';
+basedir = '"._BASEDIR."';
+
+categories = new Array( );
+characters = new Array( );
+\n";
+      
+   e107::js('inline', $inlinecode); 
+   
+}
+
+/*
+<link rel=\"alternate\" type=\"application/rss+xml\" title=\"$sitename RSS Feed\" href=\""._BASEDIR."rss.php\">";
+*/
 
 if(!$displaycolumns) $displaycolumns = 1;
 $colwidth = floor(100/$displaycolumns);
@@ -242,10 +278,10 @@ e107::css('url', $skindir.'/style.css');
 }
 
 
-require_once(HEADERF); 
+require_once(HEADERF);
  
  
 $headerSent = true;
-include (_BASEDIR."includes/class.TemplatePower.inc.php");
+include ("includes/class.TemplatePower.inc.php");
  
 ?>

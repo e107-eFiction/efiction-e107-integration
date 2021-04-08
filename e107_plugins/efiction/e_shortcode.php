@@ -118,5 +118,21 @@ class efiction_shortcodes extends e_shortcode
         return $content;
     }
 
-    // {search_content}
+    /*  {EFICTION_LINK} */
+    public function sc_efiction_link($parm = '')
+    {
+		if($parm == "") { return ''; }
+
+	    $efiction = e107::getSingleton('efiction', e_PLUGIN.'efiction/efiction.class.php');
+		 
+		$link = $efiction->get_userlink($parm);
+		
+		if($link) {    
+			return "<li>".$link."</li>";
+		}
+		else return "";
+		 
+    }
+
+ 
 }

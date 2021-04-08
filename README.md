@@ -75,6 +75,8 @@ TODO: wait for fix e107 extended fields, otherwise admin will need to connect us
 - [x] random block as e107 menu `{MENU: path=efiction/efiction_recent}`
 - [x] featured block as e107 menu `{MENU: path=efiction/efiction_featured}`
 - [x] recent block as e107 menu `{MENU: path=efiction/efiction_random}`
+- [x] skinchange removed
+- [x] login block removed
 
 **Panels**
 
@@ -85,6 +87,7 @@ TODO: wait for fix e107 extended fields, otherwise admin will need to connect us
 
 - [ ] e107 Admin UI
 - [ ] fixed default Data
+- [x] {EFICTION_LINK=xxx} for replacing {adminarea} {login} {logout}
 
 **Level access control**
 
@@ -105,7 +108,7 @@ Now: All members, authors, betareader, site admins
 
 **Removed contact.php**
 
-- [ ] deleted file - file can't be deleted because reporting
+- [x] deleted file Note: file can't be deleted without callback because reporting
 - [x] renamed to report.php
 - [x] replaced for reportthis  
 - [ ] safety check
@@ -131,6 +134,7 @@ Now: All members, authors, betareader, site admins
 - [ ] loaded in config.php
 - [ ] includes/dbfunctions.php 
 - [x] rss.php
+- [x] includes/categorieslist.php
 
 
 **Messages/Custom pages**
@@ -153,11 +157,14 @@ Now: All members, authors, betareader, site admins
 
 
 **Ajax user search**
++ category selection
 
 - [x] fixed with debug mode 
 - [x] load scripts in e107 header
 - [ ] styling
-- [ ] scripts  
+- [x] scripts  
+
+
 
 **Replace header with HEADERF**
 
@@ -175,6 +182,7 @@ Now: All members, authors, betareader, site admins
 **Added footer with FOOTERF**
 - [x] viestory.php
 - [x] browse.php
+- [x] stories.php
 
 **Printing**
 - [x] issue with FOOTERF - data are removed FIXED css issue
@@ -186,11 +194,14 @@ Now: All members, authors, betareader, site admins
  
 
 **Date format issue** 
-conversion to timestamp...
+conversion to timestamp... ???
 -  
 
 **efiction tpls**
 - [ ] created skin e107, default from Epiphany
 - [ ] added Sommerbrise skin + e107 theme
+
+
+**e107 routing**
 
 

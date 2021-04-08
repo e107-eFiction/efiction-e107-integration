@@ -43,6 +43,7 @@ class eFiction
 {
     private $text = null;
     private $caption = null;
+	static $userlinks = array();
 
     /**
      * @var array Array with
@@ -91,6 +92,74 @@ class eFiction
 
         return $ratingslist;
     }
+
+	public static function pagelinks()  {
+
+		$linkquery =  "SELECT * from #fanfiction_pagelinks ORDER BY link_access ASC" ;
+		$records  =  e107::getDb()->retrieve($linkquery, true); 
+		
+		$userlinks = array();
+		foreach($records AS $link) {
+			if($link['link_access'] && !isMEMBER) continue;
+			if($link['link_access'] == 2 && uLEVEL < 1) continue;
+			if($link['link_name'] == "register" && isMEMBER) continue;
+			if(strpos($link['link_url'], "http://") === false && strpos($link['link_url'], "https://") === false) 
+			$link['link_url'] = e_HTTP.$link['link_url'];
+
+			$linkname =$link['link_name'];
+			$link_start  = "<a href=\"".$link['link_url']."\" title=\"".$link['link_text']."\"".($link['link_target'] ? " target=\"_blank\"" : "").(!empty($link['link_key']) ? " accesskey='".$link['link_key']."'" : "").($current == $link['link_name'] ? " id=\"current\"" : "").">";
+
+			self::$userlinks[$link['link_name']] = $link_start.$link['link_text']."</a>";
+			 
+
+			$pagelinks[$link['link_name']] = array(
+				"id" => $link['link_id'], 
+				"text" => $link['link_text'], 
+				"url" => $link['link_url'], 
+				"key" => $link['link_key'], 
+    			"link" => $link_start.$link['link_text']."</a>");
+
+		}
+
+        return $pagelinks;
+	}
+
+	public static function userlinks()  {
+
+		$linkquery =  "SELECT * from #fanfiction_pagelinks ORDER BY link_access ASC" ;
+		$records  =  e107::getDb()->retrieve($linkquery, true); 
+		
+		$userlinks = array();
+		foreach($records AS $link) {
+			if($link['link_access'] && !isMEMBER) continue;
+			if($link['link_access'] == 2 && uLEVEL < 1) continue;
+			if($link['link_name'] == "register" && isMEMBER) continue;
+			if(strpos($link['link_url'], "http://") === false && strpos($link['link_url'], "https://") === false) 
+			$link['link_url'] = e_HTTP.$link['link_url'];
+
+			$linkname =$link['link_name'];
+			$link_start  = "<a href=\"".$link['link_url']."\" title=\"".$link['link_text']."\"".($link['link_target'] ? " target=\"_blank\"" : "").(!empty($link['link_key']) ? " accesskey='".$link['link_key']."'" : "").($current == $link['link_name'] ? " id=\"current\"" : "").">";
+
+			$userlinks[$link['link_name']] = $link_start.$link['link_text']."</a>";
+		}
+
+		return $userlinks;
+	}
+	
+
+	public function get_userlink($key = NULL) {
+		
+		
+		if(null === $key)
+		{   
+			$ret = self::userlinks();
+			return $ret;
+		}
+
+		$links = self::userlinks();
+		$ret = isset($links[$key]) ? $links[$key] : NULL;
+		return $ret;
+	}
     
     /*
     $settingsresults = dbquery("SELECT * FROM ".$settingsprefix."fanfiction_settings WHERE sitekey = '".$sitekey."'");

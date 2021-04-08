@@ -99,30 +99,46 @@
             $stories = $this->var;
  
             $ratingslist = efiction::ratingslist();
+		 
             $rating = $stories['rid'];
+			$row['story_sef'] = eHelper::title2sef($stories['title'],'dashl');
+
         	$warningtext = !empty($ratingslist[$rating]['warningtext']) ? addslashes(strip_tags($ratingslist[$rating]['warningtext'])) : "";
-      		if(empty($ratingslist[$rating]['ratingwarning']))
-      			$title = "<a href=\""._BASEDIR."viewstory.php?sid=".$stories['sid']."\">".$stories['title']."</a>";
+			
+			if(empty($ratingslist[$rating]['ratingwarning'])) {
+			    $row['story_query'] = "sid=".$stories['sid'];
+				$url = e107::url("efiction", "viewstory", $row, "full");  
+      			$title = "<a href='{$url}'>".$stories['title']."</a>";
+			}	  
       		else {
-      			$warning = "";
+      			$warning = "";  print_a($ratingslist[$rating]['warningtext']);
       			$warninglevel = sprintf("%03b", $ratingslist[$rating]['ratingwarning']);
+				 
       			if($warninglevel[2] && !e107::getSession()->is(SITEKEY."_warned_{$rating}")) {
-      				$location = "viewstory.php?sid=".$stories['sid']."&amp;warning=$rating";
+					$row['story_query'] = "sid=".$stories['sid']."&warning=$rating"; 
+      				$location = e107::url("efiction", "viewstory", $row, "full"); 
       				$warning = $warningtext;
       			}
-      			if($warninglevel[1] && !$ageconsent && !e107::getSession()->is(SITEKEY."_ageconsent")) {
-      				$location = "viewstory.php?sid=".$stories['sid']."&amp;ageconsent=ok&amp;warning=$rating";
+      			elseif($warninglevel[1] && !$ageconsent && !e107::getSession()->is(SITEKEY."_ageconsent")) {
+					$row['story_query'] = "sid=".$stories['sid']."&ageconsent=ok&warning=$rating";
+      				$location = e107::url("efiction", "viewstory", $row, "full"); 
       				$warning = _AGECHECK." - "._AGECONSENT." ".$warningtext." -- 1";
       			}
-      			if($warninglevel[0] && !isMEMBER) {
+      			elseif($warninglevel[0] && !isMEMBER) {
       				$location = "member.php?action=login&amp;sid=".$stories['sid'];
       				$warning = _RUSERSONLY." - $warningtext";		
       			}
-      			if(!empty($warning)) {
+      			
+				if(!empty($warning)) {
       				$warning = preg_replace("@'@", "\'", $warning);
-      				$title = "<a href=\"javascript:if(confirm('".$warning."')) location = '"._BASEDIR."$location'\">".$stories['title']."</a>";
+
+      				$title = "<a href=\"javascript:if(confirm('".$warning."')) location = '$location'\">".$stories['title']."</a>";
       			}
-      			else $title = "<a href=\""._BASEDIR."viewstory.php?sid=".$stories['sid']."\">".$stories['title']."</a>";
+      			else {
+					  $row['story_query'] = "sid=".$stories['sid'];
+					  $url = e107::url("efiction", "viewstory", $row, "full");  
+					  $title = "<a href='{$url}'>".$stories['title']."</a>";
+				}
       		}
             return $title;
         }
