@@ -93,68 +93,37 @@
         /* TODO: sessions */
         public function sc_story_title_link($parm)
         {
-            global $sitekey, $userdata;
+            global $ageconsent, $disablepopups;
+            
             $tp = e107::getParser();
             $stories = $this->var;
-
-            // $ageconsent - session
-            // $disablepopups fanfiction_settings ?notused
-            if (class_exists('efiction')) {
-                $ratingslist = efiction::ratingslist();
-
-                /* $ageconsent */
-                /*
-                  if(!isset($_SESSION[$sitekey."_agecontsent"])) $ageconsent = $userdata['ageconsent'];
-                   else $ageconsent = $_SESSION[$sitekey."_agecontsent"];
-                 */
-
-                $session_name = $sitekey.'_ageconsent';
-                if (USER) {
-                    //$ageconsent = e107::getSession()->get($session_name);
-                    $ageconsent = $_SESSION[$session_name];
-                } elseif (!isset($_SESSION[$sitekey.'_agecontsent'])) {
-                    $ageconsent = $_SESSION[$session_name];
-                }
-
-                /*
-                elseif(e107::getSession()->is($session_name)) {
-                   $ageconsent = e107::getSession()->get($session_name);
-                }
-                */
-                $ageconsent = $_SESSION[$session_name];
-                //var_dump(e107::getSession()->is($session_name));
-
-                $disablepopups = false;
-                $rating = $stories['rid'];
-                $warningtext = !empty($ratingslist[$rating]['warningtext']) ? $tp->toHTML($ratingslist[$rating]['warningtext']) : '';
-
-                if (empty($ratingslist[$rating]['ratingwarning'])) {
-                    $title = '<a href="'.e_BASE.'viewstory.php?sid='.$stories['sid'].'">'.$stories['title'].'</a>';
-                } else {
-                    $warning = '';
-                    $warninglevel = sprintf('%03b', $ratingslist[$rating]['ratingwarning']);
-                    if ($warninglevel[2] && !isset($_SESSION[SITEKEY.'_warned'][$rating])) {
-                        $location = 'viewstory.php?sid='.$stories['sid']."&amp;warning=$rating";
-                        $warning = $warningtext;
-                    }
-                    if ($warninglevel[1] && !$ageconsent && empty($_SESSION[SITEKEY.'_ageconsent'])) {
-                        $location = 'viewstory.php?sid='.$stories['sid']."&amp;ageconsent=ok&amp;warning=$rating";
-                        $warning = _AGECHECK.' - '._AGECONSENT.' '.$warningtext.' -- 1';
-                    }
-                    if ($warninglevel[0] && !isMEMBER) {
-                        //FIX THIS!!!
-                        //$location = 'member.php?action=login&amp;sid='.$stories['sid'];
-                        $location = e_LOGIN.'&amp;sid='.$stories['sid'];
-                        $warning = _RUSERSONLY." - $warningtext";
-                    }
-                    if (!empty($warning)) {
-                        $warning = preg_replace("@'@", "\'", $warning);
-                        $title = "<a href=\"javascript:if(confirm('".$warning."')) location = '".e_BASE."$location'\">".$stories['title'].'</a>';
-                    } else {
-                        $title = '<a href="'.e_BASE.'viewstory.php?sid='.$stories['sid'].'">'.$stories['title'].'</a>';
-                    }
-                }
-            }
+ 
+            $ratingslist = efiction::ratingslist();
+            $rating = $stories['rid'];
+        	$warningtext = !empty($ratingslist[$rating]['warningtext']) ? addslashes(strip_tags($ratingslist[$rating]['warningtext'])) : "";
+      		if(empty($ratingslist[$rating]['ratingwarning']))
+      			$title = "<a href=\""._BASEDIR."viewstory.php?sid=".$stories['sid']."\">".$stories['title']."</a>";
+      		else {
+      			$warning = "";
+      			$warninglevel = sprintf("%03b", $ratingslist[$rating]['ratingwarning']);
+      			if($warninglevel[2] && !e107::getSession()->is(SITEKEY."_warned_{$rating}")) {
+      				$location = "viewstory.php?sid=".$stories['sid']."&amp;warning=$rating";
+      				$warning = $warningtext;
+      			}
+      			if($warninglevel[1] && !$ageconsent && !e107::getSession()->is(SITEKEY."_ageconsent")) {
+      				$location = "viewstory.php?sid=".$stories['sid']."&amp;ageconsent=ok&amp;warning=$rating";
+      				$warning = _AGECHECK." - "._AGECONSENT." ".$warningtext." -- 1";
+      			}
+      			if($warninglevel[0] && !isMEMBER) {
+      				$location = "member.php?action=login&amp;sid=".$stories['sid'];
+      				$warning = _RUSERSONLY." - $warningtext";		
+      			}
+      			if(!empty($warning)) {
+      				$warning = preg_replace("@'@", "\'", $warning);
+      				$title = "<a href=\"javascript:if(confirm('".$warning."')) location = '"._BASEDIR."$location'\">".$stories['title']."</a>";
+      			}
+      			else $title = "<a href=\""._BASEDIR."viewstory.php?sid=".$stories['sid']."\">".$stories['title']."</a>";
+      		}
             return $title;
         }
 

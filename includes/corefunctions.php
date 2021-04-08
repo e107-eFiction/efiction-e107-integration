@@ -234,8 +234,9 @@ function format_link($text, $title = "", $target = 0) {
 
 // Because this is used in places other than the listings of stories, we're setting it up as a function to be called as needed.
 function title_link($stories) {
-	global $ratingslist, $ageconsent, $disablepopups;
+	global  $ageconsent, $disablepopups;
 
+    $ratingslist = efiction::ratingslist();
 	$rating = $stories['rid'];
 	$warningtext = !empty($ratingslist[$rating]['warningtext']) ? addslashes(strip_tags($ratingslist[$rating]['warningtext'])) : "";
 		if(empty($ratingslist[$rating]['ratingwarning']))
@@ -243,11 +244,11 @@ function title_link($stories) {
 		else {
 			$warning = "";
 			$warninglevel = sprintf("%03b", $ratingslist[$rating]['ratingwarning']);
-			if($warninglevel[2] && !isset($_SESSION[SITEKEY."_warned"][$rating])) {
+			if($warninglevel[2] && !e107::getSession()->is(SITEKEY."_warned/{$rating}")) {
 				$location = "viewstory.php?sid=".$stories['sid']."&amp;warning=$rating";
 				$warning = $warningtext;
 			}
-			if($warninglevel[1] && !$ageconsent && empty($_SESSION[SITEKEY.'_ageconsent'])) {
+			if($warninglevel[1] && !$ageconsent && !e107::getSession()->is(SITEKEY."_ageconsent")) {
 				$location = "viewstory.php?sid=".$stories['sid']."&amp;ageconsent=ok&amp;warning=$rating";
 				$warning = _AGECHECK." - "._AGECONSENT." ".$warningtext." -- 1";
 			}

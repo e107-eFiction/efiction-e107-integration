@@ -116,7 +116,7 @@ if(!defined("_CHARSET")) exit( );
 	else if(isADMIN && uLEVEL < 4) $adminlinks .= " [<a href=\""._BASEDIR."admin.php?action=featured&amp;feature=".$stories['sid']."\">"._FEATURED."</a>]";
 	$tpl->assign("toc", "<a href=\""._BASEDIR."viewstory.php?sid=".$stories['sid']."&amp;index=1\">"._TOC."</a>");
 	$tpl->assign("oddeven", ($count % 2 ? "odd" : "even"));
-	$tpl->assign("reportthis", "[<a href=\""._BASEDIR."contact.php?action=report&amp;url=viewstory.php?sid=".$stories['sid']."\">"._REPORTTHIS."</a>]");
+	$tpl->assign("reportthis", "[<a href=\""._BASEDIR."report.php?action=report&amp;url=viewstory.php?sid=".$stories['sid']."\">"._REPORTTHIS."</a>]");
 	if(isADMIN && uLEVEL < 4) $tpl->assign("adminlinks", "<div class=\"adminoptions\"><span class='label'>"._ADMINOPTIONS.":</span> ".$adminlinks."</div>");
 	else if(isMEMBER && (USERUID == $stories['uid'] || array_key_exists(USERUID, $stories['coauthors']))) $tpl->assign("adminlinks", "<div class=\"adminoptions\"><span class='label'>"._OPTIONS.":</span> ".$adminlinks."</div>");
 	$count++;

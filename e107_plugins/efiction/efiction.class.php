@@ -89,6 +89,32 @@ class eFiction
 
         return $ratingslist;
     }
+    
+    /*
+    $settingsresults = dbquery("SELECT * FROM ".$settingsprefix."fanfiction_settings WHERE sitekey = '".$sitekey."'");
+$settings = dbassoc($settingsresults);
+if(!defined("SITEKEY")) define("SITEKEY", $settings['sitekey']);
+unset($settings['sitekey']);
+if(!defined("TABLEPREFIX")) define("TABLEPREFIX", $settings['tableprefix']);
+unset($settings['tableprefix']);
+define("STORIESPATH", $settings['storiespath']);
+unset($settings['storiespath']);
+foreach($settings as $var => $val) {
+	$$var = stripslashes($val);
+	$settings[$var] = htmlspecialchars($val);
+}
+*/
+
+    public static function settings()
+    {
+        $settingslist = array();
+       // $settingsquery = 'SELECT * FROM #fanfiction_settings WHERE sitekey = '".$sitekey."'  ;
+        $settingsquery = "SELECT * FROM #fanfiction_settings "  ;
+        $settings = e107::getDb()->retrieve($settingsquery);
+         
+        return $settings;
+    }    
+    
 
     /**
      * Compiles the prefs for usage within the class.

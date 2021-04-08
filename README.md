@@ -56,14 +56,27 @@ Note: added possibility to template caption to be able have the same look
 - [x] added fanfiction_authors table to efiction plugin for adding user_id field, maybe will be removed, but with thousands users is easier manage authors directly 
 - [x] fixed member.php
 - [] checke e107 admin login via another user
+- [] delete user/login functionality
 
 TODO: wait for fix e107 extended fields, otherwise admin will need to connect users and authors
 
-**Age controls**:
+**Sessions**
 
-- [] replacing sessions 
+- [] replacing session _viewed // This session variable is used to track the story views
+- [] replacing session _ageconsent
+- [] replacing session _warned
+
+**Age controls**:
 - [] moving to UEA data? 
-- [] update title shortcode?  
+- [] update title shortcode? 
+- [] fix viewstory.php
+
+**Sitesettings**
+
+- [] e107 admin
+- [] efiction class
+- [] TABLEPREFIX
+- [] $displayprofile = Settings/Display/Select 'yes' if you wish for the member's profile to be displayed at all times on the viewuser page.
 
 
 **TinyMce**:
@@ -99,12 +112,12 @@ TODO: wait for fix e107 extended fields, otherwise admin will need to connect us
 
 **Level access control**
 
-New rules:
+Rules:
 Level 0 - all (visitors)
-Level 1 - user (any user log in e107)
-Level 2 - author (only user connected with author table)
-Level 3 - admins
-Level 4 - main admin
+Level 1 - is Super Administer with access to everything.
+Level 2 - can edit user 
+Level 3 -  
+Level 4 - is an authorized author for archives with submissions turned off
 Maybe replaced with class assess later.
 
 - [] change default data for panels
@@ -129,3 +142,27 @@ Now: All members, authors, betareader, site admins
 - [] add link with list
 - [] remove AUTORPREFS field
 - [] remove module
+
+**Remove functionality**
+- [] efiction debug
+- [] efiction benchmark
+- [x] efiction installation
+- [] separated config page
+- [] maintenance
+
+
+**Replace db functions**
+- [] loaded in config.php
+
+
+**Messages/Custom pages**
+
+- [x] Admin UI
+- [x] Default data
+- [] remove 'maintenance', not needed
+
+**global variables**
+
+- [] $viewed
+- [] $ageconsent
+- [] 

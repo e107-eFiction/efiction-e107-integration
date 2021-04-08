@@ -28,15 +28,7 @@ if(isset($_GET['benchmark'])) {
 	$start = ((float)$usec + (float)$sec);
 }
 $headerSent = false;
-if(get_magic_quotes_gpc()){
-	foreach($_POST as $var => $val) {
-		$_POST[$var] = is_array( $val ) ? array_map( 'stripslashes', $val ) : stripslashes( $val );
-	}
-	foreach($_GET as $var => $val) {
-		$_GET[$var] = is_array( $val ) ? array_map( 'stripslashes', $val ) : stripslashes( $val );
-	}
-}
-
+ 
 // Defines the character set for your language/location
 define ("_CHARSET", "utf-8");
 
@@ -54,15 +46,6 @@ foreach ($_GET as $v) {
 	}
 }
 unset($v);
-
-if(!isset($_SESSION)) session_start();
-// clear the global variables if register globals is on.
-if(ini_get('register_globals')) {
-	$arrayList = array_merge($_SESSION, $_GET, $_POST, $_COOKIE);
-	foreach($arrayList as $k => $v) {
-		unset($GLOBALS[$k]);
-	}
-}                   
  
 Header('Cache-Control: private, no-cache, must-revalidate, max_age=0, post-check=0, pre-check=0');
 header ("Pragma: no-cache"); 
@@ -75,13 +58,10 @@ while (!file_exists($folder_level."header.php")) { $folder_level .= "../"; }
 if(!defined("_BASEDIR")) define("_BASEDIR", $folder_level);
 
 @ include_once(_BASEDIR."config.php");
-if(empty($sitekey)) {
-	header("Location: install/install.php");
-	exit( );
-}
+@ include_once(_BASEDIR."class2.php");
+
+$settings = efiction::settings();
  
-$settingsresults = dbquery("SELECT * FROM ".$settingsprefix."fanfiction_settings WHERE sitekey = '".$sitekey."'");
-$settings = dbassoc($settingsresults);
 if(!defined("SITEKEY")) define("SITEKEY", $settings['sitekey']);
 unset($settings['sitekey']);
 if(!defined("TABLEPREFIX")) define("TABLEPREFIX", $settings['tableprefix']);
@@ -93,11 +73,10 @@ foreach($settings as $var => $val) {
 	$settings[$var] = htmlspecialchars($val);
 }
 
-if(isset($_GET['debug'])) $debug = 1;
+ 
 if(!$displaycolumns) $displaycolumns = 1; // shouldn't happen, but just in case.
 if($words) $words = explode(", ", $words);
 else $words = array( );
- 
 
 if(isset($_GET['action'])) $action = strip_tags($_GET['action']);
 else $action = false;
@@ -130,46 +109,16 @@ if(isset($PHP_SELF)) $PHP_SELF = htmlspecialchars(descript($PHP_SELF), ENT_QUOTE
 
 // Set these variables to start.
 $agecontsent = false; $viewed = false; 
-
+ 
 require_once("includes/get_session_vars.php");
-@ include_once(_BASEDIR."class2.php");
  
-$v = explode(".", $version);
-include("version.php");
-$newV = explode(".", $version);
-//if($v[0] == $newV[0] && ($v[1] < $newV[1] || (isset($newV[2]) && $v[2] < $newV[2]))) {
-foreach($newV AS $k => $l) {
-	if($newV[$k] > $v[$k] || (!empty($newV[$k]) && empty($v[$k]))) {
-		if(isADMIN && basename($_SERVER['PHP_SELF']) != "update.php") {
-			header("Location: update.php");
-			exit( );
-		}
-		else if(!isADMIN && basename($_SERVER['PHP_SELF']) != "maintenance.php" && !(isset($_GET['action']) && $_GET['action'] == "login")) {
-			header("Location: maintenance.php");
-			exit( );
-		}
-	}
-}
+$blocks = efiction::blocks();
  
-if($maintenance && !isADMIN && basename($_SERVER['PHP_SELF']) != "maintenance.php" && !(isset($_GET['action']) && $_GET['action'] == "login")) {
-	header("Location: maintenance.php");
-	exit( );
-}
-
-$blockquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_blocks");
-while($block = dbassoc($blockquery)) {
-	$blocks[$block['block_name']] = unserialize($block['block_variables']);
-	$blocks[$block['block_name']]['title'] = $block['block_title'];
-	$blocks[$block['block_name']]['file'] = $block['block_file'];
-	$blocks[$block['block_name']]['status'] = $block['block_status'];
-}
-
-// This session variable is used to track the story views
-if(isset($_SESSION[SITEKEY."_viewed"])) $viewed = $_SESSION[SITEKEY."_viewed"];
-
-if(isset($_GET['ageconsent'])) $_SESSION[SITEKEY."_ageconsent"] = 1;
-if(isset($_GET['warning'])) $_SESSION[SITEKEY."_warned"][$_GET['warning']] = 1;
-
+if(e107::getSession()->is(SITEKEY."_viewed")) $viewed = e107::getSession()->get(SITEKEY."_viewed"); 
+ 
+if(isset($_GET['ageconsent'])) e107::getSession()->set(SITEKEY."_ageconsent", 1);
+if(isset($_GET['warning'])) e107::getSession()->set(SITEKEY."_warned_{$_GET['warning']}", 1);
+ 
 if(file_exists("languages/{$language}.php")) require_once ("languages/{$language}.php");
 else require_once ("languages/en.php");
 
@@ -434,10 +383,5 @@ a.pophelp:hover span{ /*the span will display just on :hover state*/
 echo "</head>";
 $headerSent = true;
 include (_BASEDIR."includes/class.TemplatePower.inc.php");
-if($debug == 1) {
-	@ error_reporting(E_ALL);
-	echo "\n<!-- \$_SESSION \n"; print_r($_SESSION); echo " -->";
-	echo "\n<!-- \$_COOKIE \n"; print_r($_COOKIE); echo " -->";
-	echo "\n<!-- \$_POST \n"; print_r($_POST); echo " -->";
-}
+ 
 ?>

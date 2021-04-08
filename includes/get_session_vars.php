@@ -37,7 +37,7 @@ if(USERID) {  //fully managed by e107, user is logged in
 			define("USERPENNAME", $authordata['penname']);
 			// the following line fixes missing authorpref rows
 	 
-			define("uLEVEL", $userdata['level']);
+			define("uLEVEL", $authordata['level']);
 			define("isADMIN", uLEVEL > 0 ? true : false);
 			define("isMEMBER", true);
 			if(EMPTY($_SESSION[$sitekey."_agecontsent"])) $ageconsent = $authordata['ageconsent'];
