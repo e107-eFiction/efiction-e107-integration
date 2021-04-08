@@ -74,8 +74,12 @@ if(empty($chapter)) $chapter = isset($_GET['chapter']) && isNumber($_GET['chapte
 		include("includes/pagesetup.php");
 		$tpl->assign("output", "<div id='pagetitle'>".$title."</div>".write_error($warning));
 		$tpl->printToScreen( );
-		dbclose( );
-		exit( ); 
+		//$output = $tpl->getOutputContent( );  
+        $output = e107::getParser()->parseTemplate($output, true); 
+        echo $output;
+        dbclose( );
+        require_once(FOOTERF);					// render the footer (everything after the main content area)
+        exit; 
 	}
 	// End 
 
@@ -144,9 +148,13 @@ if($action == "printable") {
 		if(empty($c['validated']) && !isADMIN && USERUID != $c['uid'] && !in_array(USERUID, $stories['coauthors'])) {
 			$warning = write_error(_ACCESSDENIED);
 			$tpl->assign("archivedat", $warning);
-			$tpl->printToScreen( );
-			dbclose( );
-			exit( );
+			//$tpl->printToScreen( );
+			$output = $tpl->getOutputContent( );  
+            $output = e107::getParser()->parseTemplate($output, true); 
+            echo $output;
+            dbclose( );
+            require_once(FOOTERF);					// render the footer (everything after the main content area)
+            exit; 
 		}
 
 		if($c['inorder'] == 1 && !empty($storyinfo['storynotes'])) {

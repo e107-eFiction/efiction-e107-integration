@@ -54,6 +54,8 @@ TODO: wait for fix e107 extended fields, otherwise admin will need to connect us
 - [ ] efiction class
 - [ ] TABLEPREFIX
 - [ ] $displayprofile = Settings/Display/Select 'yes' if you wish for the member's profile to be displayed at all times on the viewuser page.
+- [ ] {sitename}
+- [ ] {slogan} 
 
 **remove config.php**
 - [x] rss.php
@@ -79,10 +81,16 @@ TODO: wait for fix e107 extended fields, otherwise admin will need to connect us
 - [x] random block as e107 menu `{MENU: path=efiction/efiction_recent}`
 - [x] featured block as e107 menu `{MENU: path=efiction/efiction_featured}`
 - [x] recent block as e107 menu `{MENU: path=efiction/efiction_random}`
-- [x] skinchange removed
+- [x] skinchange removed {skinchange_content}
 - [x] login block removed
 - [x] {menu_content} as e107 shortcode {EFICTION_MENU_CONTENT}
-
+- [ ] {search_content}
+- [ ] {info_title} {info_content}
+- [ ] {online_content}  
+- [ ] {shoutbox_title}{shoutbox_content}
+- [ ] {poll_title} {poll_content} 
+- [ ] {news_title} {news_content} 
+ 
 **Panels**
 
 - [ ] e107 Admin UI
@@ -93,6 +101,9 @@ TODO: wait for fix e107 extended fields, otherwise admin will need to connect us
 - [ ] e107 Admin UI
 - [ ] fixed default Data
 - [x] {EFICTION_LINK=xxx} for replacing {adminarea} {login} {logout}
+- [x] {EFICTION_LINK=rss} for {rss}
+- [ ] ?? xml
+- [ ] {newsarchive}
 
 **Level access control**
 
@@ -147,6 +158,9 @@ Now: All members, authors, betareader, site admins
 - [x] Admin UI
 - [x] Default data
 - [ ] remove 'maintenance', not needed
+- [ ] {welcome}
+- [ ] {footer}
+
 
 **global variables**
 
@@ -159,6 +173,7 @@ Now: All members, authors, betareader, site admins
 - [x] $defaultskin 
 - [x] $globalskin 
 - [x] $skinnew
+- [ ] $displaycolumns
 
 
 **Ajax user search**
@@ -185,7 +200,7 @@ Now: All members, authors, betareader, site admins
 - [x] rating popup
 
 **Added footer with FOOTERF**
-- [x] viestory.php
+- [x] viestory.php, fixed 3x.
 - [x] browse.php
 - [x] stories.php
 

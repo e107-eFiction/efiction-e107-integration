@@ -104,9 +104,9 @@ if(file_exists("languages/{$language}.php")) require_once ("languages/{$language
 else require_once ("languages/en.php");
 
 //$skindir = _BASEDIR."default_tpls";
-$skindir = _BASEDIR."skins/Epiphany";
+//$skindir = _BASEDIR."skins/Epiphany";
 //$skindir = _BASEDIR."skins/Sommerbrise";
-//$skindir = _BASEDIR."skins/e107";
+$skindir = _BASEDIR."skins/e107";
 
 
 if(USERUID) {
@@ -204,8 +204,8 @@ else {
 $inlinestyle = '
 #columncontainer { margin: 1em auto; width: auto; padding: 5%;}
 #browseblock, #memberblock { width: 100%; padding: 0; margin: 0; float: left; border: 0px solid transparent; }
-.column { float: left; width: ".($colwidth - 1)."%; }
-html>body .column { width: $colwidth%; }
+.column { float: left; width: ".('.$colwidth.' - 1)."%; }
+html>body .column { width: '.$colwidth.'%; }
 .cleaner { clear: both; height: 1px; font-size: 1px; margin: 0; padding: 0; background: transparent; }
 #settingsform { margin: 0; padding: 0; border: none; }
 #settingsform FORM { width: 100%; margin: 0 10%; }
