@@ -74,36 +74,32 @@ class efiction_shortcodes extends e_shortcode
         return $text;
     }
 
-    /* {EFICTION_MENU_CONTENT} */
+    
+
+    /*  {EFICTION_LINK} */
+    public function sc_efiction_link($parm = '')
+    {
+		if($parm == "") { return ''; }
+
+	    $efiction = e107::getSingleton('efiction', e_PLUGIN.'efiction/efiction.class.php');
+		 
+		$link = $efiction->get_userlink($parm);
+		
+		if($link) {    
+			return "<li class=".$parm.">".$link."</li>";
+		}
+		else return "";
+		 
+    }
+
+
+	/* {EFICTION_MENU_CONTENT} */
     public function sc_efiction_menu_content()
     {
-        $block = 'menu';
-        $block = e107::getDb()->retrieve('fanfiction_blocks', '*', 'block_name = "menu" ');
-
-        $blocks['menu'] = unserialize($block['block_variables']);
-        $blocks['menu']['title'] = $block['block_title'];
-        $blocks['menu']['file'] = $block['block_file'];
-        $blocks['menu']['status'] = $block['block_status'];
-
-        $linkquery = 'SELECT * from #fanfiction_pagelinks ORDER BY link_access ASC' ;
-        $links = e107::getDB()->retrieve($linkquery, true);
-
-        foreach ($links as $link) {
-            if ($link['link_access'] && !isMEMBER) {
-                continue;
-            }
-            if ($link['link_access'] == 2 && uLEVEL < 1) {
-                continue;
-            }
-            if ($link['link_name'] == 'register' && isMEMBER) {
-                continue;
-            }
-            if (strpos($link['link_url'], 'http://') === false && strpos($link['link_url'], 'https://') === false) {
-                $link['link_url'] = _BASEDIR.$link['link_url'];
-            }
-
-            $pagelinks[$link['link_name']] = array('id' => $link['link_id'], 'text' => $link['link_text'], 'url' => $link['link_url'], 'key' => $link['link_key'], 'link' => '<a href="'.$link['link_url'].'" title="'.$link['link_text'].'"'.(!empty($link['link_key']) ? " accesskey='".$link['link_key']."'" : '').($link['link_target'] ? ' target="_blank"' : '').($current == $link['link_name'] ? ' id="current"' : '').'>'.$link['link_text'].'</a>');
-        }
+ 
+		//$block = $efiction->get_block('menu'); 
+		$blocks = efiction::blocks();
+        $pagelinks = efiction::pagelinks();
 
         foreach ($blocks['menu']['content'] as $page) {
             if (isset($pagelinks[$page]['link'])) {
@@ -116,22 +112,6 @@ class efiction_shortcodes extends e_shortcode
         }
 
         return $content;
-    }
-
-    /*  {EFICTION_LINK} */
-    public function sc_efiction_link($parm = '')
-    {
-		if($parm == "") { return ''; }
-
-	    $efiction = e107::getSingleton('efiction', e_PLUGIN.'efiction/efiction.class.php');
-		 
-		$link = $efiction->get_userlink($parm);
-		
-		if($link) {    
-			return "<li>".$link."</li>";
-		}
-		else return "";
-		 
     }
 
  

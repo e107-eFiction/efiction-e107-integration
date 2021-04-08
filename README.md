@@ -81,6 +81,7 @@ TODO: wait for fix e107 extended fields, otherwise admin will need to connect us
 - [x] recent block as e107 menu `{MENU: path=efiction/efiction_random}`
 - [x] skinchange removed
 - [x] login block removed
+- [x] {menu_content} as e107 shortcode {EFICTION_MENU_CONTENT}
 
 **Panels**
 

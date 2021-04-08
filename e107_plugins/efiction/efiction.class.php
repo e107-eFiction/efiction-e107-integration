@@ -160,6 +160,19 @@ class eFiction
 		$ret = isset($links[$key]) ? $links[$key] : NULL;
 		return $ret;
 	}
+
+	public function get_block($key = NULL) {
+
+		if(null === $key)
+		{   
+			$ret = self::blocks();
+			return $ret;
+		}
+
+		$blocks = self::blocks(); 
+		$ret = isset($blocks[$key]) ? $blocks[$key] : NULL;
+		return $ret;
+	}	
     
     /*
     $settingsresults = dbquery("SELECT * FROM ".$settingsprefix."fanfiction_settings WHERE sitekey = '".$sitekey."'");
