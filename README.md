@@ -18,7 +18,7 @@ for other solution use e107 bridge or alt_auth plugin. It is not enough for me n
 **Integration**
 
 - [x] using class2.php
-- [] _BASEDIR fix 
+- [ ] _BASEDIR fix ? e_HTTP ? e_BASE it is problem with SEF-URLs
 - [x] front languages
 
 **User/registration system**:
@@ -194,8 +194,12 @@ Now: All members, authors, betareader, site admins
  
 
 **Date format issue** 
+
 conversion to timestamp... ???
--  
+- [x] authors table (date of author creation)
+- [ ] stories table
+- [ ] chapters tabel
+  
 
 **efiction tpls**
 - [ ] created skin e107, default from Epiphany
@@ -203,5 +207,9 @@ conversion to timestamp... ???
 
 
 **e107 routing**
+
+
+**Alphabet fix**
+
 
 
