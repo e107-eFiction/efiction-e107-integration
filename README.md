@@ -18,6 +18,8 @@ for other solution use e107 bridge or alt_auth plugin. It is not enough for me n
 **Integration**
 
 - [x] using class2.php
+- [] _BASEDIR fix 
+- [x] front languages
 
 **User/registration system**:
 

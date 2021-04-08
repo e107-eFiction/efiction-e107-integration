@@ -43,6 +43,7 @@ if(!defined("_BASEDIR")) define("_BASEDIR", $folder_level);
 
 $settings = efiction::settings();
  
+ 
 if(!defined("SITEKEY")) define("SITEKEY", $settings['sitekey']);
 unset($settings['sitekey']);
 if(!defined("TABLEPREFIX")) define("TABLEPREFIX", $settings['tableprefix']);
@@ -62,9 +63,8 @@ else $words = array( );
 if(isset($_GET['action'])) $action = strip_tags($_GET['action']);
 else $action = false;
 
-if(file_exists(_BASEDIR."languages/{$language}.php")) include (_BASEDIR."languages/{$language}.php");
-else include (_BASEDIR."languages/en.php");
-
+e107::lan('efiction');
+ 
 include_once(_BASEDIR."includes/queries.php");
 include_once(_BASEDIR."includes/corefunctions.php");
 
