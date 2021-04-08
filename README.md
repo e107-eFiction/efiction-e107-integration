@@ -28,8 +28,12 @@ for other solution use e107 bridge or alt_auth plugin. It is not enough for me n
 - [x] separating users and authors, separated USERID and USERUID, isMEMBER is only for authors
 - [x] added fanfiction_authors table to efiction plugin for adding user_id field, maybe will be removed, but with thousands users is easier manage authors directly 
 - [x] fixed member.php
-- [ ] checke e107 admin login via another user
+- [ ] check e107 admin login via another user
 - [ ] delete user/login functionality
+- [x] deleted login block - replaced by e107 login_menu
+- [ ] check delete authors functionality
+- [ ] add delete or set level 4 for deleted e107 user
+- [ ] check in clanmmember plugin for creating clanmember... it is similar solution.  
 
 TODO: wait for fix e107 extended fields, otherwise admin will need to connect users and authors
 
@@ -199,7 +203,7 @@ conversion to timestamp... ???
 - [x] authors table (date of author creation)
 - [ ] stories table
 - [ ] chapters tabel
-  
+
 
 **efiction tpls**
 - [ ] created skin e107, default from Epiphany
