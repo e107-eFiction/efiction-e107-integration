@@ -15,38 +15,9 @@ for other solution use e107 bridge or alt_auth plugin. It is not enough for me n
 1. e107 theme used directly with eFiction frontend (and admin)
 2. Separated e107 users and eFiction authors - make relation between them (alias members / authors / admins)
 
-**Integration steps:** 
+**Integration**
 
-1. add `@ include_once(_BASEDIR."class2.php");`
-after  `require_once("includes/get_session_vars.php");`
-Note: after solving sessions, it could be moved upper
-
-
-2. replace recent block 
-`<h3>{recent_title}</h3>{recent_content}`
-with
-`{MENU: path=efiction/recent}`
-
-and output (tested index.php)
-from:
-`$tpl->printToScreen();`
-
-to:
-```
-$output = $tpl->getOutputContent( );  
-$output = e107::getParser()->parseTemplate($output, true); 
-echo $output;
-```
-
-Note: added possibility to template caption to be able have the same look 
-
-3. replace random block
-`{random_content} `with `{MENU: path=efiction/random}`
-
-4. replace featured block
-`{featured_content}` with `{MENU: path=efiction/featured}`
-
-5. removed $defaultskin, $globalskin, $skinnew etc
+- [x] using class2.php
 
 **User/registration system**:
 
@@ -62,14 +33,14 @@ TODO: wait for fix e107 extended fields, otherwise admin will need to connect us
 
 **Sessions**
 
-- [ ] replacing session _viewed // This session variable is used to track the story views
-- [ ] replacing session _ageconsent
-- [ ] replacing session _warned
+- [x] replacing session _viewed // This session variable is used to track the story views
+- [x] replacing session _ageconsent
+- [x] replacing session _warned
 
 **Age controls**:
 - [ ] moving to UEA data? 
-- [ ] update title shortcode? 
-- [ ] fix viewstory.php
+- [x] update title shortcode? 
+- [x] fix viewstory.php
 
 **Sitesettings**
 
@@ -99,9 +70,9 @@ TODO: wait for fix e107 extended fields, otherwise admin will need to connect us
 - [ ] e107 Admin UI
 - [ ] fixed default Data 
 - [ ] blocks options settings
-- [ ] random block as e107 menu
-- [ ] featured block as e107 menu
-- [ ] recent block as e107 menu
+- [x] random block as e107 menu `{MENU: path=efiction/efiction_recent}`
+- [x] featured block as e107 menu `{MENU: path=efiction/efiction_featured}`
+- [x] recent block as e107 menu `{MENU: path=efiction/efiction_random}`
 
 **Panels**
 
@@ -174,18 +145,22 @@ Now: All members, authors, betareader, site admins
 - [ ] $displaycolumns
 - [ ] $tinyMCE
 - [ ] $colwidth
+- [x] $defaultskin 
+- [x] $globalskin 
+- [x] $skinnew
+
 
 **Ajax user search**
 
-- [ ] fixed with debug mode 
-- [ ] load scripts in e107 header
+- [x] fixed with debug mode 
+- [x] load scripts in e107 header
 - [ ] styling
 - [ ] scripts  
 
 **Replace header with HEADERF**
 
 //testing new theme without losing functionality !!! 
-- [ ] javascript.js
+- [x] javascript.js
 - [x] rss.php - debug mode issue
 - [ ] coauthors search - works, just wrong position, propably due bootstrap css 
 - [x] categories selection in edit form
@@ -211,3 +186,9 @@ Now: All members, authors, betareader, site admins
 **Date format issue** 
 conversion to timestamp...
 -  
+
+**efiction tpls**
+- [ ] created skin e107, default from Epiphany
+- [ ] added Sommerbrise skin + e107 theme
+
+

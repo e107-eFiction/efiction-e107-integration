@@ -36,6 +36,8 @@
  * #     https://www.e107sk.com          #
  * #######################################
  */
+ 
+e107::lan('efiction');
 
 class eFiction
 {
