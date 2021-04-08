@@ -20,6 +20,7 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
+error_reporting(0);
 define("_BASEDIR", "");
   include_once("includes/dbfunctions.php");    
   include_once("config.php"); 
@@ -45,7 +46,7 @@ while($rate = dbassoc($ratlist)) {
 	$ratings[$rate['rid']] = $rate['rating'];
 }
 
-  $rss="<?xml version=\"1.0\" encoding=\""._CHARSET."\"?>\n"; 
+  $rss="<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"; 
   $rss.="<rss version=\"2.0\">\n"; 
   $rss.="<channel>\n"; 
   $rss.="<copyright>Copyright ".date("Y")."</copyright>\n"; 

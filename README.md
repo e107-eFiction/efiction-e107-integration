@@ -165,4 +165,40 @@ Now: All members, authors, betareader, site admins
 
 - [] $viewed
 - [] $ageconsent
-- [] 
+- [] $headerSent
+- [] $displaycolumns
+- [] $tinyMCE
+- [] $colwidth
+
+**Ajax user search**
+
+- [] fixed with debug mode 
+- [] load scripts in e107 header
+- [] styling
+- [] scripts  
+
+**Replace header with HEADERF**
+
+//testing new theme without losing functionality !!! 
+- [] javascript.js
+- [x] rss.php - debug mode issue
+- [] coauthors search - works, just wrong position, propably due bootstrap css 
+- [x] categories selection in edit form
+- [x] categories selection in search form
+- [] check extra_header.php functionality
+- [x] printing 
+- [x] inline css
+- [x] rating popup
+
+**Added footer with FOOTERF**
+- [x] viestory.php
+- [x] browse.php
+
+**Printing**
+- [x] issue with FOOTERF - data are removed FIXED css issue
+- [x] issue with HEADERF - printer is not called FIXED
+- [] label conflict with bootstrap - change to ff-label
+
+**RSS feed**
+- [] charset set (it is wrong on original site) - adding hardcoded utf-8 didn'help
+ 
