@@ -52,10 +52,15 @@ if(empty($chapter)) $chapter = isset($_GET['chapter']) && isNumber($_GET['chapte
 	$rating = dbassoc($ratingquery);
 	$warninglevel = sprintf("%03b", $rating['ratingwarning']);
 	$title = $storyinfo['title'];
+    
 	if($warninglevel[0] && !isMEMBER) $warning = _RUSERSONLY."<br />";
-	else if($warninglevel[1] && empty($_SESSION[SITEKEY."_ageconsent"]) && !$ageconsent) $warning = _AGECHECK."<br /><a href='viewstory.php?sid=".$storyinfo['sid']."&amp;ageconsent=ok&amp;warning=".$storyinfo['rid']."'>".$rating['warningtext']."</a>";
-	else if($warninglevel[2] && empty($_SESSION[SITEKEY."_warned"][$storyinfo['rid']])) {
-		$warning = $rating['warningtext']."<br /><a href='viewstory.php?sid=".$storyinfo['sid']."&amp;warning=".$storyinfo['rid']."'>"._CONTINUE."</a>";
+    //else if($warninglevel[1] && empty($_SESSION[SITEKEY."_ageconsent"]) && !$ageconsent)
+	else if($warninglevel[1] && !e107::getSession()->is(SITEKEY."_ageconsent")  && !$ageconsent )  { 
+        $warning = _AGECHECK."<br /><a href='viewstory.php?sid=".$storyinfo['sid']."&amp;ageconsent=ok&amp;warning=".$storyinfo['rid']."'>".$rating['warningtext']."</a>";
+	}
+    // else if($warninglevel[2] && empty($_SESSION[SITEKEY."_warned"][$storyinfo['rid']])) {
+    else if($warninglevel[2] && !e107::getSession()->is(SITEKEY."_warned_{$storyinfo['rid']}") ) {
+        $warning = $rating['warningtext']."<br /><a href='viewstory.php?sid=".$storyinfo['sid']."&amp;warning=".$storyinfo['rid']."'>"._CONTINUE."</a>";
 	}
 
 	// if the above checks came back with a warning, output an error page.
@@ -404,5 +409,5 @@ $output = $tpl->getOutputContent( );
 $output = e107::getParser()->parseTemplate($output, true); 
 echo $output;
 dbclose( );
-
-?>
+require_once(FOOTERF);					// render the footer (everything after the main content area)
+exit; 

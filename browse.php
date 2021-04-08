@@ -347,4 +347,5 @@ $tpl->assign("output", $output);
 $output = $tpl->getOutputContent( );  
 $output = e107::getParser()->parseTemplate($output, true); 
 echo $output;
-?>
+require_once(FOOTERF);					// render the footer (everything after the main content area)
+exit; 

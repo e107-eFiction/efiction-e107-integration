@@ -31,27 +31,8 @@ $headerSent = false;
  
 // Defines the character set for your language/location
 define ("_CHARSET", "utf-8");
-
-// Prevent possible XSS attacks via $_GET.
-foreach ($_GET as $v) {
-	if(preg_match('@<script[^>]*?>.*?</script>@si', $v) ||
-		preg_match("'@<iframe[^>]*?>.*?</script>@si'", $v) ||
-		preg_match("'@<applet[^>]*?>.*?</script>@si'", $v) ||
-		preg_match("'@<meta[^>]*?>.*?</script>@si'", $v) ||
-		preg_match('@<[\/\!]*?[^<>]*?>@si', $v) ||
-		preg_match('@<style[^>]*?>.*?</style>@siU', $v) ||
-		preg_match('@<![\s\S]*?--[ \t\n\r]*>@', $v)) {
-		include("languages/en.php"); // no language set yet, so default to English.	
-		die (_POSSIBLEHACK);
-	}
-}
-unset($v);
  
-Header('Cache-Control: private, no-cache, must-revalidate, max_age=0, post-check=0, pre-check=0');
-header ("Pragma: no-cache"); 
-header ("Expires: 0"); 
-header("Content-Type: text/html; charset="._CHARSET);
-
+ 
 // Locate config.php and set the basedir path
 $folder_level = "";
 while (!file_exists($folder_level."header.php")) { $folder_level .= "../"; }
@@ -123,6 +104,7 @@ if(file_exists("languages/{$language}.php")) require_once ("languages/{$language
 else require_once ("languages/en.php");
 
 $skindir = _BASEDIR."default_tpls";
+//$skindir = _BASEDIR."skins/Epiphany";
 
 if(USERUID) {
 	$prefs = dbquery("SELECT sortby, storyindex, tinyMCE FROM ".TABLEPREFIX."fanfiction_authorprefs WHERE uid = '".USERUID."'");
@@ -157,153 +139,33 @@ if($current == "viewuser" && isNumber($uid)) {
 	list($penname) = dbrow($author);
 	$titleinfo = "$sitename :: $penname";
 }
-echo _DOCTYPE."<html><head>";
-echo "<meta charset='utf-8' />";
-if(!isset($titleinfo)) $titleinfo = "$sitename :: $slogan";
-if(isset($metaDesc)) echo "<meta name='description' content='$metaDesc'>";
-echo "<title>$titleinfo</title>";
 
-// ---------- Favicon ---------
-if (file_exists($skindir."/images/favicon.ico")) 
-{
-	echo "<link rel='icon' href='".THEME_ABS."favicon.ico' type='image/x-icon' />\n<link rel='shortcut icon' href='".THEME_ABS."favicon.ico' type='image/xicon' />\n";
-}
-elseif (file_exists(_BASEDIR."favicon.ico")) 
-{
-	echo "<link rel='icon' href='"._BASEDIR."favicon.ico' type='image/x-icon' />\n<link rel='shortcut icon' href='"._BASEDIR."favicon.ico' type='image/xicon' />\n";
-}
- 
-
-echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset="._CHARSET."\">";
-if(!isset($_GET['action']) || $_GET['action'] != "printable") {
-echo "<script language=\"javascript\" type=\"text/javascript\" src=\""._BASEDIR."includes/javascript.js\"></script>
-<link rel=\"alternate\" type=\"application/rss+xml\" title=\"$sitename RSS Feed\" href=\""._BASEDIR."rss.php\">";
-if(!empty($tinyMCE)) {
-	echo "<script language=\"javascript\" type=\"text/javascript\" src=\""._BASEDIR."tinymce/js/tinymce/tinymce.min.js\"></script>
-	<script language=\"javascript\" type=\"text/javascript\"><!--";
-	$tinymessage = dbquery("SELECT message_text FROM ".TABLEPREFIX."fanfiction_messages WHERE message_name = 'tinyMCE' LIMIT 1");
-	list($tinysettings) = dbrow($tinymessage);
-	if(!empty($tinysettings) && $current != "adminarea") {
-		echo $tinysettings;
-	}
-	else {
-		echo "
-	tinymce.init({
-  		selector: 'textarea:not(.mceNoEditor)',
-  		menubar: false,
-		language: '$language',
-  		theme: 'modern',
-		skin: 'lightgray',
-		min_height: 200,
-		plugins: [
-		    'autolink lists link image charmap paste preview hr anchor pagebreak',
-		    'searchreplace wordcount visualblocks visualchars code fullscreen',
-		    'insertdatetime media nonbreaking save table contextmenu directionality',
-		    'emoticons template textcolor colorpicker textpattern imagetools toc textcolor table'
-		],
-		paste_word_valid_elements: 'b,strong,i,em,h1,h2,u,p,ol,ul,li,a[href],span,color,font-size,font-color,font-family,mark,table,tr,td',
-		  		paste_retain_style_properties : 'all',
-		paste_strip_class_attributes: 'none',
-		toolbar1: 'undo redo | insert styleselect | bold italic underline strikethrough | link image | alignleft aligncenter alignright alignjustify',
-		toolbar2: 'preview | bullist numlist | forecolor backcolor emoticons | fontselect |  fontsizeselect wordcount',
-		image_advtab: true,
-		templates: [
-		    { title: 'Test template 1', content: 'Test 1' },
-		    { title: 'Test template 2', content: 'Test 2' }
-		],
-		content_css: [
-		    '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
-		    '//www.tinymce.com/css/codepen.min.css'
-		],";
-		if(USERUID) 
-			echo "		external_image_list_url : '".STORIESPATH."/".USERUID."/images/imagelist.js',";
-		echo "
-		theme_modern_resizing: true,".($current == "adminarea" ? "\n\t\tentity_encoding: 'raw'" : "\n\t\tinvalid_elements: 'script,object,applet,iframe'")."
-   });
-	
-";
-	}
-	echo "
-var tinyMCEmode = true;
-	function toogleEditorMode(id) {
-		var elm = document.getElementById(id);
-
-		if (tinyMCE.getInstanceById(id) == null)
-			tinyMCE.execCommand('mceAddControl', false, id);
-		else
-			tinyMCE.execCommand('mceRemoveControl', false, id);
-	}
-";
-/*echo "
-var tinyMCEmode = true;
-	function toogleEditorMode(id) {
-		var elm = document.getElementById(id);
-
-		if (tinyMCE.get(id) == null)
-			tinyMCE.execCommand('mceAddControl', false, id);
-		else
-			tinyMCE.execCommand('mceRemoveControl', false, id);
-	}
-";*/
-echo " --></script>";
-}
-}
-if(isset($displayform) && $displayform == 1) {
-echo "<script language=\"javascript\" type=\"text/javascript\" src=\""._BASEDIR."includes/xmlhttp.js\"></script>";
-echo "<script language=\"javascript\" type=\"text/javascript\">
-lang = new Array( );
-
-lang['Back2Cats'] = '"._BACK2CATS."';
-lang['ChooseCat'] = '"._CHOOSECAT."';
-lang['Categories'] = '"._CATEGORIES."';
-lang['Characters'] = '"._CHARACTERS."';
-lang['MoveTop'] = '"._MOVETOP."';
-lang['TopLevel'] = '"._TOPLEVEL."';
-lang['CatLocked'] = '"._CATLOCKED."';
-basedir = '"._BASEDIR."';
-
-categories = new Array( );
-characters = new Array( );
-\n";
-/*
-	$result = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_categories ORDER BY leveldown, displayorder");
-$x = 0;
-	while($category = dbassoc($result)) {
-		echo "categories[$x] = new category(".$category['parentcatid'].", ".$category['catid'].", \"". str_replace('"', '\"', stripslashes($category['category']))."\", ".$category['locked'].", ".$category['displayorder'].");\r\n";
-		$catlist[$category['catid']] = array("name" => stripslashes($category['category']), "pid" => $category['parentcatid'], "locked" => (isADMIN ? 0 : $category['locked']), "order" => $category['displayorder'], "leveldown" => $category['leveldown']);
-		$x++;
-	}
-$x = 0;
-	$result = dbquery("SELECT charname, catid, charid FROM ".TABLEPREFIX."fanfiction_characters ORDER BY charname");
-	while($char = dbassoc($result)) {
-		echo "characters[$x] = new character(".$char['charid'].", ".$char['catid'].", \"".str_replace('"', '\"', stripslashes($char['charname']))."\");\r\n";
-		$charlist[$char['charid']] = array("name" => stripslashes($char['charname']), "catid" => $char['catid']);
-		$x++;
-	}
-*/
-echo "</script>";
-}
-if(file_exists("extra_header.php")) include_once("extra_header.php");
-if(file_exists("$skindir/extra_header.php")) include_once("$skindir/extra_header.php");
 if(!$displaycolumns) $displaycolumns = 1;
 $colwidth = floor(100/$displaycolumns);
 if(!empty($_GET['action']) && $_GET['action'] == "printable") {
-	if(file_exists("$skindir/printable.css")) echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"$skindir/printable.css\">";
-	else echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"default_tpls/printable.css\">";
-	echo "<script type='text/javascript'>
-<!--
-if (window.print) {
-    window.print() ;  
-} else {
-    var WebBrowser = '<OBJECT ID=\"WebBrowser1\" WIDTH=0 HEIGHT=0 CLASSID=\"CLSID:8856F961-340A-11D0-A96B-00C04FD705A2\"></OBJECT>';
-document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
-    WebBrowser1.ExecWB(6, 2);//Use a 1 vs. a 2 for a prompting dialog box    WebBrowser1.outerHTML = \"\";  
+
+	if(file_exists( $skindir."/printable.css")) e107::css('url', $skindir.'/printable.css');  
+	else e107::css('url', 'default_tpls/printable.css');   
+    
+    $inlinescript = "
+    if (window.print) {
+        window.print() ;  
+      } else {
+          var WebBrowser = '<OBJECT ID=\"WebBrowser1\" WIDTH=0 HEIGHT=0 CLASSID=\"CLSID:8856F961-340A-11D0-A96B-00C04FD705A2\"></OBJECT>';
+      document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
+          WebBrowser1.ExecWB(6, 2);//Use a 1 vs. a 2 for a prompting dialog box    WebBrowser1.outerHTML = \"\";  
+      }";
+      
+   e107::js('footer-inline', $inlinescript);    
+      
 }
--->
-</script>";
+
+if(!empty($_GET['action']) && $_GET['action'] == "printable") {
+e107::js('url', _BASEDIR."includes/javascript.js" );
 }
 else {
-echo "<style type=\"text/css\">
+
+$inlinestyle = '
 #columncontainer { margin: 1em auto; width: auto; padding: 5%;}
 #browseblock, #memberblock { width: 100%; padding: 0; margin: 0; float: left; border: 0px solid transparent; }
 .column { float: left; width: ".($colwidth - 1)."%; }
@@ -373,14 +235,16 @@ a.pophelp:hover span{ /*the span will display just on :hover state*/
 }
 .multiSelect {
 	width: 300px;
+} ;';
+
+e107::css('inline', $inlinestyle);
+e107::css('url', $skindir.'/style.css');
 }
 
-</style>
-<link rel='stylesheet' type='text/css' href='$skindir/style.css' /> \n
-<meta name='viewport' content='width=device-width, initial-scale=1.0' />
-";
-}
-echo "</head>";
+
+require_once(HEADERF); 
+ 
+ 
 $headerSent = true;
 include (_BASEDIR."includes/class.TemplatePower.inc.php");
  
