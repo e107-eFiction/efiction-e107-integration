@@ -14,6 +14,7 @@ for other solution use e107 bridge or alt_auth plugin. It is not enough for me n
 ### Goals:  
 1. e107 theme used directly with eFiction frontend (and admin)
 2. Separated e107 users and eFiction authors - make relation between them (alias members / authors / admins)
+3. **Priority:** get searchform outside efiction to be able to use it on e107 pages
 
 **Integration**
 
@@ -160,6 +161,7 @@ Now: All members, authors, betareader, site admins
 - [ ] remove 'maintenance', not needed
 - [ ] {welcome}
 - [ ] {footer}
+- [ ] 'copyright' $copy 
 
 
 **global variables**
@@ -174,6 +176,7 @@ Now: All members, authors, betareader, site admins
 - [x] $globalskin 
 - [x] $skinnew
 - [ ] $displaycolumns
+- [ ] $disablesorts
 
 
 **Ajax user search**
@@ -224,12 +227,33 @@ conversion to timestamp... ???
 **efiction tpls**
 - [ ] created skin e107, default from Epiphany
 - [ ] added Sommerbrise skin + e107 theme
+- [ ] removed efiction TemplatePower browse-index, replaced with tablerender()
 
+
+**Constants**
+- [x] _DOCTYPE, removed, not needed with e107 header
+- [ ] TABLEPREFIX, replace with MPREFIX or #
+
+
+**Page Setup**
+- [x] Category list efiction::catlist();
+- [x] Characters list efiction::charlist();
+- [x] Classes list efiction::classlist();
+- [x] Class types list efiction::classtypelist();
+- [x] Ratings list efiction::ratingslist();
 
 **e107 routing**
 
 
 **Alphabet fix**
+
+
+**Search Form e107 version for homepage**
+[x] e107 alternative for homepage, added type home, hidden {EFICTION_SORTFORM} = block sortform
+[x] fixed category selection script
+[x] hardcoded template added, used the same shortcodes as efiction, replaced efiction templating, testing with new theme
+[x] added home landing page after searchin browse/home
+
 
 
 

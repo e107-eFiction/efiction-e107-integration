@@ -111,7 +111,7 @@
       			$title = "<a href='{$url}'>".$stories['title']."</a>";
 			}	  
       		else {
-      			$warning = "";  print_a($ratingslist[$rating]['warningtext']);
+      	 
       			$warninglevel = sprintf("%03b", $ratingslist[$rating]['ratingwarning']);
 				 
       			if($warninglevel[2] && !e107::getSession()->is(SITEKEY."_warned_{$rating}")) {

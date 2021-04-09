@@ -87,7 +87,7 @@ if(isset($_POST['submit'])) {
 			$slogan = escapestring(descript(strip_tags($_POST['newslogan'])));
 			$url = escapestring(descript(strip_tags($_POST['newsiteurl'])));
 			// if the http:// is missing add it.
-			if(substr($url, 0, 7) != "http://") $url = "http://".$url;
+			//if(substr($url, 0, 4) != "http") $url = "http://".$url;  TODO solve http vs https
 			// we also want to check for a trailing slash.
 			if(substr($url, -1, 1) == "/") $url = substr($url, 0, strlen($url) - 1);
 			$tableprefix = escapestring(descript(strip_tags($_POST['newtableprefix'])));

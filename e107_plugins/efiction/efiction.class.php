@@ -36,14 +36,12 @@
  * #     https://www.e107sk.com          #
  * #######################################
  */
- 
- 
 
 class eFiction
 {
     private $text = null;
     private $caption = null;
-	static $userlinks = array();
+    public static $userlinks = array();
 
     /**
      * @var array Array with
@@ -65,8 +63,53 @@ class eFiction
         $this->initPrefs();
     }
 
+    public static function catlist()
+    {
+        $catlist = array();
+        $catquery = "SELECT * FROM #fanfiction_categories ORDER BY leveldown, displayorder";
+        $result = e107::getDb()->retrieve($catquery, true);
+        foreach ($result as $cat) {
+            $catlist[$cat['catid']] = array('name' => stripslashes($cat['category']), 'pid' => $cat['parentcatid'], 'order' => $cat['displayorder'], 'locked' => $cat['locked'], 'leveldown' => $cat['leveldown']);
+        }
+        return $catlist;
+    }
+
+    public static function charlist()
+    {
+        $charlist = array();
+        $charquery = "SELECT charname, catid, charid FROM #fanfiction_characters ORDER BY charname";
+        $result = e107::getDb()->retrieve($charquery, true);
+        foreach ($result as $char) {
+            $charlist[$char['charid']] = array('name' => stripslashes($char['charname']), 'catid' => $char['catid']);
+        }
+        return $charlist;
+    }
+
+    public static function classlist()
+    {
+        $classlist = array();
+        $classquery = "SELECT * FROM #fanfiction_classes ORDER BY class_name";
+        $result = e107::getDb()->retrieve($classquery, true);
+        foreach ($result as $class) {
+            $classlist[$class['class_id']] = array("type" => $class['class_type'], "name" => stripslashes($class['class_name']));
+        }
+        return $classlist;
+    }	
+
+    public static function classtypelist()
+    {
+        $classtypelist = array();
+        $classlistquery = "SELECT * FROM #fanfiction_classtypes ORDER BY classtype_name";
+        $result = e107::getDb()->retrieve($classlistquery, true);
+        foreach ($result as $type) {
+            $classtypelist[$type['classtype_id']] = array("name" => $type['classtype_name'], "title" => stripslashes($type['classtype_title']));
+        }
+        return $classtypelist;
+    }	
+
     public static function blocks()
     {
+        $blocks = array();
         $blockquery = 'SELECT * FROM #fanfiction_blocks';
         $result = e107::getDb()->retrieve($blockquery, true);
 
@@ -93,87 +136,95 @@ class eFiction
         return $ratingslist;
     }
 
-	public static function pagelinks()  {
+    public static function pagelinks()
+    {
+        $linkquery = 'SELECT * from #fanfiction_pagelinks ORDER BY link_access ASC' ;
+        $records = e107::getDb()->retrieve($linkquery, true);
 
-		$linkquery =  "SELECT * from #fanfiction_pagelinks ORDER BY link_access ASC" ;
-		$records  =  e107::getDb()->retrieve($linkquery, true); 
-		
-		$userlinks = array();
-		foreach($records AS $link) {
-			if($link['link_access'] && !isMEMBER) continue;
-			if($link['link_access'] == 2 && uLEVEL < 1) continue;
-			if($link['link_name'] == "register" && isMEMBER) continue;
-			if(strpos($link['link_url'], "http://") === false && strpos($link['link_url'], "https://") === false) 
-			$link['link_url'] = e_HTTP.$link['link_url'];
+        $userlinks = array();
+        foreach ($records as $link) {
+            if ($link['link_access'] && !isMEMBER) {
+                continue;
+            }
+            if ($link['link_access'] == 2 && uLEVEL < 1) {
+                continue;
+            }
+            if ($link['link_name'] == 'register' && isMEMBER) {
+                continue;
+            }
+            if (strpos($link['link_url'], 'http://') === false && strpos($link['link_url'], 'https://') === false) {
+                $link['link_url'] = e_HTTP.$link['link_url'];
+            }
 
-			$linkname =$link['link_name'];
-			$link_start  = "<a href=\"".$link['link_url']."\" title=\"".$link['link_text']."\"".($link['link_target'] ? " target=\"_blank\"" : "").(!empty($link['link_key']) ? " accesskey='".$link['link_key']."'" : "").($current == $link['link_name'] ? " id=\"current\"" : "").">";
+            $linkname = $link['link_name'];
+            $link_start = '<a href="'.$link['link_url'].'" title="'.$link['link_text'].'"'.($link['link_target'] ? ' target="_blank"' : '').(!empty($link['link_key']) ? " accesskey='".$link['link_key']."'" : '').($current == $link['link_name'] ? ' id="current"' : '').'>';
 
-			self::$userlinks[$link['link_name']] = $link_start.$link['link_text']."</a>";
-			 
+            self::$userlinks[$link['link_name']] = $link_start.$link['link_text'].'</a>';
 
-			$pagelinks[$link['link_name']] = array(
-				"id" => $link['link_id'], 
-				"text" => $link['link_text'], 
-				"url" => $link['link_url'], 
-				"key" => $link['link_key'], 
-    			"link" => $link_start.$link['link_text']."</a>");
-
-		}
+            $pagelinks[$link['link_name']] = array(
+                'id' => $link['link_id'],
+                'text' => $link['link_text'],
+                'url' => $link['link_url'],
+                'key' => $link['link_key'],
+                'link' => $link_start.$link['link_text'].'</a>');
+        }
 
         return $pagelinks;
-	}
+    }
 
-	public static function userlinks()  {
+    public static function userlinks()
+    {
+        $linkquery = 'SELECT * from #fanfiction_pagelinks ORDER BY link_access ASC' ;
+        $records = e107::getDb()->retrieve($linkquery, true);
 
-		$linkquery =  "SELECT * from #fanfiction_pagelinks ORDER BY link_access ASC" ;
-		$records  =  e107::getDb()->retrieve($linkquery, true); 
-		
-		$userlinks = array();
-		foreach($records AS $link) {
-			if($link['link_access'] && !isMEMBER) continue;
-			if($link['link_access'] == 2 && uLEVEL < 1) continue;
-			if($link['link_name'] == "register" && isMEMBER) continue;
-			if(strpos($link['link_url'], "http://") === false && strpos($link['link_url'], "https://") === false) 
-			$link['link_url'] = e_HTTP.$link['link_url'];
+        $userlinks = array();
+        foreach ($records as $link) {
+            if ($link['link_access'] && !isMEMBER) {
+                continue;
+            }
+            if ($link['link_access'] == 2 && uLEVEL < 1) {
+                continue;
+            }
+            if ($link['link_name'] == 'register' && isMEMBER) {
+                continue;
+            }
+            if (strpos($link['link_url'], 'http://') === false && strpos($link['link_url'], 'https://') === false) {
+                $link['link_url'] = e_HTTP.$link['link_url'];
+            }
 
-			$linkname =$link['link_name'];
-			$link_start  = "<a href=\"".$link['link_url']."\" title=\"".$link['link_text']."\"".($link['link_target'] ? " target=\"_blank\"" : "").(!empty($link['link_key']) ? " accesskey='".$link['link_key']."'" : "").($current == $link['link_name'] ? " id=\"current\"" : "").">";
+            $linkname = $link['link_name'];
+            $link_start = '<a href="'.$link['link_url'].'" title="'.$link['link_text'].'"'.($link['link_target'] ? ' target="_blank"' : '').(!empty($link['link_key']) ? " accesskey='".$link['link_key']."'" : '').($current == $link['link_name'] ? ' id="current"' : '').'>';
 
-			$userlinks[$link['link_name']] = $link_start.$link['link_text']."</a>";
-		}
+            $userlinks[$link['link_name']] = $link_start.$link['link_text'].'</a>';
+        }
 
-		return $userlinks;
-	}
-	
+        return $userlinks;
+    }
 
-	public function get_userlink($key = NULL) {
-		
-		
-		if(null === $key)
-		{   
-			$ret = self::userlinks();
-			return $ret;
-		}
+    public function get_userlink($key = null)
+    {
+        if (null === $key) {
+            $ret = self::userlinks();
+            return $ret;
+        }
 
-		$links = self::userlinks();
-		$ret = isset($links[$key]) ? $links[$key] : NULL;
-		return $ret;
-	}
+        $links = self::userlinks();
+        $ret = isset($links[$key]) ? $links[$key] : null;
+        return $ret;
+    }
 
-	public function get_block($key = NULL) {
+    public function get_block($key = null)
+    {
+        if (null === $key) {
+            $ret = self::blocks();
+            return $ret;
+        }
 
-		if(null === $key)
-		{   
-			$ret = self::blocks();
-			return $ret;
-		}
+        $blocks = self::blocks();
+        $ret = isset($blocks[$key]) ? $blocks[$key] : null;
+        return $ret;
+    }
 
-		$blocks = self::blocks(); 
-		$ret = isset($blocks[$key]) ? $blocks[$key] : NULL;
-		return $ret;
-	}	
-    
     /*
     $settingsresults = dbquery("SELECT * FROM ".$settingsprefix."fanfiction_settings WHERE sitekey = '".$sitekey."'");
 $settings = dbassoc($settingsresults);
@@ -184,21 +235,20 @@ unset($settings['tableprefix']);
 define("STORIESPATH", $settings['storiespath']);
 unset($settings['storiespath']);
 foreach($settings as $var => $val) {
-	$$var = stripslashes($val);
-	$settings[$var] = htmlspecialchars($val);
+    $$var = stripslashes($val);
+    $settings[$var] = htmlspecialchars($val);
 }
 */
 
     public static function settings()
     {
         $settingslist = array();
-       // $settingsquery = 'SELECT * FROM #fanfiction_settings WHERE sitekey = '".$sitekey."'  ;
-        $settingsquery = "SELECT * FROM #fanfiction_settings "  ;
+        // $settingsquery = 'SELECT * FROM #fanfiction_settings WHERE sitekey = '".$sitekey."'  ;
+        $settingsquery = 'SELECT * FROM #fanfiction_settings '  ;
         $settings = e107::getDb()->retrieve($settingsquery);
-         
+
         return $settings;
-    }    
-    
+    }
 
     /**
      * Compiles the prefs for usage within the class.

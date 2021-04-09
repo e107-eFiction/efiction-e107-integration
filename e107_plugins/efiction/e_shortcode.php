@@ -114,5 +114,133 @@ class efiction_shortcodes extends e_shortcode
         return $content;
     }
 
+     /* {EFICTION_SORTFORM} */
+    public function sc_efiction_sortform() {
+    
+    global $disablesorts, $terms, $type;
+  
+		//require_once(__DIR__ . '/../../includes/pagesetup.php');
+		$catlist = efiction::catlist(); 
+		$charlist = efiction::charlist();
+		$classlist = efiction::classlist();
+		$classtypelist = efiction::classtypelist();
+		$ratlist = efiction::ratingslist();
+
+		//temp
+		$template = 
+		'<section class="property-search-section style-two">
+        	<div class="auto-container">
+				<div class="property-search-form-two wow fadeInUp">
+					<div class="title"><h5>Search For Stories</h5></div>
+                		<div class="form-inner">
+								<div id="sortform">{sortbegin} 
+									<div class="row">
+											{categorymenu}
+											{charactermenu1} {charactermenu2} {pairingsmenu} {ratingmenu} {classmenu} {sortmenu} {completemenu} 
+									</div>
+									</div>
+									{sortend}
+								</div> 
+							 
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>';
+
+		$var['sortbegin'] = 
+		"<form style=\"margin:0\" method=\"POST\" id=\"form\" enctype=\"multipart/form-data\" action=\"browse.php?type=recent\">";
+
+		/* CATEGORIES */
+		if($catlist && !in_array("categories", $disablesorts)) {
+			if(count($catid) > 0) $thiscat = $catid[0];
+			else $thiscat = -1;
+			$catmenu = "<div class='form-group col-lg-4 col-md-6 col-sm-12 '><select class=\"textbox \"  name=\"catid\" id=\"catid\"
+			onChange='browseCategories(\"catid\")'><option value=\"-1\">".($thiscat > 0 ? _BACK2CATS : _CATEGORIES)."</option>\n";
+			foreach($catlist as $cat => $info) {
+				if($info['pid'] == $thiscat || $cat == $thiscat) $catmenu .= "<option value=\"$cat\"".($thiscat == $cat ? " selected" : "").">".$info['name']."</option>\n";
+			}
+			$catmenu .= "</select></div>";
+
+			$var['categorymenu'] = $catmenu;
+		}
+
+		if(count($charlist) > 0 && !in_array("characters", $disablesorts)) {
+			$charactermenu1 = "<div class='form-group col-lg-4 col-md-6 col-sm-12 hidden-sm-down '><select class=\"textbox custom-select-box\"  name=\"charlist1\" id=\"charlist1\">\n";
+			$charactermenu1 .= "<option value=\"0\">"._CHARACTERS."</option>\n";
+			$charactermenu2 = "<div class='form-group col-lg-4 col-md-6 col-sm-12 hidden-sm-down '><select class=\"textbox custom-select-box\"  name=\"charlist2\" id=\"charlist2\">\n";
+			$charactermenu2 .= "<option value=\"0\">"._CHARACTERS."</option>\n";
+			$categories[] = -1;
+			//$categories = array_merge($categories, $catid);
+			foreach($charlist as $char => $info) {
+				if(is_array($categories) && in_array($info['catid'], $categories)) {
+					$charactermenu1 .= "<option value=\"$char\"";
+					if(isset($charid[0]) && $charid[0] == $char)
+						$charactermenu1 .= " selected";
+					$charactermenu1 .= ">".$info['name']."</option>\n";
+					$charactermenu2 .= "<option value=\"$char\"";
+					if(isset($charid[1]) && $charid[1] == $char)
+						$charactermenu2 .= " selected";
+					$charactermenu2 .= ">".$info['name']."</option>\n";
+				}
+			}
+			$charactermenu1 .= "</select></div>";
+			$charactermenu2 .= "</select></div>";
+			if($type != "characters") $var['charactermenu1']  = $charactermenu1 ;
+			$var['charactermenu2']  = $charactermenu2 ;
+		}
+
+			// To avoid throwing warnings we need to define $classopts and tell it how many elements it should have.
+			if(!in_array("classes", $disablesorts)) {
+				$classopts = array();
+				foreach($classlist as $id => $vars) {
+					if(empty($classopts[$vars['type']])) $classopts[$vars['type']] = "";
+					$classopts[$vars['type']] = $classopts[$vars['type']]."<option value=\"$id\"".(isset($classin) && is_array($classin) && in_array($id, $classin) ? " selected" : "").">".$vars['name']."</option>\n";
+				}
+				$allclasses = "";
+				foreach($classopts as $type => $opts) {
+					if(empty($type) || in_array($classtypelist[$type]['name'], $disablesorts)) continue; // Because of the way we defined $classopts we need to skip the empty first element.
+					$opts = "<option value=\"\">".$classtypelist[$type]['title']."</option>$opts";
+					$tmp = $classtypelist[$type]['name']."menu"; 
+					$var[$tmp] = "<div class='form-group col-lg-4 col-md-6 col-sm-12'><select name=\"".$classtypelist["$type"]['name']."\">\n$opts</select></div>";
+					$allclasses .= "<div class='form-group col-lg-4 col-md-6 col-sm-12'><select class=\"textbox custom-select-box\"  name=\"".$classtypelist["$type"]['name']."\">\n$opts</select></div>";
+				}
+				$var['classmenu'] = $allclasses;
+			}
+
+			if(!in_array("ratings", $disablesorts)) {
+				$ratingmenu = "<div class='form-group col-lg-4 col-md-6 col-sm-12'><select class=\"textbox custom-select-box\"  name=\"rating\">\n";
+				$ratingmenu .= "<option value=\"0\">"._RATINGS."</option>\n";
+				if(!isset($ratingslist)) $ratingslist = array( );
+				foreach($ratingslist as $r => $rinfo) {
+					$ratingmenu .= "<option value=\"".$r."\"";
+					if(isset($rid) && in_array($r, $rid))
+						$ratingmenu .= " selected";
+					$ratingmenu .= ">".$rinfo['name']."</option>\n";
+				}
+				$ratingmenu .= "</select></div>";
+				$var['ratingmenu'] = $ratingmenu;
+			}
+			if(!in_array("sorts", $disablesorts)) 
+			$var['sortmenu']  = "<div class='form-group col-lg-4 col-md-6 col-sm-12'><select class=\"textbox custom-select-box\"  name=\"sort\">\n<option value=''>"._SORT."</option><option value=\"alpha\"".(!$defaultsort ? " selected" : "").">"._ALPHA."</option>\n<option value=\"update\"".($defaultsort == 1 ? " selected" : "").">"._MOSTRECENT."</option>\n</select></div>";
+
+			if(!in_array("complete", $disablesorts)) 
+			$var['completemenu'] = "<div class='form-group col-lg-4 col-md-6 col-sm-12'><select class=\"textbox custom-select-box\"  name=\"complete\">\n<option value=\"all\"".($complete == "all" ? " selected" : "").">"._ALLSTORIES."</option>\n<option value=\"1\"".($complete == 1 ? " selected" : "").">"._COMPLETEONLY."</option>\n<option value=\"0\"".($complete && $complete != "all" && $complete != 1 ? " selected" : "").">"._WIP."</option>\n</select></div" ;
+	
+
+
+		$var['sortend'] = "
+		<div class=\"form-group col-lg-12 col-md-6 col-sm-12 text-center\">
+		<button type=\"submit\" class=\"theme-btn btn-style-one\" name=\"go\" ><span class=\"btn-title\" >"._GO."</span></button></form>
+		</div>";
+
+
+
+
+
+		$text .= e107::getParser()->simpleParse($template, $var);
+     return $text;
+    
+    }
  
 }

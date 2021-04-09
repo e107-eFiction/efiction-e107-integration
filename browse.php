@@ -29,14 +29,14 @@ if(file_exists("$skindir/browse.tpl")) $tpl = new TemplatePower( "$skindir/brows
 else $tpl = new TemplatePower("default_tpls/browse.tpl");
 if(file_exists("$skindir/listings.tpl")) $tpl->assignInclude("listings", "./$skindir/listings.tpl");
 else $tpl->assignInclude( "listings", "./default_tpls/listings.tpl" );
-$tpl->assignInclude( "header", "./$skindir/header.tpl" );
-$tpl->assignInclude( "footer", "./$skindir/footer.tpl" );
+ 
 
 include("includes/pagesetup.php");
 if(isset($_GET['type'])) $type = descript($_GET['type']);
 else $type = false;
+// print_a($searchterm);  ?search box
+if($type) {  //otherwise just list of available types of browsing see browse folder
 
-if($type) {
 	$query = array();
 	$countquery = array();
 	$scountquery = array();
@@ -214,6 +214,8 @@ if($type) {
 	}
 	$terms = "type=$type".(count($termsList) ? "&amp;" : "").implode("&amp;", $termsList);
 // End query strings
+
+    //subbrowsing... next level... 
 	$panelquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_name = '$type' AND panel_type = 'B' LIMIT 1");
 	if(dbnumrows($panelquery)) {
 		$numrows = 0;
@@ -223,7 +225,9 @@ if($type) {
 		else $output .= write_error(_ERROR);
 	}
 	else $output .= write_error(_ERROR);
-	$terms = implode("&amp;", $termsList);
+	
+    
+    $terms = implode("&amp;", $termsList);
 // Other results
 	$otherresults = array( );
 	$codeblocks = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'otherresults'");
@@ -236,24 +240,27 @@ if($type) {
 		if($scount > 0) $otherresults[] = "<a href='browse.php?type=series&amp;$terms'>$scount "._SERIES."</a>";
 	}
 	if(count($otherresults) > 0 && $type != "titles") $tpl->assign("otherresults", "<div id='otherresults'><span class='label'>"._OTHERRESULTS.":</span> ".implode(", ", $otherresults)."</div>");
-// build our sort menus. if there aren't any stories don't bother with these since they won't be used
+    
+    
+    // build our sort menus. if there aren't any stories don't bother with these since they won't be used
 	if(!empty($numrows) || isset($_POST['go'])) {
 		$tpl->newBlock("sortform");
 		$tpl->assign("sortbegin", "<form style=\"margin:0\" method=\"POST\" id=\"form\" enctype=\"multipart/form-data\" action=\"browse.php?type=$type&amp;$terms\">");
 		if($catlist && !in_array("categories", $disablesorts)) {
 			if(count($catid) > 0) $thiscat = $catid[0];
 			else $thiscat = -1;
-			$catmenu = "<select class=\"textbox\" name=\"catid\" id=\"catid\" onChange=\"browseCategories('catid')\"><option value=\"-1\">".($thiscat > 0 ? _BACK2CATS : _CATEGORIES)."</option>\n";
+			$catmenu = "<div class='form-group col-lg-4 col-md-6 col-sm-12'><select class=\"textbox custom-select-box\"  name=\"catid\" id=\"catid\"
+             onChange='browseCategories(\"catid\")'> <option value=\"-1\">".($thiscat > 0 ? _BACK2CATS : _CATEGORIES)."</option>\n";
 			foreach($catlist as $cat => $info) {
 				if($info['pid'] == $thiscat || $cat == $thiscat) $catmenu .= "<option value=\"$cat\"".($thiscat == $cat ? " selected" : "").">".$info['name']."</option>\n";
 			}
-			$catmenu .= "</select>\n";
+			$catmenu .= "</select></div>";
 			$tpl->assign("categorymenu", $catmenu);
 		}
 		if(count($charlist) > 0 && !in_array("characters", $disablesorts)) {
-			$charactermenu1 = "<select class=\"textbox\" name=\"charlist1\" id=\"charlist1\">\n";
+			$charactermenu1 = "<div class='form-group col-lg-4 col-md-6 col-sm-12'><select class=\"textbox custom-select-box\"  name=\"charlist1\" id=\"charlist1\">\n";
 			$charactermenu1 .= "<option value=\"0\">"._CHARACTERS."</option>\n";
-			$charactermenu2 = "<select class=\"textbox\" name=\"charlist2\" id=\"charlist2\">\n";
+			$charactermenu2 = "<div class='form-group col-lg-4 col-md-6 col-sm-12'><select class=\"textbox custom-select-box\"  name=\"charlist2\" id=\"charlist2\">\n";
 			$charactermenu2 .= "<option value=\"0\">"._CHARACTERS."</option>\n";
 			$categories[] = -1;
 			$categories = array_merge($categories, $catid);
@@ -269,8 +276,8 @@ if($type) {
 					$charactermenu2 .= ">".$info['name']."</option>\n";
 				}
 			}
-			$charactermenu1 .= "</select>";
-			$charactermenu2 .= "</select>";
+			$charactermenu1 .= "</select></div>";
+			$charactermenu2 .= "</select></div>";
 			if($type != "characters") $tpl->assign("charactermenu1"   , $charactermenu1 );
 			$tpl->assign("charactermenu2"   , $charactermenu2 );
 		}
@@ -285,13 +292,13 @@ if($type) {
 			foreach($classopts as $type => $opts) {
 				if(empty($type) || in_array($classtypelist[$type]['name'], $disablesorts)) continue; // Because of the way we defined $classopts we need to skip the empty first element.
 				$opts = "<option value=\"\">".$classtypelist[$type]['title']."</option>$opts";
-				$tpl->assign($classtypelist[$type]['name']."menu", "<select name=\"".$classtypelist["$type"]['name']."\">\n$opts</select>\n");
-				$allclasses .= "<select class=\"textbox\" name=\"".$classtypelist["$type"]['name']."\">\n$opts</select>\n ";
+				$tpl->assign($classtypelist[$type]['name']."menu", "<div class='form-group col-lg-4 col-md-6 col-sm-12'><select name=\"".$classtypelist["$type"]['name']."\">\n$opts</select></div>");
+				$allclasses .= "<div class='form-group col-lg-4 col-md-6 col-sm-12'><select class=\"textbox custom-select-box\"  name=\"".$classtypelist["$type"]['name']."\">\n$opts</select></div>";
 			}
 			$tpl->assign("classmenu", $allclasses);
 		}
 		if(!in_array("ratings", $disablesorts)) {
-			$ratingmenu = "<select class=\"textbox\" name=\"rating\">\n";
+			$ratingmenu = "<div class='form-group col-lg-4 col-md-6 col-sm-12'><select class=\"textbox custom-select-box\"  name=\"rating\">\n";
 			$ratingmenu .= "<option value=\"0\">"._RATINGS."</option>\n";
 			if(!isset($ratingslist)) $ratingslist = array( );
 			foreach($ratingslist as $r => $rinfo) {
@@ -300,23 +307,33 @@ if($type) {
 					$ratingmenu .= " selected";
 				$ratingmenu .= ">".$rinfo['name']."</option>\n";
 			}
-			$ratingmenu .= "</select>\n";
+			$ratingmenu .= "</select></div>";
 			$tpl->assign("ratingmenu"   , $ratingmenu );
 		}
-		if(!in_array("sorts", $disablesorts)) $tpl->assign("sortmenu", "<select class=\"textbox\" name=\"sort\">\n<option value=''>"._SORT."</option><option value=\"alpha\"".(!$defaultsort ? " selected" : "").">"._ALPHA."</option>\n<option value=\"update\"".($defaultsort == 1 ? " selected" : "").">"._MOSTRECENT."</option>\n</select>\n");
-		if(!in_array("complete", $disablesorts)) $tpl->assign("completemenu", "<select class=\"textbox\" name=\"complete\">\n<option value=\"all\"".($complete == "all" ? " selected" : "").">"._ALLSTORIES."</option>\n<option value=\"1\"".($complete == 1 ? " selected" : "").">"._COMPLETEONLY."</option>\n<option value=\"0\"".($complete && $complete != "all" && $complete != 1 ? " selected" : "").">"._WIP."</option>\n</select>\n");
+		if(!in_array("sorts", $disablesorts)) $tpl->assign("sortmenu", "<div class='form-group col-lg-4 col-md-6 col-sm-12'><select class=\"textbox custom-select-box\"  name=\"sort\">\n<option value=''>"._SORT."</option><option value=\"alpha\"".(!$defaultsort ? " selected" : "").">"._ALPHA."</option>\n<option value=\"update\"".($defaultsort == 1 ? " selected" : "").">"._MOSTRECENT."</option>\n</select></div>");
+		if(!in_array("complete", $disablesorts)) $tpl->assign("completemenu", "<div class='form-group col-lg-4 col-md-6 col-sm-12'><select class=\"textbox custom-select-box\"  name=\"complete\">\n<option value=\"all\"".($complete == "all" ? " selected" : "").">"._ALLSTORIES."</option>\n<option value=\"1\"".($complete == 1 ? " selected" : "").">"._COMPLETEONLY."</option>\n<option value=\"0\"".($complete && $complete != "all" && $complete != 1 ? " selected" : "").">"._WIP."</option>\n</select></div");
 		$codeblocks = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'browsesorts'");
 		while($code = dbassoc($codeblocks)) {
 			eval($code['code_text']);
 		}
-		$tpl->assign("sortend"   , "<INPUT type=\"submit\" class=\"button\" name=\"go\" value=\""._GO."\"></form>");
+		$tpl->assign("sortend"   , "<button type=\"submit\" class=\"theme-btn btn-style-one\" name=\"go\" ><span class=\"btn-title\" >"._GO."</span></button></form>");
 		$tpl->gotoBlock("_ROOT");
 	}
+    $tpl->assign("output", $output);
+    $output = $tpl->getOutputContent( ); 
+    e107::getRender()->tablerender($caption, $output, 'browse-index');
+    require_once(FOOTERF);					// render the footer (everything after the main content area)
+    exit;
+   
+
 }
 else  {
-	$output = "<div id='pagetitle'>"._BROWSE."</div>";
-	$panelquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_hidden != '1' AND panel_level ".(isMEMBER ? " < 2" : "= '0'")." AND panel_type = 'B' ORDER BY panel_type DESC, panel_order ASC, panel_title ASC");
-	while($panel = dbassoc($panelquery)) {
+	//$caption = "<div id='pagetitle'>"._BROWSE."</div>"; tablerender caption has already divs
+	$caption = _BROWSE;
+    $panelquery = "SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_hidden != '1' AND panel_level ".(isMEMBER ? " < 2" : "= '0'")." AND panel_type = 'B' ORDER BY panel_type DESC, panel_order ASC, panel_title ASC";
+    $records = e107::getDb()->retrieve($panelquery, true);
+	
+    foreach($records AS $panel) {
 		$browsetypes[$panel['panel_title']] =  "<a href=\"browse.php?type=".$panel['panel_name']."\">".$panel['panel_title']."</a><br />\n";
 	}
 	
@@ -341,11 +358,8 @@ else  {
 		}
 	}
 	$output .= "</div>".($displaycolumns ? "</div>" : "")."<div class='cleaner'>&nbsp;</div></div>";
+    
+    e107::getRender()->tablerender($caption, $output, 'browse-index');
+    require_once(FOOTERF);					// render the footer (everything after the main content area)
+    exit; 
 }
-$tpl->assign("output", $output);
-//$tpl->printToScreen( );
-$output = $tpl->getOutputContent( );  
-$output = e107::getParser()->parseTemplate($output, true); 
-echo $output;
-require_once(FOOTERF);					// render the footer (everything after the main content area)
-exit; 

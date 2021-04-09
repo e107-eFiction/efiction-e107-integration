@@ -1,6 +1,6 @@
 <?php
 
-e107::lan('efiction',true, true);
+e107::lan('efiction',true );
 
 class efiction_adminArea extends e_admin_dispatcher
 {

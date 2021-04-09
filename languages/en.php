@@ -1,7 +1,5 @@
 <?php
-
-// Defines the doc type.  Most people will not need to change this.
-define('_DOCTYPE', '<!doctype html>');
+ 
 
 // Your alphabet list.  If you need other than single characters be sure to enclose the character entity in quotes.  For example: "&#338;"
 define('_OTHER', 'Other');

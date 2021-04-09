@@ -23,8 +23,7 @@
 $current = "challenges";
 if(isset($_GET['action']) && ($_GET['action'] == "add" || $_GET['action'] == "edit")) $displayform = 1;
 
-if(file_exists(_BASEDIR."languages/{$language}_admin.php")) include_once(_BASEDIR."languages/{$language}_admin.php");
-else include_once(_BASEDIR."languages/en_admin.php");
+e107::lan('efiction',true );
 if(file_exists(_BASEDIR."modules/challenges/languages/{$language}.php")) include_once(_BASEDIR."modules/challenges/languages/{$language}.php");
 else include_once(_BASEDIR."modules/challenges/languages/en.php");
 $output = "<div id='pagetitle'>"._CHALLENGEADMIN."</div>";

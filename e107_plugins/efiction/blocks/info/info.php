@@ -12,8 +12,7 @@
 	list($newmember) = dbrow(dbquery("SELECT "._PENNAMEFIELD." as penname FROM "._AUTHORTABLE." WHERE "._UIDFIELD." = '".$stats['newestmember']."' LIMIT 1"));
 	$adminnotices = "";
 	if(isADMIN) {
-		if(file_exists(_BASEDIR."languages/".$language."_admin.php")) include_once(_BASEDIR."languages/".$language."_admin.php");
-		else include_once(_BASEDIR."languages/en_admin.php");
+		e107::lan('efiction',true );
 		$countquery = dbquery("SELECT COUNT(DISTINCT chapid) FROM ".TABLEPREFIX."fanfiction_chapters WHERE validated = '0'");
 		list($count) = dbrow($countquery);
 		if($count) $adminnotices = sprintf(_QUEUECOUNT, $count);

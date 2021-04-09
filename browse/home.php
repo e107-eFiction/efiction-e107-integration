@@ -21,13 +21,8 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 if(!defined("_CHARSET")) exit( );
-
-    // Page Setup
-    $current = "titles";
-	$output .= "<div id=\"pagetitle\">"._TITLES.($let ? " - $let" : "")."</div>".build_alphalinks("browse.php?$terms&amp;", $let);
-
-	if($let == _OTHER) $storyquery .= " AND stories.title REGEXP '^[^a-zčřňšúžř]'";
-	else if(!empty($let)) $storyquery .= " AND stories.title LIKE '$let%'";
-	$storyquery  .= _ORDERBY;
-	$numrows = search(_STORYQUERY.$storyquery, _STORYCOUNT.$storyquery, "browse.php?");
+	$output .= _MOSTRECENT." ".$pagelinks['rss']['link'] ; 
+	$query = $storyquery;
+	$query .= " ORDER BY ".(isset($_REQUEST['sort']) && $_REQUEST['sort'] == "alpha" ? "stories.title" : "updated DESC");
+	$numrows = search(_STORYQUERY.$query, _STORYCOUNT.$countquery, "browse.php?");
 ?>

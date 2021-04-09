@@ -25,12 +25,16 @@ class efiction_url // plugin-folder + '_url'
 	{
 		$config = array();
 
- 
+		$config['adminarea'] = array(
+
+			'sef'			=> 'admin.php', //untill all links are not absolute	 
+		);
+		
 		$config['viewstory'] = array(
             'alias'         => 'viewstory',
 			'regex'			=> 'viewstory/(.*)/(.*)',	 
-			'sef'			=> '{alias}/{story_sef}/{story_query}',  
-			//'sef'			=> 'viewstory.php?{story_sef}&{story_query}', untill all links are not absolute
+			'sefx'			=> '{alias}/{story_sef}/{story_query}',  
+			'sef'			=> 'viewstory.php?{story_sef}&{story_query}', //untill all links are not absolute
 			'redirect'		=> 'viewstory.php?$2', 		// file-path of what to load when the regex returns true.
 		);
 

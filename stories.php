@@ -32,7 +32,7 @@ include ("header.php");
 $tpl = new TemplatePower( file_exists("$skindir/default.tpl") ?  "$skindir/default.tpl" : "default_tpls/default.tpl");
 $tpl->assignInclude( "header", "./$skindir/header.tpl" );
 $tpl->assignInclude( "footer", "./$skindir/footer.tpl" );
-
+ 
 include("includes/pagesetup.php");
 include("includes/storyform.php");
 
@@ -980,4 +980,5 @@ switch($action) {
     $output = e107::getParser()->parseTemplate($output, true); 
     echo $output;
 	dbclose( );
-?>
+require_once(FOOTERF);					// render the footer (everything after the main content area)
+exit; 
