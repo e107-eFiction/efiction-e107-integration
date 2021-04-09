@@ -79,8 +79,12 @@ if(isset($_REQUEST['uid'])) $uid = $_REQUEST["uid"];
 if(isset($uid) && !isNumber($uid)) unset($uid);
 if(isset($_REQUEST['chapid'])) $chapid = $_REQUEST["chapid"];
 if(isset($chapid) && !isNumber($chapid)) unset($chapid);
+
+//alphabet
 $let = false;
 if(isset($_GET['let'])) $let = $_GET['let'];
+if(file_exists("languages/{$language}.php")) require_once ("languages/{$language}.php");
+else require_once ("languages/en.php");
 if(isset($let) && !in_array($let, $alphabet)) $let = false;
 $output = "";
 
@@ -100,8 +104,7 @@ if(e107::getSession()->is(SITEKEY."_viewed")) $viewed = e107::getSession()->get(
 if(isset($_GET['ageconsent'])) e107::getSession()->set(SITEKEY."_ageconsent", 1);
 if(isset($_GET['warning'])) e107::getSession()->set(SITEKEY."_warned_{$_GET['warning']}", 1);
  
-if(file_exists("languages/{$language}.php")) require_once ("languages/{$language}.php");
-else require_once ("languages/en.php");
+
 
 //$skindir = _BASEDIR."default_tpls";
 //$skindir = _BASEDIR."skins/Epiphany";
@@ -204,7 +207,7 @@ else {
 $inlinestyle = '
 #columncontainer { margin: 1em auto; width: auto; padding: 5%;}
 #browseblock, #memberblock { width: 100%; padding: 0; margin: 0; float: left; border: 0px solid transparent; }
-.column { float: left; width: ".('.$colwidth.' - 1)."%; }
+.column { float: left; width: '.($colwidth - 1).'%; }
 html>body .column { width: '.$colwidth.'%; }
 .cleaner { clear: both; height: 1px; font-size: 1px; margin: 0; padding: 0; background: transparent; }
 #settingsform { margin: 0; padding: 0; border: none; }
