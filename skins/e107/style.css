@@ -6,104 +6,11 @@
 		Author E-Mail: nadia@artphilia.de
 */
 
-
-/* import fonts */
-@import url(http://fonts.googleapis.com/css?family=Raleway:400,700,300|Patua+One:400);
-@import url(http://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css); 
-
+ 
 /* import basic settings, IE-fixes and grids */
 @import url(base.css);
 
-/*---------------------------------------------------------------------
-   Basic styles
-------------------------------------------------------------------------*/
-html, body { 
-	height: 100%;
-	}            
-
-body { 
-	background-color: #efa008;
-	background-image: url(images/bg-pattern.png);
-	background-repeat: repeat;
-	text-align: justify;
-	font-family: 'Raleway', Tahoma, sans-serif;
-	font-size: 11pt;
-	color: #323232;
-	margin: 15px 0;
-	padding: 0;
-	}
-
-table { 
-	text-align: justify;
-	}
-tr:nth-child(odd) {
-	background-color: transparent;
-	padding: 6px;
-	}
-tr:nth-child(even), td:nth-child(even) {
-	background-color: transparent;
-	padding: 6px;
-	}
-
-ul li {
-	list-style-type: none;
-	}
-a, a:active, a:visited {
-	font-weight: normal;
-	text-decoration: none;
-	text-transform: none;
-	color: #efa008;
-	-webkit-transition: 1s;
-	-moz-transition: 1s;
-	transition: 1s;
-	}
-a:hover {
-	color: #123456;
-	text-decoration: none;
-	background-color: transparent;
-	}
-
-h1 {
-  border-bottom: 1px solid #989898;
-  color: #5c5c5c;
-	font-family: 'Patua One', cursive;
-	font-size: 26pt;
-	font-weight: normal;
-  margin-bottom: 30px;
-  position: relative;
-  text-align: center;
-}
-h1 span {
-  background-color: #e8e8e8;
-  padding: 0 15px;
-  position: relative;
-  top: 20px;
-}
-h2  {
-	color: #5c5c5c;
-	font-family: 'Patua One', cursive;
-	font-size: 22pt;
-	font-weight: normal;
-	padding: 5px 0;
-	}
-h3 {
- 	border-left: 10px solid #efa008;
-	font-family: 'Patua One', cursive;
-	font-size: 18pt;
-	padding: 5px 10px; 
-	color: #5c5c5c;
-	font-weight: normal;
-	text-transform: normal;
-	}
-
-h4, #pagetitle, .sectionheader {
-	font-size: 16pt;
-	font-family: 'Patua One', cursive;
-	font-weight: normal;
-	text-align: center;
-	padding: 10px 0;
-	color: #5c5c5c;
-}
+ 
 		
 /*---------------------------------------------------------------------
    General page alignment and width
@@ -113,18 +20,7 @@ h4, #pagetitle, .sectionheader {
 	color: #989898;
 	padding: 10px;
 }
-
-.container {
-	background-color: #e8e8e8;
-	background-image: url(images/bg.png);
-	background-repeat: no-repeat;
-	padding: 10px;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	margin-bottom: 20px;
-}
-
+ 
 .content {
 	margin: 80px 0 0 0;
 	text-align: justify;
@@ -330,10 +226,7 @@ a#currentpage {
 	width: 90%;
 	text-align: justify;
 }
-.column, #columncontainer a {
-	font-family: 'Raleway', Tahoma, sans-serif;
-	font-size: 18px;
-	}
+ 
 .copyright {
 	padding: 5px 0;
 	text-transform: uppercase;
