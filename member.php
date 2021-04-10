@@ -33,8 +33,9 @@ else $current = "user";
 // end main function 
  
 if(empty($action) && defined("isMEMBER") AND isMEMBERx ) {
-    print_a($action);
-	$output .= "<div id=\"pagetitle\">"._USERACCOUNT."</div>
+ 
+    
+	$output .= " 
 		<div class=\"tblborder\" id=\"useropts\" style=\"padding: 5px; width: 50%; margin: 1em 25%;\">";
 	$panelquery = "SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_hidden != '1' 
     AND panel_level = '1' AND 
@@ -51,7 +52,7 @@ if(empty($action) && defined("isMEMBER") AND isMEMBERx ) {
 }
 elseif(empty($action) && defined("USERID") AND USERID )  {
     print_a(defined(USERID));
-	$output .= "<div id=\"pagetitle\">"._USERACCOUNT."</div>
+	$output .= " 
 		<div class=\"tblborder\" id=\"useropts\" style=\"padding: 5px; width: 50%; margin: 1em 25%;\">";
 	$panelquery = "SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_hidden != '1' 
     AND panel_level = '0' AND 
@@ -83,7 +84,9 @@ else $output = write_error(_NOTAUTHORIZED);
 $tpl->assign( "output", $output );
 //$tpl->printToScreen();
 $output = $tpl->getOutputContent( );  
+$pagetitle = _USERACCOUNT;
 $output = e107::getParser()->parseTemplate($output, true); 
-echo $output;
-dbclose( );
-?>
+e107::getRender()->tablerender($pagetitle, $output, 'authors-index');
+require_once(FOOTERF);
+dbclose( );				 
+exit; 

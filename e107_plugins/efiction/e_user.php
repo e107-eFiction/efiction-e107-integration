@@ -22,25 +22,31 @@ class efiction_user // plugin-folder + '_user'
 	 */
 	function settings()
 	{
- 
-		$fields = array();
-		$fields['author'] = array('title' => "Author name",  'fieldType' => 'int(11)',   'type' => 'method', 'data'=>'str', 
-		'read'=> e_UC_MEMBER, 
-		'write'=>e_UC_MEMBER );
- 
-        return $fields;
-
+  
 	}
 
 	
 	function profile($udata)  // display on user profile page.
 	{
-		$author_uid = $udata['user_plugin_efiction_author'];
-		$where = " uid = ".$author_uid; 
+ 
+        $tp = e107::getParser();
+        
+        $adata = eauthors::get_author_data_by_user_id($udata['user_id']); 
+ 
+        $author_uid = $adata['uid'];
+        
 		if($author_uid > 0) {
- 			$author = e107::getDb()->retrieve("fanfiction_authors", "penname", $where  );
+      
+            $label = ' <img src="'.e_PLUGIN_ABS.'/efiction_authors/images/icon_128.png" alt="Prekladateľ" style="width: 70px;" > '; 
+            
+            $membersince =  $tp->toDate($adata['date'], 'short');  
+            
+            $text  =  '<div class="agent-form bg-light-blue "><h3><a href="#">'.$adata['penname'].'</a></h3>';
+             
+            $text  .= '</div>';       
+                
 			$var = array(
-				0 => array('label' => "Author name", 'text' => $author )
+				0 => array('label' =>$label, 'text' => $text )
 			);
 		}
  
@@ -53,18 +59,6 @@ class efiction_user // plugin-folder + '_user'
 class efiction_user_form extends e_form
 {
 
-
-	// user_plugin_(plugin-folder)_(fieldname)
-	public function user_plugin_efiction_author($curVal, $mode, $att=array())
-	{
-        //$where = " user_id = ".USERID; 
  
-		$authors = e107::getDb()->retrieve("fanfiction_authors", "uid, penname", $where, true );
-        foreach($authors AS $row)  {
-			$opts[$row['uid']] = $row['penname'] ;
-		}
-		//$opts[0] = 'Not set';
-		return e107::getForm()->select('user_plugin_efiction_author', $opts, $curVal, true);
-	}
    
 }

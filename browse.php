@@ -243,7 +243,9 @@ if($type) {  //otherwise just list of available types of browsing see browse fol
     
     
     // build our sort menus. if there aren't any stories don't bother with these since they won't be used
-	if(!empty($numrows) || isset($_POST['go'])) {
+    /* Custom change fix this */
+    if($type != "series") {
+	if((!empty($numrows) || isset($_POST['go']) )) {
 		$tpl->newBlock("sortform");
 		$tpl->assign("sortbegin", "<form style=\"margin:0\" method=\"POST\" id=\"form\" enctype=\"multipart/form-data\" action=\"browse.php?type=$type&amp;$terms\">");
 		if($catlist && !in_array("categories", $disablesorts)) {
@@ -319,6 +321,7 @@ if($type) {  //otherwise just list of available types of browsing see browse fol
 		$tpl->assign("sortend"   , "<button type=\"submit\" class=\"theme-btn btn-style-one\" name=\"go\" ><span class=\"btn-title\" >"._GO."</span></button></form>");
 		$tpl->gotoBlock("_ROOT");
 	}
+    }
     $tpl->assign("output", $output);
     $output = $tpl->getOutputContent( ); 
     e107::getRender()->tablerender($caption, $output, 'browse-index');
@@ -360,6 +363,6 @@ else  {
 	$output .= "</div>".($displaycolumns ? "</div>" : "")."<div class='cleaner'>&nbsp;</div></div>";
     
     e107::getRender()->tablerender($caption, $output, 'browse-index');
-    require_once(FOOTERF);					// render the footer (everything after the main content area)
+    require_once(FOOTERF);				 
     exit; 
 }

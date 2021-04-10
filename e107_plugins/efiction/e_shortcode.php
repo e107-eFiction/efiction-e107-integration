@@ -51,32 +51,43 @@ class efiction_shortcodes extends e_shortcode
     }
 
     /*
-      {FANFICTION_MESSAGES=welcome} replaced with {WMESSAGE}
-      {FANFICTION_MESSAGES=rules}  used in pages
-      {FANFICTION_MESSAGES=maintenance}
-      {FANFICTION_MESSAGES=printercopyright} in viewstory
-      {FANFICTION_MESSAGES=copyright}
-      {FANFICTION_MESSAGES=thankyou}  in yesletter.php
-      {FANFICTION_MESSAGES=nothankyou} in noletter.php
-
-      custom pages - SELECT * FROM ".TABLEPREFIX."fanfiction_messages WHERE message_id = $edit LIMIT 1");
+      {EFICTION_MESSAGES: key=welcome&strip=1} replaced with {WMESSAGE} removed div and p tags
+      {EFICTION_MESSAGES: key=rules}  used in pages
+      {EFICTION_MESSAGES: key=maintenance}
+      {EFICTION_MESSAGES: key=printercopyright} in viewstory
+      {EFICTION_MESSAGES: key=copyright}
+      {EFICTION_MESSAGES: key=thankyou}  in yesletter.php
+      {EFICTION_MESSAGES: key=nothankyou} in noletter.php
     */
 
-    public function sc_fanfiction_messages($parm = '')
+    public function sc_efiction_messages($parm = NULL)
     {
+     
         if ($parm == '') {
             return '';
         }
-        $query = "SELECT message_text FROM #fanfiction_messages WHERE message_name = '{$parm}'" ;
-
+        
+        if(varset($parm['key'])) { 
+            $key = $parm['key'];  
+            $query = "SELECT message_text FROM #fanfiction_messages WHERE message_name = '{$key}'  LIMIT 1 " ;
+        }
+        else return '';
+        
         $text = e107::getDB()->retrieve($query);
-
-        return $text;
+        
+        if(varset($parm['strip']) === 'blocks')
+		{
+			$text = e107::getParser()->stripBlockTags($text);
+		}
+        
+ 
+       return $text ? e107::getParser()->toHTML($text, true, 'BODY') : '';
     }
 
     
 
     /*  {EFICTION_LINK} */
+    /* {EFICTION_LINK=rss} - doesn't work on live site, on local it works. Data issue? */
     public function sc_efiction_link($parm = '')
     {
 		if($parm == "") { return ''; }

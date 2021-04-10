@@ -45,7 +45,7 @@ TODO: wait for fix e107 extended fields, otherwise admin will need to connect us
 - [x] replacing session _warned
 
 **Age controls**:
-- [ ] moving to UEA data? 
+- [x] moving to UEA data? Decision: Not, it is easy to get Author data now. 
 - [x] update title shortcode? 
 - [x] fix viewstory.php
 
@@ -133,13 +133,13 @@ Now: All members, authors, betareader, site admins
 
 **Beta-reader module**
 
-- [x] replace by UEA field
-- [ ] fix authors 
+- [ ] replace by UEA field - return back efiction way
+- [ ] fix authors - return back
 - [ ] add link with list
-- [ ] remove AUTORPREFS field
-- [ ] remove module
+- [ ] remove AUTORPREFS field - not now
+- [ ] remove module - not now 
 
-**Remove functionality**
+**Remove/check functionality**
 - [ ] efiction debug
 - [ ] efiction benchmark
 - [x] efiction installation
@@ -203,9 +203,13 @@ Now: All members, authors, betareader, site admins
 - [x] rating popup
 
 **Added footer with FOOTERF**
+
 - [x] viestory.php, fixed 3x.
 - [x] browse.php
 - [x] stories.php
+- [x] authors.php
+- [x] member.php
+
 
 **Printing**
 - [x] issue with FOOTERF - data are removed FIXED css issue
@@ -254,6 +258,9 @@ conversion to timestamp... ???
 [x] hardcoded template added, used the same shortcodes as efiction, replaced efiction templating, testing with new theme
 [x] added home landing page after searchin browse/home
 
+
+**Searching** 
+[ ] Find a way how to set $disablesorts in admin area. This is pretty cool, but hardcoded. Or I haven't find where it is set.
 
 
 

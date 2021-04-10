@@ -39,15 +39,7 @@
 
 class eFiction
 {
-    private $text = null;
-    private $caption = null;
-    public static $userlinks = array();
-
-    /**
-     * @var array Array with
-     */
-    protected static $customerFields = array();
-
+ 
     public function __construct()
     {
         $sql = e107::getDb();
@@ -59,10 +51,13 @@ class eFiction
         $this->post = varset($_POST);
 
         $this->pref = e107::pref('efiction');
-
-        $this->initPrefs();
+ 
     }
 
+    public function init() {
+    
+    }
+    
     public static function catlist()
     {
         $catlist = array();
@@ -158,9 +153,7 @@ class eFiction
 
             $linkname = $link['link_name'];
             $link_start = '<a href="'.$link['link_url'].'" title="'.$link['link_text'].'"'.($link['link_target'] ? ' target="_blank"' : '').(!empty($link['link_key']) ? " accesskey='".$link['link_key']."'" : '').($current == $link['link_name'] ? ' id="current"' : '').'>';
-
-            self::$userlinks[$link['link_name']] = $link_start.$link['link_text'].'</a>';
-
+ 
             $pagelinks[$link['link_name']] = array(
                 'id' => $link['link_id'],
                 'text' => $link['link_text'],
@@ -250,35 +243,5 @@ foreach($settings as $var => $val) {
         return $settings;
     }
 
-    /**
-     * Compiles the prefs for usage within the class.
-     */
-    public function initPrefs()
-    {
-    }
 
-    public function init()
-    {
-    }
-
-    /**
-     * Handle & process all non-ajax requests.
-     *
-     * @return void
-     */
-    private function process()
-    {
-    }
-
-    /**
-     * Render the efiction pages.
-     *
-     * @return string
-     */
-    public function render()
-    {
-        $ns = e107::getRender();
-
-        $ns->tablerender('caption', 'this is text', 'vstore-category-list');
-    }
 }

@@ -37,15 +37,15 @@ include("includes/pagesetup.php");
 
 // end basic page setup
 
-$pagetitle = "<div id=\"pagetitle\">";
+$pagetitle = "<span id=\"pagetitle\">";
 if(isset($_GET['list'])) $list = $_GET['list'];
 else $list = "members";
 if(!$let) {
 	$let = false;
-	$ptitle = "</div>";
+	$ptitle = "</span>";
 }
 else {
-	$ptitle = " -- $let</div>";
+	$ptitle = " -- $let</span>";
 	if($let == _OTHER) {
 		$letter = _PENNAMEFIELD." REGEXP '^[^a-z]'";
 	}
@@ -99,6 +99,10 @@ $listOpts = ""; $countquery = "";
 	//$tpl->printToScreen();
     $output = $tpl->getOutputContent( );  
     $output = e107::getParser()->parseTemplate($output, true); 
-    echo $output;
-	dbclose( );
-?>
+    
+    e107::getRender()->tablerender($pagetitle.$ptitle, $output, 'authors-index');
+    require_once(FOOTERF);
+    dbclose( );				 
+    exit; 
+      
+ 
