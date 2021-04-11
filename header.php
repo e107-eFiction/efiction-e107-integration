@@ -30,8 +30,8 @@ if(isset($_GET['benchmark'])) {
 $headerSent = false;
  
 // Defines the character set for your language/location
-define ("_CHARSET", "utf-8");
- 
+define("_CHARSET", "utf-8");
+define("TABLEPREFIX", MPREFIX);
  
 // Locate config.php and set the basedir path
 $folder_level = "";
@@ -54,7 +54,9 @@ foreach($settings as $var => $val) {
 	$$var = stripslashes($val);
 	$settings[$var] = htmlspecialchars($val);
 }
-
+print_a($settings);
+print_a($sitekey);
+die;
  
 if(!$displaycolumns) $displaycolumns = 1; // shouldn't happen, but just in case.
 if($words) $words = explode(", ", $words);

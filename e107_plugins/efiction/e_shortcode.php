@@ -89,13 +89,14 @@ class efiction_shortcodes extends e_shortcode
     /*  {EFICTION_LINK} */
     /* {EFICTION_LINK=rss} - doesn't work on live site, on local it works. Data issue? */
     public function sc_efiction_link($parm = '')
-    {
+    { 
 		if($parm == "") { return ''; }
 
 	    $efiction = e107::getSingleton('efiction', e_PLUGIN.'efiction/efiction.class.php');
 		 
 		$link = $efiction->get_userlink($parm);
 		
+        
 		if($link) {    
 			return "<li class=".$parm.">".$link."</li>";
 		}

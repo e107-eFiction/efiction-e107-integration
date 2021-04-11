@@ -5,6 +5,12 @@
 Note:
 for other solution use e107 bridge or alt_auth plugin. It is not enough for me now. 
 
+# Latest version:
+
+https://github.com/e107-eFiction/efiction-plugins-for-e107
+Everything moved to plugin. 
+This repo is now just a backup. 
+
 ### Preparation:
 - installed full efiction and e107 CMS on the same level
 - customized eFiction to noconflict version
@@ -19,24 +25,85 @@ for other solution use e107 bridge or alt_auth plugin. It is not enough for me n
 **Integration**
 
 - [x] using class2.php
-- [ ] _BASEDIR fix ? e_HTTP ? e_BASE it is problem with SEF-URLs
+- [x] _BASEDIR - after moving to plugin correct value is define ("_BASEDIR", e_PLUGIN."efiction/"); 
 - [x] front languages
 
-**User/registration system**:
+### efiction moved to plugin
 
-- [x] replaced paths
+#### User/registration system
+
+_Important_: Don't use e107 EUA in any case. It complicates things. 
+
 - [x] replaced sessions 
 - [x] separating users and authors, separated USERID and USERUID, isMEMBER is only for authors
 - [x] added fanfiction_authors table to efiction plugin for adding user_id field, maybe will be removed, but with thousands users is easier manage authors directly 
-- [x] fixed member.php
-- [ ] check e107 admin login via another user
-- [ ] delete user/login functionality
-- [x] deleted login block - replaced by e107 login_menu
 - [ ] check delete authors functionality
 - [ ] add delete or set level 4 for deleted e107 user
-- [ ] check in clanmmember plugin for creating clanmember... it is similar solution.  
+- [ ] check in clanmmember plugin for creating clanmember... it is similar solution
 
-TODO: wait for fix e107 extended fields, otherwise admin will need to connect users and authors
+#### Moving everything under plugin
+- [x] member.php e107::url('efiction','member')
+- [x] viewserie.php e107::url('efiction','viewserie')
+- [x] viewstory.php e107::url('efiction','viewstory')
+- [x] viewpage.php e107::url('efiction','viewpage')
+- [x] viewuser.php e107::url('efiction','viewuser')
+- [x] toplists.php e107::url('efiction','toplists')
+- [x] stories.php e107::url('efiction','stories')
+- [x] series.php e107::url('efiction','series')
+- [x] searching.php e107::url('efiction','searching')
+- [x] rss.php e107::url('efiction','rss')
+- [x] reviews.php e107::url('efiction','report')
+- [x] authors.php e107::url('efiction','authors')
+- [x] browse.php e107::url('efiction','browse')
+- [x] report.php e107::url('efiction','report')
+- [x] admin.php e107::url('efiction','adminarea')
+
+
+
+**user panels list**
+- [ ] contact
+- [ ] editbio
+- [ ] editprefs
+- [ ] favau
+- [ ] favlist - used in viewuser.php
+- [ ] favse
+- [ ] favst
+- [x] login - DELETED, managed by e107
+- [x] logout - DELETED, managed by e107
+- [x] lostpassword - DELETED, managed by e107
+- [ ] manageimages 
+- [ ] manfavs
+- [ ] profile
+- [ ] queries
+- [x] register - DELETED, managed by e107
+- [ ] reviewsby
+- [ ] revreceived
+- [ ] revres
+- [ ] series by
+- [ ] stats
+- [ ] stories by
+ 
+
+#### Main pages:  HEADERF 
+- [ ] fixed header.php
+- [ ] paths to default .tpls files (originally in root)
+- [x] member.php  
+- [x] viewserie.php 
+- [x] viewstory.php  
+- [x] viewpage.php  
+- [x] viewuser.php  
+- [x] toplists.php  
+- [x] stories.php   
+- [x] series.php 
+- [x] searching.php  
+- [ ] rss.php  - not nedded
+- [x] reviews.php 
+- [x] authors.php 
+- [x] browse.php 
+- [x] report.php 
+
+- [x] admin.php  
+
 
 **Sessions**
 
@@ -121,7 +188,7 @@ Maybe replaced with class assess later.
 
 **Authors list**
 
-Now: All members, authors, betareader, site admins
+Needed: All members, authors, betareader, site admins
 
 **Removed contact.php**
 
@@ -150,8 +217,8 @@ Now: All members, authors, betareader, site admins
 **Replace db functions**
 - [ ] loaded in config.php
 - [ ] includes/dbfunctions.php 
-- [x] rss.php
-- [x] includes/categorieslist.php
+- [ ] rss.php
+- [ ] includes/categorieslist.php
 
 
 **Messages/Custom pages**
@@ -177,6 +244,7 @@ Now: All members, authors, betareader, site admins
 - [x] $skinnew
 - [ ] $displaycolumns
 - [ ] $disablesorts
+- [ ] $favorites
 
 
 **Ajax user search**
@@ -203,12 +271,15 @@ Now: All members, authors, betareader, site admins
 - [x] rating popup
 
 **Added footer with FOOTERF**
-
 - [x] viestory.php, fixed 3x.
 - [x] browse.php
 - [x] stories.php
 - [x] authors.php
 - [x] member.php
+- [x] admin.php
+
+
+
 
 
 **Printing**

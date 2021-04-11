@@ -93,9 +93,8 @@ class eAuthors
         $where = " user_id = ".$user_id; 
 
 	    $authorquery = "SELECT *, ap.* 
-        FROM "._AUTHORTABLE." LEFT JOIN ".TABLEPREFIX."fanfiction_authorprefs as ap ON ap.uid = "._UIDFIELD." WHERE ". $where. " LIMIT 1" ;
- 
-         
+        FROM "._AUTHORTABLE." LEFT JOIN #fanfiction_authorprefs as ap ON ap.uid = "._UIDFIELD." WHERE ". $where. " LIMIT 1" ;
+  
 		$authordata = e107::getDb()->retrieve($authorquery);
         
        
