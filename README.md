@@ -85,15 +85,22 @@ _Important_: Don't use e107 EUA in any case. It complicates things.
 - [ ] stories by
  
 
-#### Header Fix
-- [x] fixed header.php
-- [x] paths to default .tpls files (originally in root) _BASEDIR."default_tpls/default.tpl"  
-- [x] using HEADERF directly after including header.php - because admin part
-- [x] removing any mention of header.tpl (+footer.tpl)
-- [x] check and fix: "./default_tpls/ 
-- [x] check and fix: ./$skindir/ 
-- [x] check and fix: space+"default_tpls
-DONE.
+#### FOOTERF
+- [x] adding FOOTERF + exit( ) everywhere after $tpl->printToScreen();
+- [x] replace $tpl->printToScreen(); with:   
+$output = $tpl->getOutputContent();  
+$output = e107::getParser()->parseTemplate($output, true);
+e107::getRender()->tablerender($caption, $output, $current);
+- [x] replace $tpl->printToScreen( ) too
+
+#### Separating caption from body
+- [ ]  look for pagetitle change div to span (to be able still style it without tablerender)
+- [ ]  replace $output if it is 
+- [ ]  
+- [ ]  
+- [ ]  
+- [ ]  
+ 
 
 
 
@@ -288,17 +295,7 @@ Needed: All members, authors, betareader, site admins
 - [x] printing 
 - [x] inline css
 - [x] rating popup
-
-**Added footer with FOOTERF**
-- [x] viestory.php, fixed 3x.
-- [x] browse.php
-- [x] stories.php
-- [x] authors.php
-- [x] member.php
-- [x] admin.php
-
-
-
+ 
 
 
 **Printing**
