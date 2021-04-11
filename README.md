@@ -29,6 +29,7 @@ This repo is now just a backup.
 - [x] front languages
 
 ### efiction moved to plugin
+- removed modules, let it for later...
 
 #### User/registration system
 
@@ -84,25 +85,42 @@ _Important_: Don't use e107 EUA in any case. It complicates things.
 - [ ] stories by
  
 
-#### Main pages:  HEADERF 
-- [ ] fixed header.php
-- [ ] paths to default .tpls files (originally in root)
-- [x] member.php  
-- [x] viewserie.php 
-- [x] viewstory.php  
-- [x] viewpage.php  
-- [x] viewuser.php  
-- [x] toplists.php  
-- [x] stories.php   
-- [x] series.php 
-- [x] searching.php  
-- [ ] rss.php  - not nedded
-- [x] reviews.php 
-- [x] authors.php 
-- [x] browse.php 
-- [x] report.php 
+#### Header Fix
+- [x] fixed header.php
+- [x] paths to default .tpls files (originally in root) _BASEDIR."default_tpls/default.tpl"  
+- [x] using HEADERF directly after including header.php - because admin part
+- [x] removing any mention of header.tpl (+footer.tpl)
+- [x] check and fix: "./default_tpls/ 
+- [x] check and fix: ./$skindir/ 
+- [x] check and fix: space+"default_tpls
+DONE.
 
-- [x] admin.php  
+
+
+#### 
+- [ ] member.php  
+- [ ] viewserie.php 
+- [ ] viewstory.php  
+- [ ] viewpage.php  
+- [ ] viewuser.php  
+- [ ] toplists.php  
+- [ ] stories.php   
+- [ ] series.php 
+- [ ] searching.php  
+- [ ] rss.php  - not nedded
+- [ ] reviews.php 
+- [ ] authors.php 
+- [ ] browse.php 
+- [ ] report.php
+- [ ] maintenance.php
+- [ ] index.php
+- [ ] template.php  
+- [ ] update.php
+
+- [ ] admin.php  
+  
+in modules
+in blocks - shoutbox + poll 
 
 
 **Sessions**
@@ -245,6 +263,7 @@ Needed: All members, authors, betareader, site admins
 - [ ] $displaycolumns
 - [ ] $disablesorts
 - [ ] $favorites
+- [x] $headerSent deleted, header is managed by e107
 
 
 **Ajax user search**
