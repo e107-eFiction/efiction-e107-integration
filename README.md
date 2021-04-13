@@ -9,11 +9,15 @@ for other solution use e107 bridge or alt_auth plugin. It is not enough for me n
 
 https://github.com/e107-eFiction/efiction-plugins-for-e107
 
-Version 1.0.0
+## Version 1.0.0
 
 New starter point for futher integration. 
 
- 
+## Version 1.0.1
+- replaced _CHARSET
+
+
+
 **Integration**
 
 - [x] using class2.php
@@ -327,7 +331,14 @@ conversion to timestamp... ???
 **Constants**
 - [x] _DOCTYPE, removed, not needed with e107 header
 - [ ] TABLEPREFIX, replace with MPREFIX or #
-- [ ] replace if(!defined("_CHARSET")) exit( ); with _ if (!defined('e107_INIT')) { exit; } 
+- [x] replace if(!defined("_CHARSET")) exit( ); with _ if (!defined('e107_INIT')) { exit; } 
+
+**Parsing**
+- [ ] check format_story()
+
+
+**Mail**
+- [ ] includes/emailer.php vs e107 email handler - PHP Mailer update
 
 
 **Page Setup**

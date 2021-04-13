@@ -69,7 +69,7 @@ function sendemail($to_name,$to_email,$from_name,$from_email,$subject,$message,$
 		$mail->Username = $smtp_username;
 		$mail->Password = $smtp_password;
 	}
-	$mail->CharSet = _CHARSET;
+	$mail->CharSet = 'utf-8';
 	$mail->From = $siteemail;
 	$mail->FromName = $from_name;
 	$mail->AddAddress($to_email, $to_name);
