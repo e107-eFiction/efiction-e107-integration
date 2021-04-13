@@ -35,7 +35,8 @@ for ($i = 0; $i < 5; $i++) {
 
 $digit = "$cnum[0]$cnum[1]$cnum[2]$cnum[3]$cnum[4]";
 
-$_SESSION[$sitekey.'_digit'] = md5($sitekey.$digit);
+e107::getSession()->set(SITEKEY."_digit", md5($sitekey.$digit);
+
 header('Content-type: image/png');
 imagepng($image);
 imagedestroy($image);

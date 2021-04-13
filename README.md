@@ -15,6 +15,7 @@ New starter point for futher integration.
 
 ## Version 1.0.1
 - replaced _CHARSET
+- replaced $_SESSION with e107 session handler
 
 
 
@@ -28,6 +29,14 @@ New starter point for futher integration.
 ### efiction moved to plugin
 - removed modules, let it for later...
 
+Done:
+**Sessions**
+- [x] check $_SESSION
+- [x] replacing session _viewed // This session variable is used to track the story views, there was bug, it couldn't work before
+- [x] replacing session _ageconsent
+- [x] replacing session _warned
+- [x] replacing session _skin
+- [x] replacing session _digit 
 
 
 #### User/registration system
@@ -40,25 +49,7 @@ _Important_: Don't use e107 EUA in any case. It complicates things.
 - [ ] check delete authors functionality
 - [ ] add delete or set level 4 for deleted e107 user
 - [ ] check in clanmmember plugin for creating clanmember... it is similar solution
-
-#### Moving everything under plugin
-- [x] member.php e107::url('efiction','member')
-- [x] viewserie.php e107::url('efiction','viewserie')
-- [x] viewstory.php e107::url('efiction','viewstory')
-- [x] viewpage.php e107::url('efiction','viewpage')
-- [x] viewuser.php e107::url('efiction','viewuser')
-- [x] toplists.php e107::url('efiction','toplists')
-- [x] stories.php e107::url('efiction','stories')
-- [x] series.php e107::url('efiction','series')
-- [x] searching.php e107::url('efiction','searching')
-- [x] rss.php e107::url('efiction','rss')
-- [x] reviews.php e107::url('efiction','report')
-- [x] authors.php e107::url('efiction','authors')
-- [x] browse.php e107::url('efiction','browse')
-- [x] report.php e107::url('efiction','report')
-- [x] admin.php e107::url('efiction','adminarea')
-
-
+ 
 
 **user panels list**
 - [ ] contact
@@ -133,16 +124,8 @@ e107::getRender()->tablerender($caption, $output, $current);
 in modules
 in blocks - shoutbox + poll 
 
-
-**Sessions**
-- [ ] check $_SESSIONs
-- [x] replacing session _viewed // This session variable is used to track the story views
-- [x] replacing session _ageconsent
-- [x] replacing session _warned
-- [x] replacing session _skin
-- [ ] image captcha left (button.php)
-
-
+ 
+ 
 **Age controls**:
 - [x] moving to UEA data? Decision: Not, it is easy to get Author data now. 
 - [x] update title shortcode? 

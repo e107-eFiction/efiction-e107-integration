@@ -63,10 +63,10 @@ function recurseCategories($catid) {
 
 // Captcha script validation
 function captcha_confirm() {
-	if(empty($_SESSION[SITEKEY.'_digit'])) return false;
-	$digit = $_SESSION[SITEKEY.'_digit'];
+    if(!e107::getSession()->is(SITEKEY."_digit")) return false;
+	$digit =  e107::getSession()->get(SITEKEY."_digit"); 
 	$userdigit = $_POST['userdigit'];
-	unset($_SESSION[SITEKEY.'_digit']);
+    e107::getSession()->clear(SITEKEY."_digit"); 
 	if($digit == md5(SITEKEY.$userdigit) && $userdigit > 1) return true;
 	return false;
 }
