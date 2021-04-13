@@ -8,25 +8,18 @@ for other solution use e107 bridge or alt_auth plugin. It is not enough for me n
 # Latest version:
 
 https://github.com/e107-eFiction/efiction-plugins-for-e107
-Everything moved to plugin. 
-This repo is now just a backup. 
 
-### Preparation:
-- installed full efiction and e107 CMS on the same level
-- customized eFiction to noconflict version
-- installed and activated efiction plugin
-- use efiction index.php for testing  
+Version 1.0.0
 
-### Goals:  
-1. e107 theme used directly with eFiction frontend (and admin)
-2. Separated e107 users and eFiction authors - make relation between them (alias members / authors / admins)
-3. **Priority:** get searchform outside efiction to be able to use it on e107 pages
+New starter point for futher integration. 
 
+ 
 **Integration**
 
 - [x] using class2.php
 - [x] _BASEDIR - after moving to plugin correct value is define ("_BASEDIR", e_PLUGIN."efiction/"); 
 - [x] front languages
+
 
 ### efiction moved to plugin
 - removed modules, let it for later...
@@ -84,6 +77,12 @@ _Important_: Don't use e107 EUA in any case. It complicates things.
 - [ ] stats
 - [ ] stories by
  
+#### related to moving
+
+- [x] include("includes/listings.php
+- [x] basename($_SERVER['PHP_SELF']) replaced with e_PAGE
+- [x] "modules/ checked
+
 
 #### FOOTERF
 - [x] adding FOOTERF + exit( ) everywhere after $tpl->printToScreen();
@@ -96,13 +95,12 @@ e107::getRender()->tablerender($caption, $output, $current);
 #### Separating caption from body
 - [ ]  look for pagetitle change div to span (to be able still style it without tablerender)
 - [ ]  replace $output if it is 
-- [ ]  
+- [ ]  check $tpl->assign("pagetitle",
 - [ ]  
 - [ ]  
 - [ ]  
  
-
-
+#### path to images
 
 #### 
 - [ ] member.php  
@@ -131,10 +129,13 @@ in blocks - shoutbox + poll
 
 
 **Sessions**
-
+- [ ] check $_SESSIONs
 - [x] replacing session _viewed // This session variable is used to track the story views
 - [x] replacing session _ageconsent
 - [x] replacing session _warned
+- [x] replacing session _skin
+- [ ] image captcha left (button.php)
+
 
 **Age controls**:
 - [x] moving to UEA data? Decision: Not, it is easy to get Author data now. 
@@ -259,15 +260,15 @@ Needed: All members, authors, betareader, site admins
 **global variables**
 
 - [ ] $viewed
-- [ ] $ageconsent
+- [ ] $ageconsent $ageconsent =  efiction::settings('ageconsent');
 - [ ] $headerSent
-- [ ] $displaycolumns
+- [ ] $displaycolumns 
 - [ ] $tinyMCE
 - [ ] $colwidth
 - [x] $defaultskin 
 - [x] $globalskin 
 - [x] $skinnew
-- [ ] $displaycolumns
+- [ ] $displaycolumns efiction::settings('disablepopups');
 - [ ] $disablesorts
 - [ ] $favorites
 - [x] $headerSent deleted, header is managed by e107

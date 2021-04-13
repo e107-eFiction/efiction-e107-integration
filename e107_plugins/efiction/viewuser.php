@@ -24,18 +24,19 @@
 $current = "viewuser";
 
 // Include some files for page setup and core functions
-
 include ("header.php");
+require_once(HEADERF);
+
 
 //make a new TemplatePower object
 if(file_exists("$skindir/user.tpl")) $tpl = new TemplatePower( "$skindir/user.tpl" );
 else $tpl = new TemplatePower(_BASEDIR."default_tpls/user.tpl");
-if(file_exists("$skindir/listings.tpl")) $tpl->assignInclude( "listings", "./$skindir/listings.tpl" );
-else $tpl->assignInclude( "listings", "./default_tpls/listings.tpl" );
-$tpl->assignInclude( "header", "./$skindir/header.tpl" );
-$tpl->assignInclude( "footer", "./$skindir/footer.tpl" );
+if(file_exists("$skindir/listings.tpl")) $tpl->assignInclude( "listings", "$skindir/listings.tpl" );
+else $tpl->assignInclude( "listings", _BASEDIR."default_tpls/listings.tpl" );
+ 
 if(file_exists("$skindir/profile.tpl")) $tpl->assignInclude("profile", "$skindir/profile.tpl");
 else $tpl->assignInclude("profile", _BASEDIR."default_tpls/profile.tpl");
+
 include("includes/pagesetup.php");	
 // If uid isn't a number kill the script with an error message.  The only way this happens is a hacker.
 if(empty($uid)) {
@@ -55,21 +56,21 @@ else if(isADMIN && uLEVEL < 3) {
 $infoquery = dbquery("SELECT "._PENNAMEFIELD." as penname FROM "._AUTHORTABLE." WHERE "._UIDFIELD." = '$uid' LIMIT 1");
 
 list($penname) = dbrow($infoquery);
-$tpl->assign("pagetitle", "<div id='pagetitle'>$penname</div>");
+$caption = $penname;
 $panelquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE ".($action ? "panel_name = '$action' AND (panel_type = 'P' OR panel_type = 'F')" : "panel_type = 'P' AND panel_hidden = 0 ORDER BY panel_order ASC")." LIMIT 1");
 if($panelquery) {
-	$panel = dbassoc($panelquery);
+	$panel = dbassoc($panelquery);   
 	if(!empty($panel['panel_url']) && file_exists(_BASEDIR.$panel['panel_url'])) include(_BASEDIR.$panel['panel_url']);
-	else if(file_exists("user/".$panel['panel_name'].".php")) include("user/".$panel['panel_name'].".php");
-	else $output .= write_error(_ERROR);
+	else if(file_exists(_BASEDIR."user/".$panel['panel_name'].".php")) include(_BASEDIR."user/".$panel['panel_name'].".php");
+	else $output .= write_error("(A) "._ERROR);
 }
-else if($action) $output .= write_error(_ERROR);
+else if($action) $output .= write_error("(B) "._ERROR);
 
 $tpl->gotoBlock("_ROOT");
 $panelquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_hidden != '1' AND panel_level = '0' AND (panel_type = 'P'".($favorites ? " OR panel_type = 'F'" : "").") ORDER BY panel_type DESC, panel_order ASC, panel_title ASC");
 $numtabs = dbnumrows($panelquery);
 $tabwidth = floor(100 / $numtabs);
-if(!$panelquery) $output .= write_error(_ERROR);
+if(!$panelquery) $output .= write_error("(C) "._ERROR);
 
 // Special tab counts
 $codequery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'userTabs'");
@@ -109,6 +110,7 @@ while($panel = dbassoc($panelquery)) {
 		$countquery = dbquery("SELECT COUNT(item) FROM ".TABLEPREFIX."fanfiction_favorites WHERE uid = '$uid'");
 		list($itemcount) = dbrow($countquery);
 	}
+    
 	if(!empty($tabCounts[$panel['panel_name']])) $itemcount = $tabCounts[$panel['panel_name']];
 	$panellinkplus = "<a href=\"viewuser.php?action=".$panel['panel_name']."&amp;uid=$uid\">".preg_replace("<\{author\}>", $penname, stripslashes($panel['panel_title'])).(isset($itemcount) ? " [$itemcount]" : "")."</a>\n";
 	$panellink = "<a href=\"viewuser.php?action=".$panel['panel_name']."&amp;uid=$uid\">".preg_replace("<\{author\}>", $penname, stripslashes($panel['panel_title']))."</a>\n";
@@ -118,10 +120,13 @@ while($panel = dbassoc($panelquery)) {
 	$tpl->assign("link", $panellink);
 	$tpl->assign("linkcount", $panellinkplus);
 	$tpl->assign("count", (isset($itemcount) ? " [$itemcount]" : ""));
-	unset($panellink, $panellinkplus, $itemcount);
+	unset($panellink, $panellinkplus, $itemcount);   
 }
 $tpl->gotoBlock("_ROOT");	
 $tpl->assign( "output", $output );
-$tpl->printToScreen();
+    $output = $tpl->getOutputContent();  
+    $output = e107::getParser()->parseTemplate($output, true);
+    e107::getRender()->tablerender($caption, $output, $current);
 dbclose( );
-?>
+    require_once(FOOTERF);  
+    exit( );

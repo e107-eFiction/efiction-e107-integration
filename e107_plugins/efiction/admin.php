@@ -26,7 +26,9 @@ if(isset($_GET['action']) && ($_GET['action'] == "categories" || $_GET['action']
 
 $disableTiny = true;
 
-include ("header.php");  
+// Include some files for page setup and core functions
+include ("header.php");
+require_once(HEADERF);
 
 //make a new TemplatePower object
 if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/default.tpl" );
@@ -57,7 +59,9 @@ e107::lan('efiction',true );
 		$panelquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_name = '$action' AND panel_type = 'A' LIMIT 1");
 		if(dbnumrows($panelquery)) {
 			$panel = dbassoc($panelquery);
-			if((isset($panel['panel_level']) ? $panel['panel_level'] : 0) >= uLEVEL) {
+            
+			if((isset($panel['panel_level']) ? $panel['panel_level'] : 0) >= uLEVEL) { 
+         
 				if($panel['panel_url'] && file_exists(_BASEDIR.$panel['panel_url'])) require_once(_BASEDIR.$panel['panel_url']);
 				else if (file_exists(_BASEDIR."admin/{$action}.php")) require_once(_BASEDIR."admin/{$action}.php");
 			}
@@ -79,6 +83,9 @@ e107::lan('efiction',true );
 		$output .= write_message(_RUNNINGVERSION);
 	}	
 	$tpl->assign( "output", $output );
-	$tpl->printToScreen();
+    $output = $tpl->getOutputContent();  
+    $output = e107::getParser()->parseTemplate($output, true);
+    e107::getRender()->tablerender($caption, $output, $current);
 	dbclose( );
-?>
+    require_once(FOOTERF);  
+    exit( );

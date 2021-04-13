@@ -22,7 +22,9 @@
 
 $current = "home";
 
+// Include some files for page setup and core functions
 include ("header.php");
+require_once(HEADERF);
 
 //make a new TemplatePower object
 
@@ -35,6 +37,9 @@ $query = dbquery("SELECT message_text FROM ".TABLEPREFIX."fanfiction_messages WH
 list($welcome) = dbrow($query);
 $tpl->assign("welcome", stripslashes($welcome));
 
-$tpl->printToScreen();
+    $output = $tpl->getOutputContent();  
+    $output = e107::getParser()->parseTemplate($output, true);
+    e107::getRender()->tablerender($caption, $output, $current);
 dbclose( );
-?>
+    require_once(FOOTERF);  
+    exit( );

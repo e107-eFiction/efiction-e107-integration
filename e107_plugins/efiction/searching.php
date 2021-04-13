@@ -35,7 +35,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'advanced') {
 
 $displayform = 1;
 
-include 'header.php';
+// Include some files for page setup and core functions
+include ("header.php");
+require_once(HEADERF);
 
 if (file_exists("$skindir/browse.tpl")) {
     $tpl = new TemplatePower("$skindir/browse.tpl");
@@ -43,9 +45,9 @@ if (file_exists("$skindir/browse.tpl")) {
     $tpl = new TemplatePower('default_tpls/browse.tpl');
 }
 if (file_exists("$skindir/listings.tpl")) {
-    $tpl->assignInclude('listings', "./$skindir/listings.tpl");
+    $tpl->assignInclude('listings', "$skindir/listings.tpl");
 } else {
-    $tpl->assignInclude('listings', './default_tpls/listings.tpl');
+    $tpl->assignInclude('listings', _BASEDIR."default_tpls/listings.tpl");
 }
 
 include 'includes/pagesetup.php';
@@ -54,7 +56,7 @@ $searchtype = (isset($_REQUEST['searchtype']) ? $_REQUEST['searchtype'] : 'simpl
 $searchterm = (isset($_REQUEST['searchterm']) ? escapestring($_REQUEST['searchterm']) : false);
 
 if (isset($_POST['submit']) || isset($_GET['offset'])) {
-    $output .= '<div id="pagetitle">'._RESULTS.'</div>';
+    $caption = _RESULTS;
     $query = array();
     $countquery = array();
     $scountquery = array();
@@ -64,9 +66,12 @@ if (isset($_POST['submit']) || isset($_GET['offset'])) {
         $query .= ' '._ORDERBY;
         search($query, $countquery);
         $tpl->assign('output', $output);
-        $tpl->printToScreen();
+        $output = $tpl->getOutputContent();  
+$output = e107::getParser()->parseTemplate($output, true);
+e107::getRender()->tablerender($caption, $output, $current);;
         dbclose();
-        exit();
+        require_once(FOOTERF);  
+        exit( );
     }
     if ($searchterm && strlen($searchterm) < 3) {
         errorExit(_SEARCHTERMTOOSHORT);
@@ -94,9 +99,12 @@ if (isset($_POST['submit']) || isset($_GET['offset'])) {
                 $countquery = 'SELECT COUNT(stories.sid) FROM '.TABLEPREFIX.'fanfiction_stories as stories LEFT JOIN '.TABLEPREFIX."fanfiction_coauthors as coauth ON coauth.sid = stories.sid WHERE stories.validated > 0 AND (FIND_IN_SET(stories.uid, '$authors') > 0 OR FIND_IN_SET(coauth.uid, '$authors') > 0)";
                 search($query, $countquery);
                 $tpl->assign('output', $output);
-                $tpl->printToScreen();
+                $output = $tpl->getOutputContent();  
+$output = e107::getParser()->parseTemplate($output, true);
+e107::getRender()->tablerender($caption, $output, $current);;
                 dbclose();
-                exit();
+                require_once(FOOTERF);  
+                exit( );
             } else {
                 $query[] = '1 = 0';
                 $countquery[] = '1 = 0';
@@ -288,7 +296,8 @@ if (isset($_POST['submit']) || isset($_GET['offset'])) {
     }
 } else {
     if ($searchtype == 'simple') {
-        $output .= '<div id="pagetitle">'._SIMPLE."</div><div style='text-align: center;'><form method=\"post\" enctype=\"multipart/form-data\" action=\"searching.php\">
+        $caption = _SIMPLE;
+        $output .= "<div style=\"text-align: center;'><form method=\"post\" enctype=\"multipart/form-data\" action=\"searching.php\">
 		<div class=\"tblborder\" style=\"width: 320px; padding: 5px; margin: 0 auto;\">
 		<select name=\"searchtype\">
 		<option value=\"penname\">"._PENNAME.'</option>
@@ -301,7 +310,8 @@ if (isset($_POST['submit']) || isset($_GET['offset'])) {
         $output .= '<INPUT type="submit" class="button" name="submit" value="'._SUBMIT.'" size="20">
 		<div style="font-size: 8pt; text-align: right;"><a href="searching.php?searchtype=advanced">'._ADVANCED.'</a></div></div></form></div>';
     } else {
-        $output .= '<div id="pagetitle">'._ADVANCED.'</div><div>
+        $caption = _ADVANCED;
+        $output .= '<div>
 			<form method="POST" name="form" enctype="multipart/form-data" action="searching.php?searchtype=advanced">
 			<div class="tblborder" style="width: 90%; margin: 0 auto; padding: 10px;">';
         if ($multiplecats) {
@@ -370,6 +380,11 @@ if (isset($_POST['submit']) || isset($_GET['offset'])) {
         $output .= "<div id='submitdiv'><input name=\"submit\" id=\"submit\" value=\""._SUBMIT.'" type="submit" class="button"></div></div></form></div>';
     }
 }
-$tpl->assign('output', $output);
-$tpl->printToScreen();
+
+$tpl->assign("output", $output);
+$output = $tpl->getOutputContent();  
+$output = e107::getParser()->parseTemplate($output, true);
+e107::getRender()->tablerender($caption, $output, $current);
 dbclose();
+    require_once(FOOTERF);  
+    exit( );

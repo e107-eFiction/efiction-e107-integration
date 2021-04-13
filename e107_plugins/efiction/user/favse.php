@@ -27,7 +27,7 @@ if(empty($favorites)) accessDenied( );
 
 	if(empty($uid)) {
 		$uid = USERUID;
-		$output .= "<div id='pagetitle'>"._YOURSTATS."</div>";
+        $caption = _YOURSTATS;
 	}
 	$add = isset($_GET['add']) && isNumber($_GET['add']) ? $add = $_GET['add'] : false;
 	$edit = isset($_GET['edit']) && isNumber($_GET['edit']) ? $_GET['edit'] : false;
@@ -87,8 +87,8 @@ if(empty($favorites)) accessDenied( );
 		$count = 0;
 		while($stories = dbassoc($list)) { 
 			include("includes/seriesblock.php"); 
-			if(file_exists("./$skindir/favcomment.tpl")) $cmt = new TemplatePower( "./$skindir/favcomment.tpl" );
-			else $cmt = new TemplatePower( "./default_tpls/favcomment.tpl" );
+			if(file_exists("$skindir/favcomment.tpl")) $cmt = new TemplatePower( "$skindir/favcomment.tpl" );
+			else $cmt = new TemplatePower( _BASEDIR."default_tpls/favcomment.tpl" );
 			$cmt->prepare( );
 			$cmt->newBlock("comment");
 			$cmt->assign("comment", $stories['comments'] ? "<div class='comments'><span class='label'>"._COMMENTS.": </span>".strip_tags($stories['comments'])."</div>" : "");
@@ -100,7 +100,7 @@ if(empty($favorites)) accessDenied( );
 		}
 		if($seriescount > $itemsperpage) {
 			$tpl->gotoBlock("listings");
-			$tpl->assign("pagelinks", build_pagelinks(basename($_SERVER['PHP_SELF'])."?action=favse&amp;uid=$uid&amp;", $seriescount, $offset));
+			$tpl->assign("pagelinks", build_pagelinks(e_PAGE."?action=favse&amp;uid=$uid&amp;", $seriescount, $offset));
 		}
 
 	}

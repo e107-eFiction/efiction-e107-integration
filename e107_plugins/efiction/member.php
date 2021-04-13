@@ -33,19 +33,23 @@ else $current = "login";
 		include("user/login.php");
 	}
 
-require_once("header.php");
+// Include some files for page setup and core functions
+include ("header.php");
+require_once(HEADERF);
+
 //make a new TemplatePower object
 if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/default.tpl" );
 else $tpl = new TemplatePower(_BASEDIR."default_tpls/default.tpl");
-if(file_exists("$skindir/listings.tpl")) $tpl->assignInclude( "listings", "./$skindir/listings.tpl" );
-else $tpl->assignInclude( "listings", "./default_tpls/listings.tpl" );
+if(file_exists("$skindir/listings.tpl")) $tpl->assignInclude( "listings", "$skindir/listings.tpl" );
+else $tpl->assignInclude( "listings", _BASEDIR."default_tpls/listings.tpl" );
 include("includes/pagesetup.php");
 
 if($action) $current = $action;
 else $current = "user";
 // end main function 
 if((empty($action) || $action == "login") && isMEMBER) {
-	$output .= "<div id=\"pagetitle\">"._USERACCOUNT."</div>
+    $caption = _USERACCOUNT;
+	$output .= " 
 		<div class=\"tblborder\" id=\"useropts\" style=\"padding: 5px; width: 50%; margin: 1em 25%;\">";
 	$panelquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_hidden != '1' AND panel_level = '1' AND (panel_type = 'U' ".(!$submissionsoff || isADMIN ? " OR panel_type = 'S'" : "").($favorites ? " OR panel_type = 'F'" : "").") ORDER BY panel_type, panel_order, panel_title ASC");
 	if(!dbnumrows($panelquery)) $output .= _FATALERROR;
@@ -68,6 +72,9 @@ else if(!empty($action)) {
 }
 else $output = write_error(_NOTAUTHORIZED);
 $tpl->assign( "output", $output );
-$tpl->printToScreen();
+    $output = $tpl->getOutputContent();  
+    $output = e107::getParser()->parseTemplate($output, true);
+    e107::getRender()->tablerender($caption, $output, $current);
 dbclose( );
-?>
+    require_once(FOOTERF);  
+    exit( );
