@@ -24,6 +24,8 @@ New starter point for futher integration.
 ### efiction moved to plugin
 - removed modules, let it for later...
 
+
+
 #### User/registration system
 
 _Important_: Don't use e107 EUA in any case. It complicates things. 
@@ -325,6 +327,7 @@ conversion to timestamp... ???
 **Constants**
 - [x] _DOCTYPE, removed, not needed with e107 header
 - [ ] TABLEPREFIX, replace with MPREFIX or #
+- [ ] replace if(!defined("_CHARSET")) exit( ); with _ if (!defined('e107_INIT')) { exit; } 
 
 
 **Page Setup**
