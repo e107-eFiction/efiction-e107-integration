@@ -22,7 +22,7 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-if(!defined("_CHARSET")) exit( );
+if (!defined('e107_INIT')) { exit; }
 
 	$output = "<div id='pagetitle'>".($action == "register" ? _SETPREFS : _EDITPREFS)."</div>";
 	if(isset($_POST['submit'])) {
@@ -75,5 +75,3 @@ if(!defined("_CHARSET")) exit( );
 		closedir($directory);
 		$output .= "</select><A HREF=\"#\" class=\"pophelp\">[?]<span>"._HELP_SKIN."</span></A><br /><INPUT type=\"submit\" class=\"button\" id=\"submit\" name=\"submit\" value=\""._SUBMIT."\"></form>";
 	}
-
-?>

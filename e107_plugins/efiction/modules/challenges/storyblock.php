@@ -22,7 +22,8 @@
 // ----------------------------------------------------------------------
 
 
-if(!defined("_CHARSET")) exit( );
+if (!defined('e107_INIT')) { exit; }
+
 if(!defined("_CHALLENGES")) {
 	global $language;
 	if(file_exists(_BASEDIR."modules/challenges/languages/{$language}.php")) include_once(_BASEDIR."modules/challenges/languages/{$language}.php");
@@ -39,5 +40,3 @@ if(!empty($stories['challenges'])) {
 }
 else $tpl->assign("challengelinks", _NONE);
 if($current == "challenges") $adminlinks  .= " [<a href='challenges.php?action=remove&amp;chalid=".$chalid."&amp;sid=".$stories['sid']."'>"._REMOVECHALLENGE."</a>]";
-
-?>

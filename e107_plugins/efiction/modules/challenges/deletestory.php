@@ -22,11 +22,10 @@
 // ----------------------------------------------------------------------
 
 
-if(!defined("_CHARSET")) exit( );
+if (!defined('e107_INIT')) { exit; }
 
 if(isset($anonchallenges) && !empty($story['challenges'])) {
 	$challenges = dbquery("UPDATE ".TABLEPREFIX."fanfiction_challenges SET responses = responses - 1 WHERE ".findclause("chalid", $story['challenges']));
 	while($c = dbassoc($challenges)) {
 	}
 }
-?>

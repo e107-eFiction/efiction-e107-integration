@@ -20,7 +20,8 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-if(!defined("_CHARSET")) exit( );
+if (!defined('e107_INIT')) { exit; }
+
 if(!isset($item)) $item = "";
 if(!isset($action)) $action == "add";
 $form = "<form method=\"POST\" id=\"reviewform\" enctype=\"multipart/form-data\" action=\"reviews.php?action=".($action == "edit" ? "edit&amp;reviewid=".$review['reviewid'] : "add&amp;type=$type&amp;item=$item").(!empty($nextchapter) ? "&amp;next=$nextchapter" : "")."\">
@@ -53,4 +54,3 @@ if(!USERUID && !empty($captcha)) $form .= "<div><span class=\"label\">"._CAPTCHA
 $form .= "<INPUT type=\"hidden\" name=\"chapid\" value=\"".(isset($chapid) ? $chapid : "")."\"><div style=\"text-align: center; margin: 1ex;\"><INPUT type=\"submit\" class=\"button\" name=\"submit\" value=\""._SUBMIT."\"></div>";
 if(!empty($rateonly)) $form .= "<div>"._REVIEWNOTE."</div>";
 $form .= "</div></form>";
-?>

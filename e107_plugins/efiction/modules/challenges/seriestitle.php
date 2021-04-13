@@ -22,8 +22,7 @@
 // ----------------------------------------------------------------------
 
 
-if(!defined("_CHARSET")) exit( );
-
+if (!defined('e107_INIT')) { exit; }
 
 $challengelinks = array( );
 if(isset($series['challenges'])) {
@@ -37,4 +36,3 @@ if(isset($series['challenges'])) {
 }		
 $allclasslist .= "<span class='label'>"._CHALLENGES.": </span> ".(!empty($challengelinks) ? implode(", ", $challengelinks) : _NONE)."<br />";
 $titleblock->assign("challengelinks", (!empty($challengelinks) ? implode(", ", $challengelinks) : _NONE));
-?>

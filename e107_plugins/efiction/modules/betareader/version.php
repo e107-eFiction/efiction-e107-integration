@@ -5,7 +5,7 @@ the module version in the database is the current version of the module.
 The version number in this file will be the current version.
 */
 
-if(!defined("_CHARSET")) exit( );
+if (!defined('e107_INIT')) { exit; }
 
 $moduleVersion = "1.4";
 $moduleName = "Beta-Reader List";
@@ -14,5 +14,3 @@ $moduleDescription = "This tiny module adds a beta-reader option to the members 
 $moduleAuthor = "Tammy Keefer";
 $moduleAuthorEmail = "efiction@hugosnebula.com";
 $moduleWebsite = "http://efiction.hugosnebula.com";
-
-?>

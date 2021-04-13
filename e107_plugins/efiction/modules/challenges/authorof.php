@@ -22,7 +22,7 @@
 // ----------------------------------------------------------------------
 
 
-if(!defined("_CHARSET")) exit( );
+if (!defined('e107_INIT')) { exit; }
 
 if(file_exists(_BASEDIR."modules/challenges/languages/{$language}.php")) 
 include_once(_BASEDIR."modules/challenges/languages/{$language}.php"); 
@@ -32,4 +32,3 @@ $challengequery = dbquery("SELECT count(chalid) FROM ".TABLEPREFIX."fanfiction_c
 list($challengecount) = dbrow($challengequery);
 $authorof[] = "<a href='".$thislink."action=challengesby'>$challengecount "._CHALLENGES."</a>";
 
-?>

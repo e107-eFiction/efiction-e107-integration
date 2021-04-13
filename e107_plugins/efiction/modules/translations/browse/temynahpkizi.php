@@ -20,7 +20,7 @@
 //
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
-if(!defined("_CHARSET")) exit( );
+if (!defined('e107_INIT')) { exit; }
 
 // Page Setup
     $current = "topics";
@@ -35,4 +35,3 @@ if(!defined("_CHARSET")) exit( );
 	$storyquery  .= _ORDERBY;
  
 	$numrows = search(_STORYQUERY.$storyquery, _STORYCOUNT.$storyquery, "browse.php?");
-?>

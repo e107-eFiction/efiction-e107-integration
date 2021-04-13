@@ -22,7 +22,7 @@
 // ----------------------------------------------------------------------
 
 
-if(!defined("_CHARSET")) exit( );
+if (!defined('e107_INIT')) { exit; }
 
 // Delete characters
 if($action == "characters") {
@@ -41,5 +41,3 @@ if($action == "categories") {
 		dbquery("UPDATE ".TABLEPREFIX."fanfiction_challenges SET catid = '".($newcatlist ? implode(",", $newcatlist) : "")."' WHERE chalid = '$chal[chalid]'");
 	}
 }
-
-?>

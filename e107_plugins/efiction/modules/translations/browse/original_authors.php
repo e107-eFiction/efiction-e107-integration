@@ -20,7 +20,7 @@
 //
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
-if(!defined("_CHARSET")) exit( );
+if (!defined('e107_INIT')) { exit; }
 
 $current = "writers";
 $writerid = isset($_GET['wrid']) && isNumber($_GET['wrid']) ? $_GET['wrid'] : 0;
@@ -105,4 +105,3 @@ else {
     $numrows = 0;
 }	
 if($writerid > 0) $writerlist1 = $writerid;
-?>

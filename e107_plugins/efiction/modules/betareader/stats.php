@@ -22,7 +22,7 @@
 // ----------------------------------------------------------------------
 
 
-if(!defined("_CHARSET")) exit( );
+if (!defined('e107_INIT')) { exit; }
 
 list($field_id, $field_title) = dbrow(dbquery("SELECT field_id, field_title FROM ".TABLEPREFIX."fanfiction_authorfields WHERE field_name = 'betareader'"));
 $query = dbquery("SELECT count(uid) FROM ".TABLEPREFIX."fanfiction_authorinfo WHERE field = '$field_id' AND info = '"._YES."'");
@@ -34,4 +34,3 @@ else if(!empty($blocks['info']['style']) && $blocks["info"]["style"] == 1) {
 	$content = preg_replace("@\{totalbetas\}@", $count, $content);
 }
 else $content .= "<div><span class='label'>".$field_title.": </span>".$count."</div>";
-?>

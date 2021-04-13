@@ -22,7 +22,7 @@
 // ----------------------------------------------------------------------
 
 
-if(!defined("_CHARSET")) exit( );
+if (!defined('e107_INIT')) { exit; }
 
 if(file_exists(_BASEDIR."modules/challenges/languages/{$language}.php")) 
 	include_once(_BASEDIR."modules/challenges/languages/{$language}.php"); 
@@ -41,4 +41,3 @@ else if(!empty($blocks['info']['style']) && $blocks["info"]["style"] == 1) {
 	$content = preg_replace("@\{challengers\}@", $challengers, $content);
 }
 else $content .= "<div><span class='label'>"._CHALLENGES.": </span>".$chalcount."</div><div><span class='label'>"._CHALLENGERS.": </span>".$challengers."</div>";
-?>

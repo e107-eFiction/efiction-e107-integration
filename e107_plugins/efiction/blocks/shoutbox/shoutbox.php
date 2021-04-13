@@ -1,5 +1,5 @@
 <?php
-if(!defined("_CHARSET")) exit( );
+if (!defined('e107_INIT')) { exit; }
 
 if(file_exists(_BASEDIR."blocks/shoutbox/{$language}.php")) include_once(_BASEDIR."blocks/shoutbox/{$language}.php");
 else include_once(_BASEDIR."blocks/shoutbox/en.php");
@@ -63,4 +63,3 @@ if(dbnumrows($shouts) != 0) {
 else $content .= write_message(_NOSHOUTS);
 $content .= "</div>";
 if($totalshouts > $shoutlimit) $content .= write_message("<a href='"._BASEDIR."blocks/shoutbox/archive.php'>"._SHOUTARCHIVE."</a>");
-?>

@@ -24,7 +24,7 @@
 // ----------------------------------------------------------------------
 
 
-if(!defined("_CHARSET")) exit( );
+if (!defined('e107_INIT')) { exit; }
  
     $output .= '<div class="alert alert-info" role="alert">
      Toto je nové!!!
