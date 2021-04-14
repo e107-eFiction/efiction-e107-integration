@@ -22,7 +22,9 @@
 // ----------------------------------------------------------------------
 if (!defined('e107_INIT')) { exit; }
 
-	$caption = ($recentdays ? _RECENTSTORIES : _MOSTRECENT)." ".$pagelinks['rss']['link'];
+    $recentdays =  efiction::settings('recentdays');
+ 
+	$caption = ($recentdays ? e107::getParser()->lanVars(LAN_RECENTSTORIES, $recentdays) : _MOSTRECENT)." ".$pagelinks['rss']['link'];
 	
 	$countquery .= ($recentdays ? " AND updated > '".date("Y-m-d H:i:s", mktime(0, 0, 0, date("m")  , date("d")-$recentdays, date("Y")))."'" : "");
 	$query = $storyquery.($recentdays ? " AND updated > '".date("Y-m-d H:i:s", mktime(0, 0, 0, date("m")  , date("d")-$recentdays, date("Y")))."'" : "");

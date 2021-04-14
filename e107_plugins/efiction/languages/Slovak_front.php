@@ -2,8 +2,10 @@
 
 define ("LAN_EFICTION_BY", "od");
 define ("LAN_EFICTION_READMORE", "Zistiť viac...");
- 
 
+define ("LAN_RECENTSTORIES", "Preklady aktualizované za posledných [x] dní.");
+
+ 
 define ("_ACTIONSUCCESSFUL", "Akcia bola úspešná.");
 define ("_ACTIONCANCELLED", "Požadovaná akcia zrušená.");
 define ("_ACTIVE", "Aktívne");
@@ -131,7 +133,7 @@ define ("_MEMBERLOGIN", "Member Login");
 
 // Browse
 define ("_BROWSE", "Prezeranie");
-define ("_RECENTSTORIES", "Preklady aktualizované za posledných ".$recentdays." dní.");
+
 define ("_EMAILSENT", "Váš email bol odoslaný.");
 define ("_TITLES", "Názvy");
 // Contact Us
