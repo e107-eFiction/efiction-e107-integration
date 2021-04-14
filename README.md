@@ -227,11 +227,11 @@ unified check if to use captcha if(!USERUID && USE_IMAGECODE)
 - [x] used in user/contact.php
 
 Display captcha:
-- [ ] report.php 
+- [x] report.php 
 
 
 **New forms**
-- [ ] report.php
+- [x] report.php
 
 
 **replace TemplatePower**
