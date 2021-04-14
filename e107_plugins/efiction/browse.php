@@ -27,11 +27,13 @@ $displayform = 1;
 include ("header.php");
 require_once(HEADERF);
 
+if(isset($_GET['type'])) $type = descript($_GET['type']);
+else $type = false;
+
 if(file_exists("$skindir/browse.tpl")) $tpl = new TemplatePower( "$skindir/browse.tpl" );
-else $tpl = new TemplatePower(_BASEDIR."default_tpls/browse.tpl");
-if(file_exists("$skindir/listings.tpl")) $tpl->assignInclude("listings", "$skindir/listings.tpl");
-else $tpl->assignInclude( "listings", _BASEDIR."default_tpls/listings.tpl" );
- 
+  else $tpl = new TemplatePower(_BASEDIR."default_tpls/browse.tpl");
+  if(file_exists("$skindir/listings.tpl")) $tpl->assignInclude("listings", "$skindir/listings.tpl");
+  else $tpl->assignInclude( "listings", _BASEDIR."default_tpls/listings.tpl" );
 
 include("includes/pagesetup.php");
 if(isset($_GET['type'])) $type = descript($_GET['type']);
@@ -240,6 +242,7 @@ if($type) {
 	if(count($otherresults) > 0 && $type != "titles") $tpl->assign("otherresults", "<div id='otherresults'><span class='label'>"._OTHERRESULTS.":</span> ".implode(", ", $otherresults)."</div>");
 // build our sort menus. if there aren't any stories don't bother with these since they won't be used
 	if(!empty($numrows) || isset($_POST['go'])) {
+        $tpl->assign("column-width", "col-md-8");
 		$tpl->newBlock("sortform");
 		$tpl->assign("sortbegin", "<form style=\"margin:0\" method=\"POST\" id=\"form\" enctype=\"multipart/form-data\" action=\"browse.php?type=$type&amp;$terms\">");
 		if($catlist && !in_array("categories", $disablesorts)) {
@@ -315,9 +318,12 @@ if($type) {
 		$tpl->gotoBlock("_ROOT");
  
 	}
+    else {
+       $tpl->assign("column-width", "col-md-12");
+    }
 }
 else  {
-
+    $tpl->assign("column-width", "col-md-12");
     $caption = _BROWSE;
 	$panelquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_hidden != '1' AND panel_level ".(isMEMBER ? " < 2" : "= '0'")." AND panel_type = 'B' ORDER BY panel_type DESC, panel_order ASC, panel_title ASC");
 	while($panel = dbassoc($panelquery)) {

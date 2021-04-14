@@ -21,8 +21,10 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 if (!defined('e107_INIT')) { exit; }
-
-	$output .= _MOSTRECENT." ".$pagelinks['rss']['link'] ; 
+  
+    $rss =  e107::getParser()->replaceConstants($rss, 'full');	
+	$caption = _MOSTRECENT ." ".$rss;
+    
 	$query = $storyquery;
 	$query .= " ORDER BY ".(isset($_REQUEST['sort']) && $_REQUEST['sort'] == "alpha" ? "stories.title" : "updated DESC");
 	$numrows = search(_STORYQUERY.$query, _STORYCOUNT.$countquery, "browse.php?");
