@@ -123,14 +123,7 @@ e107::getRender()->tablerender($caption, $output, $current);
   
 in modules
 in blocks - shoutbox + poll 
-
  
- 
-**Age controls**:
-- [x] moving to UEA data? Decision: Not, it is easy to get Author data now. 
-- [x] update title shortcode? 
-- [x] fix viewstory.php
-
 **Sitesettings**
 
 - [ ] e107 admin
@@ -205,6 +198,57 @@ Maybe replaced with class assess later.
 
 Needed: All members, authors, betareader, site admins
 
+**check**
+- [x] "._BASEDIR."member.php - 
+- [x] "._BASEDIR."admin.php
+- [x] "._BASEDIR."stories.php
+
+**captcha**
+- [ ] original doesn't display numbers, only image is rendered
+- [ ] replace with e107::getSecureImg();
+- [ ] delete button.php, plain.button.php (not used)
+- [x] better admin look in admin_settings.php e107::getForm() 
+- [x] added check for gd library and new constant - if($newcaptcha && extension_loaded('gd'))  USE_IMAGECODE
+
+button.php:
+- [ ] used in report.php
+- [ ] used in includes/reviewform.php if(!USERUID && !empty($captcha))
+- [ ] used in user/contact.php if(!USERUID && !empty($captcha))  + captcha_confirm()
+- [ ] used in user/editbio.php  if(!empty($captcha) && $action == "register") + captcha_confirm()
+- [ ] used in blocks/shoutbox/shoutbox.php if(!isMEMBER && $captcha)  + captcha_confirm()
+- [ ] used in modules/challenges/challenges.php if(!isMEMBER && $captcha) + captcha_confirm()
+
+- [x] $captcha used in report.php captcha_confirm()
+- [ ] $captcha used in review.php if($captcha && !isMEMBER && !captcha_confirm()) $output .= write_error(_CAPTCHAFAIL);
+ 
+unified check if to use captcha if(!USERUID && USE_IMAGECODE)
+- [x] used in report.php
+- [x] used in includes/reviewform.php
+- [x] used in user/contact.php
+
+Display captcha:
+- [ ] report.php 
+
+
+**New forms**
+- [ ] report.php
+
+
+**replace TemplatePower**
+
+
+**Templating**
+
+
+**replace includes/emailer.php** 
+
+
+
+
+**check removed actions**
+- [ ] $action == "register"
+
+
 **Removed contact.php**
 
 - [x] deleted file Note: file can't be deleted without callback because reporting
@@ -212,6 +256,7 @@ Needed: All members, authors, betareader, site admins
 - [x] replaced for reportthis  
 - [ ] safety check
 - [ ] (re)captcha support 
+- [ ] add prefs to submit report for quests, image captcha is enough?
 
 **Beta-reader module**
 

@@ -165,8 +165,10 @@ else if($action == "add" || $action == "edit") {
 	while($code = dbassoc($codequery)) {
 		eval($code['code_text']);
 	}
-	if(!isMEMBER && $captcha) $output .= "<div><span class=\"label\">"._CAPTCHANOTE."</span><input MAXLENGTH=5 SIZE=5 name=\"userdigit\" type=\"text\" value=\"\"><br /><img width=120 height=30 src=\""._BASEDIR."includes/button.php\" style=\"border: 1px solid #111;\">";
-	$output .= "<div style=\"text-align: center; margin: 1em;\"><input type=\"submit\" class=\"button\" name=\"submit\" value=\""._SUBMIT."\"></div></div></form>";
+	if(!USERUID && USE_IMAGECODE) {
+     $output .= "<div><span class=\"label\">"._CAPTCHANOTE."</span><input MAXLENGTH=5 SIZE=5 name=\"userdigit\" type=\"text\" value=\"\"><br /><img width=120 height=30 src=\""._BASEDIR."includes/button.php\" style=\"border: 1px solid #111;\">";
+	}
+    $output .= "<div style=\"text-align: center; margin: 1em;\"><input type=\"submit\" class=\"button\" name=\"submit\" value=\""._SUBMIT."\"></div></div></form>";
 }
 
 else if($action == "delete") {

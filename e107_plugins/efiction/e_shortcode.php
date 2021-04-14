@@ -180,7 +180,7 @@ class efiction_shortcodes extends e_shortcode
 	</section>';
 
 		$var['sortbegin'] = 
-		"<form style=\"margin:0\" method=\"POST\" id=\"form\" enctype=\"multipart/form-data\" action=\"browse.php?type=recent\">";
+		"<form style=\"margin:0\" method=\"POST\" id=\"form\" enctype=\"multipart/form-data\" action=\"browse.php?type=home\">";
 
 		/* CATEGORIES */
 		if($catlist && !in_array("categories", $disablesorts)) {

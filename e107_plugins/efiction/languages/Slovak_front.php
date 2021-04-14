@@ -50,7 +50,7 @@ define ("_DOWN", "down arrow");
 define ("_EDIT", "Upraviť");
 define ("_EDITFAVORITES", "Upraviť obľúbené");
 define ("_EMAIL", "E-mail");
-define ("_EMAILFAILED", "The email could not be sent.  Please <a href='contact.php'>contact the administrator</a> to report this problem.");
+define ("_EMAILFAILED", "The email could not be sent.  Please <a href='".SITEURL."contact.php'>contact the administrator</a> to report this problem.");
 define ("_ERROR", "<strong>Error!</strong>We encountered an error.  Please go back and try again.");
 define ("_FATALERROR", "<b>A fatal MySQL error was encountered.</b><br />");
 define ("_FSTORY", "Feature");
@@ -364,7 +364,7 @@ define ("_REMOVEFAV", "Vyradiť z obľúbených");
 // User - Login
 
 define ("_WRONGPASSWORD", "That password doesn't match the one in our database. Please <a href=\"member.php?action=login\">try again</a> or retrieve a <a href=\"member.php?action=lostpassword\">new password</a> if you can't remember yours.");
-define ("_ACCOUNTLOCKED", "This account has been locked by the adminstrators of this site.  Please <a href='contact.php'>contact</a> the site adminstrators for more information.");
+define ("_ACCOUNTLOCKED", "This account has been locked by the adminstrators of this site.  Please <a href='".SITEURL."contact.php'>contact</a> the site adminstrators for more information.");
 define ("_NOSUCHACCOUNT", "There is no such account on our website."); // Added 6-18-2008
 
 // User - Review Response
