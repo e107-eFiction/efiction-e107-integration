@@ -26,11 +26,11 @@
 if (!defined('e107_INIT')) {
     exit;
 }
-
+ 
 //function to build story data section of the form.
 function storyform($stories, $preview = 0)
 {
-    global $admin, $allowed_tags, $multiplecats,  $roundrobins, $catlist, $coauthallowed, $tinyMCE, $action, $sid;
+    global $admin, $allowed_tags, $roundrobins, $catlist, $coauthallowed, $tinyMCE, $action, $sid;
 
 	$frm = e107::getForm();
     $classes = explode(',', $stories['classes']);
@@ -45,8 +45,9 @@ function storyform($stories, $preview = 0)
     $complete = $stories['completed'];
     $validated = $stories['validated'];
     $uid = $stories['uid'];
+    
+    $multiplecats = efiction::settings('multiplecats');
  
-	
 	$authorquery = 'SELECT '._PENNAMEFIELD.' as penname, '._UIDFIELD.' as uid FROM '._AUTHORTABLE.' ORDER BY '._PENNAMEFIELD;
 	if (!isset($authors)) {
 		$authors = array();
@@ -59,6 +60,7 @@ function storyform($stories, $preview = 0)
 	$output  = '<div class="title"><h3>Základné údaje o poviedke</h3></div>';
 	
 	$output .= '<div class="row">';
+    
 	$output .= '<div class="form-group col-lg-4 col-md-4 col-sm-12">
 		<label for="uid" class="col-form-label">'._AUTHOR.'</label>
 				<div>';
@@ -77,10 +79,39 @@ function storyform($stories, $preview = 0)
 					</div>
 		</div>';
 
-		$output .="</div>"; //end of row
+	
+        $output .="</div>"; //end of row
 
 		$output .= '<div class="row">';
-		$output .= '<div class="form-group col-lg-12 col-md-12 col-sm-12">
+	    $output .= '<div class="  col-lg-4 col-md-4 col-sm-12">
+		 
+				 ';
+    	if ($coauthallowed) {
+            $output .= ' 
+    		<div style="text-align: center;">'._COAUTHORSEARCH.'</div>';
+    
+            $output .= "<label for='coauthorsSelect'>"._SEARCH.": <input class='tbox form-control input-large' name='coauthorsSelect' id='coauthorsSelect' size='20' type='text' class='userSelect' onkeyup='setUserSearch(\"coauthors\");' autocomplete='off'></label><br />
+    		<div id='coauthorsDiv' name='coauthorsDiv' style='visibility: hidden;'></div>
+    		<iframe id='coauthorsshim' scr='' scrolling='no' frameborder='0' class='shim'></iframe>
+    		<div><label for='coauthorsSelected'>"._COAUTHORS.": <br /><select name='coauthorsSelected' id='coauthorsSelected' size='8' multiple='multiple' class='multiSelect' onclick='javascript: removeMember(\"coauthors\");'>";
+            $couids = array() ;
+            if (is_array($stories['coauthors']) && count($stories['coauthors'])) {
+                $coauths = dbquery('SELECT '._PENNAMEFIELD.' as penname, '._UIDFIELD.' as uid FROM '._AUTHORTABLE.' WHERE FIND_IN_SET('._UIDFIELD.", '".implode(',', $stories['coauthors'])."') > 0");
+                while ($c = dbassoc($coauths)) {
+                    if ($c['uid'] == $stories['uid']) {
+                        continue;
+                    }
+                    $output .= "<option label='".$c['penname']."' value='".$c['uid']."'>".$c['penname'].'</option>';
+                    $couids[] = $c['uid'];
+                }
+                $couids = implode(',', $couids);
+            }
+            $output .= "</select></label>
+    		<input type='hidden' name='coauthors' id='coauthors' value='$couids'></div>";
+        }           
+                      
+        $output .=" </div>";
+		$output .= '<div class="form-group col-lg-8 col-md-8 col-sm-12">
 					<label for="summary" class="col-form-label">'._SUMMARY.'</label>
 					<div>
 					'.$frm->textarea('summary', $summary, '6', '58',  array('class'=>'col-md-12')).'
@@ -91,63 +122,23 @@ function storyform($stories, $preview = 0)
         if (!$multiplecats) {
             $output .= '<input type="hidden" name="catid" id="catid" value="1">';
         } else {
-            
-            $rows = e107::getDb()->retrieve("fanfiction_categories", "*", true, true);
-    		foreach($rows AS $row) {
-    				$values[$row['catid']] = $row['category'];
-    		}
-           
-        $atributes =  array (  'title' => LAN_CHOOSECAT,  
-                    'type' => 'checkboxes', 
-                    'data' => 'str',  
-                    'filter' => true, 
-		            'width' => '200px',  
-                    'help' => '',  
-                    'writeParms' => array('inline'=>true, 'multicheck'=>true, 'useKeyValues'=>1 )
-		             ); 
-         $atributes['writeParms']['optArray'] = $values ;  
- 
-          $output .= e107::getForm()->renderElement('catoptions', $stories['catid'] , $atributes ); 
-            
-            //include _BASEDIR.'includes/categories.php';
-            //$output .= '<input type="hidden" name="formname" value="stories">';
+            include _BASEDIR.'includes/categories.php';
+            $output .= "<input type=\"hidden\" name=\"formname\" value=\"stories\">";
         }
-   $output .=  "<style> .checkbox-inline {min-width: 200px;}
-				#characters-container .checkbox-inline  {margin-left: 20px!important; } 
-				#catid-container .checkbox-inline  {margin-left: 20px!important; }  
-				#classes-container .checkbox-inline  {margin-left: 20px!important; } </style> 
-				 ";
-                 
-                 
-    	if ($coauthallowed) {
-        $output .= '<script language="javascript" type="text/javascript" src="'._BASEDIR.'includes/userselect.js"></script>
-		<script language="javascript" type="text/javascript" src="'._BASEDIR.'includes/xmlhttp.js"></script><div style="text-align: center;">'._COAUTHORSEARCH.'</div>';
+     
 
-        $output .= "<label for='coauthorsSelect'>"._SEARCH.": <input name='coauthorsSelect' id='coauthorsSelect' size='20' type='text' class='userSelect' onkeyup='setUserSearch(\"coauthors\");' autocomplete='off'></label><br />
-		<div id='coauthorsDiv' name='coauthorsDiv' style='visibility: hidden;'></div>
-		<iframe id='coauthorsshim' scr='' scrolling='no' frameborder='0' class='shim'></iframe>
-		<div><label for='coauthorsSelected'>"._COAUTHORS.": <br /><select name='coauthorsSelected' id='coauthorsSelected' size='8' multiple='multiple' class='multiSelect' onclick='javascript: removeMember(\"coauthors\");'>";
-        $couids = array() ;
-        if (is_array($stories['coauthors']) && count($stories['coauthors'])) {
-            $coauths = dbquery('SELECT '._PENNAMEFIELD.' as penname, '._UIDFIELD.' as uid FROM '._AUTHORTABLE.' WHERE FIND_IN_SET('._UIDFIELD.", '".implode(',', $stories['coauthors'])."') > 0");
-            while ($c = dbassoc($coauths)) {
-                if ($c['uid'] == $stories['uid']) {
-                    continue;
-                }
-                $output .= "<option label='".$c['penname']."' value='".$c['uid']."'>".$c['penname'].'</option>';
-                $couids[] = $c['uid'];
-            }
-            $couids = implode(',', $couids);
-        }
-        $output .= "</select></label>
-		<input type='hidden' name='coauthors' id='coauthors' value='$couids'></div>";
-    }
     $codequery = dbquery('SELECT * FROM '.TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'storyform_start'");
     while ($code = dbassoc($codequery)) {
         eval($code['code_text']);
     }
 
- 
+ 	
+    
+	$output .= "</p>
+		<p><label for=\"storynotes\">"._STORYNOTES.":</label> <br /><textarea class=\"textbox\" rows=\"6\" name=\"storynotes\" id=\"storynotes\" cols=\"58\">$storynotes</textarea></p>";
+	if($tinyMCE) 
+		$output .= "<div class='tinytoggle'><input type='checkbox' name='toggle' onclick=\"toogleEditorMode('storynotes');\" checked><label for='toggle'>"._TINYMCETOGGLE."</label></div>";
+        
 
     $output .= "<div style='float: left; width: 100%;'>";
     $count = 0;

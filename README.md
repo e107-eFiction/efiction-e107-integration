@@ -17,6 +17,8 @@ New starter point for futher integration.
 - replaced _CHARSET
 - replaced $_SESSION with e107 session handler
 
+## Version 1.0.2
+- categories as multicheck
 
 
 **Integration**
@@ -24,20 +26,10 @@ New starter point for futher integration.
 - [x] using class2.php
 - [x] _BASEDIR - after moving to plugin correct value is define ("_BASEDIR", e_PLUGIN."efiction/"); 
 - [x] front languages
-
-
-### efiction moved to plugin
-- removed modules, let it for later...
-
-Done:
-**Sessions**
-- [x] check $_SESSION
-- [x] replacing session _viewed // This session variable is used to track the story views, there was bug, it couldn't work before
-- [x] replacing session _ageconsent
-- [x] replacing session _warned
-- [x] replacing session _skin
-- [x] replacing session _digit 
-
+ 
+ 
+**categories as multicheck**
+- [ ] check for explode 
 
 #### User/registration system
 

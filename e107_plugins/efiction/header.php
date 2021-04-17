@@ -183,6 +183,7 @@ if(!isset($_GET['action']) || $_GET['action'] != "printable") {
 
 if(isset($displayform) && $displayform == 1) {
 
+e107::js('url',  _BASEDIR."includes/userselect.js" , 'jquery' );
 e107::js('url',  _BASEDIR."includes/xmlhttp.js" , 'jquery' );
   $inlinecode = "
     lang = new Array( );

@@ -70,7 +70,7 @@ include("includes/storyform.php");
 
 function preview_story($stories) {
 	global $current, $new, $extendcats, $skindir, $catlist, $charlist, $classlist, $featured, $retired, $rr, $reviewsallowed, $star, $halfstar, $classtypelist, $dateformat, $ratingslist, $recentdays;
-
+ 
 	$count = 0;
 	if(file_exists("$skindir/listings.tpl")) $tpl = new TemplatePower( "$skindir/listings.tpl" );
 	else $tpl = new TemplatePower(_BASEDIR."default_tpls/listings.tpl");
@@ -136,6 +136,7 @@ function newstory( ) {
 	$title = isset($_POST['title']) ? descript(strip_tags($_POST['title'], $allowed_tags)) : "";
 	$summary = isset($_POST['summary']) ? replace_naughty(descript(strip_tags($_POST['summary'], $allowed_tags))) : "";
 	$storynotes = isset($_POST['storynotes']) ? descript(strip_tags($_POST['storynotes'], $allowed_tags)) : "";
+ 
 	$catid = isset($_POST['catid']) ? array_filter(explode(",", $_POST['catid']), "isNumber") : array( );
 	$charid = isset($_POST['charid']) ? array_filter($_POST['charid'], "isNumber") : array( );
 	$coauthors = isset($_POST['coauthors']) ? array_filter(explode(",", $_POST['coauthors']), "isNumber") : array( );
@@ -633,7 +634,7 @@ function editstory($sid) {
 		$notes = isset($_POST['notes']) ? strip_tags(descript($_POST['notes']), $allowed_tags) : "";
 		$endnotes = isset($_POST['endnotes']) ? strip_tags(descript($_POST['endnotes']), $allowed_tags) : "";
 		$rid = isset($_POST['rid']) && isNumber($_POST['rid']) ? $_POST['rid'] : 0;
-		$catid = isset($_POST['catid']) ? array_filter(explode(",", $_POST['catid']), "isNumber") : array( );
+	//	$catid = isset($_POST['catid']) ? array_filter($_POST['catid'], "isNumber") : array( );
 		$charid = isset($_POST['charid']) ? array_filter($_POST['charid'], "isNumber") : array( );
 		$coauthors = isset($_POST['coauthors']) ? array_filter(explode(",", $_POST['coauthors']), "isNumber") : array( );
 		if(isset($_POST['uid']) && isNumber($_POST['uid'])) $uid = $_POST['uid'];
@@ -658,6 +659,7 @@ function editstory($sid) {
  
 		$oldcats = isset($_POST['oldcats']) ? array_filter(explode(",", $_POST['oldcats']), "isNumber") : array( );
 		if (!$rid || !$title || !$summary || !$catid) {
+             
 			$output .= write_error("(A)"._MISSINGFIELDS);
 			$submit = _PREVIEW;
 		}
@@ -834,15 +836,16 @@ function editstory($sid) {
 			exit( );
 		}
 	}
+ 
 	$query = dbquery("SELECT DATE_FORMAT(date, '$dateformat') as date, wordcount, uid FROM ".TABLEPREFIX."fanfiction_stories WHERE sid = '$sid' LIMIT 1");
 	list($published, $wordcount, $storyuid) = dbrow($query);
 	$formbegin = "<div class=\"tblborder editstory\" width=\"80%\">
 		<form METHOD=\"POST\" name=\"form\" action=\"stories.php?action=editstory".($admin ? "&amp;admin=1" : "")."&amp;sid=$sid\">";
  
 
-	if(isset($_POST['submit']) && $_POST['submit'] != _PREVIEW) {
+	if(isset($_POST['submit']) && $_POST['submit'] != _PREVIEW) {  
 		$submit = _PREVIEW;
-		$storyquery = dbquery("SELECT title, summary, storynotes,  rr, completed, rid, classes, charid, catid, featured, uid, coauthors, UNIX_TIMESTAMP(date) as date FROM ".TABLEPREFIX."fanfiction_stories WHERE sid = '$sid' LIMIT 1");
+		$storyquery = dbquery("SELECT * , UNIX_TIMESTAMP(date) as date FROM ".TABLEPREFIX."fanfiction_stories WHERE sid = '$sid' LIMIT 1");
 		$story = dbassoc($storyquery);
 		$output .= $formbegin.storyform($story, $preview);
 		$output .= "<input type=\"hidden\" name=\"oldcats\" value =\"".$story['catid']."\">";
