@@ -26,6 +26,16 @@
 
 if (!defined('e107_INIT')) { exit; }
  
+ if(isset($_POST['submit'])) {
+			$stories['writer'] = stripslashes($_POST['writer']);
+			$stories['original_title'] = stripslashes($_POST['original_title']);
+			$stories['original_url'] = stripslashes($_POST['original_url']);
+			$stories['preklad_url'] = stripslashes($_POST['preklad_url']);
+			$stories['multichapter'] = stripslashes($_POST['multichapter']);
+			$stories['source'] = $source;		
+ }
+ 
+ 
     $output .= '<div class="alert alert-info" role="alert">
      Toto je nové!!!
         </div>';
@@ -62,7 +72,6 @@ $output .= "<br /><label for=\"feature\">Zdroj:</label>
 <option value='none' ".($source == 'none' ? " selected" : "")." >Neurceny</option>
 <option value='mimo' ".($source == 'mimo' ? " selected" : "").">Mimo HPKizi Universe</option>
 <option value='efiction' ".($source == 'efiction' ? " selected" : "")." >Priamy cez efiction</option>
-<option value='archiv' ".($source == 'archiv' ? " selected" : "").">HPKIZI Archiv</option>
 <option value='hpkizi' ".($source == 'hpkizi' ? " selected" : "")." >HPKIZI</option>
 <option value='chyba' ".($source == 'chyba' ? " selected" : "").">Chyba</option>
 </select>";
