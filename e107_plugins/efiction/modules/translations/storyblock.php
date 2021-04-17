@@ -23,9 +23,19 @@
  
  
 	global $language;
+    
+    
+ if(isset($_POST['submit'])) {      
+			$stories['writer'] = stripslashes($_POST['writer']);
+			$stories['original_title'] = stripslashes($_POST['original_title']);
+			$stories['original_url'] = stripslashes($_POST['original_url']);
+			$stories['preklad_url'] = stripslashes($_POST['preklad_url']);
+			$stories['multichapter'] = stripslashes($_POST['multichapter']);
+			$stories['source'] =  stripslashes($_POST['source']);
+}    
  
     if(!empty($stories['writer'])) {  
-    	$challengelinks = array( );
+    
     	$writer_id = $stories['writer'];
       
     	$writer_result = e107::getDb()->retrieve("fanfiction_writers", "cw_author_name, cw_author_rs, cw_author_id", "cw_author_id =".$writer_id." LIMIT 1 ");
@@ -35,7 +45,8 @@
            $rsekcia = ' <span class="label rs label-danger">RS  </span> ';  
         }   
     	$writer_name =  (!empty($writer_result ) ? $writer_result['cw_author_name']  : _NONE);
- 
+    }
+    else $tpl->assign("writer", _NONE); 
  
         $tpl->assign("original_title", stripslashes($stories['original_title']) );
     	$tpl->assign("original_link"   , stripslashes(original_link($stories)) );    
@@ -50,8 +61,7 @@
     	$tpl->assign("writer_label", $writer_withlabel );
     	$allclasslist .= "<span class='label'>"._ORIGINAL_WRITER.": </span> ".$writer_name['cw_author_name'] ."<br />";
     */
-    }
-    else $tpl->assign("writer", _NONE);
+
     
      
     

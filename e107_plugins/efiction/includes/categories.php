@@ -40,6 +40,7 @@ foreach($catlist as $cat => $info) {
 		$cats[] = $cat;
 	}
 }
+
 $output .= "</select></div>
 		<div style='float: left; width: 20%; text-align: center; padding-top: 3em;'>
 			<input type='button' class='button' value='>' name='Select' onClick='addCat(\"catoptions\", \"selectCats\");'><br /><br />

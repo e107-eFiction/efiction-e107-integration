@@ -26,55 +26,72 @@
 
 if (!defined('e107_INIT')) { exit; }
  
- if(isset($_POST['submit'])) {
-			$stories['writer'] = stripslashes($_POST['writer']);
-			$stories['original_title'] = stripslashes($_POST['original_title']);
-			$stories['original_url'] = stripslashes($_POST['original_url']);
-			$stories['preklad_url'] = stripslashes($_POST['preklad_url']);
-			$stories['multichapter'] = stripslashes($_POST['multichapter']);
-			$stories['source'] = $source;		
- }
- 
- 
-    $output .= '<div class="alert alert-info" role="alert">
-     Toto je nové!!!
-        </div>';
-    $writer = $stories['writer'];     
-    $output .= "<div style=\"clear: both; height: 1px;\">&nbsp;</div>";
-	$result5 = dbquery("SELECT cw_author_id, cw_author_name FROM ".TABLEPREFIX."fanfiction_writers ORDER BY cw_author_name ");
-	$output .= "<label for=\"cw_author_id\">"._ORIGINAL_WRITER.":</label>".(!$rid ? " <span style=\"font-weight: bold; color: red\">*</span>" : "")." <select size=\"1\" id=\"writer\" name=\"writer\">";
-	while ($w = dbassoc($result5)) {
-		$output .= "<option value=\"".$w['cw_author_id']."\"".($writer == $w['cw_author_id'] ? " selected" : "").">".$w['cw_author_name']."</option>";
-	} 
-	$output .= "</select> <br>"; 
-    
- 
+    $writer = $stories['writer'];  
     $original_title = $stories['original_title']; 
-	$output .= "<br /><label for=\"original_title\">"._ORIGINAL_TITLE.":</label> ".(!$original_title ? "<span style=\"font-weight: bold; color: red\">*</span>" : "")."<input type=\"text\" class=\"textbox\" name=\"original_title\" size=\"50\"".($original_title? " value=\"".htmlentities($original_title)."\"" : "")." maxlength=\"200\" id=\"original_title\"><br />";
- 
     $original_url = $stories['original_url']; 
-	$output .= "<br /><label for=\"original_url\">"._ORIGINAL_URL.":</label> ".(!$original_url ? "<span style=\"font-weight: bold; color: red\">*</span>" : "")."<input type=\"text\" class=\"textbox\" name=\"original_url\" size=\"100\"".($original_url? " value=\"".htmlentities($original_url)."\"" : "")." maxlength=\"200\" id=\"original_title\"><br />";
-  
     $preklad_url = $stories['preklad_url']; 
-	$output .= "<br /><label for=\"preklad_url\">"._PREKLAD_URL.":</label> ".(!$preklad_url ? "<span style=\"font-weight: bold; color: red\">*</span>" : "")."<input type=\"text\" class=\"textbox\" name=\"preklad_url\" size=\"100\"".($preklad_url? " value=\"".htmlentities($preklad_url)."\"" : "")." maxlength=\"200\" id=\"original_title\"><br />";
-  
-    
     $multichapter = $stories['multichapter'];
-	$output .= " <br> <label for=\"complete\">Kapitolovka:</label> 
-    <input type=\"checkbox\" class=\"checkbox-inline\" id=\"multichapter\" name=\"multichapter\" value=\"1\"".($multichapter == 1 ? " checked" : "") .">";
-
-
-    $source = $stories['source'];  
-    
-$output .= "<br /><label for=\"feature\">Zdroj:</label> 
+    $source = $stories['source'];
  
-<select name='source' id='source'  class=\"textbox\" data-original-title='' title=''>
-<option value='none' ".($source == 'none' ? " selected" : "")." >Neurceny</option>
-<option value='mimo' ".($source == 'mimo' ? " selected" : "").">Mimo HPKizi Universe</option>
-<option value='efiction' ".($source == 'efiction' ? " selected" : "")." >Priamy cez efiction</option>
-<option value='hpkizi' ".($source == 'hpkizi' ? " selected" : "")." >HPKIZI</option>
-<option value='chyba' ".($source == 'chyba' ? " selected" : "").">Chyba</option>
-</select>";
+    $writerquery = "SELECT cw_author_id, cw_author_name FROM ".TABLEPREFIX."fanfiction_writers ORDER BY cw_author_name ";
+    $writersarray = e107::getDb()->retrieve($writerquery, true);
+	foreach($writersarray AS $writerresult) {
+		$writers[$writerresult['cw_author_id']] = $writerresult['cw_author_name'];
+    }
+ 
+    $output .= '<div class="title"><h3>Informácie o originále a nastavení</h3></div>';
+    $output .= '<div class="row">';
+	$output .= '<div class="form-group col-lg-4 col-md-4 col-sm-12">
+					<label for="uid" class=" col-form-label">'._ORIGINAL_WRITER.'</label>
+						<div>
+						'.$frm->select('writer', $writers, $uid, array( 'class'=> 'custom-select-box', 'required' => 1), _ORIGINAL_WRITER).'
+						</div>
+				</div>';
+                     
+    $output .= '<div class="form-group col-lg-8 col-md-8 col-sm-12">
+				<label for="storytitle" class="  col-form-label">'._ORIGINAL_TITLE.'</label>
+					<div>
+					'.$frm->text('original_title', htmlentities($original_title), 200, array('size' => 'large', 'required' => 1, 'id'=>'original_title')).'
+					</div>
+			  </div>';
+    $output .= '</div>';       
+    $output .= '<div class="row">';
+	$output .= '<div class="form-group col-lg-6 col-md-6 col-sm-12">
+				<label for="storytitle" class="col-form-label">'._ORIGINAL_URL.'</label>
+					<div>
+					'.$frm->text('original_url', htmlentities($original_url), 200, array('size' => 'large', 'required' => 1, 'id'=>'original_url')).'
+					</div>
+			  </div>';
+    $output .= '<div class="form-group  col-lg-6 col-md-6 col-sm-12">
+				<label for="storytitle" class="col-form-label">'._PREKLAD_URL.'</label>
+					<div>
+					'.$frm->url('preklad_url', htmlentities($preklad_url), 200, array('size' => 'large', 'required' => 1, 'id'=>'preklad_url')).'
+					</div>
+			  </div>';
+    $output .= '</div>';    
+    $output .= '<div class="row">';  
+	$output .= '<div class="form-group col-lg-6 col-md-6 col-sm-12">
+				    <label for=\"multichapter\">Kapitolovka</label>
+					<div>
+					'.e107::getForm()->radio_switch('multichapter', $multichapter, _YES, _NO).'
+					</div>
+			    </div>';   
+                
+    $sources['none'] =  'Neurčený';
+    $sources['hpkizi'] =  'HPKIZI';    
+    $sources['mimo'] =  'Mimo HPKizi Universe';   
+    $sources['efiction'] =  'Priamy cez efiction';
+    $sources['chyba'] =  'Chyba';
+                    
+ 	$output .= '<div class="form-group col-lg-4 col-md-4 col-sm-12">
+					<label for="uid" class=" col-form-label">Zdroj:</label>
+						<div>
+						'.$frm->select('source', $sources, $source, array( 'class'=> 'custom-select-box', 'required' => 1)).'
+						</div>
+				</div>';               
+                 
+    $output .= '</div>';
+ 
 
 
     

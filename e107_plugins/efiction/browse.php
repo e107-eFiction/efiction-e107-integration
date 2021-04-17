@@ -30,10 +30,16 @@ require_once(HEADERF);
 if(isset($_GET['type'])) $type = descript($_GET['type']);
 else $type = false;
 
-if(file_exists("$skindir/browse.tpl")) $tpl = new TemplatePower( "$skindir/browse.tpl" );
+if($type) {
+  if(file_exists("$skindir/browse_search.tpl")) $tpl = new TemplatePower( "$skindir/browse_search.tpl" );
   else $tpl = new TemplatePower(_BASEDIR."default_tpls/browse.tpl");
   if(file_exists("$skindir/listings.tpl")) $tpl->assignInclude("listings", "$skindir/listings.tpl");
   else $tpl->assignInclude( "listings", _BASEDIR."default_tpls/listings.tpl" );
+}
+else {
+  if(file_exists("$skindir/browse.tpl")) $tpl = new TemplatePower( "$skindir/browse.tpl" );
+  else $tpl = new TemplatePower(_BASEDIR."default_tpls/browse.tpl");
+}
 
 include("includes/pagesetup.php");
 if(isset($_GET['type'])) $type = descript($_GET['type']);
@@ -323,7 +329,7 @@ if($type) {
     }
 }
 else  {
-    $tpl->assign("column-width", "col-md-12");
+
     $caption = _BROWSE;
 	$panelquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_hidden != '1' AND panel_level ".(isMEMBER ? " < 2" : "= '0'")." AND panel_type = 'B' ORDER BY panel_type DESC, panel_order ASC, panel_title ASC");
 	while($panel = dbassoc($panelquery)) {
