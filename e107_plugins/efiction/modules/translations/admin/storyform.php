@@ -39,43 +39,42 @@ if (!defined('e107_INIT')) { exit; }
 		$writers[$writerresult['cw_author_id']] = $writerresult['cw_author_name'];
     }
  
-    $output .= '<div class="title"><h3>Informácie o originále a nastavení</h3></div>';
+    $output .= '<div class="title"><h3>Doplňujúce info</h3></div>';
     $output .= '<div class="row">';
-	$output .= '<div class="form-group col-lg-4 col-md-4 col-sm-12">
-					<label for="uid" class=" col-form-label">'._ORIGINAL_WRITER.'</label>
+	$output .= '<div class="form-group col-md-6">
+					<label for="writer" class="col-form-label">'._ORIGINAL_WRITER.'</label>
 						<div>
-						'.$frm->select('writer', $writers, $uid, array( 'class'=> 'custom-select-box', 'required' => 1), _ORIGINAL_WRITER).'
+						'.e107::getForm()->select('writer', $writers, $writer,  array( 'required'=> 1 , 'data-live-search'=>'true', 'class'=>'selectpicker form-control show-tick' ), _ORIGINAL_WRITER).'
 						</div>
 				</div>';
-                     
-    $output .= '<div class="form-group col-lg-8 col-md-8 col-sm-12">
-				<label for="storytitle" class="  col-form-label">'._ORIGINAL_TITLE.'</label>
-					<div>
-					'.$frm->text('original_title', htmlentities($original_title), 200, array('size' => 'large', 'required' => 1, 'id'=>'original_title')).'
-					</div>
-			  </div>';
-    $output .= '</div>';       
-    $output .= '<div class="row">';
-	$output .= '<div class="form-group col-lg-6 col-md-6 col-sm-12">
-				<label for="storytitle" class="col-form-label">'._ORIGINAL_URL.'</label>
-					<div>
-					'.$frm->text('original_url', htmlentities($original_url), 200, array('size' => 'large', 'required' => 1, 'id'=>'original_url')).'
-					</div>
-			  </div>';
-    $output .= '<div class="form-group  col-lg-6 col-md-6 col-sm-12">
-				<label for="storytitle" class="col-form-label">'._PREKLAD_URL.'</label>
-					<div>
-					'.$frm->url('preklad_url', htmlentities($preklad_url), 200, array('size' => 'large', 'required' => 1, 'id'=>'preklad_url')).'
-					</div>
-			  </div>';
-    $output .= '</div>';    
-    $output .= '<div class="row">';  
-	$output .= '<div class="form-group col-lg-6 col-md-6 col-sm-12">
+                
+   	$output .= '<div class="form-group col-md-6">
 				    <label for=\"multichapter\">Kapitolovka</label>
 					<div>
 					'.e107::getForm()->radio_switch('multichapter', $multichapter, _YES, _NO).'
 					</div>
-			    </div>';   
+			    </div>';
+    $output .= '</div>';     
+                             
+    $output .= '<div class="form-group">
+				<label for="original_title" class="col-form-label">'._ORIGINAL_TITLE.'</label>
+					<div>
+					'.e107::getForm()->text('original_title', htmlentities($original_title), 200, array('size' => 'large', 'required' => 1, 'id'=>'original_title')).'
+					</div>
+			  </div>';
+	$output .= '<div class="form-group">
+				<label for="original_url" class="col-form-label">'._ORIGINAL_URL.'</label>
+					<div>
+					'.e107::getForm()->text('original_url', htmlentities($original_url), 200, array('size' => 'large', 'required' => 1, 'id'=>'original_url')).'
+					</div>
+			  </div>';
+    $output .= '<div class="form-group">
+				<label for="preklad_url" class="col-form-label">'._PREKLAD_URL.'</label>
+					<div>
+					'.e107::getForm()->url('preklad_url', htmlentities($preklad_url), 200, array('size' => 'large', 'required' => 1, 'id'=>'preklad_url')).'
+					</div>
+			  </div>';
+   
                 
     $sources['none'] =  'Neurčený';
     $sources['hpkizi'] =  'HPKIZI';    
@@ -83,18 +82,10 @@ if (!defined('e107_INIT')) { exit; }
     $sources['efiction'] =  'Priamy cez efiction';
     $sources['chyba'] =  'Chyba';
                     
- 	$output .= '<div class="form-group col-lg-4 col-md-4 col-sm-12">
-					<label for="uid" class=" col-form-label">Zdroj:</label>
+ 	$output .= '<div class="form-group">
+					<label for="source" class=" col-form-label">Zdroj:</label>
 						<div>
-						'.$frm->select('source', $sources, $source, array( 'class'=> 'custom-select-box', 'required' => 1)).'
+						'.e107::getForm()->select('source', $sources, $source, array( 'class'=> 'custom-select-box', 'required' => 1)).'
 						</div>
 				</div>';               
-                 
-    $output .= '</div>';
  
-
-
-    
-  $output .= '<div class="alert alert-info" role="alert">
-     Tu končia naše úpravy
-        </div>';

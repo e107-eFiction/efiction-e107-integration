@@ -24,7 +24,7 @@
  
 	global $language;
     
-    
+ 
  if(isset($_POST['submit'])) {      
 			$stories['writer'] = stripslashes($_POST['writer']);
 			$stories['original_title'] = stripslashes($_POST['original_title']);

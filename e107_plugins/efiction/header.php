@@ -207,8 +207,7 @@ characters = new Array( );
 
 if(!$displaycolumns) $displaycolumns = 1;
 $colwidth = floor(100/$displaycolumns);
-
-
+ 
 if(!empty($_GET['action']) && $_GET['action'] == "printable") {
 	if(file_exists("$skindir/printable.css")) echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"$skindir/printable.css\">";
 	else echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"default_tpls/printable.css\">";

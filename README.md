@@ -19,6 +19,8 @@ New starter point for futher integration.
 
 ## Version 1.0.2
 - categories as multicheck
+- new edit form, fully templated + shortcodes
+- fixed viewstories - with coauthors used story were displayed more times
 
 
 **Integration**
@@ -29,7 +31,10 @@ New starter point for futher integration.
  
  
 **categories as multicheck**
-- [ ] check for explode 
+- [ ] check for explode array_filter(explode(",", $_POST['catid']), "isNumber")
+
+**moving storyform to shortcodes**
+- [ ] check _AUTHOR - LAN_AUTHOR
 
 #### User/registration system
 

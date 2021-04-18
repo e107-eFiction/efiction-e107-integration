@@ -31,7 +31,7 @@ if (!isset($catid)) {
     $catid = array();
 }
 
-$output .= "<div><label for='catoptions'>"._CATOPTIONS.'</label> <br />';
+$output .= "<div ><label class='col-form-label' for='catid'>"._CATOPTIONS.'</label> <br />';
 
 $rows = e107::getDb()->retrieve('fanfiction_categories', '*', true, true);
 foreach ($rows as $row) {
@@ -39,7 +39,6 @@ foreach ($rows as $row) {
 }
 
 $options = array('title' => _SELECTCATS, 'inline' => true,  'useKeyValues' => 1);
-
 $output .= e107::getForm()->checkboxes('catid', $categories, $catid, $options);
 
 $output .= '

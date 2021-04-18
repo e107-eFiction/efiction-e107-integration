@@ -58,6 +58,24 @@ class eAuthors
     
     
     }
+    
+    
+    /* used for author select in storyform */
+    
+    public function get_authors_list()
+	{
+		
+        $authors = array();
+        $authorquery = 'SELECT '._PENNAMEFIELD.' as penname, '._UIDFIELD.' as uid FROM '._AUTHORTABLE.' ORDER BY '._PENNAMEFIELD;
+		$authorsarray = e107::getDb()->retrieve($authorquery, true);
+
+		foreach($authorsarray AS $authorresult) {
+			$authors[$authorresult['uid']] = $authorresult['penname'];
+		}    
+        
+		return $authors;
+	}  
+    
  
     
     public function get_author_data($uid=null)

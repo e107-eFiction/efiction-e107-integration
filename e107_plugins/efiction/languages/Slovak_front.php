@@ -4,7 +4,7 @@ define ("LAN_EFICTION_BY", "od");
 define ("LAN_EFICTION_READMORE", "Zistiť viac...");
 
 define ("LAN_RECENTSTORIES", "Preklady aktualizované za posledných [x] dní.");
-
+define ("LAN_REQUIRED_INFORMATION", "Povinné údaje");
  
 define ("_ACTIONSUCCESSFUL", "Akcia bola úspešná.");
 define ("_ACTIONCANCELLED", "Požadovaná akcia zrušená.");
@@ -36,7 +36,7 @@ define ("_CAPTCHANOTE", "Enter the security code shown below:");
 define ("_CATEGORIES", "Kategórie");
 define ("_CATEGORY", "Kategória");
 define ("_CATLOCKED", "Táto kategória je uzavratá.");
-define ("_CATOPTIONS", "Možnosti kategórie");
+define ("_CATOPTIONS", "Dostupné kategórie");
 define ("_CLEAR", "Clear");
 define ("_CHAPTER", "Kapitola");
 define ("_CHAPTERS", "Kapitoly");

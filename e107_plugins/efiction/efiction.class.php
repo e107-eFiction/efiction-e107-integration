@@ -126,6 +126,7 @@ class eFiction
     }
     
  
+	/* all day id => array() */
 
     public static function ratingslist()
     {
@@ -139,6 +140,22 @@ class eFiction
 
         return $ratingslist;
     }
+
+	/* used for ratings select in storyform */
+	/* ID => NAME */
+	public function get_ratings_list()
+	{
+		
+		$authors = array();
+		$ratingquery = 'SELECT rid, rating FROM #fanfiction_ratings';
+		$ratingsarray = e107::getDb()->retrieve($ratingquery, true);
+
+		foreach($ratingsarray AS $ratingresult) {
+			$ratings[$ratingresult['rid']] = $ratingresult['rating'];
+		}    
+		
+		return $ratings;
+	}
 
     public static function pagelinks()
     {
