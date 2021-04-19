@@ -304,6 +304,9 @@ Display captcha:
 - [ ] $disablesorts
 - [ ] $favorites
 - [x] $headerSent deleted, header is managed by e107
+- [ ] $multiplecats  $multiplecats = efiction::settings('multiplecats') 
+		- check ($multiplecats), (!$multiplecats)
+- [ ] $up, $down
 
 
 **Ajax user search**

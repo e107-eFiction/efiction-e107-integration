@@ -30,7 +30,7 @@ if (!defined('e107_INIT')) {
 //function to build story data section of the form.
 function storyform($stories, $preview = 0)
 {
-    global $admin, $allowed_tags, $multiplecats,  $roundrobins, $catlist, $coauthallowed, $tinyMCE, $action, $sid;
+    global $admin, $allowed_tags,  $roundrobins, $catlist, $coauthallowed, $tinyMCE, $action, $sid;
 
 	$frm = e107::getForm();
     $classes = explode(',', $stories['classes']);
@@ -46,24 +46,21 @@ function storyform($stories, $preview = 0)
     $validated = $stories['validated'];
     $uid = $stories['uid'];
  
-	
-	$authorquery = 'SELECT '._PENNAMEFIELD.' as penname, '._UIDFIELD.' as uid FROM '._AUTHORTABLE.' ORDER BY '._PENNAMEFIELD;
-	if (!isset($authors)) {
-		$authors = array();
-		$authorsarray = e107::getDb()->retrieve($authorquery, true);
-		foreach($authorsarray AS $authorresult) {
-			$authors[$authorresult['uid']] = $authorresult['penname'];
-		}
-	}
+ 
 	$template = e107::getTemplate('efiction', 'storyform', 'story');
     $sc = e107::getScParser()->getScObject('storyform_shortcodes', 'efiction', false);
   
+    $chapter_query = "SELECT sid, chapid, title, inorder, rating, reviews, validated, uid FROM ".TABLEPREFIX."fanfiction_chapters WHERE sid = '$sid' ORDER BY inorder";
+    $stories['chapters'] =  e107::getDb()->retrieve($chapter_query, true);
+    $stories['action'] = $action;
     $sc->setVars($stories);
     $sc->wrapper('storyform/layout');
+ 
+        
     $output = '';
     $output = e107::getParser()->parseTemplate($template, true, $sc); 
  
- 
+	/* TODO */
     if ($roundrobins) {
         $output .= ' <label for="rr">  '._ROUNDROBIN.':</label>
   			<input type="checkbox" class="checkbox" name="rr" id="rr"value="1"'.($rr == 1 ? 'checked' : '').'>';
@@ -73,6 +70,7 @@ function storyform($stories, $preview = 0)
     while ($code = dbassoc($codequery)) {
         eval($code['code_text']);
     }
+	
     return $output;
 }
 // end storyform

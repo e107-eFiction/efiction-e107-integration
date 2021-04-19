@@ -51,22 +51,21 @@ $STORYFORM_TEMPLATE['story']  = '
 	</div>
     <div class="col-lg-6 col-md-12 col-sm-12">
         {STORY_EDIT_CODEBLOCK=storyform_start}
-    </div>
-  </div>      
-<div>
+    </div>   
+</div>
 <div class="row"> 
 	<div class="col-lg-12 col-md-12 col-sm-12">  
 		<div class="title"><h3>More information:</h3></div>
-		<div class="form-group"><label for="title" class="col-form-label">{LAN=_STORYNOTES}</label>
+		<div class="form-group"><label for="title" class="col-form-label">{LAN=_CHARACTERS}</label>
 		{STORY_EDIT_CHARACTERS}
 		</div>
 	</div>
 </div>
 <div class="row">
 	<div class="col-lg-12 col-md-12 col-sm-12">  
-		<div class="form-group"><label for="title" class="col-form-label">{LAN=_STORYNOTES}</label>
+	 
 		{STORY_EDIT_CLASSES}
-		</div>
+	 
 	</div>
 </div>
 <div class="row">
@@ -81,6 +80,9 @@ $STORYFORM_TEMPLATE['story']  = '
 	{STORY_EDIT_CODEBLOCK=storyform}
 	</div>
 </div>
+ {STORY_BUTTON_PREVIEW}  {STORY_BUTTON_SAVE}  {STORY_BUTTON_ADD_CHAPTER} 
+ {STORY_EDIT_CHAPTERS_LIST} 
+
 '; 
 
 $STORYFORM_TEMPLATE['chapter']  = '
@@ -92,3 +94,20 @@ $STORYFORM_TEMPLATE['chapter']  = '
     </div>
   </div>
 <div>';
+
+
+
+$STORYFORM_TEMPLATE['chapter_list']['start']  = '<table class="table table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>{LAN=_CHAPTER}</th>
+            <th>{LAN=_MOVE}</th>
+            <th>{LAN=_OPTIONS}</th>
+        </tr>
+    </thead>
+    <tbody>';
+$STORYFORM_TEMPLATE['chapter_list']['item']  = 
+'<tr>
+    <td><a href="{CHAPTER_VIEW_LINK}">{CHAPTER_VIEW_TITLE}</a></td><td>{CHAPTER_REORDER}</td><td>{CHAPTER_EDIT_BUTTON} {CHAPTER_DELETE_BUTTON}</td></tr>';
+
+$STORYFORM_TEMPLATE['chapter_list']['end']  = '</tbody></table>';

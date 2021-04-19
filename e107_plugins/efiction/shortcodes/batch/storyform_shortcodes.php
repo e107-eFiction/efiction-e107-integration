@@ -88,7 +88,7 @@ class plugin_efiction_storyform_shortcodes extends e_shortcode
     public function sc_story_edit_coauthors()
     {
         $coauthallowed = efiction::settings('coauthallowed');
- 
+
         if ($coauthallowed) {
             $authors = eAuthors::get_authors_list();  //all available authors
             $text = e107::getForm()->select('coauthors', $authors, $this->var['coauthors'], array('data-live-search' => 'true', 'class' => 'selectpicker form-control show-tick', 'multiple' => 1), true);
@@ -148,24 +148,22 @@ class plugin_efiction_storyform_shortcodes extends e_shortcode
     /* STORY_EDIT_CODEBLOCK */
     public function sc_story_edit_codeblock($parm)
     {
- 
         if ($parm == 'storyform_start') {
             $stories = $this->var;
             $codequery = "SELECT * FROM #fanfiction_codeblocks WHERE code_type = 'storyform_start'";
-			$codes = e107::getDb()->retrieve($codequery, true);
-            foreach($codes AS $code) {
+            $codes = e107::getDb()->retrieve($codequery, true);
+            foreach ($codes as $code) {
                 //example:  include(_BASEDIR."modules/translations/admin/storyform.php"
                 eval($code['code_text']);
             }
             $text = $output;
             $output = '';
             return $text;
-        }
-		elseif($parm == 'storyform') {
+        } elseif ($parm == 'storyform') {
             $stories = $this->var;
             $codequery = "SELECT * FROM #fanfiction_codeblocks WHERE code_type = 'storyform'";
             $codes = e107::getDb()->retrieve($codequery, true);
-            foreach($codes AS $code) {
+            foreach ($codes as $code) {
                 //example:  include(_BASEDIR."modules/translations/admin/storyform.php"
                 eval($code['code_text']);
             }
@@ -178,8 +176,7 @@ class plugin_efiction_storyform_shortcodes extends e_shortcode
     /* {STORY_EDIT_RATING} */
     public function sc_story_edit_rating()
     {
- 
-		$ratings = efiction::get_ratings_list();
+        $ratings = efiction::get_ratings_list();
         $text = e107::getForm()->select('rid', $ratings, $this->var['rid'], array('required' => 1, 'class' => 'selectpicker form-control show-tick'), _RATING);
 
         return $text;
@@ -196,31 +193,27 @@ class plugin_efiction_storyform_shortcodes extends e_shortcode
     /* {STORY_EDIT_VALIDATED} */
     public function sc_story_edit_validated()
     {
-
-		if (isADMIN && uLEVEL < 4) {
-
-			$values = array(1 => _CHAPTER, 2 =>_STORY,  0 => _NO, );
-			$text .= '<label for="validated">'._VALIDATED.': </label><br>';
-			$text .= e107::getForm()->radio('validated', $values, $this->var['validated']);
-			return $text; 
-		}
+        if (isADMIN && uLEVEL < 4) {
+            $values = array(1 => _CHAPTER, 2 => _STORY,  0 => _NO, );
+            $text .= '<label for="validated">'._VALIDATED.': </label><br>';
+            $text .= e107::getForm()->radio('validated', $values, $this->var['validated']);
+            return $text;
+        }
 
         return '';
-
-        
     }
 
     /* {STORY_EDIT_FEATURED} */
     public function sc_story_edit_featured()
     {
-		if (isADMIN && uLEVEL < 4) {
-			$values = array(1 => _ACTIVE, 2 =>_RETIRED,  0 => _NO, );
-			$text = '<label for="feature">'._FEATURED.': </label><br>';
-			$text .= e107::getForm()->radio('feature', $values, $this->var['feature'] );
+        if (isADMIN && uLEVEL < 4) {
+            $values = array(1 => _ACTIVE, 2 => _RETIRED,  0 => _NO, );
+            $text = '<label for="feature">'._FEATURED.': </label><br>';
+            $text .= e107::getForm()->radio('feature', $values, $this->var['feature']);
 
-			return $text; 
-		}
-        return '';   
+            return $text;
+        }
+        return '';
     }
 
     /* {STORY_EDIT_CHARACTERS} */
@@ -241,30 +234,82 @@ class plugin_efiction_storyform_shortcodes extends e_shortcode
         return $text;
     }
 
-	/* {STORY_EDIT_CLASSES} */
-	public function sc_story_edit_classes()
-	{
- 
-		$classrows  = e107::getDb()->retrieve("SELECT * FROM #fanfiction_classtypes ORDER BY classtype_name", true);
-		$ret .="<style> #admin-ui-edit .checkbox-inline {min-width: 300px;}
+    /* {STORY_EDIT_CLASSES} */
+    public function sc_story_edit_classes()
+    {
+        $classrows = e107::getDb()->retrieve('SELECT * FROM #fanfiction_classtypes ORDER BY classtype_name', true);
+        $ret .= '<style> #admin-ui-edit .checkbox-inline {min-width: 300px;}
 		#characters-container .checkbox-inline  {margin-left: 20px!important; } 
 		#catid-container .checkbox-inline  {margin-left: 20px!important; }  
 		#classes-container .checkbox-inline  {margin-left: 20px!important; } 
-		</style>";
-		foreach($classrows AS $type) {
-			$ret .=  "<div><label for=\"class_".$type['classtype_id']."\"><b>$type[classtype_title]:</b></label>:<br>";
-			$result2 = e107::getDb()->retrieve("SELECT * FROM #fanfiction_classes WHERE class_type = '$type[classtype_id]' ORDER BY class_name" , true);
-			$values = array();
-			foreach($result2 AS $row) {
-				$values[$row['class_id']] = $row['class_name'] ;
-			} 
-			$options['useKeyValues'] = true;
-			$options['inline'] = true;
-			$ret .= e107::getForm()->checkboxes('classes' , $values , $this->var['classes'], $options );
-			$ret .= "</div>";
-		} 
+		</style>';
+        foreach ($classrows as $type) {
+            $ret .= "<div class='form-group'><label for=\"class_".$type['classtype_id']."\"><b>$type[classtype_title]:</b></label>:<br>";
+            $result2 = e107::getDb()->retrieve("SELECT * FROM #fanfiction_classes WHERE class_type = '$type[classtype_id]' ORDER BY class_name", true);
+            $values = array();
+            foreach ($result2 as $row) {
+                $values[$row['class_id']] = $row['class_name'] ;
+            }
+            $options['useKeyValues'] = true;
+            $options['inline'] = true;
+            $ret .= e107::getForm()->checkboxes('classes', $values, $this->var['classes'], $options);
+            $ret .= '</div>';
+        }
+        return $ret;
+    }
 
-		return $ret;
-	}
+    /* {STORY_EDIT_CHAPTERS_LIST} */
+    public function sc_story_edit_chapters_list()
+    {
+        $sid = $this->var['sid'];
+        if (!$sid) {
+            return '';
+        }
 
+        $template = e107::getTemplate('efiction', 'storyform', 'chapter_list');
+        $sc2 = e107::getScParser()->getScObject('chapter_shortcodes', 'efiction', false);
+
+        $tmp = $this->var['chapters'];
+
+        $text = $template['start'];
+
+        $this->chapters = count($this->var['chapters']);
+        foreach ($tmp as $chapter) {
+            $chapter['chapters'] = $this->chapters;
+            $sc2->setVars($chapter);
+            $text .= $output = e107::getParser()->parseTemplate($template['item'], true, $sc2);
+        }
+        $text .= $template['end'];
+
+        return $text;
+    }
+
+    /* {STORY_BUTTON_PREVIEW} */
+    public function sc_story_button_preview()
+    {
+        $text = '<input type="submit" class="button btn btn-secondary" value="'._PREVIEW.'" name="submit">';
+        return $text;
+    }
+
+    /* {STORY_BUTTON_SAVE} */
+    public function sc_story_button_save()
+    {
+        $text = '<input type="submit" class="button btn btn-success" value="'._EDITSTORY.'" name="submit">';
+        return $text;
+    }
+
+    /* {STORY_BUTTON_ADD_CHAPTER} */
+    public function sc_story_button_add_chapter()
+    {
+		if($this->var['action'] == "newstory") return '';
+
+        $sid = $this->var['sid'];
+        $storyuid = $this->var['uid'];
+        $chapters = count($this->var['chapters']);
+        $text = "<a class=\"button btn btn-primary\" href=\"stories.php?action=newchapter&amp;sid=$sid&amp;inorder=$chapters".($this->admin ? '&amp;admin=1&amp;uid='.$storyuid : '').'">'._ADDNEWCHAPTER.'</a>';
+        return $text;
+    }
+
+
+ 
 }

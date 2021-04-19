@@ -95,7 +95,7 @@ else if($action == "add" || $action == "edit") {
 		$challenger = escapestring(strip_tags(descript($_POST['challenger']), $allowed_tags));
 		if(!$challenger) $challenger = _ANONYMOUS;
 		$challengeruid = isset($_POST['challengeruid']) && isNumber($_POST['challengeruid']) ? $_POST['challengeruid'] : 0;
-		$catid = isset($_POST['catid']) ? array_filter(explode(",", $_POST['catid']), "isNumber") : array( );
+		$catid = isset($_POST['catid']) ? array_filter($_POST['catid'], "isNumber") : array( );
 		$category = implode(",", $catid);
 		if(!$category) $category = -1;
 		$characters = isset($_POST['charid']) ? array_filter($_POST['charid'], "isNumber") : array( );
