@@ -12,7 +12,6 @@ define ("_ACTIVE", "Aktívne");
 define ("_ADD", "Pridať");
 define ("_ADDAUTHOR2FAVES", "Zaradiť medzi obľúbených prekladateľov");
 define ("_ADDWRITER2FAVES", "Zaradiť medzi obľúbených autorov");
-define ("_ADDSTORY2FAVES", "Zaradiť medzi obľúbené preklady");
 define ("_ADDTOFAVORITES", "Pridať k obľúbeným");
 define ("_ADMINOPTIONS", "Admin Options");
 define ("_AGECHECK", "Vyžadované odsúhlasenie veku");
@@ -41,8 +40,6 @@ define ("_CLEAR", "Clear");
 define ("_CHAPTER", "Kapitola");
 define ("_CHAPTERS", "Kapitoly");
 define ("_CHARACTERS", "Postavy");
-define ("_CHARACTER_1", "Postava");
-define ("_CHARACTER_2", "Ďalšia postava");
 define ("_CHOOSECAT", "Choose a Category");
 define ("_CONFIRMDELETE", "Are you sure you want to delete this?");
 define ("_COAUTHORSEARCH", "Type in the first few letters of the person's penname.  The first ten matches will appear in a list.  Click on the person's name to select them as a co-author.");
@@ -67,10 +64,12 @@ define ("_MEMBERS", "Členovia");
 define ("_MOSTRECENT", "Najnovšie pridané");
 define ("_MOVE", "Move");
 define ("_MOVETOP", "Move to Top"); // Really only used in the admin files, but we need it in the header.
-define ("_MULTIPLECATEGORIES", 
+define (
+"_MULTIPLECATEGORIES", 
 "<span style=\"text-decoration: underline; font-weight: bold;\">Note:</span> You may select multiple categories.  
 <u>Please be aware that when you select a category in the drop-down menu below, the options in the list will change to display that category's sub-categories.</u>
- Press the 'Select >' button to add it to your choices. You may clear your selections at any time using the 'Clear' button.");
+ Press the 'Select >' button to add it to your choices. You may clear your selections at any time using the 'Clear' button."
+ );
 define ("_MULTIPLESELECT", "Hold the CTRL key to make multiple selections.");
 define ("_NAME", "Meno");
 define ("_NAUGHTYWORDS", "You have triggered our bad language filters.  We require that all content not behind an age verification warning be suitable for all audiences.  This includes titles, summaries, and names (for anonymous reviews, challenges, etc.). Please <a href=\"javascript: history.back(1)\">try again.</a>");
@@ -80,8 +79,6 @@ define ("_NO", "No");
 define ("_NODBFUNCTIONALITY", "It appears no applicable database functionality for PHP has not been enabled in the php configuration for this website.  Please consult the PHP documentation or ask your hosting provider.");
 define ("_NOMAILSENT", "We encountered an error.  No e-mail was sent.");
 define ("_NONE", "None");
-define ("_NONE_SERIE", "Nezaradené v žiadnej sérii");
-
 define ("_NOSKIN", "The skin you selected in your user profile seems to be missing.  The site's default skin will be used instead. Please edit your profile to choose another skin.");
 define ("_NORESULTS", "No results found.");
 define ("_NOTAUTHORIZED", "You are not authorized to access that function.");
@@ -145,8 +142,6 @@ define ("_AUTHORS" , "Prekladatelia");
 define ("_BETAS", "Beta-readeri");
 define ("_ALLMEMBERS", "Všetci členovia");
 define ("_SITEADMINS", "Administrátori");
-define ("_WRITERS" , "Autori originálu");
-
 
 // News
 define ("_COMMENTS", "Komentáre");
@@ -265,7 +260,6 @@ define ("_STORYUPDATED", "The story has been updated.");
 define ("_VALIDATED", "Validated");
 define ("_VIEWCHAPTERS", "View Chapters");
 define ("_WORDCOUNTFAILED", "Your story failed to meet the required minimum or maximum word count for story submission on this site.  Each chapter must be".($minwords ? " no less than ".$minwords : "").($maxwords ? ($minwords ? " and" : "")." no more than $maxwords " : "")." words long.");
-
 
 // User
 
@@ -395,7 +389,6 @@ define ("_EDITADMIN", "Edit Admin Privileges");
 define ("_FAVORITEAUTHORS", "Obľúbení prekladatelia"); // Added for 3.0
 define ("_FAVORITESERIES", "Obľúbené série"); // Added for 3.0
 define ("_FAVORITESTORIES", "Obľúbené preklady"); // Added for 3.0
-define ("_FAVORITEWRITERS", "Obľúbení autori originálu"); // Added for 4.0
 define ("_FAVORITESOF", "Favorites of "); // Added for 3.0
 define ("_LOCKMEM", "Uzamknutý účet");
 define ("_MAKEADMIN", "Make User an Admin");
@@ -409,7 +402,6 @@ define ("_STORIESBY", "Autor prekladu");
 define ("_SUBJECT", "Predmet");
 define ("_UNLOCKMEM", "Odomknúť účet");
 define ("_VALIDATE", "Schváliť");
-
 
 // Tooltip help for various items.  
 define ("_HELP_NEWREV", "Check this box if you wish to receive an e-mail notice each time you get a new review.");
@@ -447,8 +439,3 @@ define ("_BUGREPORT", "Bug Report");
 define ("_REPORTTHIS", "Report This");
 
 
-//autori
-define("_ORIGINAL_WRITER", "Autor originálu");
-define("_ORIGINAL_TITLE", "Názov originálu");
-define("_ORIGINAL_URL", "Link na originál (N ak neexistuje)");
-define("_PREKLAD_URL", "Link na preklad");

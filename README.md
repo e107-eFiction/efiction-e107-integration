@@ -21,6 +21,7 @@ New starter point for futher integration.
 - categories as multicheck
 - new edit form, fully templated + shortcodes
 - fixed viewstories - with coauthors used story were displayed more times
+- removed custom SK LANs and moved them to module, now SK and EN strings are the same
 
 
 **Integration**

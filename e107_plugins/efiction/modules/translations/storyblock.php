@@ -24,7 +24,9 @@
  
 	global $language;
     
- 
+if(file_exists(_BASEDIR."modules/translations/languages/{$language}.php")) include_once(_BASEDIR."modules/translations/languages/{$language}.php");
+else include_once(_BASEDIR."modules/translations/languages/en.php");
+
  if(isset($_POST['submit'])) {      
 			$stories['writer'] = stripslashes($_POST['writer']);
 			$stories['original_title'] = stripslashes($_POST['original_title']);

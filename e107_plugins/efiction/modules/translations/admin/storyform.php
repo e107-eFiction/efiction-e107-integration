@@ -25,6 +25,10 @@
 
 
 if (!defined('e107_INIT')) { exit; }
+
+
+if(file_exists(_BASEDIR."modules/translations/languages/{$language}.php")) include_once(_BASEDIR."modules/translations/languages/{$language}.php");
+else include_once(_BASEDIR."modules/translations/languages/en.php");
  
     $writer = $stories['writer'];  
     $original_title = $stories['original_title']; 

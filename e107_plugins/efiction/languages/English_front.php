@@ -3,7 +3,7 @@
 define ("LAN_EFICTION_BY", "by");
 define ("LAN_EFICTION_READMORE", "Read more...");
 
-define('_RECENTSTORIES', 'Stories updated in the last [x] days.');
+define('LAN_RECENTSTORIES', 'Stories updated in the last [x] days.');
 define ("LAN_REQUIRED_INFORMATION", "Required information");
  
 define('_ACTIONSUCCESSFUL', 'The action was successful.');
