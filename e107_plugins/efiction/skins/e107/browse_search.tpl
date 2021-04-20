@@ -28,7 +28,9 @@
 		<!-- END BLOCK : sortform -->
 		</div>
 		<div class=" {column-width}">
+		{alphalinks}
 		{output}{otherresults}
+		{seriesblock}
 		<!-- INCLUDE BLOCK : listings -->
 		</div>
 

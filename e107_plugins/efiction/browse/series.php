@@ -26,8 +26,8 @@ if (!defined('e107_INIT')) { exit; }
 $current = "series";
 
 $caption =  _SERIES.($let ? " - $let" : "");
-$output .=  build_alphalinks("browse.php?$terms&amp;", $let)."</div>";
-
+$alphalinks =  build_alphalinks("browse.php?$terms&amp;", $let) ;
+ 
 if($let) {
 	$seriesquery .= (empty($seriesquery) ? "" : " AND ").($let == _OTHER ? " series.title REGEXP '^[^a-z]'" : "series.title LIKE '$let%'");
 }
@@ -66,15 +66,40 @@ if($let) {
 		}
 	}
 
-$count = dbquery(_SERIESCOUNT.(!empty($seriesquery) ? " WHERE ".$seriesquery : ""));
+$countquery = _SERIESCOUNT.(!empty($seriesquery) ? " WHERE ".$seriesquery : "");
+$cresult = e107::getDb()->retrieve($countquery, true);
 $query = _SERIESQUERY.(!empty($seriesquery) ? " AND ".$seriesquery : "")." ORDER BY series.title LIMIT $offset, $itemsperpage";
-list($numrows)= dbrow($count);
-$sresult = dbquery($query);
+$sresult = e107::getDb()->retrieve($query, true);
+$numrows = count($cresult);
 $count = 0;
-$tpl->newBlock("listings");
-while($stories = dbassoc($sresult)) { include(_BASEDIR."includes/seriesblock.php"); }	
-$tpl->gotoBlock("listings");
+ 
+/* series listing starts */
+$template = e107::getTemplate('efiction', 'serieview', 'listing');
+$sc_serie = e107::getScParser()->getScObject('serie_shortcodes', 'efiction', false);
+$seriesblock = $template['start'];
+
+$template_key = 'series';
+
+foreach($sresult AS $serie)  { 
+  
+    $serie['numstories'] = count(storiesInSeries($serie['seriesid']));
+    $serie['count'] = $count;
+    $sc_serie->setVars($serie);
+    
+    $count++;
+    //include(_BASEDIR."includes/seriesblock.php"); 
+    $item =  e107::getParser()->parseTemplate($template['item'], true, $sc_serie);
+    $seriesblock .= $item;
+}
+
+ 
+$seriesblock =  e107::getRender()->tablerender($caption, $seriesblock, 'serie-listing', true);
+$tpl->assign("seriesblock", $seriesblock); 
+
+/* series listing ends */
+     
 if($numrows > $itemsperpage) $tpl->assign("pagelinks", build_pagelinks("browse.php?$terms&amp;", $numrows, $offset));
+
 $tpl->gotoBlock("_ROOT");
 if(!$numrows) {
 	$tpl->gotoBlock("_ROOT");

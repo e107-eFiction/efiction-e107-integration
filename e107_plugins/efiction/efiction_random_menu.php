@@ -54,7 +54,7 @@ if (class_exists('efiction')) {
 	$var = array('BLOCK_CAPTION' => $caption);
 	$caption = e107::getParser()->simpleParse($template['caption'], $var);
 
-    $sc = e107::getScParser()->getScObject('efiction_shortcodes', 'efiction', false);
+    $sc = e107::getScParser()->getScObject('story_shortcodes', 'efiction', false);
     $text = '';
  
 	$limit = isset($blocks['random']['limit']) && $blocks['random']['limit'] > 0 ? $blocks['random']['limit'] : 1;

@@ -86,14 +86,35 @@ $STORYFORM_TEMPLATE['story']  = '
 '; 
 
 $STORYFORM_TEMPLATE['chapter']  = '
+
+ 
 <div class="row">
   <div class="col-lg-12 col-md-12 col-sm-12">
-    <div class="title"><h3>{LAN=LAN_REQUIRED_INFORMATION}</h3></div>
-    <div class="form-group"><label for="title" class="col-form-label">{LAN=_STORYTEXTTEXT}</label>   
+    <div class="form-group"><label for="title" class="col-form-label">{LAN=_CHAPTERTITLE}</label>   
+            {STORY_EDIT_CHAPTERTITLE}
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-12 col-md-12 col-sm-12 bg-danger">
+    <div class="form-group"><label for="storytext" class="col-form-label text-white">{LAN=_STORYTEXTTEXT}</label>   
             {STORY_EDIT_STORYTEXT}
     </div>
   </div>
-<div>';
+</div>
+<div class="row">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="form-group"><label for="endnotes" class="col-form-label">{LAN=_CHAPTERNOTES}</label>   
+            {STORY_EDIT_CHAPTERNOTES}
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+ {STORY_BUTTON_PREVIEW}  {STORY_BUTTON_SAVE}    
+  </div>
+</div> 
+';
 
 
 

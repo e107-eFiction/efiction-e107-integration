@@ -48,14 +48,14 @@ while($class = dbassoc($classresults)) {
 }
 $classtypelist = array( );
 $classtyperesults = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_classtypes ORDER BY classtype_name");
-while($type = dbassoc($classtyperesults)) {
-	$classtypelist[$type['classtype_id']] = array("name" => $type['classtype_name'], "title" => stripslashes($type['classtype_title']));
+while($classtype = dbassoc($classtyperesults)) {
+	$classtypelist[$classtype['classtype_id']] = array("name" => $classtype['classtype_name'], "title" => stripslashes($classtype['classtype_title']));
 }
 $ratlist = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_ratings");
 while($rate = dbassoc($ratlist)) {
 	$ratingslist[$rate['rid']] = array("name" => $rate['rating'], "ratingwarning" => $rate['ratingwarning'], "warningtext" => $rate['warningtext']);
 }
-unset($catresult, $result, $classresults, $classtyperesults, $ratlist, $type, $rate, $class, $char, $cat);
+unset($catresult, $result, $classresults, $classtyperesults, $ratlist, $classtype, $rate, $class, $char, $cat);
 $action = escapestring($action);
 // Set up the page template
 

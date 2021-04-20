@@ -132,18 +132,7 @@ class plugin_efiction_storyform_shortcodes extends e_shortcode
         return $text;
     }
 
-    /* {STORY_EDIT_STORYTEXT} */
-    public function sc_story_edit_storytext()
-    {
-        $tinyMCE = efiction::settings('tinyMCE');
-        if ($tinyMCE) {
-            $text = e107::getForm()->bbarea('storytext', $this->var['storytext'], null, array('required' => true));
-        } else {
-            $text = e107::getForm()->textarea('storytext', $this->var['storytext'], '6', '58', array('class' => 'col-md-12', 'required' => true));
-        }
 
-        return $text;
-    }
 
     /* STORY_EDIT_CODEBLOCK */
     public function sc_story_edit_codeblock($parm)
@@ -294,7 +283,11 @@ class plugin_efiction_storyform_shortcodes extends e_shortcode
     /* {STORY_BUTTON_SAVE} */
     public function sc_story_button_save()
     {
+        
+        if($this->var['action'] == "editstory")  
         $text = '<input type="submit" class="button btn btn-success" value="'._EDITSTORY.'" name="submit">';
+        else
+        $text = '<input type="submit" class="button btn btn-success" value="'._ADDSTORY.'" name="submit">';
         return $text;
     }
 
@@ -310,6 +303,48 @@ class plugin_efiction_storyform_shortcodes extends e_shortcode
         return $text;
     }
 
+    /* {STORY_EDIT_STORYTEXT} == chapter text in fact */
+    public function sc_story_edit_storytext()
+    {
+        $tinyMCE = efiction::settings('tinyMCE');
+        if ($tinyMCE) {
+            $text = e107::getForm()->bbarea('storytext', $this->var['storytext'], null, array('required' => true));
+        } else {
+            $text = e107::getForm()->textarea('storytext', $this->var['storytext'], '6', '58', array('class' => 'col-md-12', 'required' => true));
+        }
 
+        return $text;
+    }
+    
+    /* {STORY_EDIT_CHAPTERTITLE}  */
+    public function sc_story_edit_chaptertitle()
+    {
+        $inorder = $this->var['inorder'];
+        $chaptertitle =  $this->var['chaptertitle'];
+        $inorder++;    
+        
+        $default = _CHAPTER.' '.$inorder;
+        if ($chaptertitle != '') {
+            $default = $chaptertitle;
+        }
+        
+        $chaptertitle = $this->var['chaptertitle'];
+        $text = e107::getForm()->text('chaptertitle', htmlentities($default), 200, array('size' => '50', 'required' => 1, 'id' => 'chaptertitle'));
+        return $text;
+        return $text;
+    }   
+    
+    /* {STORY_EDIT_CHAPTERNOTES} */
+    public function sc_story_edit_chapternotes()
+    {
+        $tinyMCE = efiction::settings('tinyMCE');
+        if ($tinyMCE) {
+            $text = e107::getForm()->bbarea('endnotes', $this->var['endnotes'] ) ;
+        } else {
+            $text = e107::getForm()->textarea('endnotes', $this->var['endnotes'], '6', '58', array('class' => 'col-md-12' ));
+        }
+
+        return $text;
+    }   
  
 }

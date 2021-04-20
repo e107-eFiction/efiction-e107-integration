@@ -28,13 +28,20 @@ $countquery = dbquery(_SERIESCOUNT." WHERE uid = '$uid'");
 list($numseries) = dbrow($countquery);
 if($numseries) {
 	$count = 0;
-	$tpl->newBlock("listings");
-	$tpl->assign("seriesheader", "<div class='sectionheader'>"._SERIESBY." $penname</div>");
-	$seriesquery = dbquery(_SERIESQUERY." AND series.uid = '$uid' LIMIT $offset, $itemsperpage");
-	while($stories = dbassoc($seriesquery)) {
-		include("includes/seriesblock.php");
-	}
-	$tpl->gotoBlock("listings");
+ 
+    $var['seriesheader'] = "<div class='sectionheader'>"._SERIESBY." $penname</div>";
+    
+    $template = e107::getTemplate('efiction', 'serieview', 'listing');
+    $caption = e107::getParser()->simpleParse($template['caption'], $var); 
+ 
+    $seriesquery = _SERIESQUERY." AND series.uid = '$uid' LIMIT $offset, $itemsperpage";
+    $sresult = e107::getDb()->retrieve($seriesquery, true);
+    foreach($sresult AS $stories)  { 
+        $sc->setVars($stories);
+        include(_BASEDIR."includes/seriesblock.php"); 
+    }
+    e107::getRender()->tablerender($caption, $start.$text.$end, $tablerender);
+	 
 	if($numseries > $itemsperpage) $tpl->assign("pagelinks", build_pagelinks("viewuser.php?action=seriesby&amp;uid=$uid&amp;", $numseries, $offset));
 	$tpl->gotoBlock("_ROOT");
 }
