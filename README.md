@@ -37,6 +37,18 @@ New starter point for futher integration.
 **moving storyform to shortcodes**
 - [ ] check _AUTHOR - LAN_AUTHOR
 
+
+**seriesblock.php**
+- [ ] template
+- [ ] shortcode
+- [ ] browse/series.php
+- [ ] modules/challenges
+- [ ] toplists/default.php
+- [ ] user/favse.php
+- [ ] user/reviewsby.php 
+- [ ] user/seriesby.php 
+- [ ] viewseries.php 
+
 #### User/registration system
 
 _Important_: Don't use e107 EUA in any case. It complicates things. 
