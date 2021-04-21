@@ -24,6 +24,51 @@ New starter point for futher integration.
 - removed custom SK LANs and moved them to module, now SK and EN strings are the same
 
 
+##  removing .tpl 
+**index.tpl**
+- [ ] added default template the same asi index.tpl
+- [ ] added global shortcodes for block caption and block content
+- [ ] index.php is clean now
+
+
+
+
+Too much changes:
+
+**browser.php**
+- [ ] authors.php  not used here
+- [ ] categories.php
+- [ ] characters.php
+- [ ] class.php
+- [ ] featured.php - manually changed to $tpl
+- [ ] home.php - manually changed to $tpl
+- [ ] ratings.php
+- [ ] recent.php - manually changed to $tpl
+- [ ] series.php
+- [ ] titles.php  - manually changed to $tpl
+- [ ] toplists.php   not used here
+
+**index for option list - 2 level browsing**
+- [x] categories.php
+- [x] characters.php
+- [x] class.php
+- [x] ratings.php
+- [ ] toplists.php
+
+**caption as shortcode**
+- [x] authors.php  - used with authors.php
+- [x] categories.php
+- [x] characters.php
+- [x] class.php
+- [x] featured.php
+- [x] home.php
+- [x] ratings.php
+- [x] recent.php
+- [x] series.php
+- [x] titles.php
+- [x] toplists.php
+
+
 **Integration**
 
 - [x] using class2.php

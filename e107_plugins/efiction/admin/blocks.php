@@ -35,17 +35,18 @@ function save_blocks( $blocks ) {
 		dbquery("UPDATE ".TABLEPREFIX."fanfiction_blocks SET block_name = '$block', block_title = '".escapestring($value['title'])."', block_file = '".$value['file']."', block_status = '".$value['status']."', block_variables =  '".(isset($blockvars) ? addslashes(serialize($blockvars)) : "")."' WHERE block_name = '$block'");
 	}
 }
+
 if(isset($_GET['admin'])) $admin = $_GET['admin'];
 else $admin = false;
 $content = "";
 
 	if($admin) {
 		$output .= "<div id='pagetitle'>"._ADMIN." - ".(isset($blocks[$_GET['admin']]['title']) ? $blocks[$_GET['admin']]['title'] : "")."</div>";
-		include("blocks/".$_GET['admin']."/admin.php");
+		include(_BASEDIR."blocks/".$_GET['admin']."/admin.php");
 		save_blocks( $blocks );
 	}
 	if(isset($_GET['init'])) {
-		if(file_exists("blocks/".$_GET['init']."/init.php")) include("blocks/".$_GET['init']."/init.php");
+		if(file_exists(_BASEDIR."blocks/".$_GET['init']."/init.php")) include(_BASEDIR."blocks/".$_GET['init']."/init.php");
 		else return _ERROR;
 		save_blocks( $blocks );
 	}
@@ -70,14 +71,15 @@ while($block = dbassoc($blockquery)) {
 	 $blocks[$block['block_name']]['file'] = $block['block_file'];
 	$blocks[$block['block_name']]['status'] = $block['block_status'];
 }
-	unset($content);
+
 
 if(empty($admin)) {
 	$output .= "<form method=\"POST\" enctype=\"multipart/form-data\" action=\"admin.php?action=blocks\"><center><table class=\"tblborder\" cellpadding=\"3\"><tr><th>"._NAME."</th><th>"._TITLE."</th><th>"._STATUS."</th><th>"._ADMIN."</th></tr>";
 	$x = 1;
-	$directory = opendir("blocks");
-	while($filename = readdir($directory)) {
-			if($filename=="." || $filename==".." || !is_dir("blocks/".$filename)) continue;
+	$directory = opendir(_BASEDIR."blocks");   
+	while($filename = readdir($directory)) {     
+			if($filename=="." || $filename==".." || !is_dir(_BASEDIR."blocks/".$filename)) continue;
+             
 			$output .= "<tr><td class=\"tblborder\"><input type=\"hidden\" name=\"$x\" value=\"$filename\">$filename</td>";
 			if(isset($blocks[$filename]['file'])) $output .= "<td class=\"tblborder\"><input name=\"{$x}_title\" type=\"text\" class=\"textbox\" value=\"".stripslashes($blocks[$filename]['title'])."\"><input name=\"{$x}_file\" type=\"hidden\" value=\"".$blocks[$filename]['file']."\"></td>
 				<td class=\"tblborder\"><select name=\"{$x}_status\">
@@ -93,6 +95,8 @@ if(empty($admin)) {
 	closedir($directory);
 	$output .= "</table><br /><INPUT type=\"submit\" class=\"button\" name=\"submit\" value=\""._SUBMIT."\"></form>";
 }
+
+
 // Now load the skin settings back in.
 	if(file_exists("$skindir/variables.php")) include("$skindir/variables.php"); 
 ?>
