@@ -221,6 +221,9 @@ in blocks - shoutbox + poll
 - [ ] {shoutbox_title}{shoutbox_content}
 - [ ] {poll_title} {poll_content} 
 - [ ] {news_title} {news_content} 
+
+Check
+- [ ] $blockquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_blocks");
  
 **Panels**
 
@@ -302,6 +305,7 @@ Display captcha:
 
 **check removed actions**
 - [ ] $action == "register"
+- [x] phpinfo  - use e107_admin/phpinfo.php
 
 
 **Removed contact.php**

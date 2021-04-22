@@ -45,13 +45,16 @@ define("LAN_EFICTION_THANKYOU", "Acceptance letter (default)");
 define("LAN_EFICTION_BLOCKTYPE", "Block style");
 define("LAN_EFICTION_DEFAULT", "Default");
 define("LAN_EFICTION_FORMAT", "Format");
-define("LAN_EFICTION_USETPL", "Use .tpl");
+define("LAN_EFICTION_USETPL", "Use&nbsp;tpl");
 define("LAN_EFICTION_TEMPLATE", "Template");
 define("LAN_EFICTION_NA-TPL", "Not Available. Layout defined in .tpl file.");
 define("LAN_EFICTION_SUMLENGTH", "Length of Summary");
 define("LAN_EFICTION_STRIPTAGS", "Strip all tags");
 define("LAN_EFICTION_ALLOWTAGS", "Allow tags");
 define("LAN_EFICTION_SUMNOTE", "Default is 75 characters.");
+define("LAN_EFICTION_NUMUPDATED", "Number of stories.");
+
+
 
 define ("LAN_EFICTION_NATPL", "Not applicable.  Use .tpl selected."); 
 
@@ -425,3 +428,12 @@ define ("_LOG_CATCOUNTS", "<a href='viewuser.php?uid=%2\$d'>%1\$s</a> recalculat
 define ("_LOG_OPTIMIZE", "<a href='viewuser.php?uid=%2\$d'>%1\$s</a> optimized the database tables.");
 define ("_LOG_BACKUP", "<a href='viewuser.php?uid=%2\$d'>%1\$s</a> backed up the database tables.");
  
+ 
+define("_CHART", "Chart");
+define("_NARRATIVE", "Narrative");
+define("_LOGGEDINAS", "You are currently logged in as");
+define("_VARIABLES", "Variables");
+define("_DISPLAY",  "Style of Display");
+define("_NARTEXT", "We are the home of  {authors} authors from among our {members} members.  There have been {reviews} reviews written about our {stories} stories consisting of {chapters} chapters and {totalwords} words.  A special welcome to our newest member, {newest}. {loggedinas} {submissions}");
+define("_NEWESTMEMBER", "Newest Member");
+define("_REVIEWERS", "Reviewers");

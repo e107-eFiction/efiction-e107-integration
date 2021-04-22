@@ -1,35 +1,57 @@
 <?php
-if (!defined('e107_INIT')) { exit; }
-
-global $language;
-$blockquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_blocks WHERE block_name = 'info'");
-while($block = dbassoc($blockquery)) {
-	$blocks[$block['block_name']] = unserialize($block['block_variables']);
-	$blocks[$block['block_name']]['title'] = $block['block_title'];
-	 $blocks[$block['block_name']]['file'] = $block['block_file'];
-	$blocks[$block['block_name']]['status'] = $block['block_status'];
+if (!defined('e107_INIT')) {
+    exit;
 }
-include("blocks/info/info.php");
-if(file_exists("blocks/info/{$language}.php")) include_once("blocks/info/{$language}.php");
-else include_once("blocks/info/en.php");
-	if(isset($_POST['submit'])) {
-		$blocks['info']['style'] = !empty($_POST['style']) && isNumber($_POST['style']) ? $_POST['style'] : 0;
-		if($_POST['template'] != _NARTEXT) $blocks['info']['template'] = $_POST['template'];
-		$output .= "<center>"._ACTIONSUCCESSFUL."</center>";
-		save_blocks( $blocks );
-	}
-	else {
-		$style = isset($blocks['info']['style']) ? $blocks['info']['style'] : 0;
-		if(empty($blocks['info']['template']) && $style == 1) $template = _NARTEXT;
-		else if($style == 1) $template = $blocks['info']['template'];
-		else $template = "";
-		$output .= "<div style='margin: 1em auto; width: 80%;'><b>"._CURRENT.":</b><br /><div class=\"tblborder\" style=\"text-align: left; padding: 4px; margin: 0 auto;\">$content</div><br />";
-		$output .= "<form method='POST' enctype='multipart/form-data' name='blockadmin' action='admin.php?action=blocks&admin=info'>
-			<label for='template'>"._TEMPLATE.":</label><br /><textarea name='template' rows='5' cols='50' style='width: 100%;'>$template</textarea>";
-		if($tinyMCE) $output .= "<div style='display: block; margin: 0; padding: 0;'><input type='checkbox' name='toggle' onclick=\"toogleEditorMode('template');\" checked><label for='toggle'>"._TINYMCETOGGLE."</label></div>";
-		$output .= "<label for='style'>"._DISPLAY.": </label><select name='style'class='textbox' ><option value='0'".(!$style ? " selected" : "").">"._CHART."</option>
-				<option value='1'".($style == 1 ? " selected" : "").">"._NARRATIVE."</option>
-				<option value='2'".($style == 2 ? " selected" : "").">"._VARIABLES."</option></select><br />
-			<INPUT type='submit' class='button' name='submit' value='"._SUBMIT."'></form></div>";
-	}
+
+global $numupdated;
+
+$block_key = 'info';
+
+$blocks = efiction::get_block($block_key);
  
+/* ?? */
+if (empty($blocks[$block_key]['tpl'])) {
+    include _BASEDIR.'blocks/'.$blocks[$block_key]['file'];
+}
+
+if(isset($_POST['submit'])) {
+    if (!empty($_POST['block_variables'])) {
+            
+            $blocks[$block_key]['block_variables'] = $_POST['block_variables'];
+    }
+ 
+    save_blocks( $blocks );
+	$output .= "<div style='text-align: center;'>"._ACTIONSUCCESSFUL."</div>";
+}
+ else {
+        $output .= "<div style='text-align: left;'><b>"._CURRENT.':</b><br /> 
+        <form method="POST" enctype="multipart/form-data" action="admin.php?action=blocks&amp;admin='.$block_key.'">';
+        $output .= '<table class="tblborder table table-bordered">';
+
+        $curVal = $blocks[$block_key]['block_variables'];
+
+        $frm = e107::getForm();
+        $optionpath = e_PLUGIN.'efiction/blocks/'.$block_key.'/admin_options.php';
+ 
+		if(empty($blocks['info']['block_variables']['template']) && $curVal['style'] == 1) $curVal['template'] = _NARTEXT;
+		else if($curVal['style'] == 1)  $curVal['template'] = $blocks['info']['block_variables']['template'];
+		else $curVal['template'] = "";
+        
+        if ((file_exists($optionpath))) {
+            require_once $optionpath;
+            $settings = $options;
+        }
+ 
+        if ($settings['fields'] > 0) {
+            $nameitem = 'block_variables';
+            foreach ($settings['fields'] as $fieldkey => $field) {
+                $text .= '<tr><td >'.$field['title'].': </td><td>';
+                $text .= $frm->renderElement($nameitem.'['.$fieldkey.']', $curVal[$fieldkey], $field);
+                $text .= '</td></tr>';
+            }
+        } else {
+        }
+        $output .= $text ;
+        $output .= "</table>
+        <div class='text-center'><input type=\"submit\" name=\"submit\" class=\"button btn btn-submit btn-default btn-secondary\" id=\"submit\" value=\""._SUBMIT.'"></div></form></div> ';
+    }

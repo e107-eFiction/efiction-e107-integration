@@ -1,37 +1,52 @@
 <?php
-if (!defined('e107_INIT')) { exit; }
-
-global $language, $numupdated;
-$blockquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_blocks WHERE block_name = 'recent'");
-while($block = dbassoc($blockquery)) {
-	$blocks[$block['block_name']] = unserialize($block['block_variables']);
-	$blocks[$block['block_name']]['title'] = $block['block_title'];
-	 $blocks[$block['block_name']]['file'] = $block['block_file'];
-	$blocks[$block['block_name']]['status'] = $block['block_status'];
+if (!defined('e107_INIT')) {
+    exit;
 }
-if(empty($blocks['recent']['tpl'])) include("blocks/".$blocks['recent']['file']);
-if(file_exists("blocks/recent/".$language.".php")) include("blocks/recent/".$language.".php");
-else include("blocks/recent/en.php");
-	if(isset($_POST['submit'])) {
-		if(!empty($_POST['tpl'])) $blocks['recent']['tpl'] = 1;
-		else unset($blocks['recent']['tpl']);
-		if(!empty($_POST['allowtags'])) $blocks['recent']['allowtags'] = 1;
-		else unset($blocks['recent']['allowtags']);
-		if(!empty($_POST['sumlength']) && isNumber($_POST['sumlength'])) $blocks['recent']['sumlength'] = $_POST['sumlength'];
-		else unset($blocks['recent']['sumlength']);
-		if(!empty($_POST['num']) && isNumber($_POST['num'])) $blocks['recent']['num'] = $_POST['num'];
-		else $blocks['recent']['num'] = 1;
-		$output .= "<div style='text-align: center;'>"._ACTIONSUCCESSFUL."</div>";
-		save_blocks( $blocks );
-	}
-	else  {
-		$output .= "<div style='text-align: center;'><b>"._CURRENT.":</b><br /><div class=\"tblborder\" style=\"width: 80%; margin: 0 auto; text-align: left;\">".(!empty($blocks['recent']['tpl']) ? _NATPL : $content)."</div><br /></div>";
-		$output .= "<div id='settingsform'><form method=\"POST\" enctype=\"multipart/form-data\" action=\"admin.php?action=blocks&amp;admin=recent\">
-			<div><label for=\"tpl\">"._BLOCKTYPE.":</label><select name=\"tpl\" class=\"textbox\" id=\"tpl\"><option value=\"0\"".(empty($blocks['recent']['tpl']) ? " selected" : "").">"._DEFAULT."</option>
-					<option value=\"1\"".(!empty($blocks['recent']['tpl']) ? " selected" : "").">"._USETPL."</option></select></div>
-			<div><label for=\"allowtags\">"._TAGS.":</label><select name=\"allowtags\" class=\"textbox\" id=\"allowtags\"><option value=\"0\"".(empty($blocks['recent']['allowtags']) ? " selected" : "").">"._STRIPTAGS."</option>
-					<option value=\"1\"".(!empty($blocks['recent']['allowtags']) ? " selected" : "").">"._ALLOWTAGS."</option></select></div>
-			<div><label for=\"sumlength\">"._SUMLENGTH.":</label><input type=\"text\" class=\"textbox\" name=\"sumlength\" id=\"sumlength\" size=\"4\" value=\"".(!empty($blocks['recent']['sumlength']) ? $blocks['recent']['sumlength'] : "")."\"></div>
-			<div><label for=\"num\">"._NUMUPDATED.":</label><input type=\"text\" class=\"textbox\" name=\"num\" id=\"num\" size=\"4\" value=\"".$blocks['recent']['num']."\"></div>
-			<INPUT type=\"submit\" name=\"submit\" class=\"button\" id=\"submit\" value=\""._SUBMIT."\"></form></div><div style='text-align: center;'>"._SUMNOTE."</div>";
-	}
+
+global $numupdated;
+
+$block_key = 'recent';
+
+$blocks = efiction::get_block($block_key);
+ 
+/* ?? */
+if (empty($blocks[$block_key]['tpl'])) {
+    include _BASEDIR.'blocks/'.$blocks[$block_key]['file'];
+}
+
+if(isset($_POST['submit'])) {
+    if (!empty($_POST['block_variables'])) {
+            
+            $blocks[$block_key]['block_variables'] = $_POST['block_variables'];
+    }
+ 
+    save_blocks( $blocks );
+	$output .= "<div style='text-align: center;'>"._ACTIONSUCCESSFUL."</div>";
+}
+ else {
+        $output .= "<div style='text-align: left;'><b>"._CURRENT.':</b><br /> 
+        <form method="POST" enctype="multipart/form-data" action="admin.php?action=blocks&amp;admin='.$block_key.'">';
+        $output .= '<table class="tblborder table table-bordered">';
+
+        $curVal = $blocks[$block_key]['block_variables'];
+ 
+        $frm = e107::getForm();
+        $optionpath = e_PLUGIN.'efiction/blocks/'.$block_key.'/admin_options.php';
+        if ((file_exists($optionpath))) {
+            require_once $optionpath;
+            $settings = $options;
+        }
+
+        if ($settings['fields'] > 0) {
+            $nameitem = 'block_variables';
+            foreach ($settings['fields'] as $fieldkey => $field) {
+                $text .= '<tr><td >'.$field['title'].': </td><td>';
+                $text .= $frm->renderElement($nameitem.'['.$fieldkey.']', $curVal[$fieldkey], $field);
+                $text .= '</td></tr>';
+            }
+        } else {
+        }
+        $output .= $text ;
+        $output .= "</table>
+        <div class='text-center'><input type=\"submit\" name=\"submit\" class=\"button btn btn-submit btn-default btn-secondary\" id=\"submit\" value=\""._SUBMIT.'"></div></form></div> ';
+    }

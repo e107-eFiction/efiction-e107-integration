@@ -25,4 +25,4 @@
 
 if (!defined('e107_INIT')) { exit; }
 
-define ("_NUMUPDATED", "Number of stories");
+define ("LAN_EFICTION_NUMUPDATED", "Number of stories");

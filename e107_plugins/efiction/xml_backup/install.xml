@@ -128,7 +128,7 @@
 			<field name="message_id">1</field>
 			<field name="message_name">welcome</field>
 			<field name="message_title"></field>
-			<field name="message_text">This is your welcome message. It appears on the index page. Include it in your .tpl files with {welcome}.</field>
+			<field name="message_text">This is your welcome message. It appears on the index page of efiction part of your site. You can include it in your template files with {EFICTION_MESSAGES: key=welcome}, but you should use e107 {WMESSAGE} too. This version is deprecated. </field>
 		</item>
 		<item>
 			<field name="message_id">2</field>

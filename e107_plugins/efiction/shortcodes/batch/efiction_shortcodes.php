@@ -43,97 +43,149 @@
         {     
         }
         
-        /* {EFICTION_CAPTION} */
-    	public function sc_efiction_caption($parm)
+        
+        
+        /* {BROWSE_CAPTION} */
+    	public function sc_browse_caption($parm)
     	{
         
     		$text = $this->var['caption'];
     		return $text;
     	}
         
-        /* {EFICTION_SORTBEGIN} */ 
-    	public function sc_efiction_sortbegin($parm)
+        /* {BROWSE_SORTBEGIN} */ 
+    	public function sc_browse_sortbegin($parm)
     	{
     		$text = $this->var['sortbegin'];
     		return $text;
     	}
-        /* {EFICTION_CATEGORYMENU} */
-    	public function sc_efiction_categorymenu($parm)
+        /* {BROWSE_CATEGORYMENU} */
+    	public function sc_browse_categorymenu($parm)
     	{
     		$text = $this->var['categorymenu'];
     		return $text;
     	}        
-        /* {EFICTION_CHARACTERMENU1} */
-    	public function sc_efiction_charactermenu1($parm)
+        /* {BROWSE_CHARACTERMENU1} */
+    	public function sc_browse_charactermenu1($parm)
     	{
     		$text = $this->var['charactermenu1'];
     		return $text;
     	}           
-        /* {EFICTION_CHARACTERMENU2} */
-    	public function sc_efiction_charactermenu2($parm)
+        /* {BROWSE_CHARACTERMENU2} */
+    	public function sc_browse_charactermenu2($parm)
     	{
     		$text = $this->var['charactermenu2'];
     		return $text;
     	}            
-        /* {EFICTION_PAIRINGSMENU} */
-    	public function sc_efiction_pairingsmenu($parm)
+        /* {BROWSE_PAIRINGSMENU} */
+    	public function sc_browse_pairingsmenu($parm)
     	{
     		$text = $this->var['pairingsmenu'];
     		return $text;
     	}          
-        /* {EFICTION_RATINGMENU} */
-    	public function sc_efiction_ratingmenu($parm)
+        /* {BROWSE_RATINGMENU} */
+    	public function sc_browse_ratingmenu($parm)
     	{
     		$text = $this->var['ratingmenu'];
     		return $text;
     	}   
-        /* {EFICTION_CLASSMENU} */
-    	public function sc_efiction_classmenu($parm)
+        /* {BROWSE_CLASSMENU} */
+    	public function sc_browse_classmenu($parm)
     	{
     		$text = $this->var['classmenu'];
     		return $text;
     	}    
-        /* {EFICTION_SORTMENU} */
-    	public function sc_efiction_sortmenu($parm)
+        /* {BROWSE_SORTMENU} */
+    	public function sc_browse_sortmenu($parm)
     	{
     		$text = $this->var['sortmenu'];
     		return $text;
     	} 
-        /* {EFICTION_COMPLETEMENU} */
-    	public function sc_efiction_completemenu($parm)
+        /* {BROWSE_COMPLETEMENU} */
+    	public function sc_browse_completemenu($parm)
     	{
     		$text = $this->var['completemenu'];
     		return $text;
     	}              
-        /* {EFICTION_SORTEND} */
-    	public function sc_efiction_sortend($parm)
+        /* {BROWSE_SORTEND} */
+    	public function sc_browse_sortend($parm)
     	{
     		$text = $this->var['sortend'];
     		return $text;
     	}    
-        /* {EFICTION_ALPHALINKS} */
-    	public function sc_efiction_alphalinks($parm)
+        /* {BROWSE_ALPHALINKS} */
+    	public function sc_browse_alphalinks($parm)
     	{
-    		$text = $this->var['alphalinks'];
-    		return $text;
+  
+    		$alphalinks =  build_alphalinks("browse.php?".$this->var['terms']."&amp;", $this->var['let']) ;
+    		return $alphalinks;
     	}  
-        /* {EFICTION_OUTPUT} */
-    	public function sc_efiction_output($parm)
+        /* {BROWSE_OUTPUT} */
+    	public function sc_browse_output($parm)
     	{ 
     		$text = $this->var['output'];
     		return $text;
     	} 
-        /* {EFICTION_OTHERRESULTS} */
-    	public function sc_efiction_otherresults($parm)
+        /* {BROWSE_OTHERRESULTS} */
+    	public function sc_browse_otherresults($parm)
     	{
     		$text = $this->var['otherresults'];
     		return $text;
     	}  
-        /* {EFICTION_SERIESBLOCK} */
-    	public function sc_efiction_seriesblock($parm)
+        /* {BROWSE_SERIESBLOCK} */
+    	public function sc_browse_seriesblock($parm)
     	{
     		$text = $this->var['seriesblock'];
     		return $text;
     	}          
+        /* {BROWSE_PAGELINKS} */
+    	public function sc_browse_pagelinks($parm)
+    	{
+            global $itemsperpage ;
+         
+       
+            $pagelinks = '';
  
+            if($this->var['numrows'] > $itemsperpage) {  
+              $pagelinks = build_pagelinks("browse.php?".$this->var['terms']."&amp;",  $this->var['numrows'], $this->var['offset'] );
+            }
+ 
+    		return $pagelinks;
+    	}  
+        
+        /*{BROWSE_SEARCHFORM}*/
+       	public function sc_browse_searchform($parm)
+    	{
+ 
+            if($parm['type'] == "series" ) {
+              $searchform_template =   e107::getTemplate('efiction', 'browse', "searchform");
+              $search_vars['BROWSE_SORTBEGIN'] = $this->sc_browse_sortbegin($parm);
+              $search_vars['BROWSE_CATEGORYMENU'] = $this->sc_browse_categorymenu($parm);
+              $search_vars['BROWSE_CHARACTERMENU1'] = $this->sc_browse_charactermenu1($parm);
+              $search_vars['BROWSE_CHARACTERMENU2'] = $this->sc_browse_charactermenu2($parm);            
+              $search_vars['BROWSE_PAIRINGSMENU'] = $this->sc_browse_pairingsmenu($parm);
+              $search_vars['BROWSE_RATINGMENU'] = $this->sc_browse_ratingmenu($parm);            
+              $search_vars['BROWSE_CLASSMENU'] = $this->sc_browse_classmenu($parm);       
+              $search_vars['BROWSE_SORTMENU'] = $this->sc_browse_sortmenu($parm);       
+              $search_vars['BROWSE_COMPLETEMENU'] = $this->sc_browse_completemenu($parm);       
+              $search_vars['BROWSE_SORTEND'] = $this->sc_browse_sortend($parm);                          
+              $text = e107::getParser()->simpleParse($searchform_template['index'], $search_vars);
+            }
+            else {
+              $searchform_template =   e107::getTemplate('efiction', 'browse', "searchform");
+              $search_vars['BROWSE_SORTBEGIN'] = $this->sc_browse_sortbegin($parm);
+              $search_vars['BROWSE_CATEGORYMENU'] = $this->sc_browse_categorymenu($parm);
+              $search_vars['BROWSE_CHARACTERMENU1'] = $this->sc_browse_charactermenu1($parm);
+              $search_vars['BROWSE_CHARACTERMENU2'] = $this->sc_browse_charactermenu2($parm);            
+              $search_vars['BROWSE_PAIRINGSMENU'] = $this->sc_browse_pairingsmenu($parm);
+              $search_vars['BROWSE_RATINGMENU'] = $this->sc_browse_ratingmenu($parm);            
+              $search_vars['BROWSE_CLASSMENU'] = $this->sc_browse_classmenu($parm);       
+              $search_vars['BROWSE_SORTMENU'] = $this->sc_browse_sortmenu($parm);       
+              $search_vars['BROWSE_COMPLETEMENU'] = $this->sc_browse_completemenu($parm);       
+              $search_vars['BROWSE_SORTEND'] = $this->sc_browse_sortend($parm);                          
+              $text = e107::getParser()->simpleParse($searchform_template['index'], $search_vars);                  
+            }
+    		return $text;
+    	}  
+        
     }

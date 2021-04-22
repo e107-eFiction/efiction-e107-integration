@@ -1,20 +1,29 @@
 <?php
 
+// ----------------------------------------------------------------------
+// eFiction 3.2
+// Copyright (c) 2007 by Tammy Keefer
+// Valid HTML 4.01 Transitional
+// Based on eFiction 1.1
+// Copyright (C) 2003 by Rebecca Smallwood.
+// http://efiction.sourceforge.net/
+// ----------------------------------------------------------------------
+// LICENSE
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License (GPL)
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// To read the license please visit http://www.gnu.org/copyleft/gpl.html
+// ----------------------------------------------------------------------
+
 if (!defined('e107_INIT')) { exit; }
 
-	$count = 0;
-	$content = "";
-	$use_tpl = isset($blocks['random']['tpl']) && $blocks['random']['tpl'] ? true : false;
-	$limit = isset($blocks['random']['limit']) && $blocks['random']['limit'] > 0 ? $blocks['random']['limit'] : 1;
-	$randomquery = dbquery(_STORYQUERY." ORDER BY rand( ) DESC LIMIT $limit");
-	if($use_tpl && dbnumrows($randomquery) >0) $tpl->newBlock("randomblock");
-	while($stories = dbassoc($randomquery))
-	{
-		if(!isset($blocks['random']['allowtags'])) $stories['summary'] = strip_tags($stories['summary']);
-		$stories['summary'] = truncate_text(stripslashes($stories['summary']), (isset($blocks['random']['sumlength']) ? $blocks['random']['sumlength'] : 75));
-		if(!$use_tpl) $content .= "<div class='randomstory'>".title_link($stories)." "._BY." ".author_link($stories)." ".$ratingslist[$stories['rid']]['name']."<br />".$stories['summary']."</div>";
-		else {
-			include(_BASEDIR."includes/storyblock.php");
-		}
-	}
-	if($use_tpl && dbnumrows($randomquery) >0) $tpl->gotoBlock("_ROOT");	
+$content = "{MENU: path=efiction/efiction_random}";
+$content = e107::getParser()->parseTemplate($content, true); 

@@ -24,24 +24,36 @@
 
 if (!defined('e107_INIT')) { exit; }
 
+$tp = e107::getParser();
+
 function save_blocks( $blocks ) {
-	
-	foreach($blocks as $block =>$value) {
+    $tp = e107::getParser();
+ 
+	foreach($blocks as $block =>$block_values) { 
 		unset($blockvars);
-		if((isset($_GET['admin']) && $_GET['admin'] != $block) || (isset($_GET['init']) && $_GET['init'] != $block)) continue;
-		foreach($value as $var=>$val) {
-			if($var != "name" && $var != "title" && $var != "file" && $var != "status") $blockvars[$var] = $val;
-		}
-		dbquery("UPDATE ".TABLEPREFIX."fanfiction_blocks SET block_name = '$block', block_title = '".escapestring($value['title'])."', block_file = '".$value['file']."', block_status = '".$value['status']."', block_variables =  '".(isset($blockvars) ? addslashes(serialize($blockvars)) : "")."' WHERE block_name = '$block'");
+ 
+        $blockvars = e107::serialize($block_values['block_variables']);
+        
+		$update = array(
+			'block_title' => $tp->filter($block_values['title']),
+			'block_file'  => $tp->filter($block_values['file']),
+            'block_status'  => $tp->filter($block_values['status']),
+            'block_variables'  => $blockvars,
+			 'WHERE'   => "block_name = '".$block ."'"
+
+		);
+            $result = e107::getDb()->update('fanfiction_blocks', $update  );  
 	}
+ 
 }
 
+ 
 if(isset($_GET['admin'])) $admin = $_GET['admin'];
 else $admin = false;
 $content = "";
 
 	if($admin) {
-		$output .= "<div id='pagetitle'>"._ADMIN." - ".(isset($blocks[$_GET['admin']]['title']) ? $blocks[$_GET['admin']]['title'] : "")."</div>";
+		$caption = "<div id='pagetitle'>"._ADMIN." - ".(isset($blocks[$_GET['admin']]['title']) ? $blocks[$_GET['admin']]['title'] : "")."</div>";
 		include(_BASEDIR."blocks/".$_GET['admin']."/admin.php");
 		save_blocks( $blocks );
 	}
@@ -50,31 +62,28 @@ $content = "";
 		else return _ERROR;
 		save_blocks( $blocks );
 	}
-	if(isset($_POST['submit']) && empty($admin)) {
+	if(isset($_POST['submit']) && empty($admin)) {  //it is not options
 		$x = 1;
-		while(isset($_POST[$x])) {
+ 
+		while(isset($_POST[$x])) { 
 			// activate inactive blocks.
 			if(isset($blocks[$_POST[$x]])) {
-				$blocks[$_POST[$x]]['title'] = descript($_POST[$x."_title"]);
+				$blocks[$_POST[$x]]['title'] =  $_POST[$x."_title"]; //sanitized in save_blocks()
 				$blocks[$_POST[$x]]["status"] = $_POST[$x."_status"];
 			}
 			$x++;	
 		}
-		save_blocks( $blocks );
+	 	save_blocks( $blocks );
 		$output .= write_message(_ACTIONSUCCESSFUL);
 	}
 // In case the skin has already overridden the block settings or we've just changed the settings.
-$blockquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_blocks");
-while($block = dbassoc($blockquery)) {
-	$blocks[$block['block_name']] = unserialize($block['block_variables']);
-	$blocks[$block['block_name']]['title'] = $block['block_title'];
-	 $blocks[$block['block_name']]['file'] = $block['block_file'];
-	$blocks[$block['block_name']]['status'] = $block['block_status'];
-}
-
+$blocks = efiction::blocks();
 
 if(empty($admin)) {
-	$output .= "<form method=\"POST\" enctype=\"multipart/form-data\" action=\"admin.php?action=blocks\"><center><table class=\"tblborder\" cellpadding=\"3\"><tr><th>"._NAME."</th><th>"._TITLE."</th><th>"._STATUS."</th><th>"._ADMIN."</th></tr>";
+	$output .= "<form method=\"POST\" enctype=\"multipart/form-data\" action=\"admin.php?action=blocks\">
+    <div class='text-center'>
+    <table class=\"table table-bordered\">
+      <thead class=\"thead-dark\"><tr><th>"._NAME."</th><th>"._TITLE."</th><th>"._STATUS."</th><th>"._ADMIN."</th></tr></thead>";
 	$x = 1;
 	$directory = opendir(_BASEDIR."blocks");   
 	while($filename = readdir($directory)) {     
@@ -87,13 +96,13 @@ if(empty($admin)) {
 					<option value=\"1\"".($blocks[$filename]['status'] == 1? " selected" : "").">"._ACTIVE."</option>
 					<option value=\"2\"".($blocks[$filename]['status'] == 2 ? " selected" : "").">"._INDEXONLY."</option>
 					</select></td>
-				<td class=\"tblborder\">".(file_exists("blocks/$filename/admin.php") ? "<a href=\"admin.php?action=blocks&admin=$filename\">"._OPTIONS."</a>" :  _NONE);
+				<td class=\"tblborder\">".(file_exists(_BASEDIR."blocks/$filename/admin.php") ? "<a class='btn btn-default btn-secondary' href=\"admin.php?action=blocks&admin=$filename\">"._OPTIONS."</a>" :  _NONE);
 			else $output .= "<td class=\"tblborder\" colspan=\"3\" align=\"center\"><a href=\"admin.php?action=blocks&init=$filename\">"._INITIALIZE."</a>";
 			$output .= "</td></tr>";
 			$x++;
 	}
 	closedir($directory);
-	$output .= "</table><br /><INPUT type=\"submit\" class=\"button\" name=\"submit\" value=\""._SUBMIT."\"></form>";
+	$output .= "</table><br /><INPUT type=\"submit\" class=\"button\" name=\"submit\" value=\""._SUBMIT."\"></div></form>";
 }
 
 
