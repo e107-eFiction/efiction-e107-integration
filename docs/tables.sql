@@ -15,21 +15,7 @@ CREATE TABLE `fanfiction_authorfields` (
 ) REPLACE=MyISAM;
 
 -- --------------------------------------------------------
-
--- 
--- Table structure for table `fanfiction_authorinfo`
--- 
-
-CREATE TABLE `fanfiction_authorinfo` (
-  `uid` int(11) NOT NULL default '0',
-  `field` int(11) NOT NULL default '0',
-  `info` varchar(255) NOT NULL default '',
-  PRIMARY KEY  (`uid`,`field`),
-  KEY `uid` (`uid`)
-) REPLACE=MyISAM;
-
--- --------------------------------------------------------
-
+ 
 -- 
 -- Table structure for table `fanfiction_authorprefs`
 -- 

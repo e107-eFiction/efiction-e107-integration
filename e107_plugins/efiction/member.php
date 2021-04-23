@@ -21,18 +21,7 @@
 // ----------------------------------------------------------------------
 if(isset($_GET['action'])) $current = $_GET['action'];
 else $current = "login";
-
-	if($current == "logout" ) {
-		define("_LOGOUTCHECK", true);		
-		include("user/logout.php");
-	}
-	
-	if(!empty($_POST['submit']) && $current == "login") {
-	session_start();
-	define("_LOGINCHECK", true);		
-		include("user/login.php");
-	}
-
+ 
 // Include some files for page setup and core functions
 include ("header.php");
 require_once(HEADERF);
@@ -46,6 +35,7 @@ include("includes/pagesetup.php");
 
 if($action) $current = $action;
 else $current = "user";
+ 
 // end main function 
 if((empty($action) || $action == "login") && isMEMBER) {
     $caption = _USERACCOUNT;

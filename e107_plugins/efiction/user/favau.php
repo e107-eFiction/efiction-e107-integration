@@ -30,7 +30,7 @@ if(empty($favorites)) accessDenied( );
 		$uid = USERUID;
         $caption = _YOURSTATS;
 	}
-	$output .= "<div class='sectionheader'>"._FAVORITEAUTHORS."</div>";
+	$caption = "<div class='sectionheader'>"._FAVORITEAUTHORS."</div>";
 	
 	$add = !empty($_GET['add']) ? $_GET['add'] : "";
 	$delete = isset($_GET['delete']) && isNumber($_GET['delete']) ? $_GET['delete'] : false;

@@ -46,37 +46,39 @@ if($userinfo['bio']) {
 if($userinfo['image'])
 	$tpl->assign("image", "<img src=\"".$userinfo['image']."\">");
 $tpl->assign("userlevel", isset($userinfo['level']) && $userinfo['level'] > 0 && $userinfo['level'] < 4 ? _ADMINISTRATOR.(isADMIN ? " - ".$userinfo['level'] : "") : _MEMBER);
-/* Dynamic authorinfo fields */
-$result2 = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_authorinfo WHERE uid = '$uid'");
-$dynamicfields = "";
-while($field = dbassoc($result2)) {
-	if($field['info'] == "") continue;
-	$fieldinfo = dbassoc(dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_authorfields WHERE field_id = '".$field['field']."' LIMIT 1"));
-	if($fieldinfo) {
-		$thisfield = "";
-		if($fieldinfo['field_on'] == 0) continue;
-		if($fieldinfo['field_type'] == 1) { $thisfield = format_link($field['info']);
-		}
-		if($fieldinfo['field_type'] == 4) {
-			$thisfield = preg_replace("@\{info\}@", $field['info'], $fieldinfo['field_options']);
-			$thisfield = format_link($thisfield);
-		}
-		if($fieldinfo['field_type'] == 2 || $fieldinfo['field_type'] == 6) {
-			$thisfield = stripslashes($field['info']);
-		}
-		if($fieldinfo['field_type'] == 3) {
-			$thisfield = $field['info'];
-		}
-		else eval($fieldinfo['field_code_out']);
-		$tpl->assign($fieldinfo['field_name'], $thisfield);
-		$dynamicfields .= "<div class='authorfields'><span class='label'>".$fieldinfo['field_title'].":</span> ".$thisfield."</div>";
-	}
+
+
+//find e107 user id for $uid 
+$user_id = eauthors::get_user_id_by_author_id($uid);
+$user = e107::user($user_id);
+
+$dynamicfields = array();
+foreach ($user_data as $key => $value) {
+    if (strpos($key, 'user_plugin_efiction_') === 0) {
+        $dynamicfields[$key] = $value;
+    }
 }
+ 
+
+/* Dynamic authorinfo fields */
+//$template = e107::getCoreTemplate('user','extended'); is used 
+$user_shortcodes = e107::getScBatch('user');
+$user_shortcodes->wrapper('user/view');
+
+$user_shortcodes->setVars($user);
+$user_shortcodes->setScVar('userProfile', $user);
+
+e107::setRegistry('core/user/profile', $user);
+$text = "{USER_EXTENDED_ALL}";
+$dynamicfields = e107::getParser()->parseTemplate( $text, TRUE, $user_shortcodes); 
+ 
 $codequery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'userprofile'");
 while($code = dbassoc($codequery)) {
 	eval($code['code_text']);
 }
-if(!empty($dynamicfields)) $tpl->assign("authorfields", $dynamicfields);
+
+if(!empty($dynamicfields)) $tpl->assign("authorfields", '<div class="panel-profile"><div class="panel-body">'.$dynamicfields.'</div></div>');
+
 /* End dynamic fields */
 $tpl->assign("reportthis", "[<a href=\""._BASEDIR."report.php?action=report&amp;url=viewuser.php?uid=".$uid."\">"._REPORTTHIS."</a>]");
 $adminopts = "";

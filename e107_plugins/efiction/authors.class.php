@@ -77,14 +77,19 @@ class eAuthors
 	}  
     
  
-    
+    /* full author data related to efiction user ID */
     public function get_author_data($uid=null)
 	{
-		$uid = intval($uid);
+		$uid = intval($uid);  print_a($uid);
 
 		if(empty($uid)){ return false; }
 
-	    $authorquery = "SELECT ap.*, "._UIDFIELD." as uid, "._PENNAMEFIELD." as penname, "._EMAILFIELD." as email, "._PASSWORDFIELD." as password 
+	    $authorquery = "SELECT ap.*, 
+        "._UIDFIELD." as author_uid, 
+        "._PENNAMEFIELD." as penname, 
+        "._EMAILFIELD." as email, 
+        "._PASSWORDFIELD." as password,
+        user_id AS e107_user_id 
         FROM "._AUTHORTABLE." LEFT JOIN ".TABLEPREFIX."fanfiction_authorprefs as ap ON ap.uid = "._UIDFIELD." WHERE "._UIDFIELD." = '".$uid."'"  ;
  
 		$authordata = e107::getDb()->retrieve($authorquery);
@@ -102,6 +107,7 @@ class eAuthors
 	}    
     
  
+    /* full author data related to e107 user ID */
     public function get_author_data_by_user_id($user_id=null)
 	{
 		$user_id = intval($user_id);
@@ -125,4 +131,55 @@ class eAuthors
 
 		return $var;
 	}   
+    
+    /* just author ID by e107 user ID */
+    public function get_author_id_by_user_id($user_id=null)
+	{
+		$user_id = intval($user_id);
+
+		if(empty($user_id)){ return false; }
+        
+        $where = " user_id = ".$user_id; 
+
+	    $authorquery = "SELECT uid 
+        FROM "._AUTHORTABLE." WHERE ". $where. " LIMIT 1" ;
+  
+		$authorid = e107::getDb()->retrieve($authorquery);
+        
+       
+        $var = 0;
+        
+		if($authorid)
+		{
+			$var = $authorid;
+		}
+
+		return $var;
+	}     
+    
+    /* just e107 user ID  by author ID */
+    public function get_user_id_by_author_id($uid=null)
+	{
+		$uid = intval($uid);
+
+		if(empty($uid)){ return false; }
+        
+        $where = " uid = ".$uid; 
+
+	    $authorquery = "SELECT user_id 
+        FROM "._AUTHORTABLE." WHERE ". $where. " LIMIT 1" ;
+  
+		$userid = e107::getDb()->retrieve($authorquery);
+        
+       
+        $var = false;
+        
+		if($userid)
+		{
+			$var = $userid;
+		}
+
+		return $var;
+	}     
+    
 }

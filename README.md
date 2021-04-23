@@ -344,7 +344,7 @@ Display captcha:
 
 - [x] Admin UI
 - [x] Default data
-- [ ] remove 'maintenance', not needed
+- [ ]  'maintenance' is something different than in e107, this one is very needed :)
 - [ ] {welcome}
 - [ ] {footer}
 - [ ] 'copyright' $copy 

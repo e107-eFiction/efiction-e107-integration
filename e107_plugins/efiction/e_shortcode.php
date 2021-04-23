@@ -58,6 +58,7 @@ class efiction_shortcodes extends e_shortcode
       {EFICTION_MESSAGES: key=copyright}
       {EFICTION_MESSAGES: key=thankyou}  in yesletter.php
       {EFICTION_MESSAGES: key=nothankyou} in noletter.php
+      {EFICTION_MESSAGES: key=tos} in e107 signup template 
     */
 
     public function sc_efiction_messages($parm = NULL)
@@ -83,8 +84,75 @@ class efiction_shortcodes extends e_shortcode
  
        return $text ? e107::getParser()->toHTML($text, true, 'BODY') : '';
     }
+    
+    /*
+     Not needed with e107 menus and tablerender 
+     {EFICTION_BLOCK_CAPTION=random}
+     {EFICTION_BLOCK_CAPTION=categories}
+     {EFICTION_BLOCK_CAPTION=recent}
+     {EFICTION_BLOCK_CAPTION=news}
+    */
+    
+    public function sc_efiction_block_caption($parm = NULL)
+    {    
+        global $current;
+        if ($parm == '') {
+            return '';
+        }
+        
+        $blocks = efiction::blocks();
+        $block = $parm['key'];
+        $value = $blocks[$block]; 
+
+        if(empty($value['status']) || ($value['status'] == 2 && $current != "home")) return '';
+        if(empty($value['file'])) return '';
+        
+        if($value['status'] /* && file_exists(_BASEDIR."blocks/".$value['file'])  */ ) {
+            $content = "";
+            $title = !empty($value['title']) ? stripslashes($value['title']) : "";   
+            
+        }
+        
+        return $title;
+    }
 
     
+    /*
+     Not needed with e107 menus and tablerender 
+     {EFICTION_BLOCK_CONTENT=info}
+     {EFICTION_BLOCK_CONTENT=login}
+     {EFICTION_BLOCK_CONTENT=news}
+     {EFICTION_BLOCK_CONTENT=categories}
+     {EFICTION_BLOCK_CONTENT=recent}
+     {EFICTION_BLOCK_CONTENT=random}
+    */
+    
+    public function sc_efiction_block_content($parm = NULL)
+    {    
+        global $current;
+        
+        if ($parm == '') {
+            return '';
+        }
+        
+        $blocks = efiction::blocks();
+        
+        $block = $parm['key'];
+        $value = $blocks[$block];
+
+        if(empty($value['status']) || ($value['status'] == 2 && $current != "home")) return '';
+        if(empty($value['file'])) return '';
+         
+        if($value['status'] && file_exists(_BASEDIR."blocks/".$value['file'])) {
+            $content = "";
+            if(file_exists(_BASEDIR."blocks/".$value['file'])) include(_BASEDIR."blocks/".$value['file']);
+            $block_content =  $content;
+            return $block_content;  
+        }
+            
+        return $block_content;    
+    }
+ 
 
     /*  {EFICTION_LINK} */
     /* {EFICTION_LINK=rss} - doesn't work on live site, on local it works. Data issue? */
