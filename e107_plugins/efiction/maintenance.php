@@ -29,7 +29,7 @@ require_once(HEADERF);
 if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/default.tpl" );
 else $tpl = new TemplatePower(_BASEDIR."default_tpls/default.tpl");
 
-include("includes/pagesetup.php");
+include(_BASEDIR."includes/pagesetup.php");
 $page = dbquery("SELECT message_title, message_text FROM ".TABLEPREFIX."fanfiction_messages WHERE message_name = 'maintenance' LIMIT 1");
 if(dbnumrows($page)) list($title, $text) = dbrow($page);
 else $text = write_message(_ERROR);

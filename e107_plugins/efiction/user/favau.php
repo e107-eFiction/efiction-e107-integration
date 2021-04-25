@@ -106,18 +106,20 @@ if(empty($favorites)) accessDenied( );
 		list($count) = dbrow($countquery);
 		$x = 1;
 		if($count) {
+                $template = e107::getTemplate('efiction', 'efiction', 'favcomment', true, true); 
 				$list = dbquery($query."  LIMIT $offset, $itemsperpage");
 				while($author = dbassoc($list)) { 
-					$output .= "<span class='label'>$x.</span> <a href=\"viewuser.php?uid=".$author['uid']."\">".$author['penname']."</a><br />";
-					if(file_exists("$skindir/favcomment.tpl")) $cmt = new TemplatePower( "$skindir/favcomment.tpl" );
-					else $cmt = new TemplatePower( _BASEDIR."default_tpls/favcomment.tpl" );
-					$cmt->prepare( );
-					$cmt->newBlock("comment");
-					$cmt->assign("comment", format_story($author['comments']));
+				 
+                    $comment_vars["number"] = $x;
+                    $comment_vars["uid"] = $author['uid'];
+                    $comment_vars["penname"] = $author['penname'];
 					if(USERUID == $uid) 
-					$cmt->assign("commentoptions", "<div class='adminoptions'><span class='label'>"._OPTIONS.":</span> <a href=\"member.php?action=favau&amp;edit=".$author['uid']."\">"._EDIT."</a> | <a href=\"member.php?action=favau&amp;delete=".$author['uid']."\">"._REMOVEFAV."</a></div>");
-					$cmt->assign("oddeven", ($x % 2 ? "odd" : "even"));
-					$output .= $cmt->getOutputContent( );
+                    $comment_vars["commentoptions"] = "<div class='adminoptions'><span class='label'>"._OPTIONS.":</span> <a href=\"member.php?action=favau&amp;edit=".$author['uid']."\">"._EDIT."</a> | <a href=\"member.php?action=favau&amp;delete=".$author['uid']."\">"._REMOVEFAV."</a></div>";
+                    $comment_vars["oddeven"] = ($x % 2 ? "odd" : "even");
+					$comment_vars["comment"] = format_story($author['comments']);
+                    $text = e107::getParser()->simpleParse($template['favau'], $comment_vars, true);   
+					 
+                    $output .=  $text;
 					$x++;
 				}
 			if($count > $itemsperpage) $output .= build_pagelinks("viewuser.php?action=favau&amp;uid=$uid&amp;", $count, $offset);

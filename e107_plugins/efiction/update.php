@@ -33,7 +33,7 @@ $blocks['info']['status'] = 0;
 //make a new TemplatePower object
 if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/default.tpl" );
 else $tpl = new TemplatePower(_BASEDIR."default_tpls/default.tpl");
-include("includes/pagesetup.php");
+include(_BASEDIR."includes/pagesetup.php");
 if(file_exists("languages/".$language."_admin.php")) include_once("languages/".$language."_admin.php");
 else include_once("languages/en_admin.php");
 // end basic page setup
@@ -201,7 +201,7 @@ CREATE TABLE `".TABLEPREFIX."fanfiction_modules` (
 	$series = dbquery("SELECT seriesid FROM ".TABLEPREFIX."fanfiction_series");
 	while($s = dbassoc($series)) {
 		$thisseries = $s['seriesid'];
-		include("includes/seriesreviews.php");
+		include(_BASEDIR."includes/seriesreviews.php");
 	}
 	} // End 3.3 updates
 	// Version 3.3.1 updates

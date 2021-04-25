@@ -171,28 +171,7 @@ class efiction_shortcodes extends e_shortcode
 		else return "";
 		 
     }
-
-
-	/* {EFICTION_MENU_CONTENT} */
-    public function sc_efiction_menu_content()
-    {
  
-		//$block = $efiction->get_block('menu'); 
-		$blocks = efiction::blocks();
-        $pagelinks = efiction::pagelinks();
-
-        foreach ($blocks['menu']['content'] as $page) {
-            if (isset($pagelinks[$page]['link'])) {
-                if (empty($blocks[$block]['style'])) {
-                    $content .= '<li '.($current == $page ? 'id="menu_current"' : '').'>'.$pagelinks[$page]['link'].'</li>';
-                } else {
-                    $content .= $pagelinks[$page]['link'];
-                }
-            }
-        }
-
-        return $content;
-    }
 
      /* {EFICTION_SORTFORM} */
     public function sc_efiction_sortform() {

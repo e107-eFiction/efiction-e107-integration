@@ -59,6 +59,9 @@ unset($catresult, $result, $classresults, $classtyperesults, $ratlist, $classtyp
 $action = escapestring($action);
 // Set up the page template
 
+if(!$tpl) {
+$tpl = new TemplatePower(_BASEDIR."default_tpls/browse.tpl");
+}
  
 $tpl->prepare( );
 // End page template setup
@@ -96,6 +99,8 @@ if($action != "printable") {
 	$tpl->assign( "footer", $copyright);
 	$tpl->gotoBlock( "_ROOT" );
 }
+
+/*
 foreach($blocks as $block=>$value) {
 	if(empty($value['status']) || ($value['status'] == 2 && $current != "home")) continue;
 	if(empty($value['file'])) continue;
@@ -106,6 +111,22 @@ foreach($blocks as $block=>$value) {
 		$tpl->assignGlobal($block."_content", $content);
 	}
 }
+*/
+
+/* this can be removed after replacing all blocks in tpls */
+$blocks = efiction::blocks();
+foreach($blocks AS  $block=>$value) { 
+    if(empty($value['status']) || ($value['status'] == 2 && $current != "home")) continue;
+    if(empty($value['file'])) continue;
+    
+    if($value['status'] && file_exists(_BASEDIR."blocks/".$value['file'])) {
+    $content = "";
+    $tpl->assignGlobal($block."_title", !empty($value['title']) ? stripslashes($value['title']) : "");
+    if(file_exists(_BASEDIR."blocks/".$value['file'])) include(_BASEDIR."blocks/".$value['file']);
+    $tpl->assignGlobal($block."_content", $content);
+    }       
+}
+        
 
 $tpl->gotoBlock( "_ROOT" );
 ?>

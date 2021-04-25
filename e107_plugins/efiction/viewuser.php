@@ -37,7 +37,7 @@ else $tpl->assignInclude( "listings", _BASEDIR."default_tpls/listings.tpl" );
 if(file_exists("$skindir/profile.tpl")) $tpl->assignInclude("profile", "$skindir/profile.tpl");
 else $tpl->assignInclude("profile", _BASEDIR."default_tpls/profile.tpl");
 
-include("includes/pagesetup.php");	
+include(_BASEDIR."includes/pagesetup.php");	
 // If uid isn't a number kill the script with an error message.  The only way this happens is a hacker.
 if(empty($uid)) {
 	if(!isMEMBER) accessDenied( );

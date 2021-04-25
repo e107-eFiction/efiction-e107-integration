@@ -30,6 +30,8 @@ require_once(HEADERF);
 if(isset($_GET['type'])) $type = descript($_GET['type']);
 else $type = false;
 
+$browse_vars['type'] = $type;
+
 if($type) {
   $template_key =  $type;  
   if(file_exists("$skindir/browse_search.tpl")) $tpl = new TemplatePower( "$skindir/browse_search.tpl" );
@@ -43,13 +45,27 @@ else {
   else $tpl = new TemplatePower(_BASEDIR."default_tpls/browse.tpl");
 }
 
-include("includes/pagesetup.php");
+include(_BASEDIR."includes/pagesetup.php");
  
 $tmp = explode("&", e_QUERY);
-if(isset($tmp[1])) {
-    $template_key = false ;  //use efiction template system, 
+if(!isset($tmp[1])) {
+    $template_key = 'index' ;  // first level
+}elseif(isset($tmp[1])) {
+    $template_key = false ;  //use efiction template system, first level
 }
-print_a($template_key);
+
+switch($type) {
+  case "featured": 
+  case "home": 
+  case "recent":
+  case "titles":
+  case "toplists":
+    $template_key = false;
+    break;
+  default:
+    break;
+}
+ 
 if($type) {
 	$query = array();
 	$countquery = array();
@@ -292,6 +308,7 @@ if($type) {
 			if($type != "characters") $tpl->assign("charactermenu1"   , $charactermenu1 );
 			$tpl->assign("charactermenu2"   , $charactermenu2 );
 		}
+        
 		// To avoid throwing warnings we need to define $classopts and tell it how many elements it should have.
 		if(!in_array("classes", $disablesorts)) {
 			$classopts = array();
@@ -308,6 +325,7 @@ if($type) {
 			}
 			$tpl->assign("classmenu", $allclasses);
 		}
+        
 		if(!in_array("ratings", $disablesorts)) {
 			$ratingmenu = "<div class='form-group'><select class=\"textbox\" name=\"rating\">\n";
 			$ratingmenu .= "<option value=\"0\">"._RATINGS."</option>\n";
@@ -338,6 +356,8 @@ if($type) {
 else  {
 
     $caption = _BROWSE;
+    $browse_vars['caption'] = $caption;
+    
 	$panelquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_hidden != '1' AND panel_level ".(isMEMBER ? " < 2" : "= '0'")." AND panel_type = 'B' ORDER BY panel_type DESC, panel_order ASC, panel_title ASC");
 	while($panel = dbassoc($panelquery)) {
 		$browsetypes[$panel['panel_title']] =  "<a href=\"browse.php?type=".$panel['panel_name']."\">".$panel['panel_title']."</a><br />\n";
@@ -365,7 +385,7 @@ else  {
 	}
 	$output .= "</div>".($displaycolumns ? "</div>" : "")."<div class='cleaner'>&nbsp;</div></div>";
 } 
- 
+
 if($template_key) {
  
  $browse_template = e107::getTemplate('efiction', 'browse', $template_key);
@@ -376,21 +396,24 @@ if($template_key) {
    $oldval = $tpl->getVarValue($oldsc); 
    $browse_vars[$oldsc] = $oldval;
  }
- $browse_vars['caption'] = $caption;
- $browse_vars['alphalinks'] = $alphalinks;
+ 
  $browse_vars['output'] = $output;
- //$browse_vars['seriesblock'] = $seriesblock;
+ $browse_vars['seriesblock'] = $seriesblock;
  
  $tablerender = varset($browse_template['caption'], $current);
  //full parsing because wrapper
+
+ $sc_browse = e107::getScParser()->getScObject('efiction_shortcodes', 'efiction', false);
+ $sc_browse->wrapper('browse/series');
  
- $sc = e107::getScParser()->getScObject('efiction_shortcodes', 'efiction', false);
- $sc->wrapper('browse/series');
+ $browse_vars['let'] = $let;
  
- $sc->setVars($browse_vars);
+ $browse_vars['offset'] = $offset;
+  
+ $sc_browse->setVars($browse_vars);    
  
- $caption = e107::getParser()->parseTemplate($browse_template['caption'], true, $sc);
- $text = e107::getParser()->parseTemplate($browse_template['body'], true, $sc);
+ $caption = e107::getParser()->parseTemplate($browse_template['caption'], true, $sc_browse);
+ $text = e107::getParser()->parseTemplate($browse_template['body'], true, $sc_browse);
  e107::getRender()->tablerender($caption, $text, $current);
  require_once(FOOTERF); 
  exit;

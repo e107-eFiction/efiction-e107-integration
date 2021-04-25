@@ -33,22 +33,39 @@ else $tpl->assignInclude( "listings", _BASEDIR."default_tpls/listings.tpl" );
  
 
 $list = isset($_GET['list']) ? $_GET['list'] : false;
-include("includes/pagesetup.php");
+include(_BASEDIR."includes/pagesetup.php");
 	if(!$list) {
-		$output = "<div id='pagetitle'>".$pagelinks['tens']['text']."</div>";
-		$lists = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_type = 'L' AND panel_hidden != '1' AND panel_level = '0' ORDER BY panel_order");
-		if(dbnumrows($lists)) $output .= "<div class='tblborder' id='top10list' style='margin: 0 25%;'>";
-		while($l = dbassoc($lists)) {
-			$output .= "<a href='toplists.php?list=".$l['panel_name']."'>".$l['panel_title']."</a><br />";
-		}
+        
+		$caption = "<div id='pagetitle'>".$pagelinks['tens']['text']."</div>";
+        $toplists_template = e107::getTemplate('efiction', 'efiction', 'toplists');
+        
+		$panelquery = "SELECT * FROM #fanfiction_panels WHERE panel_type = 'L' AND panel_hidden != '1' AND panel_level = '0' ORDER BY panel_order";
+        $panels = e107::getDb()->retrieve($panelquery, true);
+        
+        $text = '';
+ 
+		foreach($panels AS $l) { 
+        
+            $sc_browse['panel_name'] =  $l['panel_name'];
+            $sc_browse['panel_title'] =  $l['panel_title'];
+		    $text .= e107::getParser()->simpleParse($toplists_template['item'], $sc_browse, true);
+        }
 		
 		if(dbnumrows($lists)) $output .= "</div>";
+ 
+       $start = $toplists_template['start']; 
+       $end = $toplists_template['end']; 
+ 
+       e107::getRender()->tablerender($caption, $start.$text.$end, $current);
+       require_once(FOOTERF); 
+       exit;
+ 
 	}
 	else {
 		$panelquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_name = '".escapestring($list)."' AND panel_type = 'L' LIMIT 1");
 		if(dbnumrows($panelquery)) {
 			$panel = dbassoc($panelquery);
-			$output .= "<div id='pagetitle'>".$panel['panel_title']."</div>";
+			$caption = "<div id='pagetitle'>".$panel['panel_title']."</div>";
 			$numrows = 0;
 			if($panel['panel_url'] && file_exists(_BASEDIR.$panel['panel_url'])) include($panel['panel_url']);
 			else if(file_exists(_BASEDIR."toplists/{$type}.php")) include(_BASEDIR."toplists/{$type}.php");

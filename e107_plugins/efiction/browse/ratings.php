@@ -53,3 +53,5 @@ else {
 		$output .= "</div>".($displaycolumns ? "</div>" : "")."<div class='cleaner'>&nbsp;</div></div>";
 	}
 }
+
+$browse_vars['caption'] = $caption;

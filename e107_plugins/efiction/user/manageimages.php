@@ -25,7 +25,7 @@
 if (!defined('e107_INIT')) { exit; }
 
 // $upfile = isset($_FILES['upfile']) ? $_FILES['upfile'] : false;
-include("includes/upload_class.php");
+include(_BASEDIR."includes/upload_class.php");
 function buildImageList( ) {
 		$dir = opendir(STORIESPATH."/".USERUID."/images/");
 		while($file = readdir($dir)) {

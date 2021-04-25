@@ -307,23 +307,7 @@ CREATE TABLE `fanfiction_news` (
 ) REPLACE=MyISAM;
 
 -- --------------------------------------------------------
-
--- 
--- Table structure for table `fanfiction_pagelinks`
--- 
-
-CREATE TABLE `fanfiction_pagelinks` (
-  `link_id` int(11) NOT NULL auto_increment,
-  `link_name` varchar(50) NOT NULL default '',
-  `link_text` varchar(100) NOT NULL default '',
-  `link_url` varchar(250) NOT NULL default '',
-  `link_target` char(1) NOT NULL default '0',
-  `link_access` tinyint(4) NOT NULL default '0',
-  PRIMARY KEY  (`link_id`),
-  KEY `link_name` (`link_name`)
-) REPLACE=MyISAM;
-
--- --------------------------------------------------------
+ 
 
 -- 
 -- Table structure for table `fanfiction_panels`

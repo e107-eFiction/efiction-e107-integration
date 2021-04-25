@@ -40,7 +40,7 @@ else $tpl = new TemplatePower(_BASEDIR."default_tpls/default.tpl");
 //let TemplatePower do its thing, parsing etc.
 $tpl->prepare();
 
-include("includes/pagesetup.php");
+include(_BASEDIR."includes/pagesetup.php");
 
 //Start modifying below:
 

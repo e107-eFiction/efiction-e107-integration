@@ -28,7 +28,7 @@ if (!defined('e107_INIT')) { exit; }
 if(USERID) {  //fully managed by e107, user is logged in
  
     $authordata = eauthors::get_author_data_by_user_id(USERID ); 
-    
+ 
     $author_uid = $authordata['uid'];
     
 	if($author_uid > 0) { //user is author

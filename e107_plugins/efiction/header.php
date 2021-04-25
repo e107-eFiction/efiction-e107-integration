@@ -65,6 +65,7 @@ if(isset($_GET['action'])) $action = strip_tags($_GET['action']);
 else $action = false;
 
 e107::lan('efiction');
+e107::lan('efiction', true);
 
 //because alphabet
 if(file_exists(_BASEDIR."languages/{$language}.php")) include (_BASEDIR."languages/{$language}.php");
@@ -228,7 +229,7 @@ if(!empty($_GET['action']) && $_GET['action'] == "printable") {
 else { 
 
 $inlinestyle = '
-    #columncontainer { margin: 1em auto; width: auto; padding: 5%;}
+    #columncontainer { margin: 1em auto; width: 100%; padding: 5%;}
     #browseblock, #memberblock { width: 100%; padding: 0; margin: 0; float: left; border: 0px solid transparent; }
     .column { float: left; width: '.($colwidth - 1).'%; }
     html>body .column { width: '.$colwidth.'%; }

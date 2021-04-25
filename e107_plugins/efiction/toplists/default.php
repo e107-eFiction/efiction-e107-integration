@@ -47,32 +47,32 @@ if (!defined('e107_INIT')) { exit; }
 			$tpl->newBlock("listings");
 			while($stories = dbassoc($result)) { 
 				$tpl->newblock("storyblock");
-				include("includes/storyblock.php"); 
+				include(_BASEDIR."includes/storyblock.php"); 
 			}
 			break;
 		case "favseries" :
 			$result = dbquery("SELECT count(fav.item) AS count, series.*,  "._PENNAMEFIELD." as penname FROM (".TABLEPREFIX."fanfiction_series AS series, ".TABLEPREFIX."fanfiction_favorites as fav, "._AUTHORTABLE.") WHERE series.uid = "._UIDFIELD." AND fav.item = series.seriesid AND fav.type = 'SE' GROUP BY series.seriesid ORDER BY count DESC LIMIT 10");
 			if(dbnumrows($result) == 0) $output .= write_message(_NORESULTS);
 			$tpl->newBlock("listings");
-			while($stories = dbassoc($result)) { include("includes/seriesblock.php"); }
+			while($stories = dbassoc($result)) { include(_BASEDIR."includes/seriesblock.php"); }
 			break;
 		case "largeseries":
 			$result = dbquery("SELECT count(inorder.seriesid) AS count, sub.*,  "._PENNAMEFIELD." as penname FROM ".TABLEPREFIX."fanfiction_series AS sub, ".TABLEPREFIX."fanfiction_inseries as inorder, "._AUTHORTABLE." WHERE sub.uid = "._UIDFIELD." AND inorder.seriesid = sub.seriesid GROUP BY sub.seriesid ORDER BY count DESC LIMIT 10");
 			if(dbnumrows($result) == 0) $output .= write_message(_NORESULTS);
 			$tpl->newBlock("listings");
-			while($stories = dbassoc($result)) { include("includes/seriesblock.php"); }
+			while($stories = dbassoc($result)) { include(_BASEDIR."includes/seriesblock.php"); }
 			break;
 		case "smallseries":
 			$result = dbquery("SELECT count(inorder.seriesid) AS count, sub.*,  "._PENNAMEFIELD." as penname FROM ".TABLEPREFIX."fanfiction_series AS sub, ".TABLEPREFIX."fanfiction_inseries as inorder, "._AUTHORTABLE." WHERE sub.uid = "._UIDFIELD." AND inorder.seriesid = sub.seriesid GROUP BY sub.seriesid ORDER BY count LIMIT 10");
 			if(dbnumrows($result) == 0) $output .= write_message(_NORESULTS);
 			$tpl->newBlock("listings");
-			while($stories = dbassoc($result)) { include("includes/seriesblock.php"); }
+			while($stories = dbassoc($result)) { include(_BASEDIR."includes/seriesblock.php"); }
 			break;
 		case "reviewedseries":
 			$result = dbquery("SELECT series.*,  "._PENNAMEFIELD." as penname FROM ".TABLEPREFIX."fanfiction_series AS series, "._AUTHORTABLE." WHERE series.uid = "._UIDFIELD." ORDER BY series.reviews DESC LIMIT 10");
 			if(dbnumrows($result) == 0) $output .= write_message(_NORESULTS);
 			$tpl->newBlock("listings");
-			while($stories = dbassoc($result)) { include("includes/seriesblock.php"); }
+			while($stories = dbassoc($result)) { include(_BASEDIR."includes/seriesblock.php"); }
 			break;
 		case "prolificauthors":
 			$result = dbquery("SELECT ap.stories AS count, "._PENNAMEFIELD." as penname , "._UIDFIELD." as uid FROM ".TABLEPREFIX."fanfiction_authorprefs as ap LEFT JOIN "._AUTHORTABLE." ON ap.uid = "._UIDFIELD." ORDER BY count DESC LIMIT 10");
@@ -112,7 +112,7 @@ if (!defined('e107_INIT')) { exit; }
 
 		while($stories = dbassoc($result2)) { 
 			$tpl->newBlock("storyblock");
-			include("includes/storyblock.php"); 
+			include(_BASEDIR."includes/storyblock.php"); 
 		}
 	}
 	$tpl->gotoBlock( "_ROOT" );

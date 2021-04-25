@@ -33,7 +33,7 @@ require_once(HEADERF);
 //make a new TemplatePower object
 if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/default.tpl" );
 else $tpl = new TemplatePower(_BASEDIR."default_tpls/default.tpl");
-include("includes/pagesetup.php");
+include(_BASEDIR."includes/pagesetup.php");
 
 e107::lan('efiction',true );
 // end basic page setup

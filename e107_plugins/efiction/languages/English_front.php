@@ -5,7 +5,19 @@ define ("LAN_EFICTION_READMORE", "Read more...");
 
 define('LAN_RECENTSTORIES', 'Stories updated in the last [x] days.');
 define ("LAN_REQUIRED_INFORMATION", "Required information");
- 
+
+define ("LAN_EFICTION_ACCOUNT", "Account Info");
+define ("LAN_EFICTION_ADMINAREA", "Admin");
+define ("LAN_EFICTION_FEATURED", "Featured Stories");
+define ("LAN_EFICTION_HOME", "Home");
+define ("LAN_EFICTION_CHALLENGES", "Challenges");
+define ("LAN_EFICTION_LOGOUT", "Logout"); 
+define ("LAN_EFICTION_NEWS", "News Archive");
+define ("LAN_EFICTION_RSS", "<img src='"._BASEDIR."/images/xml.gif' alt='RSS' border='0'>");
+define ("LAN_EFICTION_RULES", "Rules");
+define ("LAN_EFICTION_TENS", "Top Tens");
+define ("LAN_EFICTION_TOS", "Terms of Service");
+
 define('_ACTIONSUCCESSFUL', 'The action was successful.');
 define('_ACTIONCANCELLED', 'The requested action was cancelled.');
 define('_ACTIVE', 'Active');

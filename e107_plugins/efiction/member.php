@@ -31,7 +31,7 @@ if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/defa
 else $tpl = new TemplatePower(_BASEDIR."default_tpls/default.tpl");
 if(file_exists("$skindir/listings.tpl")) $tpl->assignInclude( "listings", "$skindir/listings.tpl" );
 else $tpl->assignInclude( "listings", _BASEDIR."default_tpls/listings.tpl" );
-include("includes/pagesetup.php");
+include(_BASEDIR."includes/pagesetup.php");
 
 if($action) $current = $action;
 else $current = "user";

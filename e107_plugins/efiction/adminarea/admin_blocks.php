@@ -32,7 +32,7 @@ class fanfiction_blocks_ui extends e_admin_ui
 
     protected $listOrder = 'block_id DESC';
 
-    protected $fields = array(
+    protected $fields = array (
         'checkboxes' => array('title' => '',  'type' => null,  'data' => null,  'width' => '5%',  'thclass' => 'center',  'forced' => true,  'class' => 'center',  'toggle' => 'e-multiselect',  'readParms' => array(),  'writeParms' => array(), ),
         'block_id' => array('title' => LAN_ID,  'data' => 'int',  'width' => '5%',  'help' => '',  'readParms' => array(),  'writeParms' => array(),  'class' => 'left',  'thclass' => 'left', 'forced' => true, ),
         'block_name' => array('title' => LAN_TITLE,  'type' => 'text',  'data' => 'safestr',  'width' => 'auto',  'inline' => true,  'validate' => true,  'help' => '',  'readParms' => array(),  'writeParms' => array(),  'class' => 'left',  'thclass' => 'left', ),
@@ -42,7 +42,7 @@ class fanfiction_blocks_ui extends e_admin_ui
         'block_status' => array('title' => 'Status',  'type' => 'dropdown',  'data' => 'int',  'width' => 'auto',  'batch' => true,  'filter' => true,  'help' => '',  'readParms' => array(),
             'writeParms' => array('optArray' => array(0 => LAN_EFICTION_INACTIVE, 1 => LAN_EFICTION_ACTIVE, 2 => LAN_EFICTION_INDEXONLY)), 'class' => 'left',  'thclass' => 'left', ),
 
-        'block_variables' => array('title' => LAN_OPTIONS,  'type' => 'method',   'data' => 'str',  'width' => 'auto',  'help' => '',  'readParms' => array(),  'writeParms' => array('nolabel' => 1),  'class' => 'left',  'thclass' => 'left',  'filter' => false,  'batch' => false, ),
+        'block_variables' => array('title' => LAN_OPTIONS,  'type' => 'method',   'data' => 'json',  'width' => 'auto',  'help' => '',  'readParms' => array(),  'writeParms' => array('nolabel' => 1),  'class' => 'left',  'thclass' => 'left',  'filter' => false,  'batch' => false, ),
         'options' => array('title' => LAN_OPTIONS,  'type' => null,  'data' => null,  'width' => '10%',  'thclass' => 'center last',  'class' => 'center last',  'forced' => true,  'readParms' => array(),  'writeParms' => array(), ),
     );
 
@@ -78,8 +78,8 @@ class fanfiction_blocks_ui extends e_admin_ui
 
     public function beforeUpdate($new_data, $old_data, $id)
     {
-        $blockvars = $new_data['block_variables'];
-        $new_data['block_variables'] =  serialize($blockvars) ;
+      //  $blockvars = $new_data['block_variables'];
+      //  $new_data['block_variables'] =  serialize($blockvars) ;
 
     
         return $new_data;
@@ -149,10 +149,10 @@ class fanfiction_blocks_form_ui extends e_admin_form_ui
 		
         $filepath = e_PLUGIN.'efiction/blocks/'.$block_name.'/admin.php';
         $optionpath = e_PLUGIN.'efiction/blocks/'.$block_name.'/admin_options.php';
-
+ 
         //actual value
         if (!empty($curVal)) {
-            $value = unserialize($curVal); //use php way
+            $value = e107::unserialize($curVal);  
         }
  
         switch ($mode) {
@@ -161,20 +161,26 @@ class fanfiction_blocks_form_ui extends e_admin_form_ui
             break;
 
             case 'write': // Edit Page
-
-                if ((file_exists($filepath))) {
+            
+               //e107 way
+               if ((file_exists($optionpath))) {   
+                    require_once $optionpath;
+                    $this->custom_fields = $options;
+                    
+                    //info
+                    if( $block_name == 'info') {
+                    		if(empty($value['template']) && $value['style'] == 1) $value['template'] = _NARTEXT;
+                    		else if($value['style'] == 1)  $value['template'] = $value['template'];
+                    		else $value['template'] = "";
+                    }
+                    $options = $this->getFields('block_variables', $value);
+                    $text .= $options;
+                } //efiction way
+                elseif ((file_exists($filepath))) {
                     require_once $filepath;
 
                     $text = $output;
                 }
-
-                if ((file_exists($optionpath))) {
-                    require_once $optionpath;
-                    $this->custom_fields = $options;
-                    $options = $this->getFields('block_variables', $value);
-                    $text .= $options;
-                }
-
                 return $text;
 
             break;
@@ -203,6 +209,7 @@ class fanfiction_blocks_form_ui extends e_admin_form_ui
         //single fields, mainly headers
         $settings = $this->custom_fields;
 
+        
         if ($settings['fields'] > 0) {
             $nameitem = 'block_variables';
             foreach ($settings['fields'] as $fieldkey => $field) {

@@ -33,8 +33,8 @@ require_once(HEADERF);
 
 $tpl = new TemplatePower( file_exists("$skindir/default.tpl") ?  "$skindir/default.tpl" : _BASEDIR."default_tpls/default.tpl");
  
-include("includes/pagesetup.php");  
-include("includes/storyform.php");  //just includes functions for displaying story and chapter forms
+include(_BASEDIR."includes/pagesetup.php");  
+include(_BASEDIR."includes/storyform.php");  //just includes functions for displaying story and chapter forms
 
 // before doing anything else check if the visitor is logged in.  If they are, check if they're an admin.  If not, check that they're 
 // trying to edit/delete/etc. their own stuff then get the penname 
@@ -77,7 +77,7 @@ function preview_story($stories) {
 	$tpl->newBlock("listings");
 	$tpl->newBlock("storyblock");
 	$tpl->assignGlobal("skindir", $skindir);
-	include("includes/storyblock.php");
+	include(_BASEDIR."includes/storyblock.php");
 	$text = $tpl->getOutputContent( );
 	$count = 0;
 	if(!empty($stories['storytext'])) {
@@ -88,7 +88,7 @@ function preview_story($stories) {
 		if(file_exists("$skindir/viewstory.tpl")) $tpl = new TemplatePower("$skindir/viewstory.tpl");
 		else $tpl = new TemplatePower(_BASEDIR."default_tpls/viewstory.tpl");
 		$tpl->prepare( );			
-		include("includes/storyblock.php");
+		include(_BASEDIR."includes/storyblock.php");
 		$tpl->assign("adminlinks", $adminlinks);
 		if($stories['inorder'] == 1 && !empty($stories['storynotes'])) {
 			$tpl->gotoBlock("_ROOT");
@@ -314,7 +314,7 @@ function newstory( ) {
 		}
 		// validate fic, send story alerts, and mail admins
 		if($validated) {
-			include("includes/emailer.php");
+			include(_BASEDIR."includes/emailer.php");
 			if(!isset($storytitle)) $storytitle = $title;
 			if(!$newchapter) {
 				foreach($catid as $cat) { categoryitems($cat, 1); }
@@ -362,7 +362,7 @@ function newstory( ) {
 		else {
 			$adminquery = dbquery("SELECT "._EMAILFIELD." as email, "._PENNAMEFIELD." as penname, contact,categories FROM ".TABLEPREFIX."fanfiction_authorprefs as ap, "._AUTHORTABLE." WHERE "._UIDFIELD." = ap.uid AND level > 0 AND level < 4");
 			if(empty($storytitle)) $storytitle = $title;
-			include("includes/emailer.php");
+			include(_BASEDIR."includes/emailer.php");
 			while($admins = dbassoc($adminquery)) {
 				global $sitename, $siteemail;
 				if($admins['contact'] == 1) {
@@ -622,6 +622,7 @@ function editchapter( $chapid ) {
 	if(!isset($_POST['submit']) || $_POST['submit'] != _PREVIEW) {
 		$storyquery = dbquery("SELECT title, inorder, notes, endnotes, uid, storytext, sid FROM ".TABLEPREFIX."fanfiction_chapters WHERE chapid = '$chapid' LIMIT 1");
 		$story = dbassoc($storyquery);
+        print_a($story);
 		$chaptertitle = stripslashes($story["title"]);
 		$storytext = $story["storytext"];
 		$inorder = $story["inorder"];
@@ -788,7 +789,7 @@ function editstory($sid) {
 
 			if($validated) {
 				if(!$oldvalid) {
-					include("includes/emailer.php");
+					include(_BASEDIR."includes/emailer.php");
 					list($newchapter) = dbrow(dbquery("SELECT validated FROM ".TABLEPREFIX."fanfiction_chapters WHERE sid = '$sid' AND inorder = '1'"));
 					if(!$newchapter) {
 						if($alertson) {
@@ -1012,7 +1013,7 @@ function delete( ) {
 			return "<center>"._ACTIONSUCCESSFUL."</center>".editstory( $sid );
 		}
 		else {
-			include("includes/deletefunctions.php");
+			include(_BASEDIR."includes/deletefunctions.php");
 			deleteStory($story);
 		}
 		$output = write_message(_ACTIONSUCCESSFUL."  ".($admin ? _BACK2ADMIN : viewstories( )));	

@@ -72,7 +72,7 @@ if(empty($favorites)) accessDenied( );
 		else {
 			$tpl->newBlock("listings");
 			$tpl->newBlock("storyblock");
-			include("includes/storyblock.php");
+			include(_BASEDIR."includes/storyblock.php");
 			$tpl->gotoBlock("listings");
 			$tpl->assign("pagelinks", "<form method=\"POST\" enctype=\"multipart/form-data\" action=\"member.php?action=favst&amp;".($edit? "edit=$edit" : "add=1")."&amp;sid=".(isset($sid) ? $sid : $edit)."\">\n
 				<div style=\"width: 350px; margin: 0 auto; text-align: left;\"><label for=\"comments\">"._COMMENTS.":</label><br />
@@ -91,18 +91,23 @@ if(empty($favorites)) accessDenied( );
 			$count = 0;
 			while($stories = dbassoc($list)) { 
 				$tpl->newBlock("storyblock");
-				include("includes/storyblock.php");
+				include(_BASEDIR."includes/storyblock.php");
 				if(!empty($stories['comments']) || USERUID == $uid || isADMIN) {
-				if(file_exists("$skindir/favcomment.tpl")) $cmt = new TemplatePower( "$skindir/favcomment.tpl" );
-				else $cmt = new TemplatePower( _BASEDIR."default_tpls/favcomment.tpl" );
-				$cmt->prepare( );
-				$cmt->newBlock("comment");
-				$cmt->assign("comment", $stories['comments'] ? "<div class='comments'><span class='label'>"._COMMENTS.": </span>".strip_tags($stories['comments'])."</div>" : "");
-				if(USERUID == $uid) 
-				$cmt->assign("commentoptions", "<div class='adminoptions'><span class='label'>"._OPTIONS.":</span> <a href=\"member.php?action=favst&amp;edit=".$stories['sid']."\">"._EDIT."</a> | <a href=\"member.php?action=favst&amp;delete=".$stories['sid']."\">"._REMOVEFAV."</a></div>");
-				$cmt->assign("oddeven", ($count % 2 ? "odd" : "even"));
-				$tpl->assign("comment", $cmt->getOutputContent( ));
-				$tpl->gotoBlock( "listings" );
+
+					$template = e107::getTemplate('efiction', 'efiction', 'favcomment', true, true); 
+
+                    $comment_vars["number"] = $x;
+                    $comment_vars["uid"] = $author['uid'];
+                    $comment_vars["penname"] = $author['penname'];
+					if(USERUID == $uid) 
+                    $comment_vars["commentoptions"] = "<div class='adminoptions'><span class='label'>"._OPTIONS.":</span> <a href=\"member.php?action=favst&amp;edit=".$stories['sid']."\">"._EDIT."</a> | <a href=\"member.php?action=favau&amp;delete=".$stories['sid']."\">"._REMOVEFAV."</a></div>";
+                    $comment_vars["oddeven"] = ($x % 2 ? "odd" : "even");
+					$comment_vars["comment"] = format_story($stories['comments']);
+                    $text = e107::getParser()->simpleParse($template['favst'], $comment_vars, true); 
+ 
+			
+					$tpl->assign("comment", $text);
+					$tpl->gotoBlock( "listings" );
 				}
 			}	
 			if($storycount > $itemsperpage) {

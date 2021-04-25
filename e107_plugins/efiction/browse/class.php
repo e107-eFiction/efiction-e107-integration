@@ -61,3 +61,4 @@ else if(isset($type_id)) {
 	$output .= "</div>".($displaycolumns ? "</div>" : "")."<div class='cleaner'>&nbsp;</div></div>";
 }
 else $output .= _ERROR;
+$browse_vars['caption'] = $caption;

@@ -22,6 +22,8 @@ New starter point for futher integration.
 - new edit form, fully templated + shortcodes
 - fixed viewstories - with coauthors used story were displayed more times
 - removed custom SK LANs and moved them to module, now SK and EN strings are the same
+- fanfiction_authorinfo table removed, replaced with e107 UEA
+- fanfiction_pagelinks table removed, replaced with e107 sitelinks
 
 
 ##  removing .tpl 

@@ -28,3 +28,5 @@ if (!defined('e107_INIT')) { exit; }
 	$query = $storyquery;
 	$query .= " ORDER BY ".(isset($_REQUEST['sort']) && $_REQUEST['sort'] == "alpha" ? "stories.title" : "updated DESC");
 	$numrows = search(_STORYQUERY.$query, _STORYCOUNT.$countquery, "browse.php?");
+
+	$browse_vars['caption'] = $caption;

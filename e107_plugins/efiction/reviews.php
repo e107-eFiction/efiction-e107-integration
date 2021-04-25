@@ -39,7 +39,7 @@ else $tpl->assignInclude("reviewsblock", _BASEDIR."default_tpls/reviewblock.tpl"
 //let TemplatePower do its thing, parsing etc.
 $tpl->prepare();
 
-include("includes/pagesetup.php");
+include(_BASEDIR."includes/pagesetup.php");
 
 $reviewid = isset($_REQUEST['reviewid']) ? $_REQUEST['reviewid'] : false;
 if(!isNumber($reviewid)) unset($reviewid);
@@ -236,7 +236,7 @@ else if($action == "edit" || $action == "add") {
 				$result = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_reviews WHERE reviewid = '$reviewid' LIMIT 1");
 				$review = dbassoc($result);
 			}
-			include("includes/reviewform.php");
+			include(_BASEDIR."includes/reviewform.php");
 			$output .= $form;
 		}
 	}
@@ -414,7 +414,7 @@ else {
 		if(isMEMBER || $anonreviews) {
 			$item = $item;
 			$type = $type;
-			include("includes/reviewform.php");
+			include(_BASEDIR."includes/reviewform.php");
 		}
 		else $form = write_message(sprintf(_LOGINTOREVIEW, strtolower($pagelinks['login']['link']), strtolower($pagelinks['register']['link'])));
 	}

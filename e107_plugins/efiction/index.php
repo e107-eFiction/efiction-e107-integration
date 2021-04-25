@@ -26,20 +26,15 @@ $current = "home";
 include ("header.php");
 require_once(HEADERF);
 
-//make a new TemplatePower object
+//include(_BASEDIR."includes/pagesetup.php");
 
-if(file_exists("$skindir/index.tpl")) $tpl = new TemplatePower( "$skindir/index.tpl" );
-else $tpl = new TemplatePower(_BASEDIR."default_tpls/index.tpl");
-//let TemplatePower do its thing, parsing etc.
+$template = e107::getTemplate('efiction', 'efiction', 'index');
+ 
+$output = e107::getParser()->parseTemplate( $template['body'], true );
 
-include("includes/pagesetup.php");
-$query = dbquery("SELECT message_text FROM ".TABLEPREFIX."fanfiction_messages WHERE message_name = 'welcome'");
-list($welcome) = dbrow($query);
-$tpl->assign("welcome", stripslashes($welcome));
+$tablerender= varset($template['tablerender'], $current);
+ 
+e107::getRender()->tablerender($caption, $output, $tablerender);
 
-    $output = $tpl->getOutputContent();  
-    $output = e107::getParser()->parseTemplate($output, true);
-    e107::getRender()->tablerender($caption, $output, $current);
-dbclose( );
-    require_once(FOOTERF);  
-    exit( );
+require_once(FOOTERF);  
+exit( );

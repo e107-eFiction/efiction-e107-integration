@@ -46,8 +46,7 @@ if (class_exists('efiction')) {
         echo e107::getMessage()->addInfo('efiction class is available')->render();
     }
 
-	$template = e107::getTemplate('efiction', 'storyblock', 'random');
-
+	$template = e107::getTemplate('efiction', 'storyblock', 'random', true, true);
     $blocks = efiction::blocks();
 
     $caption = $blocks['random']['title'];

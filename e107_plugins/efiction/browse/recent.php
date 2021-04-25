@@ -31,3 +31,6 @@ if (!defined('e107_INIT')) { exit; }
 	$query = $storyquery.($recentdays ? " AND updated > '".date("Y-m-d H:i:s", mktime(0, 0, 0, date("m")  , date("d")-$recentdays, date("Y")))."'" : "");
 	$query .= " ORDER BY ".(isset($_REQUEST['sort']) && $_REQUEST['sort'] == "alpha" ? "stories.title" : "updated DESC");
 	$numrows = search(_STORYQUERY.$query, _STORYCOUNT.$countquery, "browse.php?");
+
+	$browse_vars['caption'] = $caption;
+	

@@ -26,7 +26,6 @@ if (!defined('e107_INIT')) { exit; }
 $current = "series";
 
 $caption =  _SERIES.($let ? " - $let" : "");
-$alphalinks =  build_alphalinks("browse.php?$terms&amp;", $let) ;
  
 if($let) {
 	$seriesquery .= (empty($seriesquery) ? "" : " AND ").($let == _OTHER ? " series.title REGEXP '^[^a-z]'" : "series.title LIKE '$let%'");
@@ -65,12 +64,14 @@ if($let) {
 			$scountquery[] = "FIND_IN_SET($class, series.classes) = 0";
 		}
 	}
-
+    
+    
+$itemsperpage = 5;
 $countquery = _SERIESCOUNT.(!empty($seriesquery) ? " WHERE ".$seriesquery : "");
-$cresult = e107::getDb()->retrieve($countquery, true);
+$cresult = e107::getDb()->retrieve($countquery);
 $query = _SERIESQUERY.(!empty($seriesquery) ? " AND ".$seriesquery : "")." ORDER BY series.title LIMIT $offset, $itemsperpage";
 $sresult = e107::getDb()->retrieve($query, true);
-$numrows = count($cresult);
+$numrows = $cresult['count'];
 $count = 0;
  
 /* series listing starts */
@@ -79,11 +80,14 @@ $sc_serie = e107::getScParser()->getScObject('serie_shortcodes', 'efiction', fal
 $seriesblock = $template['start'];
 
 $template_key = 'series';
-
+ 
+$browse_vars['numrows'] = $numrows;
+$browse_vars['terms'] =  $terms ;
 foreach($sresult AS $serie)  { 
   
-    $serie['numstories'] = count(storiesInSeries($serie['seriesid']));
+    $serie['numrows'] = count(storiesInSeries($serie['seriesid']));
     $serie['count'] = $count;
+ 
     $sc_serie->setVars($serie);
     
     $count++;
@@ -98,12 +102,15 @@ $tpl->assign("seriesblock", $seriesblock);
 
 /* series listing ends */
      
-if($numrows > $itemsperpage) $tpl->assign("pagelinks", build_pagelinks("browse.php?$terms&amp;", $numrows, $offset));
-
-$tpl->gotoBlock("_ROOT");
+//if($numrows > $itemsperpage) $tpl->assign("pagelinks", build_pagelinks("browse.php?$terms&amp;", $numrows, $offset));
+ 
 if(!$numrows) {
-	$tpl->gotoBlock("_ROOT");
-	$output .= write_message(_NORESULTS);
+   
+    echo e107::getMessage()->addInfo(_NORESULTS);
+ 
+	
 }
-$disablesorts = array("ratings", "sorts", "complete");
-?>
+
+//$disablesorts = array("ratings", "sorts", "complete");
+ 
+$browse_vars['caption'] = $caption;

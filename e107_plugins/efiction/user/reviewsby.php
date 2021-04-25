@@ -54,7 +54,7 @@ if($reviewcount) {
 			$authoruid = $stories['uid'];
 			if($lastreview['type'] != 'ST' || $lastreview['item'] != $reviews['item']) {
 				$tpl->newBlock("storyblock");
-				include("includes/storyblock.php");
+				include(_BASEDIR."includes/storyblock.php");
 			}
 			if($reviews['chapid']) {
 				$chapquery = dbquery("SELECT title, inorder FROM ".TABLEPREFIX."fanfiction_chapters WHERE chapid = '".$reviews['chapid']."' LIMIT 1");
@@ -65,7 +65,7 @@ if($reviewcount) {
 			$storyquery = dbquery(_SERIESQUERY." AND seriesid = '".$reviews['item']."' LIMIT 1");
 			$stories = dbassoc($storyquery);
 			$authoruid = $stories['uid'];
-			include("includes/seriesblock.php");
+			include(_BASEDIR."includes/seriesblock.php");
 		}
 		else { 
 			$codeblocks = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'reviewsby'");

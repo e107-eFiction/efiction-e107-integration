@@ -30,3 +30,5 @@ $current = "titles";
 	else if(!empty($let)) $storyquery .= " AND stories.title LIKE '$let%'";
 	$storyquery  .= _ORDERBY;
 	$numrows = search(_STORYQUERY.$storyquery, _STORYCOUNT.$storyquery, "browse.php?");
+
+	$browse_vars['caption'] = $caption;

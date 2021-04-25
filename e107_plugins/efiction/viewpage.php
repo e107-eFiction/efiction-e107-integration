@@ -32,7 +32,7 @@ if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/defa
 else $tpl = new TemplatePower(_BASEDIR."default_tpls/default.tpl");
 //let TemplatePower do its thing, parsing etc.
 
-include("includes/pagesetup.php");
+include(_BASEDIR."includes/pagesetup.php");
 
 $page = dbquery("SELECT message_title, message_text FROM ".TABLEPREFIX."fanfiction_messages WHERE ".($current ? "message_name = '".escapestring($current)."'" : "message_id = '".(isNumber($_GET['id']) ? $_GET[id] : "0")."'")." LIMIT 1");
 if(dbnumrows($page)) list($title, $text) = dbrow($page);

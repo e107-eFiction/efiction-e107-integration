@@ -36,7 +36,7 @@ if(file_exists("$skindir/listings.tpl")) $tpl->assignInclude( "listings", "$skin
 else $tpl->assignInclude( "listings", _BASEDIR."default_tpls/listings.tpl" );
  
 
-include("includes/pagesetup.php");
+include(_BASEDIR."includes/pagesetup.php");
 $seriesid = isset($_GET['seriesid']) && isNumber($_GET['seriesid']) ? $_GET['seriesid'] : false;
 $showlist = true;
 $inorder = isset($_GET['inorder']) && isNumber($_GET['inorder']) ? $_GET['inorder'] : false;
@@ -167,7 +167,7 @@ if($add == "series" || ($action == "add" && !$add) || $action == "edit") {
 	if(!$multiplecats) $output .= "<input type=\"hidden\" name=\"catid[]\" id=\"catid\" value=\"1\">";
 	else {	
 		$catid = isset($series['catid']) ? explode(",", $series['catid']) : array( );
-		include("includes/categories.php");
+		include(_BASEDIR."includes/categories.php");
 		$output .= "<input type=\"hidden\" name=\"formname\" value=\"series\">";
 	}
 	if(count($charlist) > 0) {
@@ -218,7 +218,7 @@ if($add == "stories") {
 		if($admin || USERUID == $owner || $isopen == 2 ) $confirmed = 1;
 		else {
 			$confirmed = 0;
-			include("includes/emailer.php");
+			include(_BASEDIR."includes/emailer.php");
 			$seriesMail = sprintf(_NEWSERIESITEMS, stripslashes($title));
 			$subject = sprintf("_SERIESITEMSSUBS", stripslashes($title));
 			$mailInfo = dbassoc(dbquery("SELECT "._PENNAMEFIELD." as penname, "._EMAILFIELD." as email FROM "._AUTHORTABLE." WHERE "._UIDFIELD." = '$owner' LIMIT 1"));
@@ -266,7 +266,7 @@ if($add == "stories") {
 			$authorlink = "<a href=\"series.php?action=$action&amp;add=stories&amp;seriesid=$seriesid&amp;stories=";
 			$countquery = _MEMBERCOUNT." WHERE ap.stories > 0".(isset($letter) ? " AND $letter" : "");
 			$authorquery = _MEMBERLIST." WHERE ap.stories > 0".(isset($letter) ? " AND $letter" : "");
-			include("includes/members_list.php");
+			include(_BASEDIR."includes/members_list.php");
 			$showlist = false;
 		}
 		else {
@@ -323,7 +323,7 @@ if($action == "delete") {
 
 			$seriesinfo = dbquery("SELECT title, uid FROM ".TABLEPREFIX."fanfiction_series WHERE seriesid = '$seriesid'");
 			list($title, $uid) = dbrow($seriesinfo);
-			include("includes/deletefunctions.php");
+			include(_BASEDIR."includes/deletefunctions.php");
 			deleteSeries($seriesid);
 			$output .= write_message(_ACTIONSUCCESSFUL);
 			if($admin || USERUID == $uid) $showlist = true;

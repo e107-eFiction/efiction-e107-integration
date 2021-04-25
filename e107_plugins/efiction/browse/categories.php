@@ -30,6 +30,7 @@ $disablesorts = array("categories");
 // End variables
 	if($catid == -1) $caption = _CATEGORIES;
 	else $caption = catlist($catid);
+    
 	$subs = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_categories WHERE parentcatid = '$catid' ORDER BY displayorder ASC");
 	$total = dbnumrows($subs);
 	$list = floor($total / $displaycolumns);
@@ -86,3 +87,4 @@ $disablesorts = array("categories");
 		$numrows = search(_STORYQUERY.$storyquery, _STORYCOUNT.$countquery, "browse.php?");
 	}
 	$catid = array($catid);
+	$browse_vars['caption'] = $caption;

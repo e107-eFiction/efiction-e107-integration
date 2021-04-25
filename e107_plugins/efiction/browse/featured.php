@@ -28,3 +28,5 @@ if (!defined('e107_INIT')) { exit; }
 	$countquery .= " AND featured > 0";
 
 	$numrows = search(_STORYQUERY.$storyquery._ORDERBY, _STORYCOUNT.$countquery, "browse.php?");
+
+	$browse_vars['caption'] = $caption;

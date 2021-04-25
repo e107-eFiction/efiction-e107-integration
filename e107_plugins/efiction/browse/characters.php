@@ -71,3 +71,4 @@ else {
 	$numrows = 0;
 }	
 	if($charid > 0) $charlist1 = $charid;
+	$browse_vars['caption'] = $caption;

@@ -366,7 +366,7 @@
 			<field name="panel_id">194</field>
 			<field name="panel_name">editbio</field>
 			<field name="panel_title">Edit Bio</field>
-			<field name="panel_url"></field>
+			<field name="panel_url">usersettings.php</field>
 			<field name="panel_level">1</field>
 			<field name="panel_order">3</field>
 			<field name="panel_hidden">0</field>
@@ -440,16 +440,6 @@
 			<field name="panel_level">3</field>
 			<field name="panel_order">0</field>
 			<field name="panel_hidden">1</field>
-			<field name="panel_type">A</field>
-		</item>
-		<item>
-			<field name="panel_id">187</field>
-			<field name="panel_name">links</field>
-			<field name="panel_title">Page Links</field>
-			<field name="panel_url"></field>
-			<field name="panel_level">1</field>
-			<field name="panel_order">3</field>
-			<field name="panel_hidden">0</field>
 			<field name="panel_type">A</field>
 		</item>
 		<item>

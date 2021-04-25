@@ -109,6 +109,7 @@ class eFiction
         return $classtypelist;
     }
 
+    /* use get_block($key) if you need one block */
     public static function blocks()
     {
         $blocks = array();
@@ -117,6 +118,7 @@ class eFiction
 
         foreach ($result as $block) {
             $blocks[$block['block_name']] = e107::unserialize($block['block_variables']);
+            $blocks[$block['block_name']]['block_variables'] = e107::unserialize($block['block_variables'], 'json');  //use both way to be able to edit blocks e107 
             $blocks[$block['block_name']]['title'] = $block['block_title'];
             $blocks[$block['block_name']]['file'] = $block['block_file'];
             $blocks[$block['block_name']]['status'] = $block['block_status'];
@@ -157,41 +159,7 @@ class eFiction
 		return $ratings;
 	}
 
-    public static function pagelinks()
-    {
-        $linkquery = 'SELECT * from #fanfiction_pagelinks ORDER BY link_access ASC' ;
-        $records = e107::getDb()->retrieve($linkquery, true);
-
-        $userlinks = array();
-        foreach ($records as $link) {
-            if ($link['link_access'] && !isMEMBER) {
-                continue;
-            }
-            if ($link['link_access'] == 2 && uLEVEL < 1) {
-                continue;
-            }
-            if ($link['link_name'] == 'register' && isMEMBER) {
-                continue;
-            }
-            if (strpos($link['link_url'], 'http://') === false && strpos($link['link_url'], 'https://') === false) {
-                $link['link_url'] = e_HTTP.$link['link_url'];
-            }
-
-            $linkname = $link['link_name'];
-            $link_start = '<a href="'.$link['link_url'].'" title="'.$link['link_text'].'"'.($link['link_target'] ? ' target="_blank"' : '').(!empty($link['link_key']) ? " accesskey='".$link['link_key']."'" : '').($current == $link['link_name'] ? ' id="current"' : '').'>';
  
-            $pagelinks[$link['link_name']] = array(
-                'id' => $link['link_id'],
-                'text' => $link['link_text'],
-                'url' => $link['link_url'],
-                'key' => $link['link_key'],
-                'link' => $link_start.$link['link_text'].'</a>');
-        }
-
-        return $pagelinks;
-    }
-
-
     public static function userlinks()
     {
         $linkquery = 'SELECT * from #fanfiction_pagelinks ORDER BY link_access ASC' ;
@@ -341,7 +309,7 @@ class eFiction
         }
 
         $blocks = self::blocks();
-        $ret = isset($blocks[$key]) ? $blocks[$key] : null;
+        $ret[$key] = isset($blocks[$key]) ? $blocks[$key] : null;
         return $ret;
     }
     

@@ -312,7 +312,7 @@ else {
 		$inorder = $chapter['inorder'];
 		$notes = format_story($chapter['notes']);
 		$endnotes = format_story($chapter['endnotes']);
-		$story = $chapter['storytext'];
+		$story = format_story($chapter['storytext']);  
 		$valid = $chapter['validated'];
 		$nextchapter = "";
 		$codeblocks = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'storyend'");

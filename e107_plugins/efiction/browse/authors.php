@@ -36,7 +36,8 @@ if($uid > 0) {
 }
 else {
 	
-    $caption = ._AUTHORS.($let ? " - $let" : "");
+    $caption = _AUTHORS.($let ? " - $let" : "");
+	
     $output =  build_alphalinks("browse.php?$terms&amp;", $let)."</div>";
 	if($let == _OTHER) $query = " "._PENNAMEFIELD." REGEXP '^[^a-z]'";
 	else if($let) $query = " "._PENNAMEFIELD." LIKE '$let%'";
@@ -73,5 +74,6 @@ else {
 	else if(!$numrows) $output .= write_message(_NORESULTS);
 	$numrows = 0;
 }	
-	$seriesquery .= (!empty($seriesquery) ? " AND " : "")."uid = '$uid'";
+$browse_vars['caption'] = $caption;	
+$seriesquery .= (!empty($seriesquery) ? " AND " : "")."uid = '$uid'";
 ?>
