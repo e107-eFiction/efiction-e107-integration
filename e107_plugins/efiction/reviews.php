@@ -263,7 +263,7 @@ else {
 		$storyquery = dbquery("SELECT title, uid FROM ".TABLEPREFIX."fanfiction_series WHERE seriesid = '$item' LIMIT 1");
 		list($title, $authoruid) = dbrow($storyquery);
 		$titletext = $title;
-		$title = "<a href=\"series.php?seriesid=$item\">".stripslashes($title)."</a>";
+		$title = "<a href=\"manageseries.php?seriesid=$item\">".stripslashes($title)."</a>";
 	}
 	else { 
 		$titlequery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'revtitle'");

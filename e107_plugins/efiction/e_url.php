@@ -91,7 +91,7 @@ class efiction_url // plugin-folder + '_url'
             'alias'         => 'series.php',
 			'regex'			=> '^{alias}\/?([\?].*)?\/?$', 
 			'sef'			=> '{alias}', 
-			'redirect'		=> '{e_PLUGIN}efiction/series.php$1', 	 		// file-path of what to load when the regex returns true.
+			'redirect'		=> '{e_PLUGIN}efiction/manageseries.php$1',  	// file-path of what to load when the regex returns true.
 		);
 
 		$config['stories'] = array(

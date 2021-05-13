@@ -73,7 +73,7 @@ while($code = dbassoc($codeblocks)) {
 	eval($code['code_text']);
 }
 $titleblock->assign("classifications", $allclasslist);
-if(isADMIN) $titleblock->assign("adminoptions", "<div class=\"adminoptions\">"._ADMINOPTIONS.": [<a href=\"series.php?action=add&amp;add=stories&amp;seriesid=$seriesid\">"._ADD2SERIES."</a>] [<a href=\"series.php?action=edit&amp;seriesid=$seriesid\">"._EDIT."</a>] [<a href=\"series.php?action=delete&amp;seriesid=$seriesid\">"._DELETE."</a>]</div>");
+if(isADMIN) $titleblock->assign("adminoptions", "<div class=\"adminoptions\">"._ADMINOPTIONS.": [<a href=\"manageseries.php?action=add&amp;add=stories&amp;seriesid=$seriesid\">"._ADD2SERIES."</a>] [<a href=\"manageseries.php?action=edit&amp;seriesid=$seriesid\">"._EDIT."</a>] [<a href=\"manageseries.php?action=delete&amp;seriesid=$seriesid\">"._DELETE."</a>]</div>");
 $jumpmenu = "";
 if($reviewsallowed && (isMEMBER || $anonreviews)) {
 	$titleblock->assign("score", ratingpics($series['rating']));
@@ -91,8 +91,8 @@ if(isMEMBER && $favorites) {
 	}
 }
 if($series['isopen'] && isMEMBER) {
-	$jumpmenu .= "<option value=\"series.php?action=add&amp;add=stories&amp;seriesid=".$seriesid."&amp;stories=".USERUID."\">"._ADD2SERIES."</option>";
-	$titleblock->assign("addtoseries", "[<a href='series.php?action=add&amp;add=stories&seriesid=$seriesid&amp;stories=".USERUID."'>"._ADD2SERIES."</a>]");
+	$jumpmenu .= "<option value=\"manageseries.php?action=add&amp;add=stories&amp;seriesid=".$seriesid."&amp;stories=".USERUID."\">"._ADD2SERIES."</option>";
+	$titleblock->assign("addtoseries", "[<a href='manageseries.php?action=add&amp;add=stories&seriesid=$seriesid&amp;stories=".USERUID."'>"._ADD2SERIES."</a>]");
 }
 $jumpmenu = "<form name=\"jump2\" action=\"\"><select name=\"jump2\" onchange=\"if(this.selectedIndex.value != 'false') document.location = document.jump2.jump2.options[document.jump2.jump2.selectedIndex].value\"><option value=\"false\">"._OPTIONS."</option>".$jumpmenu."</select></form>";
 $titleblock->assign("jumpmenu", $jumpmenu);
@@ -100,7 +100,7 @@ if(isset($addtofaves)) $titleblock->assign("addtofaves", $addtofaves);
 $parents = dbquery("SELECT s.title, s.seriesid FROM ".TABLEPREFIX."fanfiction_inseries as i, ".TABLEPREFIX."fanfiction_series as s WHERE s.seriesid = i.seriesid AND i.subseriesid = '$seriesid'");
 $plinks = array( );
 while($p = dbassoc($parents)) {
-	$plinks[] = "<a href='series.php?seriesid=".$p['seriesid']."'>".$p['title']."</a>";
+	$plinks[] = "<a href='manageseries.php?seriesid=".$p['seriesid']."'>".$p['title']."</a>";
 }
 $titleblock->assign("parentseries", count($plinks) ? implode(", ", $plinks) : _NONE);
 $codeblocks = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'seriestitle'");
