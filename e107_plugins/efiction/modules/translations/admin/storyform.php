@@ -48,7 +48,7 @@ else include_once(_BASEDIR."modules/translations/languages/en.php");
 	$output .= '<div class="form-group col-md-6">
 					<label for="writer" class="col-form-label">'._ORIGINAL_WRITER.'</label>
 						<div>
-						'.e107::getForm()->select('writer', $writers, $writer,  array( 'required'=> 1 , 'data-live-search'=>'true', 'class'=>'selectpicker form-control show-tick' ), _ORIGINAL_WRITER).'
+						'.e107::getForm()->select('writer', $writers, $writer,  array( 'required'=> 1 , 'data-width'=>'100%', 'class'=>'form-control select2-single' ), _ORIGINAL_WRITER).'
 						</div>
 				</div>';
                 

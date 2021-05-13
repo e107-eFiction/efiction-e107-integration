@@ -40,6 +40,7 @@ if(empty($chapter)) $chapter = isset($_GET['chapter']) && isNumber($_GET['chapte
 	// Get the story information
 	$storyquery = dbquery("SELECT "._PENNAMEFIELD." as penname, "._UIDFIELD." as uid, story.*, UNIX_TIMESTAMP(story.date) as date, UNIX_TIMESTAMP(story.updated) as updated, story.validated as valid FROM ".TABLEPREFIX."fanfiction_stories as story, "._AUTHORTABLE." WHERE story.sid = '".$sid."' AND story.uid = "._UIDFIELD);
 	$storyinfo = dbassoc($storyquery);
+    
 	if($storyinfo['coauthors'] == 1) {
 		$coauthors = array();
 		$coauth = dbquery("SELECT "._PENNAMEFIELD." as penname, co.uid FROM ".TABLEPREFIX."fanfiction_coauthors AS co LEFT JOIN "._AUTHORTABLE." ON co.uid = "._UIDFIELD." WHERE co.sid = '".$sid."'");
@@ -145,7 +146,7 @@ if($action == "printable") {
 			}
 		}
 	}
-	else {
+	else { 
 		$chapterinfo = dbquery("SELECT *, "._PENNAMEFIELD." as penname FROM (".TABLEPREFIX."fanfiction_chapters as c, "._AUTHORTABLE.") WHERE sid = '$sid' AND inorder = '$chapter' AND c.uid = "._UIDFIELD." LIMIT 1");
 		$c = dbassoc($chapterinfo);
 		// if the *CHAPTER* hasn't been validated and the viewer isn't an admin or the author throw them a warning.  
@@ -195,7 +196,7 @@ if($action == "printable") {
 				$tpl->assign( "endnotes", format_story($c['endnotes']));
 				$tpl->gotoBlock("chapterblock");
 			}
-	}
+	} 
 	$tpl->gotoBlock("_ROOT");
 	// Hook for adding content to the printed version of the story.
 	$codeblocks = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'printstory'");
@@ -207,7 +208,7 @@ if($action == "printable") {
 	list($copyright) = dbrow($copyquery);
 	$tpl->assign("copyright", $copyright);
 }
-else if(($displayindex && empty($chapter)) || !empty($_GET['index'])) {
+else if(($displayindex && empty($chapter)) || !empty($_GET['index'])) {  
 	if(file_exists("$skindir/storyindex.tpl")) $tpl = new TemplatePower( "$skindir/storyindex.tpl" );
 	else $tpl = new TemplatePower(_BASEDIR."default_tpls/storyindex.tpl");
 	require_once("includes/pagesetup.php");
@@ -257,15 +258,17 @@ else if(($displayindex && empty($chapter)) || !empty($_GET['index'])) {
 	}
 }
 else {
+
 	if(file_exists("$skindir/viewstory.tpl")) $tpl = new TemplatePower( "$skindir/viewstory.tpl" );
 	else $tpl = new TemplatePower(_BASEDIR."default_tpls/viewstory.tpl");
-	require_once("includes/pagesetup.php");
+	require_once(_BASEDIR."includes/pagesetup.php");
 	$jumpmenu = "";
 	$jumpmenu2 = "";
 	if(empty($chapter) || !$chapter) $chapter = 1;
 	// get information about the story's chapter(s)
 	$chapterinfo = dbquery("SELECT chap.*, "._PENNAMEFIELD." as penname FROM (".TABLEPREFIX."fanfiction_chapters as chap, "._AUTHORTABLE.") WHERE sid = '$sid' AND chap.uid = "._UIDFIELD." ORDER BY inorder");
 	$chapters = dbnumrows($chapterinfo);
+
 	if($chapters > 1) {
 		$printicon = "<img src='".(isset($printer) ? $printer : _BASEDIR."images/print.gif")."' border='0' alt='"._PRINTER."'> <a href=\"viewstory.php?action=printable&amp;textsize=$textsize&amp;sid=$sid&amp;chapter=$chapter\" target=\"_blank\">"._CHAPTER."</a> "._OR." <a href=\"viewstory.php?action=printable&amp;textsize=$textsize&amp;sid=$sid&amp;chapter=all\" target=\"_blank\">"._STORY."</a>";
 		$jumpmenu .= "<form name=\"jump\" action=\"\">";
@@ -302,7 +305,7 @@ else {
 		$jumpmenu .= "</form>";
 	}
 	// if the story has only one chapter this is what happens
-	else {
+	else { 
 		$chapter = dbassoc($chapterinfo);
 		$chapterauthor = $chapter['uid'];
 		$chapterpenname = $chapter['penname'];
@@ -314,18 +317,21 @@ else {
 		$endnotes = format_story($chapter['endnotes']);
 		$story = format_story($chapter['storytext']);  
 		$valid = $chapter['validated'];
-		$nextchapter = "";
+		$nextchapter = "";  
 		$codeblocks = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'storyend'");
 		while($code = dbassoc($codeblocks)) {
 			eval($code['code_text']);
-		}
+		}  
 		$printicon = "<a href=\"viewstory.php?action=printable&amp;sid=$sid&amp;textsize=$textsize&amp;chapter=1\" target=\"_blank\"><img src='".(isset($printer) ? $priner : _BASEDIR."images/print.gif")."' border='0' alt='"._PRINTER."'></a>";
-	}
+	} 
+ 
 	// if the *CHAPTER* hasn't been validated and the viewer isn't an admin or the author throw them a warning.  
-	if(!$valid && !isADMIN && USERUID != $chapterauthor && !in_array($chapterauthor, $storyinfo['coauthors'])) {
-		$warning = accessDenied( );
-	}
-	$stories = $storyinfo;
+  
+ 	if(!$valid && !isADMIN && USERUID != $chapterauthor && !in_array($chapterauthor, $storyinfo['coauthors'])) {
+ 	      $warning = accessDenied(_NOTAUTHORIZED. 'First chapter hasn\'t been validated yet');
+ 	}
+
+	$stories = $storyinfo;     
 	$tpl->gotoBlock("_ROOT");
 	$jumpmenu2 = ""; 
 	require_once("includes/storyblock.php");

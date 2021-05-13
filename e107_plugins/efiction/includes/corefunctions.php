@@ -116,16 +116,13 @@ function accessDenied($str = ""){
 	global $tpl, $output;
 
 	if(!empty($str)) $output = write_error($str);
-	else $output = write_error(_NOTAUTHORIZED);
-	if(!empty($tpl)) {
-		$tpl->assign("output", $output);
-		    $output = $tpl->getOutputContent();  
-    $output = e107::getParser()->parseTemplate($output, true);
+	else $output = write_error(_NOTAUTHORIZED);     
+ 
+    $output = e107::getParser()->parseTemplate($output, true);    
     e107::getRender()->tablerender($caption, $output, $current);
 	dbclose( );
     require_once(FOOTERF); 
-	}
-	else echo $output;
+
 	exit( );
 }
 

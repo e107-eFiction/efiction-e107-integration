@@ -53,7 +53,8 @@ if (!class_exists('efiction_setup')) {
          */
         public function install_post($var)
         {
-            $ret = e107::getXml(true)->e107Import(e_PLUGIN.'efiction/xml/install.xml');
+           // $ret = e107::getXml(true)->e107Import(e_PLUGIN.'efiction/xml/install.xml');
+           // $ret = e107::getXml(true)->e107Import(e_PLUGIN.'efiction/install/sitelinks.xml');
 
             if (!empty($ret['success'])) {
                 e107::getMessage()->addSuccess(LAN_EFICTION_ADMIN_001);

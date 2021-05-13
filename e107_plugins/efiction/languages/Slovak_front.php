@@ -107,7 +107,8 @@ define ("_RETIRED", "Retired");
 define ("_RUSERSONLY", "Len registrovaní užívatelia");
 define ("_SELECT", "Select");
 define ("_SELECTCATS", "Selected Categories");
-define ("_SERIES", "Série");
+define ("_SERIES", "Séria");
+define ("_SERIESES", "Série");
 define ("_SORT", "Zoradiť");
 define ("_STAR", "star"); 
 define ("_STORIES", "Preklady");
@@ -195,12 +196,12 @@ define ("_WORDCOUNT", "Word count");
 define ("_SEARCH", "Search");
 
 // Series
-define ("_ADD2SERIES", "Add to Series");
-define ("_ADDSERIES", "Add New Series");
-define ("_ADDSERIES2FAVES", "Add Series to Favorites");
-define ("_BACKTOSERIES", "Back to the Series"); // Added 11-06-05
-define ("_CHOOSEAUTHOR", "Choose another author");
-define ("_CLOSED", "Closed"); // Added 02-10-07
+define ("_ADD2SERIES", "Pridať poviedku");
+define ("_ADDSERIES", "Pridať novú sériu");
+define ("_ADDSERIES2FAVES", "Pridať sériu k obľúbeným");
+define ("_BACKTOSERIES", "Späť k sérii"); // Added 11-06-05
+define ("_CHOOSEAUTHOR", "Vybrať iného autora");
+define ("_CLOSED", "Uzavreté"); // Added 02-10-07
 define ("_CONFIRMREMOVE", "Are you sure you want to remove this from the series?"); // Added 12-22-05
 define ("_DELETESERIES", "Delete Series");
 define ("_EDITSERIES", "Edit Series");

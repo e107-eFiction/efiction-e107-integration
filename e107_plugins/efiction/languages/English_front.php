@@ -120,6 +120,7 @@ define('_RUSERSONLY', 'Registered Users Only');
 define('_SELECT', 'Select');
 define('_SELECTCATS', 'Selected Categories');
 define('_SERIES', 'Series');
+define('_SERIESES', 'Series');  //singular and plular for series can be different in some languages
 define('_SORT', 'Sort');
 define('_STAR', 'star');
 define('_STORIES', 'Stories');
@@ -207,7 +208,7 @@ define('_WORDCOUNT', 'Word count');
 define('_SEARCH', 'Search');
 
 // Series
-define('_ADD2SERIES', 'Add to Series');
+define('_ADD2SERIES', 'New Assign Story');
 define('_ADDSERIES', 'Add New Series');
 define('_ADDSERIES2FAVES', 'Add Series to Favorites');
 define('_BACKTOSERIES', 'Back to the Series'); // Added 11-06-05

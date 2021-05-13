@@ -22,7 +22,7 @@
 // ----------------------------------------------------------------------
 
 //Begin basic page setup
-$current = "series";
+$current = "manageseries";
 if($_GET['action'] == "add" || $_GET['action'] == "edit") $displayform = 1;
 
 // Include some files for page setup and core functions
@@ -30,12 +30,7 @@ include ("header.php");
 require_once(HEADERF);
 
 //make a new TemplatePower object
-if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/default.tpl" );
-else $tpl = new TemplatePower(_BASEDIR."default_tpls/default.tpl");
-if(file_exists("$skindir/listings.tpl")) $tpl->assignInclude( "listings", "$skindir/listings.tpl" );
-else $tpl->assignInclude( "listings", _BASEDIR."default_tpls/listings.tpl" );
  
-
 include(_BASEDIR."includes/pagesetup.php");
 $seriesid = isset($_GET['seriesid']) && isNumber($_GET['seriesid']) ? $_GET['seriesid'] : false;
 $showlist = true;
@@ -45,14 +40,19 @@ $add = isset($_GET['add']) ? $_GET['add'] : false;
 // before doing anything else check if the visitor is logged in.  If they are, check if they're an admin.  If not, check that they're 
 // trying to edit/delete/etc. their own stuff then get the penname 
 if(!isMEMBER) accessDenied( );
-
+ 
 if(isADMIN && uLEVEL < 3) $admin = 1;
 else $admin = 0;
 if(isADMIN && uLEVEL == 3) {
-	list($admincats) = dbrow(dbquery("SELECT categories FROM ".TABLEPREFIX."fanfiction_authorprefs WHERE uid = '".USERUID."'"));
+ 
+	$admincats= e107::getDB()->retrieve("SELECT categories FROM ".TABLEPREFIX."fanfiction_authorprefs WHERE uid = '".USERUID."'");
+ 
 	if(isset($seriesid)) {
-		$series = dbquery("SELECT uid, isopen, catid from ".TABLEPREFIX."fanfiction_series WHERE seriesid='$seriesid' LIMIT 1");
-		list($owner, $seriesopen, $catid) = dbrow($series);
+		$series = e107::getDB()->retrieve("SELECT uid, isopen, catid from ".TABLEPREFIX."fanfiction_series WHERE seriesid='$seriesid' LIMIT 1");
+		list($owner, $seriesopen, $catid) = $series;
+		$owner = $series['uid'];
+		$seriesopen = $series['catid'];
+		$catid = $series['isopen'];
 		if(uLEVEL == 3 && $admincats != 0) {
 			$seriescats = explode(",", $catid);
 			$adcats = explode(",", $admincats);
@@ -64,13 +64,14 @@ if(isADMIN && uLEVEL == 3) {
 }
 if(!$allowseries && !$admin) accessDenied( );
 if($allowseries == 1 && !$admin) {
-	list($count) = dbrow(dbquery("SELECT COUNT(sid) FROM ".TABLEPREFIX."fanfiction_stories WHERE uid = '".USERUID."'"));
+	$count = e107::getDB()->retrieve("SELECT COUNT(sid) FROM ".TABLEPREFIX."fanfiction_stories WHERE uid = '".USERUID."'");
 	if($count == 0) accessDenied( );
 }
 
 if($action == "validate") {
 	$inorder = isset($_GET['inorder']) && isNumber($_GET['inorder']) ? $_GET['inorder'] : 0;
-	$valid = dbquery("UPDATE ".TABLEPREFIX."fanfiction_inseries SET confirmed = 1 WHERE seriesid = '$seriesid' AND inorder = '$inorder' LIMIT 1");
+	// $valid = dbxquery("UPDATE ".TABLEPREFIX."fanfiction_inseries SET confirmed = 1 WHERE seriesid = '$seriesid' AND inorder = '$inorder' LIMIT 1");
+	$valid = e107::getDB()->gen("UPDATE ".TABLEPREFIX."fanfiction_inseries SET confirmed = 1 WHERE seriesid = '$seriesid' AND inorder = '$inorder' LIMIT 1");
 	if($valid) {
 		$output .= write_message(_ACTIONSUCCESSFUL);
 		$showlist = true;
@@ -115,24 +116,55 @@ if($add == "series" || ($action == "add" && !$add) || $action == "edit") {
 			$summary = replace_naughty($summary);
 			if($action == "edit") {
 				$seriesid = $_POST['seriesid'];
-				dbquery("UPDATE ".TABLEPREFIX."fanfiction_series SET title = '$title', summary ='$summary', catid = '$category', isopen = '$open', characters = '$charid', classes = '$classes' WHERE seriesid = '$seriesid'");
-				$codequery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'editseries'");
-				while($code = dbassoc($codequery)) {
+				// dbxquery("UPDATE ".TABLEPREFIX."fanfiction_series SET title = '$title', summary ='$summary', catid = '$category', isopen = '$open', characters = '$charid', classes = '$classes' WHERE seriesid = '$seriesid'");
+				e107::getDb()->gen("UPDATE ".TABLEPREFIX."fanfiction_series SET title = '$title', summary ='$summary', catid = '$category', isopen = '$open', characters = '$charid', classes = '$classes' WHERE seriesid = '$seriesid'");
+				
+				//$codequery = dbxquery("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'editseries'");
+				$codequery =  e107::getDB()->retrieve("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'editseries'", true);
+				foreach($codequery AS $code) { 
+				//while($code = dbassoc($codequery)) {
 					eval($code['code_text']);
 				}
 				if($logging && $admin) {
-					$seriesinfo = dbquery("SELECT title, uid FROM ".TABLEPREFIX."fanfiction_series WHERE seriesid = '$seriesid'");
-					list($title, $uid) = dbrow($seriesinfo);
-					if($uid != USERUID) dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_log (`log_action`, `log_uid`, `log_ip`, `log_type`) VALUES('".escapestring(sprintf(_LOG_ADMIN_EDIT_SERIES, USERPENNAME, USERUID, $title, $seriesid))."', '".USERUID."', INET_ATON('".$_SERVER['REMOTE_ADDR']."'), 'ED')");
+					//$seriesinfo = dbxquery("SELECT title, uid FROM ".TABLEPREFIX."fanfiction_series WHERE seriesid = '$seriesid'");
+					$seriesinfo = e107::getDB()->retrieve("SELECT title, uid FROM ".TABLEPREFIX."fanfiction_series WHERE seriesid = '$seriesid'"); 
+					$title = $seriesinfo['title'];
+					$uid =  $seriesinfo['uid'];
+					//list($title, $uid) = dbrow($seriesinfo);
+					if($uid != USERUID) { 
+						dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_log (`log_action`, `log_uid`, `log_ip`, `log_type`) VALUES('".escapestring(sprintf(_LOG_ADMIN_EDIT_SERIES, USERPENNAME, USERUID, $title, $seriesid))."', '".USERUID."', INET_ATON('".$_SERVER['REMOTE_ADDR']."'), 'ED')");
+					    e107::getDb()->gen("INSERT INTO ".TABLEPREFIX."fanfiction_log (`log_action`, `log_uid`, `log_ip`, `log_type`) VALUES('".escapestring(sprintf(_LOG_ADMIN_EDIT_SERIES, USERPENNAME, USERUID, $title, $seriesid))."', '".USERUID."', INET_ATON('".$_SERVER['REMOTE_ADDR']."'), 'ED')");
+					}
+
 				}
 				$output = write_message(_ACTIONSUCCESSFUL."<br />"._BACK2ACCT);
 			}
 			else {
-				dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_series (title, summary, catid, isopen, uid, characters, classes) VALUES('$title', '$summary', '$category', '$open', '$owner', '$charid', '$classes')");
-				$seriesid = dbinsertid();
-				dbquery("UPDATE ".TABLEPREFIX."fanfiction_stats SET series = series + 1");
-				$codequery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'addseries'");
-				while($code = dbassoc($codequery)) {
+				// dbxquery("INSERT INTO ".TABLEPREFIX."fanfiction_series (title, summary, catid, isopen, uid, characters, classes) VALUES('$title', '$summary', '$category', '$open', '$owner', '$charid', '$classes')");
+
+				$insert = array(
+					'title'     => $title,
+					'summary'   => $summary , 
+					'catid'     => $category,
+					'isopen'    => $summary ,
+					'title'     => $open,
+					'uid'       => $owner ,
+					'characters'   => $charid,
+					'classes'  => $classes ,
+
+					'_DUPLICATE_KEY_UPDATE' => 1
+					);
+
+				// $seriesid = dbinsertid(); 
+				$seriesid = e107::getDB()->insert("fanfiction_series", $insert);
+
+				//dbquery("UPDATE ".TABLEPREFIX."fanfiction_stats SET series = series + 1");
+				e107::getDb()->gen("UPDATE ".TABLEPREFIX."fanfiction_stats SET series = series + 1");
+
+				//$codequery = dbxquery("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'addseries'");
+				$codequery =  e107::getDB()->retrieve("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'addseries'", true);
+				foreach($codequery AS $code) { 					
+				//while($code = dbassoc($codequery)) {
 					eval($code['code_text']);
 				}
 				$add = "stories";
@@ -141,21 +173,25 @@ if($add == "series" || ($action == "add" && !$add) || $action == "edit") {
 		}
 	}
 	else {
-	$output = "<div id=\"pagetitle\">".($action == "edit" ? _EDITSERIES : $add == "stories" ? _ADD2SERIES : _ADDSERIES)."</div>
-<form METHOD=\"POST\" style='width: 90%; margin: 0 auto;' name=\"form\" action=\"series.php?action=$action&amp;add=".(!empty($add) ? $add : "series").(!empty($seriesid) ? "&amp;seriesid=$seriesid" : "")."\">";
+	$caption = "<div id=\"pagetitle\">".($action == "edit" ? _EDITSERIES : $add == "stories" ? _ADD2SERIES : _ADDSERIES)."</div>
+<form METHOD=\"POST\" style='width: 90%; margin: 0 auto;' name=\"form\" action=\"manageseries.php?action=$action&amp;add=".(!empty($add) ? $add : "series").(!empty($seriesid) ? "&amp;seriesid=$seriesid" : "")."\">";
 	if($action == "edit" && !isset($POST['submit'])) {
-		$seriesquery = dbquery(_SERIESQUERY." AND seriesid = '$seriesid' LIMIT 1");
+		/* $seriesquery = dbxquery(_SERIESQUERY." AND seriesid = '$seriesid' LIMIT 1");
 		$series = dbassoc($seriesquery);
 		$series = array_map("stripslashes", $series);
+		*/
+		$series = e107::getDB()->retrieve(_SERIESQUERY." AND seriesid = '$seriesid' LIMIT 1");
 		$owner = $series['uid'];
 		$output .= "<input type=\"hidden\" name=\"seriesid\" value=\"$seriesid\">";
 	}
 	else $series = array("uid" => 0, "title" => "", "summary" => "");
 	$output .= "<div>";
 	if($admin) {
-		$authorquery = dbquery("SELECT "._PENNAMEFIELD." as penname, "._UIDFIELD." as uid FROM "._AUTHORTABLE." ORDER BY penname");
+		// $authorquery = dbxquery("SELECT "._PENNAMEFIELD." as penname, "._UIDFIELD." as uid FROM "._AUTHORTABLE." ORDER BY penname");
+		$authors = e107::getDB()->retrieve("SELECT "._PENNAMEFIELD." as penname, "._UIDFIELD." as uid FROM "._AUTHORTABLE." ORDER BY penname");
 		$output .= "<label for=\"uid=\">"._AUTHOR.":</label> <select name=\"uid\" id=\"uid\">";
-		while($authorresult = dbassoc($authorquery)) {	
+		// while($authorresult = dbassoc($authorquery)) {	
+		foreach($authors AS $authorresult) {
 			$output .= "<option value=\"".$authorresult['uid']."\"".((USERUID == $authorresult['uid'] && !$seriesid) || (is_array($series) && $series['uid'] == $authorresult['uid']) ? " selected" : "").">".$authorresult['penname']."</option>";
 		}
 		$output .= "</select><font color=\"red\">*</font><br />";
@@ -207,11 +243,21 @@ if($add == "series" || ($action == "add" && !$add) || $action == "edit") {
 if($add == "stories") {
 	if(isset($seriesid) && isset($_POST['submit'])) {
 		if(!$seriesid) accessDenied( );
-		list($owner, $isopen, $title) = dbrow(dbquery("SELECT uid, isopen, title FROM ".TABLEPREFIX."fanfiction_series WHERE seriesid = '$seriesid' LIMIT 1"));
-		$seriescount = dbquery("SELECT count(seriesid) FROM ".TABLEPREFIX."fanfiction_inseries WHERE seriesid = '$seriesid'");
-		list($count) = dbrow($seriescount);
-		$seriesitems = dbquery("SELECT sid, subseriesid FROM ".TABLEPREFIX."fanfiction_inseries WHERE seriesid = '$seriesid'");
-		while($item = dbassoc($seriesitems)) {
+		// list($owner, $isopen, $title) = dbrow(dbxquery("SELECT uid, isopen, title FROM ".TABLEPREFIX."fanfiction_series WHERE seriesid = '$seriesid' LIMIT 1"));
+		$tmp = e107::getDb()->retrieve("SELECT uid, isopen, title FROM ".TABLEPREFIX."fanfiction_series WHERE seriesid = '$seriesid' LIMIT 1");
+		$owner = $tmp['uid'];
+		$isopen = $tmp['isopen'];
+		$title = $tmp['title'];
+		// $seriescount = dbxquery("SELECT count(seriesid) FROM ".TABLEPREFIX."fanfiction_inseries WHERE seriesid = '$seriesid'");
+		// list($count) = dbrow($seriescount);
+		 
+		$count = e107::getDb()->retrieve("SELECT count(seriesid) AS count FROM ".TABLEPREFIX."fanfiction_inseries WHERE seriesid = '$seriesid'");
+	 
+		//$seriesitems = dbquery("SELECT sid, subseriesid FROM ".TABLEPREFIX."fanfiction_inseries WHERE seriesid = '$seriesid'");
+		$seriesitems = e107::getDb()->retrieve("SELECT sid, subseriesid FROM ".TABLEPREFIX."fanfiction_inseries WHERE seriesid = '$seriesid'", true);
+
+		//while($item = dbassoc($seriesitems)) {
+		foreach($seriesitems AS $item) {
 			if($item['sid']) $items[] = $item['sid'];
 			if($item['subseriesid']) $subs[] = $item['subseriesid'];
 		}
@@ -221,7 +267,8 @@ if($add == "stories") {
 			include(_BASEDIR."includes/emailer.php");
 			$seriesMail = sprintf(_NEWSERIESITEMS, stripslashes($title));
 			$subject = sprintf("_SERIESITEMSSUBS", stripslashes($title));
-			$mailInfo = dbassoc(dbquery("SELECT "._PENNAMEFIELD." as penname, "._EMAILFIELD." as email FROM "._AUTHORTABLE." WHERE "._UIDFIELD." = '$owner' LIMIT 1"));
+			//$mailInfo = dbassoc(dbxquery("SELECT "._PENNAMEFIELD." as penname, "._EMAILFIELD." as email FROM "._AUTHORTABLE." WHERE "._UIDFIELD." = '$owner' LIMIT 1"));
+			$mailInfo = e107::getDb()->retrieve("SELECT "._PENNAMEFIELD." as penname, "._EMAILFIELD." as email FROM "._AUTHORTABLE." WHERE "._UIDFIELD." = '$owner' LIMIT 1");
 			sendemail($mailInfo['penname'], $mailInfo['email'], $sitename, $siteemail, $subject, $seriesMail, "html");
 		}
 		if(!empty($_POST["sid"])) {
@@ -229,72 +276,103 @@ if($add == "stories") {
 				if(!isNumber($story)) continue;
 				if(!isset($items) || !is_array($items) || !in_array($story, $items)) {
 					$count++;
-					$validate = dbquery("SELECT validated FROM ".TABLEPREFIX."fanfiction_stories WHERE sid = '$story' LIMIT 1");
-					list($valid) = dbrow($validate);
-					if($valid) dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_inseries (seriesid, sid, inorder, confirmed) VALUES('$seriesid', '$story', '$count', '$confirmed')");
+					//$validate = dbxquery("SELECT validated FROM ".TABLEPREFIX."fanfiction_stories WHERE sid = '$story' LIMIT 1");
+					//list($valid) = dbrow($validate);
+					$validate =  e107::getDb()->retrieve("SELECT validated FROM ".TABLEPREFIX."fanfiction_stories WHERE sid = '$story' LIMIT 1");
+					$valid = $validate; //check this 
+					if($valid) {
+						 //dbxquery("INSERT INTO ".TABLEPREFIX."fanfiction_inseries (seriesid, sid, inorder, confirmed) VALUES('$seriesid', '$story', '$count', '$confirmed')");
+						e107::getDb()->gen("INSERT INTO ".TABLEPREFIX."fanfiction_inseries (seriesid, sid, inorder, confirmed) VALUES('$seriesid', '$story', '$count', '$confirmed')");
+						}
 				}
 			}
 		}
-		$seriescount = dbquery("SELECT count(seriesid) FROM ".TABLEPREFIX."fanfiction_inseries WHERE seriesid = '$seriesid'");
-		list($count) = dbrow($seriescount);
+		//$seriescount = dbquery("SELECT count(seriesid) FROM ".TABLEPREFIX."fanfiction_inseries WHERE seriesid = '$seriesid'");
+		//list($count) = dbrow($seriescount);
+		$count = e107::getDb()->retrieve("SELECT count(seriesid) FROM ".TABLEPREFIX."fanfiction_inseries WHERE seriesid = '$seriesid'");
+
 		if(!empty($_POST["subseriesid"])) {
 			foreach($_POST["subseriesid"] as $subseries) {
 				if(!isNumber($subseries)) continue;
 				if(!isset($subs) || !in_array($subseries, $subs)) {
 					$count++;
-					dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_inseries (seriesid, subseriesid, inorder) VALUES('$seriesid', '$subseries', '$count')");
+					//dbxquery("INSERT INTO ".TABLEPREFIX."fanfiction_inseries (seriesid, subseriesid, inorder) VALUES('$seriesid', '$subseries', '$count')");
+					e107::getDb()->gen("INSERT INTO ".TABLEPREFIX."fanfiction_inseries (seriesid, subseriesid, inorder) VALUES('$seriesid', '$subseries', '$count')");
 				}
 			}
 		}
 		$numstories = count(storiesInSeries($seriesid));
-		dbquery("UPDATE ".TABLEPREFIX."fanfiction_series SET numstories = '$numstories' WHERE seriesid = $seriesid LIMIT 1");
+		//dbxquery("UPDATE ".TABLEPREFIX."fanfiction_series SET numstories = '$numstories' WHERE seriesid = $seriesid LIMIT 1");
+		e107::getDb()->gen("UPDATE ".TABLEPREFIX."fanfiction_series SET numstories = '$numstories' WHERE seriesid = $seriesid LIMIT 1");
 		seriesreview($seriesid);
 		$showlist = true;
 		$output .= write_message(_ACTIONSUCCESSFUL);
 	}
 	else {
-		$output = "<div id=\"pagetitle\">".($action == "edit" ? _EDITSERIES : $add == "stories" ? _ADD2SERIES : _ADDSERIES)."</div>
-			<form METHOD=\"POST\" style='width: 90%; margin: 0 auto;' name=\"form\" action=\"series.php?action=$action&amp;add=".(!empty($add) ? $add : "series").(!empty($seriesid) ? "&amp;seriesid=$seriesid" : "")."\">";
+		$caption = "<div id=\"pagetitle\">".($action == "edit" ? _EDITSERIES : $add == "stories" ? _ADD2SERIES : _ADDSERIES)."</div>
+			<form METHOD=\"POST\" style='width: 90%; margin: 0 auto;' name=\"form\" action=\"manageseries.php?action=$action&amp;add=".(!empty($add) ? $add : "series").(!empty($seriesid) ? "&amp;seriesid=$seriesid" : "")."\">";
 		$output .= "<input type=\"hidden\" name=\"seriesid\" value=\"$seriesid\">";
-		$series = dbquery("SELECT title, uid, isopen FROM ".TABLEPREFIX."fanfiction_series WHERE seriesid = '$seriesid' LIMIT 1");
-		list($title, $owner) = dbrow($series);	
-		$output .= "<div class='sectionheader'>"._SERIES.": ".stripslashes($title)."</div>";
+		//$series = dbxquery("SELECT title, uid, isopen FROM ".TABLEPREFIX."fanfiction_series WHERE seriesid = '$seriesid' LIMIT 1");
+		//list($title, $owner) = dbrow($series);
+		$series = e107::getDb()->retrieve("SELECT title, uid, isopen FROM ".TABLEPREFIX."fanfiction_series WHERE seriesid = '$seriesid' LIMIT 1"); 
+		$title = $series['title'];
+		$owner = $series['uid'];
+		$isopen = $series['isopen'];
+	
+		$caption .= "<div class='sectionheader'>"._SERIE.": ".stripslashes($title)."</div>";
 		if(($admin || USERUID == $owner ) && isset($_GET['stories']) && $_GET['stories'] == "others") {
 			if($let == _OTHER) $letter= _PENNAMEFIELD." REGEXP '^[^a-z]'";
 			else $letter = _PENNAMEFIELD." LIKE '$let%'";
-			$pagelink = "series.php?action=$action&amp;add=stories&amp;stories=others&amp;seriesid=$seriesid&amp;";
-			$authorlink = "<a href=\"series.php?action=$action&amp;add=stories&amp;seriesid=$seriesid&amp;stories=";
+			$pagelink = "manageseries.php?action=$action&amp;add=stories&amp;stories=others&amp;seriesid=$seriesid&amp;";
+			$authorlink = "<a id='327' href=\"manageseries.php?action=$action&amp;add=stories&amp;seriesid=$seriesid&amp;stories=";
 			$countquery = _MEMBERCOUNT." WHERE ap.stories > 0".(isset($letter) ? " AND $letter" : "");
 			$authorquery = _MEMBERLIST." WHERE ap.stories > 0".(isset($letter) ? " AND $letter" : "");
 			include(_BASEDIR."includes/members_list.php");
 			$showlist = false;
 		}
 		else {
-			$stories = dbquery("SELECT title, sid FROM ".TABLEPREFIX."fanfiction_stories WHERE validated > 0 AND uid = '".(isset($_GET["stories"]) && isNumber($_GET['stories']) ? $_GET["stories"] : USERUID)."' ORDER BY title ASC");
-			$seriesstories = dbquery("SELECT sid FROM ".TABLEPREFIX."fanfiction_inseries WHERE seriesid = '$seriesid'");
-			while($story = dbassoc($seriesstories)) {
+			//$stories = dbxquery("SELECT title, sid FROM ".TABLEPREFIX."fanfiction_stories WHERE validated > 0 AND uid = '".(isset($_GET["stories"]) && isNumber($_GET['stories']) ? $_GET["stories"] : USERUID)."' ORDER BY title ASC");
+			$stories = e107::getDb()->retrieve("SELECT title, sid FROM ".TABLEPREFIX."fanfiction_stories WHERE validated > 0 AND uid = '".(isset($_GET["stories"]) && isNumber($_GET['stories']) ? $_GET["stories"] : USERUID)."' ORDER BY title ASC", true);
+
+			//$seriesstories = dbxquery("SELECT sid FROM ".TABLEPREFIX."fanfiction_inseries WHERE seriesid = '$seriesid'");
+			$seriesstories = e107::getDb()->retrieve("SELECT sid FROM ".TABLEPREFIX."fanfiction_inseries WHERE seriesid = '$seriesid'", true);
+			//while($story = dbassoc($seriesstories)) {
+			foreach($seriesstories AS $story) {	
 				$selectedstories["$story[sid]"] = 1;
 			}
-			if($admin || USERUID == $owner) $output .= "<div style=\"text-align: center;\"><a href=\"series.php?action=$action&amp;add=$add&amp;stories=others&amp;seriesid=$seriesid\">"._CHOOSEAUTHOR."</a></div>";
-			$output .= "<table style=\"width: 500px; margin: 0 auto;\" class=\"tblborder\"><tr><th class=\"tblborder\">"._STORIES."</th></tr>";
+			if($admin || USERUID == $owner) $output .= "<div style=\"text-align: center;\">
+			<a id='344' class='btn btn-outline-primary waves-effect' href=\"manageseries.php?action=$action&amp;add=$add&amp;stories=others&amp;seriesid=$seriesid\">"._CHOOSEAUTHOR."</a></div>";
+			$output .= "<table id='544' class=\"table table-bordered table-hover table-striped\">
+			<thead class='info-color'><tr><th class=\"tblborder\">"._STORIES."</th></tr></thead>";
 			$numstories = 0;
-			while($story = dbassoc($stories)) {
+			//while($story = dbassoc($stories)) {
+			
+			foreach($stories AS $story) {
 				if(!empty($selectedstories[$story['sid']])) continue;
-				$output .= "<tr><td><input type=\"checkbox\" class=\"checkbox\" value=\"".$story['sid']."\" name=\"sid[]\">".stripslashes($story['title'])."</td></tr>";
+				//<input type=\"checkbox\" class=\"checkbox\" value=\"".$story['sid']."\" name=\"sid[]\">" use e107 snippet
+				$title = e107::getParser()->toHTML($story['title'], 'TITLE');
+				$checkbox = e107::getForm()->checkbox('sid[]', $story['sid'], false, array('label'=>$title ) );
+				$output .= "<tr><td>".$checkbox."</td></tr>";
 				$numstories++;
 			}
 			if($numstories  == 0) $output .= "<tr><td align=\"center\">"._NORESULTS."</td></tr>";
-			$series2 = dbquery("SELECT title, seriesid FROM ".TABLEPREFIX."fanfiction_series WHERE uid = '".(isset($_GET['stories']) && isNumber($_GET['stories']) ? $_GET['stories'] : USERUID)."' ORDER BY title ASC");
+			//$series2 = dbxquery("SELECT title, seriesid FROM ".TABLEPREFIX."fanfiction_series WHERE uid = '".(isset($_GET['stories']) && isNumber($_GET['stories']) ? $_GET['stories'] : USERUID)."' ORDER BY title ASC");
+			$series2 = e107::getDb()->retrieve("SELECT title, seriesid FROM ".TABLEPREFIX."fanfiction_series WHERE uid = '".(isset($_GET['stories']) && isNumber($_GET['stories']) ? $_GET['stories'] : USERUID)."' ORDER BY title ASC",true);
 			$output .= "<tr><th class=\"tblborder\">"._SERIES."</th></tr>";
 			$numseries = 0;
-			while($series = dbassoc($series2)) {
+			//while($series = dbassoc($series2)) {
+			foreach($series2 AS $series) {
 				if($series['seriesid'] != $seriesid) {
-					$output .= "<tr><td><input type=\"checkbox\" class=\"checkbox\" value=\"".$series['seriesid']."\" name=\"subseriesid[]\">".stripslashes($series['title'])."</td></tr>";
+					$title = e107::getParser()->toHTML($series['title'], 'TITLE');
+					$checkbox = e107::getForm()->checkbox('subseriesid[]', $series['seriesid'], false, array('label'=>$title ) );
+					$output .= "<tr><td>".$checkbox."</td></tr>";
+					//$output .= "<tr><td><input type=\"checkbox\" class=\"checkbox\" value=\"".$series['seriesid']."\" name=\"subseriesid[]\">".stripslashes($series['title'])."</td></tr>";
 					$numseries++;
 				}
 			}
 			if($numseries < 1) $output .= "<tr><td align=\"center\">"._NORESULTS."</td></tr>";
-			$output .="</table><p style=\"text-align: center;\">"._SERIESNOTE2."<br /><input type=\"submit\" class=\"button\" name=\"submit\" value=\"submit\"></p></form>";
+			$output .="</table><p style=\"text-align: center;\">"._SERIESNOTE2."<br />
+			<input type=\"submit\" class=\"button\" name=\"submit\" value=\"submit\"></p></form>";
 			$showlist = false;
 		}		
 	}
@@ -303,26 +381,39 @@ if($action == "delete") {
 	global $seriesid;
 
 	$confirmed = isset($_GET["confirmed"]) ? $_GET['confirmed'] : false;
-	$output = "<div id=\"pagetitle\">".(!empty($inorder) ? _REMOVEFROM : _DELETESERIES)."</div>";
+	$caption = "<div id=\"pagetitle\">".(!empty($inorder) ? _REMOVEFROM : _DELETESERIES)."</div>";
 
 	if($confirmed == "no") {
 		$output .=  write_message(_ACTIONCANCELLED);
 	}
 	else if($confirmed == "yes" && $seriesid) {
 		if(!empty($inorder)) {
-			$info = dbquery("SELECT inorder, subseriesid, sid FROM ".TABLEPREFIX."fanfiction_inseries WHERE seriesid = '$seriesid' AND inorder = '$inorder' LIMIT 1");
-			list($inorder, $subseriesid, $sid) = dbrow($info);
-			$countquery = dbquery("SELECT count(seriesid) FROM ".TABLEPREFIX."fanfiction_inseries WHERE seriesid = '$seriesid'");
-			list($count) = dbrow($countquery);
-			dbquery("DELETE FROM ".TABLEPREFIX."fanfiction_inseries WHERE seriesid = '$seriesid' AND ".($sid ? "sid = '$sid'" : "subseriesid = '$subseriesid'"). " LIMIT 1");
-			if($inorder < $count) dbquery("UPDATE ".TABLEPREFIX."fanfiction_inseries SET inorder = (inorder - 1) WHERE seriesid = '$seriesid' AND inorder > '$inorder'");
+			//$info = dbxquery("SELECT inorder, subseriesid, sid FROM ".TABLEPREFIX."fanfiction_inseries WHERE seriesid = '$seriesid' AND inorder = '$inorder' LIMIT 1");
+			//list($inorder, $subseriesid, $sid) = dbrow($info);
+			$info = e107::getDb()->retrieve("SELECT inorder, subseriesid, sid FROM ".TABLEPREFIX."fanfiction_inseries WHERE seriesid = '$seriesid' AND inorder = '$inorder' LIMIT 1");
+			$inorder = $info['inorder'];
+			$subseriesid = $info['subseriesid'];
+			$sid = $info['sid'];
+
+			//$countquery = dbxquery("SELECT count(seriesid) FROM ".TABLEPREFIX."fanfiction_inseries WHERE seriesid = '$seriesid'");
+			//list($count) = dbrow($countquery);
+			$count = e107::getDb()->retrieve("SELECT count(seriesid) AS count FROM ".TABLEPREFIX."fanfiction_inseries WHERE seriesid = '$seriesid'");
+			
+			//dbxquery("DELETE FROM ".TABLEPREFIX."fanfiction_inseries WHERE seriesid = '$seriesid' AND ".($sid ? "sid = '$sid'" : "subseriesid = '$subseriesid'"). " LIMIT 1");
+			e107::getDb()->gen("DELETE FROM ".TABLEPREFIX."fanfiction_inseries WHERE seriesid = '$seriesid' AND ".($sid ? "sid = '$sid'" : "subseriesid = '$subseriesid'"). " LIMIT 1");
+			if($inorder < $count) { 
+				//dbxquery("UPDATE ".TABLEPREFIX."fanfiction_inseries SET inorder = (inorder - 1) WHERE seriesid = '$seriesid' AND inorder > '$inorder'");
+				e107::getDb()->gen("UPDATE ".TABLEPREFIX."fanfiction_inseries SET inorder = (inorder - 1) WHERE seriesid = '$seriesid' AND inorder > '$inorder'");
+			}
 			$output .= write_message(_ACTIONSUCCESSFUL);
 			$showlist = true;
 		}
 		else {
-
-			$seriesinfo = dbquery("SELECT title, uid FROM ".TABLEPREFIX."fanfiction_series WHERE seriesid = '$seriesid'");
-			list($title, $uid) = dbrow($seriesinfo);
+			//$seriesinfo = dbxquery("SELECT title, uid FROM ".TABLEPREFIX."fanfiction_series WHERE seriesid = '$seriesid'");
+			// list($title, $uid) = dbrow($seriesinfo);
+			$seriesinfo = e107::getDb()->retrieve("SELECT title, uid FROM ".TABLEPREFIX."fanfiction_series WHERE seriesid = '$seriesid'");
+			$title = $seriesinfo['title'];
+			$uid = $seriesinfo['uid'];
 			include(_BASEDIR."includes/deletefunctions.php");
 			deleteSeries($seriesid);
 			$output .= write_message(_ACTIONSUCCESSFUL);
@@ -331,8 +422,9 @@ if($action == "delete") {
 		}
 	}
 	else {
-		$output .= write_message((!empty($inorder) ? _CONFIRMREMOVE : _CONFIRMDELETE)."<br /><br />[ <a href=\"series.php?action=delete&amp;confirmed=yes&amp;seriesid=$seriesid".(!empty($inorder) ? "&amp;inorder=$inorder" : "")."\">"._YES."</a> | 
-			<a href=\"series.php?action=delete&amp;confirmed=no\">"._NO."</a> ]");
+		$output .= write_message((!empty($inorder) ? _CONFIRMREMOVE : _CONFIRMDELETE)."<br /><br />[ 
+			<a id='422' href=\"manageseries.php?action=delete&amp;confirmed=yes&amp;seriesid=$seriesid".(!empty($inorder) ? "&amp;inorder=$inorder" : "")."\">"._YES."</a> | 
+			<a id='423' href=\"manageseries.php?action=delete&amp;confirmed=no\">"._NO."</a> ]");
 		$showlist = false;
 	}
 }
@@ -345,40 +437,59 @@ if($showlist) {
 			if($go == "up") $oneabove = $inorder - 1;
 			else $oneabove = $inorder + 1;
 			if($oneabove >= 1) {
-				dbquery("UPDATE ".TABLEPREFIX."fanfiction_inseries SET inorder = '$inorder' WHERE inorder = '$oneabove' AND seriesid = '$seriesid'");
-				dbquery("UPDATE ".TABLEPREFIX."fanfiction_inseries SET inorder = '$oneabove' WHERE ".(isset($sid) ? "sid = '$sid'" : "subseriesid = '$subseriesid'")." AND seriesid = '$seriesid'");	
+				//dbquery("UPDATE ".TABLEPREFIX."fanfiction_inseries SET inorder = '$inorder' WHERE inorder = '$oneabove' AND seriesid = '$seriesid'");
+				e107::getDb()->gen("UPDATE ".TABLEPREFIX."fanfiction_inseries SET inorder = '$inorder' WHERE inorder = '$oneabove' AND seriesid = '$seriesid'");
+				//dbquery("UPDATE ".TABLEPREFIX."fanfiction_inseries SET inorder = '$oneabove' WHERE ".(isset($sid) ? "sid = '$sid'" : "subseriesid = '$subseriesid'")." AND seriesid = '$seriesid'");
+				e107::getDb()->gen("UPDATE ".TABLEPREFIX."fanfiction_inseries SET inorder = '$oneabove' WHERE ".(isset($sid) ? "sid = '$sid'" : "subseriesid = '$subseriesid'")." AND seriesid = '$seriesid'");	
 			}
 		}
 	}
-	if(empty($action) || $action == "manage") $output .= "<div id=\"pagetitle\">"._MANAGESERIES."</div>";
+	if(empty($action) || $action == "manage") $caption = "<div id=\"pagetitle\">"._MANAGESERIES."</div>";
 	if($seriesid) {
-		list($owner, $isopen) = dbrow(dbquery("SELECT uid,isopen FROM ".TABLEPREFIX."fanfiction_series WHERE seriesid = '$seriesid' LIMIT 1"));
-		$result = dbquery("SELECT series.seriesid AS mainid, series.inorder, confirmed, series.sid, series.subseriesid, stories.title AS storytitle, sub.title AS subtitle FROM ".TABLEPREFIX."fanfiction_inseries AS series LEFT JOIN ".TABLEPREFIX."fanfiction_stories AS stories ON ( series.sid = stories.sid ) LEFT JOIN ".TABLEPREFIX."fanfiction_series AS sub ON ( sub.seriesid = series.subseriesid ) WHERE series.seriesid = '$seriesid' ORDER BY series.inorder");
-		$output .= "<table style=\"margin: 1em auto;\" cellpadding=\"0\" class=\"tblborder\">
+		//list($owner, $isopen) = dbrow(dbxquery("SELECT uid,isopen FROM ".TABLEPREFIX."fanfiction_series WHERE seriesid = '$seriesid' LIMIT 1"));
+		$tmp = e107::getDb()->retrieve("SELECT uid,isopen FROM ".TABLEPREFIX."fanfiction_series WHERE seriesid = '$seriesid' LIMIT 1");
+		$owner = $tmp['uid'];
+		$isopen = $tmp['isopen'];
+		// $result = dbxquery("SELECT series.seriesid AS mainid, series.inorder, confirmed, series.sid, series.subseriesid, stories.title AS storytitle, sub.title AS subtitle FROM ".TABLEPREFIX."fanfiction_inseries AS series LEFT JOIN ".TABLEPREFIX."fanfiction_stories AS stories ON ( series.sid = stories.sid ) LEFT JOIN ".TABLEPREFIX."fanfiction_series AS sub ON ( sub.seriesid = series.subseriesid ) WHERE series.seriesid = '$seriesid' ORDER BY series.inorder");
+		$result = e107::getDb()->retrieve("SELECT series.seriesid AS mainid, series.inorder, confirmed, series.sid, series.subseriesid, stories.title AS storytitle, sub.title AS subtitle FROM ".TABLEPREFIX."fanfiction_inseries AS series LEFT JOIN ".TABLEPREFIX."fanfiction_stories AS stories ON ( series.sid = stories.sid ) LEFT JOIN ".TABLEPREFIX."fanfiction_series AS sub ON ( sub.seriesid = series.subseriesid ) WHERE series.seriesid = '$seriesid' ORDER BY series.inorder", true);
+
+		$output .= "<table id='445' class=\"table table-bordered table-hover table-striped\">
 			<tr><th class=\"tblborder\">"._TITLE."</th><th class=\"tblborder\" width=\"26\">"._ORDER."</th><th class=\"tblborder\">"._OPTIONS."</th></tr>";
-		$rows = dbnumrows($result);
-		while($series = dbassoc($result)) {
-			$output .= "<tr><td class=\"tblborder\"><a href=\"".($series['subseriesid'] == 0 ? "viewstory.php?sid=".$series['sid']."\">".stripslashes($series['storytitle']) : "viewseries.php?seriesid=$series[subseriesid]\">".stripslashes($series['subtitle']))."</a></td>
-				<td class=\"tblborder\" align=\"center\">".($series['inorder'] == $rows ? "" : "<a href=\"series.php?action=manage&amp;go=down&amp;inorder=".$series['inorder']."&amp;".($series['sid'] ? "sid=".$series['sid'] : "subseriesid=".$series['subseriesid'])."&amp;seriesid=$seriesid\"><img src=\""._BASEDIR."images/arrowdown.gif\" align=\"right\" border=\"0\" width=\"13\" height=\"18\" alt=\""._DOWN."\"></a>").
-				($series['inorder'] == 1 ? "&nbsp;" : "<a href=\"series.php?action=manage&amp;go=up&amp;inorder=$series[inorder]&amp;".($series['sid'] ? "sid=".$series['sid'] : "subseriesid=".$series['subseriesid'])."&amp;seriesid=$seriesid\"><img src=\""._BASEDIR."images/arrowup.gif\" border=\"0\" width=\"13\" height=\"18\" align=\"left\" alt=\""._UP."\"></a>")."</td>
-				<td class=\"tblborder\">".($owner == USERUID || $admin ? "<a href=\"series.php?action=delete&amp;seriesid=$seriesid&amp;inorder=".$series['inorder']."\">"._REMOVE."</a>" : "&nbsp;").($isopen == 1 && empty($series['confirmed']) && USERUID == $owner ? " | <a href=\"series.php?action=validate&amp;seriesid=$seriesid&amp;inorder=".$series['inorder']."\">"._VALIDATE."</a>" : "")."</td></tr>";
+		//$rows = dbnumrows($result);
+		$rows = count($result);
+		//while($series = dbassoc($result)) {
+		foreach($result AS $series) {
+			$output .= "<tr><td class=\"tblborder\"><a id='458' href=\"".($series['subseriesid'] == 0 ? "viewstory.php?sid=".$series['sid']."\">".stripslashes($series['storytitle']) : "viewseries.php?seriesid=$series[subseriesid]\">".stripslashes($series['subtitle']))."</a></td>
+				<td class=\"tblborder\" align=\"center\">".($series['inorder'] == $rows ? "" : "<a id='459' href=\"manageseries.php?action=manage&amp;go=down&amp;inorder=".$series['inorder']."&amp;".($series['sid'] ? "sid=".$series['sid'] : "subseriesid=".$series['subseriesid'])."&amp;seriesid=$seriesid\"><img src=\""._BASEDIR."images/arrowdown.gif\" align=\"right\" border=\"0\" width=\"13\" height=\"18\" alt=\""._DOWN."\"></a>").
+				($series['inorder'] == 1 ? "&nbsp;" : "<a id='460' href=\"manageseries.php?action=manage&amp;go=up&amp;inorder=$series[inorder]&amp;".($series['sid'] ? "sid=".$series['sid'] : "subseriesid=".$series['subseriesid'])."&amp;seriesid=$seriesid\"><img src=\""._BASEDIR."images/arrowup.gif\" border=\"0\" width=\"13\" height=\"18\" align=\"left\" alt=\""._UP."\"></a>")."</td>
+				<td class=\"tblborder\">".($owner == USERUID || $admin ? "<a id='461' class='btn btn-sm  btn-danger' href=\"manageseries.php?action=delete&amp;seriesid=$seriesid&amp;inorder=".$series['inorder']."\">"._REMOVE."</a>" : "&nbsp;").($isopen == 1 && empty($series['confirmed']) && USERUID == $owner ? " | <a id='465'  href=\"manageseries.php?action=validate&amp;seriesid=$seriesid&amp;inorder=".$series['inorder']."\">"._VALIDATE."</a>" : "")."</td></tr>";
 		}
-		$output .= "<tr><td colspan=\"3\" align=\"center\"><a href=\"series.php?action=add&amp;add=stories&amp;seriesid=$seriesid\">"._ADD2SERIES."</a></td></tr></table>";
+		$output .= "<tr><td colspan=\"3\" align=\"center\">
+		<a id='462' class='btn btn-outline-success' href=\"manageseries.php?action=add&amp;add=stories&amp;seriesid=$seriesid\">"._ORDER. " + ". _ADD2SERIES."</a>
+		<a id='469' class='btn btn-outline-primary' href=\"manageseries.php\">"._MANAGESERIES."</a>
+		</td></tr></table>";
 	}
 	else {
-		$result = dbquery("SELECT * from ".TABLEPREFIX."fanfiction_series WHERE uid = '".USERUID."' ORDER BY title");
-		$output .= "<table style=\"margin: 0 auto;\" cellpadding=\"0\" cellspacing=\"0\" class=\"tblborder\">
-			<tr><th class=\"tblborder\">"._TITLE."</th><th class=\"tblborder\">"._OPTIONS."</th></tr>";
-		while($series = dbassoc($result)) {
-			$output .= "<tr><td class=\"tblborder\"><a href=\"viewseries.php?seriesid=".$series['seriesid']."\">".stripslashes($series['title'])."</a></td><td class=\"tblborder\"><a href=\"series.php?action=add&amp;add=stories&amp;seriesid=".$series['seriesid']."\">"._ADD2SERIES."</a> | <a href=\"series.php?action=edit&amp;seriesid=$series[seriesid]\">"._EDIT."</a> | <a href=\"series.php?action=delete&amp;seriesid=$series[seriesid]\">"._DELETE."</a></td></tr>";
+		//$result = dbquery("SELECT * from ".TABLEPREFIX."fanfiction_series WHERE uid = '".USERUID."' ORDER BY title");
+		$result = e107::getDb()->retrieve("SELECT * from ".TABLEPREFIX."fanfiction_series WHERE uid = '".USERUID."' ORDER BY title", true);
+		
+		$output .= "<table id='462' class=\"table table-bordered table-hover table-striped\"> 
+		<thead class='info-color'><tr><th class=\"tblborder\">"._TITLE."</th><th class=\"tblborder\">"._OPTIONS."</th></tr></thead>";
+		// while($series = dbassoc($result)) {
+		foreach($result AS $series) {
+			$output .= "<tr><td class=\"tblborder\">
+			<a href=\"viewseries.php?seriesid=".$series['seriesid']."\">".stripslashes($series['title'])."</a></td><td class=\"tblborder\">
+			<a id='473' class='btn btn-sm btn-warning' href=\"manageseries.php?action=add&amp;add=stories&amp;seriesid=".$series['seriesid']."\">"._ADD2SERIES."</a> | 
+			<a  id='474' class='btn btn-sm btn-success' href=\"manageseries.php?action=edit&amp;seriesid=$series[seriesid]\">"._EDIT."</a> | 
+			<a  id='475' class='btn btn-sm btn-danger' href=\"manageseries.php?action=delete&amp;seriesid=$series[seriesid]\">"._DELETE."</a></td></tr>";
 		}
-		$output .= "<tr><td colspan='2' align='center' class=\"tblborder\"><a href='series.php?action=add'>"._ADDSERIES."</a></td></tr></table>";
+		$output .= "<tr><td colspan='2' align='center' class=\"tblborder\">
+		<a class='btn btn-success' href='series.php?action=add'>"._ADDSERIES."</a></td></tr></table>";
 	}
 }
-$tpl->assign("output", $output);
-$output = $tpl->getOutputContent();  
+ 
 $output = e107::getParser()->parseTemplate($output, true);
 e107::getRender()->tablerender($caption, $output, $current);
 dbclose( );
 require_once(FOOTERF);  
-?>
+ 
