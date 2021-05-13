@@ -31,7 +31,7 @@ if($numseries) {
  
     $var['seriesheader'] = "<div class='sectionheader'>"._SERIESBY." $penname</div>";
     
-    $template = e107::getTemplate('efiction', 'serieview', 'listing');
+    $template = e107::getTemplate('efiction', 'series', 'listing');
     $caption = e107::getParser()->simpleParse($template['caption'], $var); 
  
     $seriesquery = _SERIESQUERY." AND series.uid = '$uid' LIMIT $offset, $itemsperpage";

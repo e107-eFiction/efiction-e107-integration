@@ -75,8 +75,8 @@ $numrows = $cresult['count'];
 $count = 0;
  
 /* series listing starts */
-$template = e107::getTemplate('efiction', 'serieview', 'listing');
-$sc_serie = e107::getScParser()->getScObject('serie_shortcodes', 'efiction', false);
+$template = e107::getTemplate('efiction', 'series', 'listing');
+$sc_serie = e107::getScParser()->getScObject('series_shortcodes', 'efiction', false);
 $seriesblock = $template['start'];
 
 $template_key = 'series';

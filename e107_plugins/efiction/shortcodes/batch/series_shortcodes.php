@@ -37,7 +37,7 @@
 * #######################################
 */
 
-class plugin_efiction_serie_shortcodes extends e_shortcode
+class plugin_efiction_series_shortcodes extends e_shortcode
 {
 	public function __construct()
 	{
@@ -147,7 +147,7 @@ class plugin_efiction_serie_shortcodes extends e_shortcode
          #fanfiction_series as s WHERE s.seriesid = i.seriesid AND i.subseriesid = '".$this->var['seriesid']."'", true);
     	$plinks = array( );
     	foreach($parents AS $p) {
-    		$plinks[] = "<a href='viewseries.php?seriesid=".$p['seriesid']."'>".$p['title']."</a>";
+    		$plinks[] = "<a href=\"viewseries.php?seriesid=".$p['seriesid']."\">".$p['title']."</a>";
     	}
     	$parentseries = count($plinks) ? implode(", ", $plinks) : _NONE;
         return $parentseries;
@@ -191,7 +191,21 @@ class plugin_efiction_serie_shortcodes extends e_shortcode
     }
     
 
-	/* {SERIE_VIEW_TITLE} */
+	/* {SERIE_TITLE} */
+	public function sc_serie_title($parm)
+	{
+		$title = e107::getParser()->toHTML($this->var['title'], true, 'TITLE');
+		return $title;
+	}
+    
+	/* {SERIE_URL} */
+	public function sc_serie_url($parm)
+	{
+		$text = "viewseries.php?seriesid=".$this->var['seriesid'];
+		return $text;
+	}
+    
+    /* {SERIE_VIEW_TITLE} */
 	public function sc_serie_view_title($parm)
 	{
 		$title = e107::getParser()->toHTML($this->var['title'], true, 'TITLE');
@@ -231,7 +245,7 @@ class plugin_efiction_serie_shortcodes extends e_shortcode
     /* {SERIE_VIEW_REPORTTHIS} */
 	public function sc_serie_view_reportthis($parm)
 	{
-	    $reportthis = "[<a href=\"report.php?action=report&amp;url=series.php?seriesid=".$this->var['seriesid']."\">"._REPORTTHIS."</a>]";
+	    $reportthis = "[<a href=\"report.php?action=report&amp;url=manageseries.php?seriesid=".$this->var['seriesid']."\">"._REPORTTHIS."</a>]";
     	return $reportthis;
 	}     
     
@@ -241,13 +255,13 @@ class plugin_efiction_serie_shortcodes extends e_shortcode
 	{
 	    if((isADMIN && uLEVEL < 4) || (USERUID != 0 && USERUID == $this->var['uid'])) {
 		$adminoptions =  "<div class=\"adminoptions\"><span class='label'>"._ADMINOPTIONS.":</span> 
-          [<a href=\"series.php?action=add&amp;add=stories&amp;seriesid=".$this->var['seriesid']."\">"._ADD2SERIES."</a>] 
-          [<a href=\"series.php?action=edit&amp;seriesid=".$this->var['seriesid']."\">"._EDIT."</a>] 
-          [<a href=\"series.php?action=delete&amp;seriesid=".$this->var['seriesid']."\">"._DELETE."</a>] </div>";
+          [<a href=\"manageseries.php?action=add&amp;add=stories&amp;seriesid=".$this->var['seriesid']."\">"._ADD2SERIES."</a>] 
+          [<a href=\"manageseries.php?action=edit&amp;seriesid=".$this->var['seriesid']."\">"._EDIT."</a>] 
+          [<a href=\"manageseries.php?action=delete&amp;seriesid=".$this->var['seriesid']."\">"._DELETE."</a>] </div>";
           
 	    }
        	else if($this->var['isopen'] == 2 && USERUID) 
-           $adminoptions = "[<a href=\"series.php?action=add&amp;add=stories&amp;seriesid=".$this->var['seriesid']."\">"._ADD2SERIES."</a>]" ;
+           $adminoptions = "[<a href=\"manageseries.php?action=add&amp;add=stories&amp;seriesid=".$this->var['seriesid']."\">"._ADD2SERIES."</a>]" ;
     
         return $adminoptions;
 	}      
@@ -282,4 +296,22 @@ class plugin_efiction_serie_shortcodes extends e_shortcode
 		$text = "<a class='btn btn-danger'  href=\"stories.php?action=delete&amp;chapid=".$serie['chapid'].($this->admin ? '&amp;admin=1&amp;uid='.$serie['uid'] : '')."\">"._DELETE.'</a>';
 		return $text;
 	}
+    
+    /* {SERIE_IMAGE_PATH} */
+    public function sc_serie_image_path($parm)
+    {
+ 
+        $serie_icon = $this->var['image']; 
+        $src =  e107::getParser()->replaceConstants($serie_icon, 'full');
+        return $src; 
+    }
+    
+    /* {SERIE_IMAGE} */
+    public function sc_serie_image($parm)
+    {
+ 
+        $serie_icon = $this->var['image']; 
+        $icon = e107::getParser()->toImage($serie_icon); 
+        return $icon; 
+    }
 }
