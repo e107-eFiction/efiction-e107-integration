@@ -18,6 +18,12 @@ define ("LAN_EFICTION_RULES", "Rules");
 define ("LAN_EFICTION_TENS", "Top Tens");
 define ("LAN_EFICTION_TOS", "Terms of Service");
 
+define ("LAN_EFICTION_PARENTSERIES", "Parent Series");
+define ("LAN_EFICTION_MEMBER_SINCE", "Member Since");
+define ("LAN_EFICTION_MEMBERSHIP_STATUS", "Membership status");
+define ("LAN_EFICTION_ACTIVITYBY", "Activity by");
+define ("LAN_EFICTION_RATED", "Rated");
+
 define('_ACTIONSUCCESSFUL', 'The action was successful.');
 define('_ACTIONCANCELLED', 'The requested action was cancelled.');
 define('_ACTIVE', 'Active');
@@ -208,7 +214,7 @@ define('_WORDCOUNT', 'Word count');
 define('_SEARCH', 'Search');
 
 // Series
-define('_ADD2SERIES', 'New Assign Story');
+define('_ADD2SERIES', 'Assign New Story');
 define('_ADDSERIES', 'Add New Series');
 define('_ADDSERIES2FAVES', 'Add Series to Favorites');
 define('_BACKTOSERIES', 'Back to the Series'); // Added 11-06-05

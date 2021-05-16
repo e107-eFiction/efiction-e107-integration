@@ -93,7 +93,7 @@ if (!defined('e107_INIT')) { exit; }
 	$tpl->assign("characters", ($stories['charid'] ? charlist($stories['charid']) : _NONE));
 	
     
-    $tpl->assign("lan_category", "<span class=\"label\">"._CATEGORIES.": </span>" );
+    $tpl->assign("lan_category",  _CATEGORIES  );
 	$tpl->assign("category",  $stories['catid'] == '-1' || !$stories['catid'] ? _ORPHAN : catlist($stories['catid']));
 	$tpl->assign("completed"   , ($stories['completed'] ? _YES : _NO) );
 	$tpl->assign("roundrobin"   , ($stories['rr'] ?  (!empty($roundrobin) ? $roundrobin : "<img src=\""._BASEDIR."images/roundrobin.gif\" alt=\""._ROUNDROBIN."\">") : "") );
@@ -115,8 +115,14 @@ if (!defined('e107_INIT')) { exit; }
 	$tpl->assign("wordcount"   , $stories['wordcount'] ? $stories['wordcount'] : "0" );
 	$tpl->assign("numreviews"   , ($reviewsallowed == "1" ? "<a href=\"reviews.php?type=ST&amp;item=".$stories['sid']."\">".$stories['reviews']."</a>" : "") );
 	if((isADMIN && uLEVEL < 4) || USERUID == $stories['uid'] || (is_array($stories['coauthors']) && array_key_exists(USERUID, $stories['coauthors'])))
-		$adminlinks .= "[<a href=\"stories.php?action=editstory&amp;sid=".$stories['sid'].(isADMIN ? "&amp;admin=1" : "")."\">"._EDIT."</a>] [<a href=\"stories.php?action=delete&amp;sid=".$stories['sid'].(isADMIN ? "&amp;admin=1" : "")."\">"._DELETE."</a>]";
-	global $featured;
+		$adminlinks .= "[<a href=\"stories.php?action=editstory&amp;sid=".$stories['sid'].(isADMIN ? "&amp;admin=1" : "")."\">"._EDIT."</a>] 
+        [<a href=\"stories.php?action=delete&amp;sid=".$stories['sid'].(isADMIN ? "&amp;admin=1" : "")."\">"._DELETE."</a>],
+        [<a href=\"stories.php?action=newchapter&amp;sid=".$stories['sid'].(isADMIN ? "&amp;admin=1" : "")."\">"._ADDNEWCHAPTER."</a>] 
+
+        ";
+//        <a class=\"button btn btn-primary\" href=\"stories.php?action=newchapter&amp;sid=".$stories['sid']."&amp;inorder=$chapters".(isADMIN ?  '&amp;admin=1&amp;uid='.$stories['uid'] : '').'">'._ADDNEWCHAPTER.'</a>	
+    
+    global $featured;
 	if($stories['featured'] == 1) {
 		$tpl->assign("featuredstory", (isset($featured) ? $featured : "<img src=\""._BASEDIR."images/blueribbon.gif\" class=\"featured\" alt=\""._FSTORY."\">"));
 		$tpl->assign("featuredtext", _FSTORY);

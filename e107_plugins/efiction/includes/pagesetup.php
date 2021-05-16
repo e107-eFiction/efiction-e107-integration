@@ -113,7 +113,7 @@ foreach($blocks as $block=>$value) {
 }
 */
 
-/* this can be removed after replacing all blocks in tpls */
+/* this can be removed after replacing all blocks in tpls 
 $blocks = efiction::blocks();
 foreach($blocks AS  $block=>$value) { 
     if(empty($value['status']) || ($value['status'] == 2 && $current != "home")) continue;
@@ -126,7 +126,7 @@ foreach($blocks AS  $block=>$value) {
     $tpl->assignGlobal($block."_content", $content);
     }       
 }
-        
+*/      
 
 $tpl->gotoBlock( "_ROOT" );
 ?>

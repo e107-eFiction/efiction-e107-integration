@@ -42,9 +42,7 @@
         public function __construct()
         {     
         }
-        
-        
-        
+
         /* {BROWSE_CAPTION} */
     	public function sc_browse_caption($parm)
     	{
@@ -86,7 +84,8 @@
         /* {BROWSE_RATINGMENU} */
     	public function sc_browse_ratingmenu($parm)
     	{
-    		$text = $this->var['ratingmenu'];
+    		print_a($this->var['ratingmenu']);
+            $text = $this->var['ratingmenu'];
     		return $text;
     	}   
         /* {BROWSE_CLASSMENU} */
@@ -141,9 +140,8 @@
         /* {BROWSE_PAGELINKS} */
     	public function sc_browse_pagelinks($parm)
     	{
-            global $itemsperpage ;
-         
-       
+            $itemsperpage =  efiction::settings('itemsperpage');
+ 
             $pagelinks = '';
  
             if($this->var['numrows'] > $itemsperpage) {  
@@ -153,38 +151,33 @@
     		return $pagelinks;
     	}  
         
-        /*{BROWSE_SEARCHFORM}*/
+        /* {BROWSE_SEARCHFORM}*/
        	public function sc_browse_searchform($parm)
     	{
+
+             $browse_template = e107::getTemplate('efiction', 'searchform', 'default');
+             $search_browse = e107::getScParser()->getScObject('searchform_shortcodes', 'efiction', false);
+             $search_vars = array();
+             $search_browse->wrapper('searchform/default');
+      
+              
+              $search_vars['searchform_sortbegin'] = $this->sc_browse_sortbegin($parm);
+              $search_vars['searchform_categorymenu'] = $this->sc_browse_categorymenu($parm);
+              $search_vars['searchform_charactermenu1'] = $this->sc_browse_charactermenu1($parm);
+              $search_vars['searchform_charactermenu2'] = $this->sc_browse_charactermenu2($parm);            
+              $search_vars['searchform_pairingsmenu'] = $this->sc_browse_pairingsmenu($parm);
+                       
+              $search_vars['searchform_classmenu'] = $this->sc_browse_classmenu($parm);       
+              $search_vars['searchform_sortmenu'] = $this->sc_browse_sortmenu($parm);       
+              $search_vars['searchform_ompletemenu'] = $this->sc_browse_completemenu($parm);       
+              $search_vars['searchform_sortend'] = $this->sc_browse_sortend($parm);                          
+              
+              $search_vars = array_merge($search_vars, $this->var);
  
-            if($parm['type'] == "series" ) {
-              $searchform_template =   e107::getTemplate('efiction', 'browse', "searchform");
-              $search_vars['BROWSE_SORTBEGIN'] = $this->sc_browse_sortbegin($parm);
-              $search_vars['BROWSE_CATEGORYMENU'] = $this->sc_browse_categorymenu($parm);
-              $search_vars['BROWSE_CHARACTERMENU1'] = $this->sc_browse_charactermenu1($parm);
-              $search_vars['BROWSE_CHARACTERMENU2'] = $this->sc_browse_charactermenu2($parm);            
-              $search_vars['BROWSE_PAIRINGSMENU'] = $this->sc_browse_pairingsmenu($parm);
-              $search_vars['BROWSE_RATINGMENU'] = $this->sc_browse_ratingmenu($parm);            
-              $search_vars['BROWSE_CLASSMENU'] = $this->sc_browse_classmenu($parm);       
-              $search_vars['BROWSE_SORTMENU'] = $this->sc_browse_sortmenu($parm);       
-              $search_vars['BROWSE_COMPLETEMENU'] = $this->sc_browse_completemenu($parm);       
-              $search_vars['BROWSE_SORTEND'] = $this->sc_browse_sortend($parm);                          
-              $text = e107::getParser()->simpleParse($searchform_template['index'], $search_vars);
-            }
-            else {
-              $searchform_template =   e107::getTemplate('efiction', 'browse', "searchform");
-              $search_vars['BROWSE_SORTBEGIN'] = $this->sc_browse_sortbegin($parm);
-              $search_vars['BROWSE_CATEGORYMENU'] = $this->sc_browse_categorymenu($parm);
-              $search_vars['BROWSE_CHARACTERMENU1'] = $this->sc_browse_charactermenu1($parm);
-              $search_vars['BROWSE_CHARACTERMENU2'] = $this->sc_browse_charactermenu2($parm);            
-              $search_vars['BROWSE_PAIRINGSMENU'] = $this->sc_browse_pairingsmenu($parm);
-              $search_vars['BROWSE_RATINGMENU'] = $this->sc_browse_ratingmenu($parm);            
-              $search_vars['BROWSE_CLASSMENU'] = $this->sc_browse_classmenu($parm);       
-              $search_vars['BROWSE_SORTMENU'] = $this->sc_browse_sortmenu($parm);       
-              $search_vars['BROWSE_COMPLETEMENU'] = $this->sc_browse_completemenu($parm);       
-              $search_vars['BROWSE_SORTEND'] = $this->sc_browse_sortend($parm);                          
-              $text = e107::getParser()->simpleParse($searchform_template['index'], $search_vars);                  
-            }
+              $search_browse->setVars($search_vars);
+     
+              $text = e107::getParser()->parseTemplate($browse_template['form'], true, $search_browse);
+             
     		return $text;
     	}  
         

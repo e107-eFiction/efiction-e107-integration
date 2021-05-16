@@ -48,7 +48,7 @@ else include_once(_BASEDIR."modules/translations/languages/en.php");
 	$output .= '<div class="form-group col-md-6">
 					<label for="writer" class="col-form-label">'._ORIGINAL_WRITER.'</label>
 						<div>
-						'.e107::getForm()->select('writer', $writers, $writer,  array( 'required'=> 1 , 'data-width'=>'100%', 'class'=>'form-control select2-single' ), _ORIGINAL_WRITER).'
+						'.e107::getForm()->select('writer', $writers, $writer,  array( 'required'=> 1 , 'data-width'=>'100%', 'class'=>'form-control select2-single'), _ORIGINAL_WRITER).'
 						</div>
 				</div>';
                 
@@ -63,19 +63,19 @@ else include_once(_BASEDIR."modules/translations/languages/en.php");
     $output .= '<div class="form-group">
 				<label for="original_title" class="col-form-label">'._ORIGINAL_TITLE.'</label>
 					<div>
-					'.e107::getForm()->text('original_title', htmlentities($original_title), 200, array('size' => 'large', 'required' => 1, 'id'=>'original_title')).'
+					'.e107::getForm()->text('original_title', htmlentities($original_title), 200, array('size' => 'large', 'class'=>'form-control', 'required' => 1, 'id'=>'original_title')).'
 					</div>
 			  </div>';
 	$output .= '<div class="form-group">
 				<label for="original_url" class="col-form-label">'._ORIGINAL_URL.'</label>
 					<div>
-					'.e107::getForm()->text('original_url', htmlentities($original_url), 200, array('size' => 'large', 'required' => 1, 'id'=>'original_url')).'
+					'.e107::getForm()->text('original_url', htmlentities($original_url), 200, array('size' => 'large', 'class'=>'form-control',  'required' => 1, 'id'=>'original_url')).'
 					</div>
 			  </div>';
     $output .= '<div class="form-group">
 				<label for="preklad_url" class="col-form-label">'._PREKLAD_URL.'</label>
 					<div>
-					'.e107::getForm()->url('preklad_url', htmlentities($preklad_url), 200, array('size' => 'large', 'required' => 1, 'id'=>'preklad_url')).'
+					'.e107::getForm()->url('preklad_url', htmlentities($preklad_url), 200, array('size' => 'large', 'class'=>'form-control',  'required' => 1, 'id'=>'preklad_url')).'
 					</div>
 			  </div>';
    
@@ -89,7 +89,7 @@ else include_once(_BASEDIR."modules/translations/languages/en.php");
  	$output .= '<div class="form-group">
 					<label for="source" class=" col-form-label">Zdroj:</label>
 						<div>
-						'.e107::getForm()->select('source', $sources, $source, array( 'class'=> 'custom-select-box', 'required' => 1)).'
+						'.e107::getForm()->select('source', $sources, $source, array( 'data-width'=>'100%', 'class'=>'form-control select2-single', 'required' => 1)).'
 						</div>
 				</div>';               
  

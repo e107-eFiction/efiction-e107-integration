@@ -39,10 +39,10 @@ $displayform = 1;
 include ("header.php");
 require_once(HEADERF);
 
-if (file_exists("$skindir/browse.tpl")) {
-    $tpl = new TemplatePower("$skindir/browse.tpl");
+if (file_exists(_BASEDIR."$skindir/browse.tpl")) {
+    $tpl = new TemplatePower(_BASEDIR."$skindir/browse.tpl");
 } else {
-    $tpl = new TemplatePower('default_tpls/browse.tpl');
+    $tpl = new TemplatePower(_BASEDIR.'default_tpls/browse.tpl');
 }
 if (file_exists("$skindir/listings.tpl")) {
     $tpl->assignInclude('listings', "$skindir/listings.tpl");
@@ -190,6 +190,7 @@ e107::getRender()->tablerender($caption, $output, $current);;
     } else {
         $rid = array();
     }
+ 
     if (count($rid) > 0) {
         $rid = array_filter($rid, 'isNumber');
         $query[] = findclause('rid', $rid);

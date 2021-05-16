@@ -70,7 +70,7 @@ $authorof[] =  "<a href='".$thislink."action=stats&amp;stat=series'>$seriescount
 if($stat == "series" && dbnumrows($seriesquery)) {
 	$output .= "<center><h4>"._SERIES."</h4></center><table class=\"tblborder\"  width=\"90%\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\"><tr><th>"._TITLE."</th>".($reviewsallowed ? "<th>"._REVIEWS."</th>" : "").($favorites ? "<th>"._FAVORITE."</th>" : "")."</tr>";
 	while($series = dbassoc($seriesquery)) {
-		$output .= "<tr><td class=\"tblborder\"><a href=\"series.php?seriesid=$series[seriesid]\">".stripslashes($series['title'])."</a> ".ratingpics($series['rating'])."</td>".($reviewsallowed ? "<td class=\"tblborder\" align=\"center\"><a href=\"reviews.php?type=SE&amp;item=$series[seriesid]\">$series[reviews]</a></td>" : "").($favorites ? "<td class=\"tblborder\" align=\"center\">".($series['count'] ? "<a href=\"member.php?action=stats&amp;favseries=$series[seriesid]\">$series[count]</a>" : "0")."</td>" : "")."</td></tr>";
+		$output .= "<tr><td class=\"tblborder\"><a href=\"manageseries.php?seriesid=$series[seriesid]\">".stripslashes($series['title'])."</a> ".ratingpics($series['rating'])."</td>".($reviewsallowed ? "<td class=\"tblborder\" align=\"center\"><a href=\"reviews.php?type=SE&amp;item=$series[seriesid]\">$series[reviews]</a></td>" : "").($favorites ? "<td class=\"tblborder\" align=\"center\">".($series['count'] ? "<a href=\"member.php?action=stats&amp;favseries=$series[seriesid]\">$series[count]</a>" : "0")."</td>" : "")."</td></tr>";
 		$serieslist[] = $series['seriesid'];
 	}
 	$output .= "</table>";

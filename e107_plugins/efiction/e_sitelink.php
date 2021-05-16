@@ -36,9 +36,8 @@ class efiction_sitelink // include plugin-folder in the name.
 		$links[4]  = array('function' => "adminarea",     'name'	=> 'Admin - no sublinks' );		
         $links[5]  = array('function' => "logout",        'name'	=> 'Logout - no sublinks' );	    
 		$links[6]  = array('function' => "featured",      'name'	=> 'Featured Stories - no sublinks'  );	
-        $links[7]  = array('function' => "catslink",      'name'	=> 'Categories - no sublinks');	    
-		$links[8]  = array('function' => "members",       'name'	=> 'Members');
-        $links[9]  = array('function' => "authors",       'name'	=> 'Authors - no sublinks' );	    
+        $links[7]  = array('function' => "catslink",      'name'	=> 'Categories - no sublinks');	    	 
+        $links[9]  = array('function' => "authors",       'name'	=> 'Authors' );	    
 		$links[10] = array('function' => "help",          'name'	=> 'Help - no sublinks' );	
         $links[11] = array('function' => "search",        'name'	=> 'Search - no sublinks');	    
 		$links[12] = array('function' => "series",        'name'	=> 'Series - no sublinks' );		

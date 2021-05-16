@@ -93,7 +93,8 @@ function chapterform($inorder, $notes, $endnotes, $storytext, $chaptertitle, $ui
     $data['storytext'] = $storytext; 
     $data['notes'] = $notes;
     $data['endnotes'] = $endnotes;
-     
+    $data['action'] = $action; 
+    
     $sc->setVars($data);
    // $sc->wrapper('storyform/layout');
     $output = '';

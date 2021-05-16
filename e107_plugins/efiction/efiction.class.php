@@ -145,6 +145,7 @@ class eFiction
 
 	/* used for ratings select in storyform */
 	/* ID => NAME */
+    // used in story_shortcodes.php, series_shortcodes.php
 	public function get_ratings_list()
 	{
 		
@@ -246,9 +247,11 @@ class eFiction
         return $favpanels;
     }
     
+    /* action is used too with:  ($action ? "panel_name = '$action' AND (panel_type = 'P' OR panel_type = 'F') in viewuser */
+    
     public static function panel_byaction($action = '' )
     {
-        
+        /*
 		$settings = self::settings();
 		$submissionsoff = $settings['submissionsoff'];
         $favorites = $settings['favorites'];
@@ -262,13 +265,14 @@ class eFiction
 		if($panel['panel_url'] && file_exists(_BASEDIR.$panel['panel_url'])) { 
 			$panel['use_panel'] =  _BASEDIR.$panel['panel_url'];
 		}
-		else if(file_exists(e_PLUGIN."efiction/panels/user/{$action}.php")) {
-			$panel['use_panel'] =  "panels/user/{$action}.php";  		 
+		else if(file_exists(e_PLUGIN."efiction/user/{$action}.php")) {
+			$panel['use_panel'] =  "user/{$action}.php";  		 
 		}
  
-        return $panel;
+        return $panel;*/
     } 
     
+    /* only for browse */
     public static function panel_bytype($type = '' )
     {
  
@@ -287,6 +291,7 @@ class eFiction
  
         return $panel;
     }   
+    
     
     
     public function get_userlink($key = null)
@@ -343,5 +348,70 @@ foreach($settings as $var => $val) {
  
         return $settings;
     }
-  
+
+	// replace for e107::getParser()->truncate($text, $limit); see issue https://github.com/e107inc/e107/issues/4480 
+	public static function truncate_text($str, $n = 75, $delim='...') { 
+		$len = strlen($str);
+		if($len > $n) {
+			 $pos = strpos($str, " ", $n);
+		 if($pos) $str = trim(substr($str, 0, $pos), "\n\t\.,"). $delim;
+	   }
+	   return closetags($str);
+	 } 
+ 
+     // replace for e107 pagination system, see issue https://github.com/e107inc/e107/issues/4024
+     function build_pagelinks($url, $total, $offset = 0, $columns = 1, $type='default') {
+    	global  $linkstyle, $linkrange;
+   
+        $itemsperpage = efiction::settings('itemsperpage');
+ 
+    	$pages = "";
+    	$itemsperpage = $itemsperpage * $columns;
+    
+    	if($itemsperpage >= $total) return;
+    
+    	if(empty($linkrange)) $linkrange = 4;
+    
+    	$totpages = floor($total/$itemsperpage) + ($total % $itemsperpage ? 1 : 0);
+    	$curpage = floor($offset/$itemsperpage) + 1;
+    	if(!$linkstyle) $startrange = $curpage;
+    	else {
+    		if($totpages <= $linkrange || $curpage == 1) $startrange = 1;
+    		else if($curpage >= $totpages - floor($linkrange / 2) + 1) $startrange = $totpages - $linkrange;
+    		else $startrange = $curpage - floor($linkrange / 2) > 0 ? $curpage - floor($linkrange / 2) : 1;
+    	}
+    	if($startrange >= $totpages - $linkrange ) $startrange = $totpages - $linkrange > 0 ? $totpages - $linkrange : 1;
+    	$stoprange = $totpages > $startrange + $linkrange ? $startrange + $linkrange : $totpages + 1;
+        
+        if($type == "bootstrap4") {   
+           if($curpage > 1 && $linkstyle != 1) $pages .= "<li class=\"page-item\"><a class=\"page-link\" href='".$url."offset=".( $offset - $itemsperpage)."' id='plprev'>"._PREVIOUS."</a></li>";
+            if($startrange > 1 && $linkstyle > 0) $pages .= "<li class=\"page-item\"><a class=\"page-link\" href='".$url."offset=0'>1</a></li><li class=\"page-item\"><span class='ellipses'>...</span></li>";
+        
+            for($x = $startrange; $x < $stoprange; $x++) {
+          		$pages .= "<li class=\"page-item".($x == $curpage ? " active" : "")."\"><a class=\"page-link\"  href='".$url."offset=".(($x - 1) * $itemsperpage)."'".($x == $curpage ? "id='currentpage'" : "").">".$x."</a></li>\n";
+          	}
+        
+            if($stoprange < $totpages && $linkstyle > 0) $pages .= "<li class=\"page-item\"><span class='ellipses'>...</span></li><li class=\"page-item\"> <a class=\"page-link\" href='".$url."offset=".(($totpages - 1) * $itemsperpage)."'>$totpages</a>\n";
+    	    if ($curpage < $totpages && $linkstyle != 1) $pages .=  "<li class=\"page-item\"><a class=\"page-link\" href='".$url."offset=".($offset+$itemsperpage)."' id='plnext'>"._NEXT."</a>";
+        
+            return "<nav aria-label=\"pagination\" class=\"\" \"><ul class=\"pagination justify-content-center\">$pages</div></div>";
+        }
+        else {
+            if($curpage > 1 && $linkstyle != 1) $pages .= "<a href='".$url."offset=".( $offset - $itemsperpage)."' id='plprev'>["._PREVIOUS."]</a> ";
+            if($startrange > 1 && $linkstyle > 0) $pages .= "<a href='".$url."offset=0'>1</a><span class='ellipses'>...</span>";
+            
+            for($x = $startrange; $x < $stoprange; $x++) {
+          		$pages .= "<a href='".$url."offset=".(($x - 1) * $itemsperpage)."'".($x == $curpage ? "id='currentpage'" : "").">".$x."</a> \n";
+          	}
+            if($stoprange < $totpages && $linkstyle > 0) $pages .= "<span class='ellipses'>...</span> <a href='".$url."offset=".(($totpages - 1) * $itemsperpage)."'>$totpages</a>\n";
+    	    if ($curpage < $totpages && $linkstyle != 1) $pages .=  " <a href='".$url."offset=".($offset+$itemsperpage)."' id='plnext'>["._NEXT."]</a>";
+            
+            return "<div id=\"pagelinks\">$pages</div>";
+        }
+        
+ 
+     
+        
+    }
+ 
 }

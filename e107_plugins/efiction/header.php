@@ -45,6 +45,7 @@ if(!defined("SITEKEY")) define("SITEKEY", $settings['sitekey']);
 unset($settings['sitekey']);
 if(!defined("TABLEPREFIX")) define("TABLEPREFIX", $settings['tableprefix']);
 unset($settings['tableprefix']);
+ 
 define("STORIESPATH", $settings['storiespath']);
 unset($settings['storiespath']);
 foreach($settings as $var => $val) {
@@ -64,8 +65,7 @@ if(isset($globalskin)) $skin = $globalskin;
 if(isset($_GET['action'])) $action = strip_tags($_GET['action']);
 else $action = false;
 
-e107::lan('efiction');
-e107::lan('efiction', true);
+
 
 //because alphabet
 if(file_exists(_BASEDIR."languages/{$language}.php")) include (_BASEDIR."languages/{$language}.php");
@@ -174,13 +174,7 @@ if($current == "viewuser" && isNumber($uid)) {
 }
  
  
-if(!isset($_GET['action']) || $_GET['action'] != "printable") {
-  e107::js('url',  _BASEDIR."includes/javascript.js" , 'jquery' );
-  if(!empty($tinyMCE)) {
-      //e107::js('url', _BASEDIR."tinymce/js/tinymce/tinymce.min.js" , 'jquery' );
-   
-  }
-}
+
 
 if(isset($displayform) && $displayform == 1) {
 

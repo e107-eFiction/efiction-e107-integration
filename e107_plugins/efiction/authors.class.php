@@ -80,7 +80,7 @@ class eAuthors
     /* full author data related to efiction user ID */
     public function get_author_data($uid=null)
 	{
-		$uid = intval($uid);  print_a($uid);
+		$uid = intval($uid);   
 
 		if(empty($uid)){ return false; }
 

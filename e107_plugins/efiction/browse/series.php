@@ -77,7 +77,7 @@ $count = 0;
 /* series listing starts */
 $template = e107::getTemplate('efiction', 'series', 'listing');
 $sc_serie = e107::getScParser()->getScObject('series_shortcodes', 'efiction', false);
-$seriesblock = $template['start'];
+$seriesblock = e107::getParser()->parseTemplate($template['start'], true, $sc_serie);
 
 $template_key = 'series';
  
@@ -96,7 +96,8 @@ foreach($sresult AS $serie)  {
     $seriesblock .= $item;
 }
 
- 
+$seriesblock .= e107::getParser()->parseTemplate($template['end'], true, $sc_serie); 
+
 $seriesblock =  e107::getRender()->tablerender($caption, $seriesblock, 'serie-listing', true);
 $tpl->assign("seriesblock", $seriesblock); 
 

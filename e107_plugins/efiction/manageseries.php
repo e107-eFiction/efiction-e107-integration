@@ -86,15 +86,23 @@ if($add == "series" || ($action == "add" && !$add) || $action == "edit") {
 	if(isset($_POST['submit'])) {
 		$title = addslashes(escapestring(strip_tags($_POST['title'], $allowed_tags)));
 		$summary = addslashes(escapestring(descript(strip_tags($_POST["summary"], $allowed_tags))));
-		$category = isset($_POST['catid']) ? explode(",", $_POST['catid']) : array();
-		$category = array_filter($category, "isNumber");
-		if($category) $category = implode(",", $category);
-		else $category = "";
+		//$category = isset($_POST['catid']) ? explode(",", $_POST['catid']) : array();
+		//$category = array_filter($category, "isNumber");
+        
+        $catid = isset($_POST['catid']) ? array_filter($_POST['catid'], "isNumber") : array( );
+        /* story example
+        catid = '".(is_array($catid) ? implode(",", $catid) : $catid)."',
+        */
+        $category = (is_array($catid) ? implode(",", $catid) : $catid);
+        
+        $charid = isset($_POST['charid']) ? array_filter($_POST['charid'], "isNumber") : array( );
+        $characters = (is_array($charid) ? implode(",", $charid) : $charid);
+                
+		/* if($category) $category = implode(",", $category);
+		else $category = ""; */
+        
 		$open = isset($_POST['open']) && isNumber($_POST['open']) ? $_POST['open'] : 0;
-		$characters = isset($_POST['charid']) ? $_POST['charid'] : array();
-		$characters = array_filter($characters, "isNumber");
-		if($characters) $charid = implode(",", $characters);
-		else $charid = "";
+ 
 		$classes = array( );
 		foreach($classtypelist as $type => $cinfo) {
 			if(isset($_POST["classes_".$type])) {
@@ -117,7 +125,7 @@ if($add == "series" || ($action == "add" && !$add) || $action == "edit") {
 			if($action == "edit") {
 				$seriesid = $_POST['seriesid'];
 				// dbxquery("UPDATE ".TABLEPREFIX."fanfiction_series SET title = '$title', summary ='$summary', catid = '$category', isopen = '$open', characters = '$charid', classes = '$classes' WHERE seriesid = '$seriesid'");
-				e107::getDb()->gen("UPDATE ".TABLEPREFIX."fanfiction_series SET title = '$title', summary ='$summary', catid = '$category', isopen = '$open', characters = '$charid', classes = '$classes' WHERE seriesid = '$seriesid'");
+				e107::getDb()->gen("UPDATE ".TABLEPREFIX."fanfiction_series SET title = '$title', summary ='$summary', catid = '$category', isopen = '$open', characters = '$characters', classes = '$classes' WHERE seriesid = '$seriesid'");
 				
 				//$codequery = dbxquery("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'editseries'");
 				$codequery =  e107::getDB()->retrieve("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'editseries'", true);
@@ -471,20 +479,26 @@ if($showlist) {
 	}
 	else {
 		//$result = dbquery("SELECT * from ".TABLEPREFIX."fanfiction_series WHERE uid = '".USERUID."' ORDER BY title");
-		$result = e107::getDb()->retrieve("SELECT * from ".TABLEPREFIX."fanfiction_series WHERE uid = '".USERUID."' ORDER BY title", true);
+        // $result = e107::getDb()->retrieve("SELECT * from ".TABLEPREFIX."fanfiction_series WHERE  uid = '".USERUID."' ORDER BY title", true);
+        
+        if($admin) { $where = true; } else { $where = "uid = '".USERUID."'";  } //possibility to see all series for level < 3 
+        
+		$result = e107::getDb()->retrieve(_SERIESQUERY." AND  ".$where." ORDER BY title", true);
 		
 		$output .= "<table id='462' class=\"table table-bordered table-hover table-striped\"> 
-		<thead class='info-color'><tr><th class=\"tblborder\">"._TITLE."</th><th class=\"tblborder\">"._OPTIONS."</th></tr></thead>";
+		<thead class='info-color'><tr><th class=\"tblborder\">"._TITLE."</th><th class=\"tblborder\">"._AUTHOR."</th><th class=\"tblborder\">"._OPTIONS."</th></tr></thead>";
 		// while($series = dbassoc($result)) {
 		foreach($result AS $series) {
-			$output .= "<tr><td class=\"tblborder\">
-			<a href=\"viewseries.php?seriesid=".$series['seriesid']."\">".stripslashes($series['title'])."</a></td><td class=\"tblborder\">
+			$output .= "
+            <tr><td class=\"tblborder\"><a href=\"viewseries.php?seriesid=".$series['seriesid']."\">".stripslashes($series['title'])."</a></td>
+            <td> <a href=\"viewuser.php?uid=".$series['uid']."\">".stripslashes($series['penname'])."</a> </td>
+            <td class=\"tblborder\">
 			<a id='473' class='btn btn-sm btn-warning' href=\"manageseries.php?action=add&amp;add=stories&amp;seriesid=".$series['seriesid']."\">"._ADD2SERIES."</a> | 
 			<a  id='474' class='btn btn-sm btn-success' href=\"manageseries.php?action=edit&amp;seriesid=$series[seriesid]\">"._EDIT."</a> | 
 			<a  id='475' class='btn btn-sm btn-danger' href=\"manageseries.php?action=delete&amp;seriesid=$series[seriesid]\">"._DELETE."</a></td></tr>";
 		}
 		$output .= "<tr><td colspan='2' align='center' class=\"tblborder\">
-		<a class='btn btn-success' href='series.php?action=add'>"._ADDSERIES."</a></td></tr></table>";
+		<a class='btn btn-success' href='manageseries.php?action=add'>"._ADDSERIES."</a></td></tr></table>";
 	}
 }
  

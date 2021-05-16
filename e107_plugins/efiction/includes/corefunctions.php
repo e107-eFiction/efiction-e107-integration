@@ -435,6 +435,8 @@ function build_alphalinks($url, $let) {
 
 // Function builds the pagination links
 function build_pagelinks($url, $total, $offset = 0, $columns = 1) {
+    efiction::build_pagelinks($url, $total, $offset, $columns1, 'bootstrap4');
+    /*
 	global $itemsperpage, $linkstyle, $linkrange;
 	$pages = "";
 	$itemsperpage = $itemsperpage * $columns;
@@ -461,6 +463,7 @@ function build_pagelinks($url, $total, $offset = 0, $columns = 1) {
 	if($stoprange < $totpages && $linkstyle > 0) $pages .= "<span class='ellipses'>...</span> <a href='".$url."offset=".(($totpages - 1) * $itemsperpage)."'>$totpages</a>\n";
 	if ($curpage < $totpages && $linkstyle != 1) $pages .=  " <a href='".$url."offset=".($offset+$itemsperpage)."' id='plnext'>["._NEXT."]</a>";
 	return "<div id=\"pagelinks\">$pages</div>";
+    */
 }
 
 // Function that returns the ratings picks 

@@ -41,7 +41,18 @@ $code = '
         maximumSelectionSize: 10,
         containerCssClass: ":all:"
       });
+
+	  $(".select2-simple").select2({
+        theme: "bootstrap",
+        placeholder: "",
+        minimumResultsForSearch: Infinity,  
+       
+        containerCssClass: ":all:"
+      });
+
     }';
+
+
 e107::js('footer-inline', $code, 'jquery');
  
  

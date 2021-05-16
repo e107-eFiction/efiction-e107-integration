@@ -88,7 +88,7 @@ class efiction_url // plugin-folder + '_url'
 		);
 
 		$config['series'] = array(
-            'alias'         => 'series.php',
+            'alias'         => 'manageseries.php',
 			'regex'			=> '^{alias}\/?([\?].*)?\/?$', 
 			'sef'			=> '{alias}', 
 			'redirect'		=> '{e_PLUGIN}efiction/manageseries.php$1',  	// file-path of what to load when the regex returns true.

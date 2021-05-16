@@ -156,17 +156,23 @@ class efiction_shortcodes extends e_shortcode
 
     /*  {EFICTION_LINK} */
     /* {EFICTION_LINK=rss} - doesn't work on live site, on local it works. Data issue? */
+    /*  example for login menu 
+        {EFICTION_LINK: key=adminarea&class=list-group-item} 
+        {EFICTION_LINK: key=login&class=list-group-item}   
+    */
     public function sc_efiction_link($parm = '')
     { 
 		if($parm == "") { return ''; }
-
+        
+        $key = (!empty($parm['key'])) ? $parm['key'] : $parm;
 	    $efiction = e107::getSingleton('efiction', e_PLUGIN.'efiction/efiction.class.php');
 		 
-		$link = $efiction->get_userlink($parm);
-		
+		$link = $efiction->get_userlink($key);
+         
+		$class = (!empty($parm['class'])) ? $parm['class']. ' ' .$key  : $key;
         
 		if($link) {    
-			return "<li class=".$parm.">".$link."</li>";
+			return "<li class='".$class."'>".$link."</li>";
 		}
 		else return "";
 		 
@@ -177,78 +183,44 @@ class efiction_shortcodes extends e_shortcode
     public function sc_efiction_sortform() {
     
     global $disablesorts, $terms, $type;
-  
+     
+     $browse_template = e107::getTemplate('efiction', 'browse', 'searchform');
+     $sc_browse = e107::getScParser()->getScObject('efiction_shortcodes', 'efiction', false);
+     $search_vars = array();
+     $sc_browse->wrapper('browse/searchform');
+     
+     $search_vars['sortbegin'] = 
+		"<form style=\"margin:0\" method=\"POST\" id=\"form\" enctype=\"multipart/form-data\" action=\"browse.php?type=home\">";
+ 
+        $disablesorts = array('cw_lang','cw_warning','cw_words', 'pairing'  ); 
+
 		//require_once(__DIR__ . '/../../includes/pagesetup.php');
 		$catlist = efiction::catlist(); 
 		$charlist = efiction::charlist();
 		$classlist = efiction::classlist();
 		$classtypelist = efiction::classtypelist();
 		$ratingslist = $ratlist = efiction::ratingslist();
-
-		//temp
-		$template2 = 
-		'<section class="property-search-section style-two">
-        	<div class="auto-container">
-				<div class="property-search-form-two wow fadeInUp">
-					<div class="title"><h5>Search For Stories</h5></div>
-                		<div class="form-inner">
-								<div id="sortform">
-                                   {sortbegin} 
-									<div class="row">
-											{categorymenu}
-											{charactermenu1} {charactermenu2} {pairingsmenu} {ratingmenu} {classmenu} {sortmenu} {completemenu} 
-									</div>
-									</div>
-									{sortend}
-								</div> 
-							 
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>';
         
-        $template = 
-		'<section class="property-search-section">
-		      <div class="auto-container">
-			     <div class="property-search-tabs tabs-box">
-                    <div class="property-search-form">
-						<div id="sortform" class="property-search-form-3col">
-                             {sortbegin} 
-									<div class="row">
-									   {categorymenu} {classmenu} {ratingmenu}  {completemenu}    {sortmenu}  
-									</div>
-                             {sortend}
-						</div>			
-					</div>		 
-			 	</div>
-			</div>
-		</div>
-	</section>';
-
-		$var['sortbegin'] = 
-		"<form style=\"margin:0\" method=\"POST\" id=\"form\" enctype=\"multipart/form-data\" action=\"browse.php?type=home\">";
-
-		/* CATEGORIES */
-		if($catlist && !in_array("categories", $disablesorts)) {
-			if(count($catid) > 0) $thiscat = $catid[0];
-			else $thiscat = -1;
-			$catmenu = "<div class='form-group col-lg-4 col-md-6 col-sm-12 '><select class=\"textbox custom-select-box\"  name=\"catid\" id=\"catid\"
-			onChange='browseCategories(\"catid\")'><option value=\"-1\">".($thiscat > 0 ? _BACK2CATS : _CATEGORIES)."</option>\n";
-			foreach($catlist as $cat => $info) {
-				if($info['pid'] == $thiscat || $cat == $thiscat) $catmenu .= "<option value=\"$cat\"".($thiscat == $cat ? " selected" : "").">".$info['name']."</option>\n";
-			}
-			$catmenu .= "</select></div>";
-
-			$var['categorymenu'] = $catmenu;
-		}
- 
+    	/* CATEGORIES */
+    	if($catlist && !in_array("categories", $disablesorts)) {
+    		if(count($catid) > 0) $thiscat = $catid[0];
+    		else $thiscat = -1;
+    		$catmenu = "<select name=\"catid\" id=\"catid\"
+    		onChange='browseCategories(\"catid\")'><option value=\"-1\">".($thiscat > 0 ? _BACK2CATS : _CATEGORIES)."</option>\n";
+    		foreach($catlist as $cat => $info) {
+    			if($info['pid'] == $thiscat || $cat == $thiscat) $catmenu .= "<option value=\"$cat\"".($thiscat == $cat ? " selected" : "").">".$info['name']."</option>\n";
+    		}
+    		$catmenu .= "</select>";
+    
+    		$search_vars['categorymenu'] = $catmenu;
+    	}
+    
          //todo fix
-         $disablesorts = array('cw_lang','cw_warning','cw_words', 'pairing'  ); 
-		if(count($charlist) > 0 && !in_array("characters", $disablesorts)) {
-			$charactermenu1 = "<div class='form-group col-lg-4 col-md-6 col-sm-12 hidden-sm-down '><select class=\"textbox custom-select-box\"  name=\"charlist1\" id=\"charlist1\">\n";
+     
+		 if(count($charlist) > 0 && !in_array("characters", $disablesorts)) {
+			$charactermenu1 = "<select name=\"charlist1\" id=\"charlist1\">\n";
 			$charactermenu1 .= "<option value=\"0\">"._CHARACTERS."</option>\n";
-			$charactermenu2 = "<div class='form-group col-lg-4 col-md-6 col-sm-12 hidden-sm-down '><select class=\"textbox custom-select-box\"  name=\"charlist2\" id=\"charlist2\">\n";
+			$charactermenu2 = "<select name=\"charlist2\" id=\"charlist2\">\n";
 			$charactermenu2 .= "<option value=\"0\">"._CHARACTERS."</option>\n";
 			$categories[] = -1;
 			//$categories = array_merge($categories, $catid);
@@ -264,33 +236,14 @@ class efiction_shortcodes extends e_shortcode
 					$charactermenu2 .= ">".$info['name']."</option>\n";
 				}
 			}
-			$charactermenu1 .= "</select></div>";
-			$charactermenu2 .= "</select></div>";
-			if($type != "characters") $var['charactermenu1']  = $charactermenu1 ;
-			$var['charactermenu2']  = $charactermenu2 ;
+			$charactermenu1 .= "</select>";
+			$charactermenu2 .= "</select>";
+			if($type != "characters") $search_vars['charactermenu1']  = $charactermenu1 ;
+			$search_vars['charactermenu2']  = $charactermenu2 ;
 		}
-
-			// To avoid throwing warnings we need to define $classopts and tell it how many elements it should have.
-			if(!in_array("classes", $disablesorts)) {
-				$classopts = array();  
-				foreach($classlist as $id => $vars) {
-                    
-					if(empty($classopts[$vars['type']])) $classopts[$vars['type']] = "";
-					$classopts[$vars['type']] = $classopts[$vars['type']]."<option value=\"$id\"".(isset($classin) && is_array($classin) && in_array($id, $classin) ? " selected" : "").">".$vars['name']."</option>\n";
-				}
-				$allclasses = "";  
-				foreach($classopts as $type => $opts) {
-					if(empty($type) || in_array($classtypelist[$type]['name'], $disablesorts)) continue; // Because of the way we defined $classopts we need to skip the empty first element.
-					$opts = "<option value=\"\">".$classtypelist[$type]['title']."</option>$opts";
-					$tmp = $classtypelist[$type]['name']."menu"; 
-					$var[$tmp] = "<div class='form-group col-lg-4 col-md-6 col-sm-12'><select name=\"".$classtypelist["$type"]['name']."\">\n$opts</select></div>";
-					$allclasses .= "<div class='form-group col-lg-4 col-md-6 col-sm-12'><select class=\"textbox custom-select-box\"  name=\"".$classtypelist["$type"]['name']."\">\n$opts</select></div>";
-				}
-				$var['classmenu'] = $allclasses;
-			}
-
-			if(!in_array("ratings", $disablesorts)) {
-				$ratingmenu = "<div class='form-group col-lg-4 col-md-6 col-sm-12'><select class=\"textbox custom-select-box\"  name=\"rating\">\n";
+        
+        if(!in_array("ratings", $disablesorts)) {
+				$ratingmenu = " <select class=\"textbox custom-select-box\"  name=\"rating\">\n";
 				$ratingmenu .= "<option value=\"0\">"._RATINGS."</option>\n";
 				if(!isset($ratingslist)) $ratingslist = array( );
 				foreach($ratingslist as $r => $rinfo) {
@@ -299,25 +252,58 @@ class efiction_shortcodes extends e_shortcode
 						$ratingmenu .= " selected";
 					$ratingmenu .= ">".$rinfo['name']."</option>\n";
 				}
-				$ratingmenu .= "</select></div>";
-				$var['ratingmenu'] = $ratingmenu;
-			}
-			if(!in_array("sorts", $disablesorts)) 
-			$var['sortmenu']  = "<div class='form-group col-lg-4 col-md-6 col-sm-12'><select class=\"textbox custom-select-box\"  name=\"sort\">\n<option value=''>"._SORT."</option><option value=\"alpha\"".(!$defaultsort ? " selected" : "").">"._ALPHA."</option>\n<option value=\"update\"".($defaultsort == 1 ? " selected" : "").">"._MOSTRECENT."</option>\n</select></div>";
-
-			if(!in_array("complete", $disablesorts)) 
-			$var['completemenu'] = "<div class='form-group col-lg-4 col-md-6 col-sm-12'><select class=\"textbox custom-select-box\"  name=\"complete\">\n<option value=\"all\"".($complete == "all" ? " selected" : "").">"._ALLSTORIES."</option>\n<option value=\"1\"".($complete == 1 ? " selected" : "").">"._COMPLETEONLY."</option>\n<option value=\"0\"".($complete && $complete != "all" && $complete != 1 ? " selected" : "").">"._WIP."</option>\n</select></div>" ;
-	
-
-            $var['sortend'] = "<div class=\"form-group col-lg-12 col-md-6 col-sm-12 text-center\">
-                                        <button type=\"submit\" class=\"theme-btn btn-style-one col-md-3\"><span class=\"btn-title\">"._GO."</span></button>
+				$ratingmenu .= "</select> ";
+				$search_vars['ratingmenu'] = $ratingmenu;
+	    }
+            
+        
+        
+       $search_vars['sortend'] = "<div class=\"form-group col-lg-12 col-md-6 col-sm-12 text-center\">
+                                        <button type=\"submit\" class=\"uix-btn uix-btn__border--thin uix-btn__margin--b uix-btn__size--s uix-btn__bg--primary\">"._GO."</button>
                                 </div>
                             </form>";
+                            
+ 			// To avoid throwing warnings we need to define $classopts and tell it how many elements it should have.
+			if(!in_array("classes", $disablesorts)) {
+				$classopts = array();  
+				foreach($classlist as $id => $vars) {
+                    
+					if(empty($classopts[$vars['type']])) $classopts[$vars['type']] = "";
+					$classopts[$vars['type']] = $classopts[$vars['type']]."<option value=\"$id\"".(isset($classin) && is_array($classin) && in_array($id, $classin) ? " selected" : "").">".$vars['name']."</option>\n";
+				}
+				$allclasses = "";  
  
+                $wrap_start = $browse_template['wrap_start'];
+                $wrap_end = $browse_template['wrap_end'];
+				foreach($classopts as $type => $opts) { 
+					if(empty($type) || in_array($classtypelist[$type]['name'], $disablesorts)) continue; // Because of the way we defined $classopts we need to skip the empty first element.
+					$opts = "<option value=\"\">".$classtypelist[$type]['title']."</option>$opts";
+					$tmp = $classtypelist[$type]['name']."menu"; 
+					$search_vars[$tmp] = " <select name=\"".$classtypelist["$type"]['name']."\">\n$opts</select> ";
+                    
+					$allclasses .= $wrap_start." <select name=\"".$classtypelist["$type"]['name']."\">\n$opts</select> ".$wrap_end;  
+				}
+      
+				$search_vars['classmenu'] = $allclasses;
+			}
 
-		$text .= e107::getParser()->simpleParse($template, $var);
+
+			if(!in_array("sorts", $disablesorts)) 
+			$search_vars['sortmenu']  = "<select class=\"textbox custom-select-box\"  name=\"sort\">\n<option value=''>"._SORT."</option><option value=\"alpha\"".(!$defaultsort ? " selected" : "").">"._ALPHA."</option>\n<option value=\"update\"".($defaultsort == 1 ? " selected" : "").">"._MOSTRECENT."</option>\n</select>";
+
+			if(!in_array("complete", $disablesorts)) 
+			$search_vars['completemenu'] = "<select class=\"textbox custom-select-box\"  name=\"complete\">\n<option value=\"all\"".($complete == "all" ? " selected" : "").">"._ALLSTORIES."</option>\n<option value=\"1\"".($complete == 1 ? " selected" : "").">"._COMPLETEONLY."</option>\n<option value=\"0\"".($complete && $complete != "all" && $complete != 1 ? " selected" : "").">"._WIP."</option>\n</select>" ;
+	
+
+       
+     $sc_browse->setVars($search_vars);
+     $text = e107::getParser()->parseTemplate($browse_template['index'], true, $sc_browse);
+ 
      return $text;
+   
     
     }
+
+	 
  
 }

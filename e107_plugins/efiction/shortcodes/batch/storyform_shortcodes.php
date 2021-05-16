@@ -103,36 +103,25 @@ class plugin_efiction_storyform_shortcodes extends e_shortcode
     public function sc_story_edit_title()
     {
         $title = $this->var['title'];
-        $text = e107::getForm()->text('title', htmlentities($title), 200, array('size' => 'large', 'required' => 1, 'id' => 'storytitle'));
+        $text = e107::getForm()->text('title', htmlentities($title), 200, array('size' => 'large', 'required' => 1, 'class'=>'form-control', 'id' => 'storytitle'));
         return $text;
     }
 
     /* {STORY_EDIT_SUMMARY} */
     public function sc_story_edit_summary()
     {
-        $tinyMCE = efiction::settings('tinyMCE');
-        if ($tinyMCE) {
-            $text = e107::getForm()->bbarea('summary', $this->var['summary']);
-        } else {
-            $text = e107::getForm()->textarea('summary', $this->var['summary'], '6', '58', array('class' => 'col-md-12', 'required' => 1, ));
-        }
+        $tinyMCE = efiction::settings('tinyMCE');  
+         $text = e107::getForm()->textarea('summary', $this->var['summary'], '3', '58', array('class' => 'useeditor form-control', 'required' => 1, ));
         return $text;
     }
 
     /* {STORY_EDIT_STORYNOTES} */
     public function sc_story_edit_storynotes()
     {
-        $tinyMCE = efiction::settings('tinyMCE');
-        if ($tinyMCE) {
-            $text = e107::getForm()->bbarea('storynotes', $this->var['storynotes']);
-        } else {
-            $text = e107::getForm()->textarea('storynotes', $this->var['storynotes'], '6', '58', array('class' => 'col-md-12'));
-        }
-
+        $text = e107::getForm()->textarea('storynotes', $this->var['storynotes'], '3', '58', array('class' => 'form-control',  ));
         return $text;
     }
-
-
+ 
 
     /* STORY_EDIT_CODEBLOCK */
     public function sc_story_edit_codeblock($parm)
@@ -166,7 +155,8 @@ class plugin_efiction_storyform_shortcodes extends e_shortcode
     public function sc_story_edit_rating()
     {
         $ratings = efiction::get_ratings_list();
-        $text = e107::getForm()->select('rid', $ratings, $this->var['rid'], array('required' => 1, 'class' => 'selectpicker form-control show-tick'), _RATING);
+        $text = '<label for=""rid">{LAN=_RATING}: </label><br>';
+        $text .= e107::getForm()->select('rid', $ratings, $this->var['rid'], array('required' => 1, 'data-width'=>'100%', 'class'=>'form-control select2-single'), _RATING);
 
         return $text;
     }
@@ -174,7 +164,8 @@ class plugin_efiction_storyform_shortcodes extends e_shortcode
     /* {STORY_EDIT_COMPLETE} */
     public function sc_story_edit_complete()
     {
-        $text = e107::getForm()->radio_switch('complete', $this->var['complete'], _YES, _NO);
+        $text = '<label for=""complete">{LAN=_COMPLETE}: </label><br>';
+        $text .= e107::getForm()->radio_switch('complete', $this->var['complete'], _YES, _NO);
 
         return $text;
     }
@@ -184,7 +175,7 @@ class plugin_efiction_storyform_shortcodes extends e_shortcode
     {
         if (isADMIN && uLEVEL < 4) {
             $values = array(1 => _CHAPTER, 2 => _STORY,  0 => _NO, );
-            $text .= '<label for="validated">'._VALIDATED.': </label><br>';
+            $text = '<label for="validated">'._VALIDATED.': </label><br>';
             $text .= e107::getForm()->radio('validated', $values, $this->var['validated']);
             return $text;
         }
@@ -283,11 +274,23 @@ class plugin_efiction_storyform_shortcodes extends e_shortcode
     /* {STORY_BUTTON_SAVE} */
     public function sc_story_button_save()
     {
-        
-        if($this->var['action'] == "editstory")  
-        $text = '<input type="submit" class="button btn btn-success" value="'._EDITSTORY.'" name="submit">';
-        else
-        $text = '<input type="submit" class="button btn btn-success" value="'._ADDSTORY.'" name="submit">';
+    
+        switch($this->var['action']) {
+          
+          case "editstory":
+            $text = '<input type="submit" class="button btn btn-success" value="'._EDITSTORY.'" name="submit">';
+            break;
+          case "newstory":
+              $text = '<input type="submit" class="button btn btn-success" value="'._ADDSTORY.'" name="submit">';
+              break;   
+          case "editchapter":
+            $text = '<input type="submit" class="button btn btn-success" value="'._EDITCHAPTER.'" name="submit">';
+            break;
+          case "newchapter":
+              $text = '<input type="submit" class="button btn btn-success" value="'.LAN_SAVE.'" name="submit">';
+              break;                       
+        }
+         
         return $text;
     }
 
@@ -306,9 +309,9 @@ class plugin_efiction_storyform_shortcodes extends e_shortcode
     /* {STORY_EDIT_STORYTEXT} == chapter text in fact */
     public function sc_story_edit_storytext()
     {
-        $tinyMCE = efiction::settings('tinyMCE');
+        $tinyMCE = efiction::settings('tinyMCE'); $tinyMCE = false;
         if ($tinyMCE) {
-            $text = e107::getForm()->bbarea('storytext', $this->var['storytext'], null, array('required' => true));
+            $text = e107::getForm()->bbarea('storytext', $this->var['storytext'], null, array('required' => true)); 
         } else {
             $text = e107::getForm()->textarea('storytext', $this->var['storytext'], '6', '58', array('class' => 'col-md-12', 'required' => true));
         }
@@ -337,7 +340,7 @@ class plugin_efiction_storyform_shortcodes extends e_shortcode
     /* {STORY_EDIT_CHAPTERNOTES} */
     public function sc_story_edit_chapternotes()
     {
-        $tinyMCE = efiction::settings('tinyMCE');
+        $tinyMCE = efiction::settings('tinyMCE'); $tinyMCE = false;
         if ($tinyMCE) {
             $text = e107::getForm()->bbarea('endnotes', $this->var['endnotes'] ) ;
         } else {

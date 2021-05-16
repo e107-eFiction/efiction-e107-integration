@@ -5,6 +5,23 @@ define ("LAN_EFICTION_READMORE", "Zistiť viac...");
 
 define ("LAN_RECENTSTORIES", "Preklady aktualizované za posledných [x] dní.");
 define ("LAN_REQUIRED_INFORMATION", "Povinné údaje");
+
+define ("LAN_EFICTION_ACCOUNT", "Account Info");
+define ("LAN_EFICTION_ADMINAREA", "Admin");
+define ("LAN_EFICTION_FEATURED", "Featured Stories");
+define ("LAN_EFICTION_HOME", "Home");
+define ("LAN_EFICTION_CHALLENGES", "Challenges");
+define ("LAN_EFICTION_LOGOUT", "Logout"); 
+define ("LAN_EFICTION_NEWS", "News Archive");
+define ("LAN_EFICTION_RSS", "<img src='"._BASEDIR."/images/xml.gif' alt='RSS' border='0'>");
+define ("LAN_EFICTION_RULES", "Rules");
+define ("LAN_EFICTION_TENS", "Top Tens");
+define ("LAN_EFICTION_TOS", "Terms of Service");
+
+define ("LAN_EFICTION_PARENTSERIES", "Parent Series");
+define ("LAN_EFICTION_MEMBER_SINCE", "Člen od");
+define ("LAN_EFICTION_MEMBERSHIP_STATUS", "Status členstva");
+define ("LAN_EFICTION_ACTIVITYBY", "Aktivita");
  
 define ("_ACTIONSUCCESSFUL", "Akcia bola úspešná.");
 define ("_ACTIONCANCELLED", "Požadovaná akcia zrušená.");

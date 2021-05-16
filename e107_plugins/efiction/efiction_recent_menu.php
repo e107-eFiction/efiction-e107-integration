@@ -71,7 +71,7 @@ if (class_exists('efiction')) {
         if (!isset($blocks['recent']['allowtags'])) {
             $stories['summary'] = e107::getParser()->toText($stories['summary']);
         } else {
-            $stories['summary'] = e107::getParser()->toHTML($this->var['summary'], true, 'SUMMARY');
+            $stories['summary'] = e107::getParser()->toHTML($stories['summary'], true, 'SUMMARY');
         }
 		$stories['sumlength'] = $sumlength;
         $sc->setVars($stories);

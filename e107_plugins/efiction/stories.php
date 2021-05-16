@@ -112,7 +112,10 @@ function preview_story($stories) {
 		$tpl->assign( "story", "<span style=\"font-size: ".(100 + ($textsize * 20))."%;\">".format_story($stories['storytext'])."</span>" );
 		$text .= $tpl->getOutputContent( );
 	}
-	return $text;
+ 
+  $text = e107::getParser()->parseTemplate($text, true);
+  $text =  e107::getRender()->tablerender($caption, $text, 'preview', true);
+  return $text;
 }
 
 // function to add new story to archives.
@@ -184,7 +187,7 @@ function newstory( ) {
 	else $coauthors = 0;
 // end variable declarations
 
-	if(isset($_POST['submit']) && ($_POST['submit'] == _ADDSTORY OR $_POST['submit'] == _EDITSTORY) && ((!$newchapter && (!$rid || !$title || !$summary || !$catid) || $storytext == "")))
+	if(isset($_POST['submit']) && ($_POST['submit'] == _ADDSTORY OR $_POST['submit'] == _EDITSTORY OR $_POST['submit'] == LAN_SAVE) && ((!$newchapter && (!$rid || !$title || !$summary || !$catid) || $storytext == "")))
 			$submit = _PREVIEW;
 	
     if (isset($_POST['submit'])) {
@@ -231,7 +234,7 @@ function newstory( ) {
 			$submit = _PREVIEW;
 		}
 	}
-	if(isset($_POST['submit']) && ($_POST['submit'] == _ADDSTORY OR $_POST['submit'] == _EDITSTORY) && !isset($submit)) 
+	if(isset($_POST['submit']) && ($_POST['submit'] == _ADDSTORY OR $_POST['submit'] == _EDITSTORY OR $_POST['submit'] == LAN_SAVE) && !isset($submit)) 
 	{
 
 		$result = dbquery("SELECT "._UIDFIELD." as uid, "._PENNAMEFIELD." as penname, "._EMAILFIELD." as email, validated FROM "._AUTHORTABLE.", ".TABLEPREFIX."fanfiction_authorprefs as ap WHERE "._UIDFIELD." = '$uid' AND ap.uid = "._UIDFIELD." LIMIT 1");
@@ -251,7 +254,7 @@ function newstory( ) {
 				$insert = dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_stories (title, summary, storynotes, catid, classes, charid,  rid, date, updated, uid, validated, rr, completed, wordcount, featured, coauthors) VALUES ('".addslashes($title)."', '".addslashes(format_story($summary))."', '".addslashes(format_story($storynotes))."', '".($catid ? implode(",", $catid) : "")."', '".($classes? implode(",", $classes) : "")."', '".($charid ? implode(",", $charid) : "")."', '$rid', now(), now(), '$uid', '$validated', '$rr', '$complete', '$wordcount', '$feat', '$coauthors')");
 				$sid = dbinsertid( );
 				$inorder = 1;
-			}
+ 	}
 			else {
 				$inorder = $_GET['inorder'] + 1;
 			}
@@ -610,7 +613,7 @@ function editchapter( $chapid ) {
 			$tpl->assign( "output", $output );
 			    $output = $tpl->getOutputContent();  
 				$output = e107::getParser()->parseTemplate($output, true);
-				e107::getRender()->tablerender($caption, $output, $current);
+				e107::getRender()->tablerender($caption, $output, 'editchapter');
 				dbclose( );
 				require_once(FOOTERF); 
 			dbclose( );
@@ -622,7 +625,7 @@ function editchapter( $chapid ) {
 	if(!isset($_POST['submit']) || $_POST['submit'] != _PREVIEW) {
 		$storyquery = dbquery("SELECT title, inorder, notes, endnotes, uid, storytext, sid FROM ".TABLEPREFIX."fanfiction_chapters WHERE chapid = '$chapid' LIMIT 1");
 		$story = dbassoc($storyquery);
-        print_a($story);
+  
 		$chaptertitle = stripslashes($story["title"]);
 		$storytext = $story["storytext"];
 		$inorder = $story["inorder"];
@@ -657,9 +660,7 @@ function editchapter( $chapid ) {
 
 function editstory($sid) {
 	global $tpl, $storiespath, $store, $allowed_tags, $uid, $admin, $tinyMCE, $up, $down, $dateformat, $classtypelist, $logging, $alertson;
-
-	
-
+ 
 	if(isset($admin) && isset($uid)) {
 		$author = dbquery("SELECT "._PENNAMEFIELD." FROM "._AUTHORTABLE." WHERE "._UIDFIELD." = '$uid' LIMIT 1");
 		$authorvalid = 1; // It's an admin edit so it's valid.
@@ -710,7 +711,7 @@ function editstory($sid) {
 		}
 		else $coauthors = 0;
 	}
-	if(isset($_POST['submit']) && ($_POST['submit'] == _ADDSTORY OR $_POST['submit'] == _EDITSTORY)) {
+	if(isset($_POST['submit']) && ($_POST['submit'] == _ADDSTORY OR $_POST['submit'] == _EDITSTORY OR $_POST['submit'] == LAN_SAVE))  {
  
 		$oldcats = isset($_POST['oldcats']) ? array_filter($_POST['oldcats'], "isNumber") : array( );
         
@@ -909,7 +910,7 @@ function editstory($sid) {
 			$tpl->assign( "output", $output );
 			    $output = $tpl->getOutputContent();  
 			$output = e107::getParser()->parseTemplate($output, true);
-			e107::getRender()->tablerender($caption, $output, $current);
+			 e107::getRender()->tablerender($caption, $output, 'editstory-913');
 			dbclose( );
 			require_once(FOOTERF); 
 			dbclose( );
@@ -919,7 +920,7 @@ function editstory($sid) {
  
 	$query = dbquery("SELECT DATE_FORMAT(date, '$dateformat') as date, wordcount, uid FROM ".TABLEPREFIX."fanfiction_stories WHERE sid = '$sid' LIMIT 1");
 	list($published, $wordcount, $storyuid) = dbrow($query);
-	$formbegin = "<div class=\"tblborder editstory\" width=\"80%\">
+	$formbegin = "<div class=\"tblborder editstory\"  >
 		<form METHOD=\"POST\" name=\"form\" action=\"stories.php?action=editstory".($admin ? "&amp;admin=1" : "")."&amp;sid=$sid\">";
  
 
@@ -962,7 +963,11 @@ function editstory($sid) {
 
 	}
 	$output .= " </form></div>";
-	return $output;
+    
+ 
+  $text =  e107::getRender()->tablerender($caption, $output, 'editstoryform', true);
+  return $text; 
+ 
 }
 // end editstory
 

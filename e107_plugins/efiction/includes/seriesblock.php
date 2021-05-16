@@ -81,9 +81,9 @@ if (!defined('e107_INIT')) { exit; }
 		$tpl->assign("addtofaves", $addtofaves);
 	}
 	if((isADMIN && uLEVEL < 4) || (USERUID != 0 && USERUID == $stories['uid'])) {
-		$tpl->assign("adminoptions", "<div class=\"adminoptions\"><span class='label'>"._ADMINOPTIONS.":</span> [<a href=\"series.php?action=add&amp;add=stories&amp;seriesid=".$stories['seriesid']."\">"._ADD2SERIES."</a>] [<a href=\"series.php?action=edit&amp;seriesid=".$stories['seriesid']."\">"._EDIT."</a>] [<a href=\""._BASEDIR."series.php?action=delete&amp;seriesid=".$stories['seriesid']."\">"._DELETE."</a>]".(!empty($adminlinks) ? " ".$adminlinks : "")."</div>");
+		$tpl->assign("adminoptions", "<div class=\"adminoptions\"><span class='label'>"._ADMINOPTIONS.":</span> [<a href=\"manageseries.php?action=add&amp;add=stories&amp;seriesid=".$stories['seriesid']."\">"._ADD2SERIES."</a>] [<a href=\"series.php?action=edit&amp;seriesid=".$stories['seriesid']."\">"._EDIT."</a>] [<a href=\""._BASEDIR."series.php?action=delete&amp;seriesid=".$stories['seriesid']."\">"._DELETE."</a>]".(!empty($adminlinks) ? " ".$adminlinks : "")."</div>");
 	}
-	else if($stories['isopen'] == 2 && USERUID) $tpl->assign("adminoptions", "[<a href=\"series.php?action=add&amp;add=stories&amp;seriesid=".$stories['seriesid']."\">"._ADD2SERIES."</a>] ".(!empty($adminlinks) ? " ".$adminlinks : ""));
-	$tpl->assign("reportthis", "[<a href=\"report.php?action=report&amp;url=series.php?seriesid=".$stories['seriesid']."\">"._REPORTTHIS."</a>]");
+	else if($stories['isopen'] == 2 && USERUID) $tpl->assign("adminoptions", "[<a href=\"manageseries.php?action=add&amp;add=stories&amp;seriesid=".$stories['seriesid']."\">"._ADD2SERIES."</a>] ".(!empty($adminlinks) ? " ".$adminlinks : ""));
+	$tpl->assign("reportthis", "[<a href=\"report.php?action=report&amp;url=manageseries.php?seriesid=".$stories['seriesid']."\">"._REPORTTHIS."</a>]");
 	$count++;
 ?>

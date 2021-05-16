@@ -31,6 +31,7 @@ if(isset($_GET['type'])) $type = descript($_GET['type']);
 else $type = false;
 
 $browse_vars['type'] = $type;
+ 
 
 if($type) {
   $template_key =  $type;  
@@ -155,15 +156,21 @@ if($type) {
 		}
 		if(count($charseries) > 0) $scountquery[] = "(".implode(" AND ", $charseries).")";
 	}
+    
 	$rid = array( ); $rating = array( );
-	if(!empty($_REQUEST['rid'])) $rid = is_array($_REQUEST['rid']) ? implode(",", $_REQUEST['rid']) : array($_REQUEST['rid']);
-	if(!empty($_REQUEST['rating'])) $rating = is_array($_REQUEST['rating']) ? implode(",", $_REQUEST['rating']) : array($_REQUEST['rating']);
+	if(!empty($_REQUEST['rid'])) $rid = is_array($_REQUEST['rid']) ? implode(",", $_REQUEST['rid']) : array($_REQUEST['rid']);  
+	if(!empty($_REQUEST['rating'])) $rating = is_array($_REQUEST['rating']) ? implode(",", $_REQUEST['rating']) : array($_REQUEST['rating']);   
 	$rid = array_merge($rid, $rating);
+      
+    $browse_vars['rating_selected'] = $rid;
+  
 	if(!empty($rid)) {
 		$query[] = "FIND_IN_SET(stories.rid, '".(implode(",", $rid))."') > 0";
 		$countquery[]  = "FIND_IN_SET(stories.rid, '".(implode(",", $rid))."') > 0";
 	}
 	$complete = "all";
+    
+    
 	if(isset($_REQUEST['complete'])) {
 		if($_REQUEST['complete'] == 1) {
 			$query[] = "stories.completed = '1'";
@@ -326,19 +333,7 @@ if($type) {
 			$tpl->assign("classmenu", $allclasses);
 		}
         
-		if(!in_array("ratings", $disablesorts)) {
-			$ratingmenu = "<div class='form-group'><select class=\"textbox\" name=\"rating\">\n";
-			$ratingmenu .= "<option value=\"0\">"._RATINGS."</option>\n";
-			if(!isset($ratingslist)) $ratingslist = array( );
-			foreach($ratingslist as $r => $rinfo) {
-				$ratingmenu .= "<option value=\"".$r."\"";
-				if(isset($rid) && in_array($r, $rid))
-					$ratingmenu .= " selected";
-				$ratingmenu .= ">".$rinfo['name']."</option>\n";
-			}
-			$ratingmenu .= "</select></div>\n";
-			$tpl->assign("ratingmenu"   , $ratingmenu );
-		}
+ 
 		if(!in_array("sorts", $disablesorts)) $tpl->assign("sortmenu", "<div class='form-group'><select class=\"textbox custom-select-box\" name=\"sort\">\n<option value=''>"._SORT."</option><option value=\"alpha\"".(!$defaultsort ? " selected" : "").">"._ALPHA."</option>\n<option value=\"update\"".($defaultsort == 1 ? " selected" : "").">"._MOSTRECENT."</option>\n</select></div>\n");
 		if(!in_array("complete", $disablesorts)) $tpl->assign("completemenu", "<div class='form-group'><select class=\"textbox custom-select-box\" name=\"complete\">\n<option value=\"all\"".($complete == "all" ? " selected" : "").">"._ALLSTORIES."</option>\n<option value=\"1\"".($complete == 1 ? " selected" : "").">"._COMPLETEONLY."</option>\n<option value=\"0\"".($complete && $complete != "all" && $complete != 1 ? " selected" : "").">"._WIP."</option>\n</select></div>\n");
 		$codeblocks = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'browsesorts'");
@@ -352,9 +347,39 @@ if($type) {
     else {
        $tpl->assign("column-width", "col-md-12");
     }
+    
+     $browse_template = e107::getTemplate('efiction', 'browse',  $template_key);
+     
+     //values for searching 
+     $tmp = ['sortbegin', 'categorymenu', 'charactermenu1', 'charactermenu2', 'pairingsmenu',  'classmenu', 'sortmenu', 'completemenu', 'sortend' ];
+     foreach($tmp AS $oldsc) {
+       $oldval = $tpl->getVarValue($oldsc); 
+       $browse_vars[$oldsc] = $oldval;
+     }
+     
+     $browse_vars['output'] = $output;
+     $browse_vars['seriesblock'] = $seriesblock;
+     
+     $tablerender = varset($browse_template['caption'], $current);
+     //full parsing because wrapper
+    
+     $sc_browse = e107::getScParser()->getScObject('efiction_shortcodes', 'efiction', false);
+     $sc_browse->wrapper('browse/series');
+     
+     $browse_vars['let'] = $let;
+     
+     $browse_vars['offset'] = $offset;
+      
+     $sc_browse->setVars($browse_vars);    
+     
+     $caption = e107::getParser()->parseTemplate($browse_template['caption'], true, $sc_browse);
+     $text = e107::getParser()->parseTemplate($browse_template['body'], true, $sc_browse);
+     e107::getRender()->tablerender($caption, $text, $current);
+     require_once(FOOTERF); 
+     exit;    
 }
 else  {
-
+    //index page
     $caption = _BROWSE;
     $browse_vars['caption'] = $caption;
     
@@ -384,45 +409,12 @@ else  {
 		}
 	}
 	$output .= "</div>".($displaycolumns ? "</div>" : "")."<div class='cleaner'>&nbsp;</div></div>";
-} 
 
-if($template_key) {
  
- $browse_template = e107::getTemplate('efiction', 'browse', $template_key);
  
- //values for searching 
- $tmp = ['sortbegin', 'categorymenu', 'charactermenu1', 'charactermenu2', 'pairingsmenu', 'ratingmenu', 'classmenu', 'sortmenu', 'completemenu', 'sortend' ];
- foreach($tmp AS $oldsc) {
-   $oldval = $tpl->getVarValue($oldsc); 
-   $browse_vars[$oldsc] = $oldval;
- }
- 
- $browse_vars['output'] = $output;
- $browse_vars['seriesblock'] = $seriesblock;
- 
- $tablerender = varset($browse_template['caption'], $current);
- //full parsing because wrapper
-
- $sc_browse = e107::getScParser()->getScObject('efiction_shortcodes', 'efiction', false);
- $sc_browse->wrapper('browse/series');
- 
- $browse_vars['let'] = $let;
- 
- $browse_vars['offset'] = $offset;
-  
- $sc_browse->setVars($browse_vars);    
- 
- $caption = e107::getParser()->parseTemplate($browse_template['caption'], true, $sc_browse);
- $text = e107::getParser()->parseTemplate($browse_template['body'], true, $sc_browse);
- e107::getRender()->tablerender($caption, $text, $current);
- require_once(FOOTERF); 
- exit;
-}
-else {
     $tpl->assign("output", $output);
     $output = $tpl->getOutputContent();    
     $output = e107::getParser()->parseTemplate($output, true);  
     e107::getRender()->tablerender($caption, $output, $current);
 	dbclose( );
-    require_once(FOOTERF); 
-}
+} 
