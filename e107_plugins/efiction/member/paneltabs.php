@@ -31,8 +31,8 @@ else {
 			$itemcount = 0;
 			//counting related records ? seriesby is not used ?
 			if($panel['panel_name'] == "storiesby") {
-				$itemcount = e107::getDb()->retrieve("SELECT COUNT(stories) AS itemcount FROM ".TABLEPREFIX."fanfiction_authorprefs WHERE uid = '$uid'");
-			}
+				$itemcount = e107::getDb()->retrieve("SELECT stories AS itemcount FROM ".TABLEPREFIX."fanfiction_authorprefs WHERE uid = '$uid'");
+ 			}
 			else {  //no idea what is this there are only admin validate panels
 				if(substr($panel['panel_name'], 0, 3) == "val") {
 					$table = substr($panel['panel_name'], 3);

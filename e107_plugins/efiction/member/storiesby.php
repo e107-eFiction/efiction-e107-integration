@@ -45,8 +45,7 @@ if($numstories) {
     FROM ("._AUTHORTABLE.", ".TABLEPREFIX."fanfiction_stories as stories) LEFT JOIN ".TABLEPREFIX."fanfiction_coauthors as coauth ON coauth.sid = stories.sid 
     WHERE "._UIDFIELD." = stories.uid AND stories.validated > 0 AND (stories.uid = '$uid' OR coauth.uid = '$uid') GROUP BY stories.sid "._ORDERBY." LIMIT $offset, $itemsperpage", true);
 
-	$key = varset($key,'listings');  //supported: reviewblock, todo use full power of e107 templating
-    
+	$key = varset($key,'listings');  //supported: reviewblock, todo use full power of e107 templating   
 	$story_template = e107::getTemplate('efiction', $key, 'storyblock');
 	$sc_story = e107::getScBatch('story', 'efiction');
 	$sc_story->wrapper('story/story');

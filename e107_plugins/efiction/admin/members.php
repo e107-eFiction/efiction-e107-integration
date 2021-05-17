@@ -112,7 +112,7 @@ $confirm = isset($_GET['confirm']) ? $_GET['confirm'] : false;
 		$output .= "<div class='sectionheader'>"._REVOKEVAL."</div>";
 		if($confirm == "yes")
 		{
-			dbquery("UPDATE ".TABLEPREFIX."fanfiction_authorprefs SET validated = '0' WHERE uid = '$_GET[revoke]'");
+			dbquery("UPDATE ".TABLEPREFIX."fanfiction_authorprefs SET validated = 0 WHERE uid = '$_GET[revoke]'");
 			$output .= write_message(_ACTIONSUCCESSFUL);
 		}
 		else if ($confirm == "no")
@@ -143,8 +143,9 @@ $confirm = isset($_GET['confirm']) ? $_GET['confirm'] : false;
 	else if(isset($_GET["validate"]) && isNumber($_GET["validate"])) {
 		$output .= "<div class='sectionheader'>"._NONVALMEMBERS."</div>";
 		if($confirm == "yes") {
-			if(check_prefs($_GET['validate'])) dbquery("UPDATE ".TABLEPREFIX."fanfiction_authorprefs SET validated = '1' WHERE uid = '".$_GET['validate']."'");
-			else dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_authorprefs(`uid`, `validated`) VALUES('".$_GET['validate']."', '1')");
+			if(check_prefs($_GET['validate'])) e107::getDb()->gen("UPDATE ".TABLEPREFIX."fanfiction_authorprefs SET validated = 1 WHERE uid = '".$_GET['validate']."'");
+			else e107::getDb()->gen("INSERT INTO ".TABLEPREFIX."fanfiction_authorprefs(`uid`, `validated`) VALUES('".$_GET['validate']."', '1')");
+ 
 			$output .= write_message(_ACTIONSUCCESSFUL);
 		}
 		else if ($confirm == "no") {
@@ -201,7 +202,7 @@ $confirm = isset($_GET['confirm']) ? $_GET['confirm'] : false;
 				exit();
 			}
 			else {
-				$where = " WHERE author.admincreated = '1'";
+				$where = " WHERE author.admincreated = 1";
 				$do = "release";
 				$caption = _INPUTBYADMIN;
 				$message = write_message(_RELEASEAUTHORS);
@@ -214,7 +215,7 @@ $confirm = isset($_GET['confirm']) ? $_GET['confirm'] : false;
 			$caption = _ADMINS;
 		}
 		else if($list == "noval") {
-			$where = " WHERE  ap.validated IS NULL OR ap.validated = '0'";
+			$where = " WHERE  ap.validated IS NULL OR ap.validated = 0";
 			$do = "validate";
 			$caption = _NONVALMEMBERS;
 		}
@@ -266,6 +267,7 @@ $confirm = isset($_GET['confirm']) ? $_GET['confirm'] : false;
 		$pagelink = "admin.php?action=members&amp;do=list&amp;list=$list&amp;".($let ? "let=$let&amp;" :"");
 
 		include(_BASEDIR."includes/members_list.php");
+         
 		if(_AUTHORTABLE != TABLEPREFIX."fanfiction_authors as author") {
 			$fieldtest = dbquery("SHOW COLUMNS FROM ".substr(_AUTHORTABLE, 0, strlen(_AUTHORTABLE) - 9)." LIKE 'admincreated'");
 			if(dbnumrows($fieldtest)) $output .= write_message("<a href=\"admin.php?action=members&do=add\">"._ADDAUTHOR."</a>");

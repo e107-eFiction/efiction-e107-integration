@@ -21,7 +21,8 @@ define ("LAN_EFICTION_TOS", "Terms of Service");
 define ("LAN_EFICTION_PARENTSERIES", "Parent Series");
 define ("LAN_EFICTION_MEMBER_SINCE", "Člen od");
 define ("LAN_EFICTION_MEMBERSHIP_STATUS", "Status členstva");
-define ("LAN_EFICTION_ACTIVITYBY", "Aktivita");
+define ("LAN_EFICTION_ACTIVITYBY", "Activity by");
+define ("LAN_EFICTION_RATED", "Rated");
  
 define ("_ACTIONSUCCESSFUL", "Akcia bola úspešná.");
 define ("_ACTIONCANCELLED", "Požadovaná akcia zrušená.");

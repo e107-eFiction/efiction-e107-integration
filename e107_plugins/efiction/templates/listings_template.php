@@ -64,7 +64,7 @@ $LISTINGS_TEMPLATE['seriesblock']['item'] =
     {SETIMAGE: w=0&h=0}
 	{SERIES_IMAGE: class=card-img-top&placeholder=true}
 	<div class="card-body">
-		<h4 class="card-title">{STORY_TITLE_LINK} {LAN=_BY} {SERIES_AUTHOR}
+		<h4 class="card-title">{SERIES_TITLE_LINK} {LAN=_BY} {SERIES_AUTHOR}
 		<small><span class="label">{LAN=LAN_EFICTION_RATED}:</span>  {SERIES_SCORE} [{SERIES_REVIEWS} - {SERIES_NUMREVIEWS}]</small></h4>
 		<p class="card-text"><span class="label">{LAN=_SUMMARY}: </span>{SERIES_SUMMARY: limit=100}</p>
 		<span class="label">{LAN=LAN_EFICTION_PARENTSERIES}:</span> {SERIES_PARENTSERIES}<br />

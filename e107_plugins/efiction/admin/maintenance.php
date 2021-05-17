@@ -30,13 +30,13 @@ if($maint == "update") {
 	if(file_exists("admin/update.php")) include_once("admin/update.php");
 }
 if($maint == "dates") {
-    $authorquery = "SELECT *, user_id AS e107_user_id, UNIX_TIMESTAMP(date) as date 
+    $authorquery = "SELECT *, user_id AS user_id, UNIX_TIMESTAMP(date) as date 
      FROM "._AUTHORTABLE." LEFT JOIN ".TABLEPREFIX."fanfiction_authorprefs as ap ON ap.uid = "._UIDFIELD    ;
 
     $authordata = e107::getDb()->retrieve($authorquery, true);
     foreach($authordata AS $author) {
      $uid = $author['uid'];    
-     $user_id = $author['e107_user_id'];    
+     $user_id = $author['user_id'];    
      $date = $author['date'];   
      if($user_id > 0 ) {
         $userinfo  = e107::user($user_id);   

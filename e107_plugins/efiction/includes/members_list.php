@@ -33,10 +33,13 @@ if (!defined('e107_INIT')) { exit; }
 		$colwidth = (100/ $displaycolumns) -1;
 		$count = 0;
 		$column = 1;
-		$authorquery = $authorquery. " ORDER BY "._PENNAMEFIELD." LIMIT $offset,$limit";
-		$result2 = dbquery($authorquery);
+		$authorquery = $authorquery. " ORDER BY "._PENNAMEFIELD." LIMIT $offset,$limit";  
+ 
+        $result2 = e107::getDb()->retrieve($authorquery, true);
+     
 		$output .= "<div id=\"columncontainer\"><div id=\"memberblock\">".($displaycolumns ? "<div class=\"column\">" : "");
-		while($author = dbassoc($result2)) {
+       //  while($author = e107::getDb()->fetch()) {
+        foreach($result2 AS $author) {
 			$count++;
 			if(empty($author['stories'])) $author['stories'] = 0; // For bridges site that may not have author prefs set.
 			$output .= (isset($authorlink) ? $authorlink : "<a href=\"viewuser.php?uid=").$author['uid']."\">".stripslashes($author['penname'])."</a> [".$author['stories']."]<br />\n";
