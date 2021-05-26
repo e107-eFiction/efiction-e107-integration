@@ -42,10 +42,7 @@ if (!defined('e107_INIT')) {
 }
 
 if (class_exists('efiction')) {
-    if (e_DEBUG) {
-        echo e107::getMessage()->addInfo('efiction class is available')->render();
-    }
-
+   
 	$template = e107::getTemplate('efiction', 'storyblock', 'random', true, true);
     $blocks = efiction::blocks();
 
@@ -72,14 +69,12 @@ if (class_exists('efiction')) {
         } else {
             $stories['summary'] = e107::getParser()->toHTML($stories['summary'], true, 'SUMMARY');
         }
-		$$stories['sumlength'] = $sumlength ;
+		$stories['sumlength'] = $sumlength ;
         $sc->setVars($stories);
         $text .= e107::getParser()->parseTemplate($template['item'], true, $sc);
     }
-} else {
-    if (e_DEBUG) {
-        echo e107::getMessage()->addError('efiction class is not set')->render();
-    }
+}  
+if($text) {
+  e107::getRender()->tablerender($caption, $start.$text.$end, $tablerender);
 }
 
-e107::getRender()->tablerender($caption, $start.$text.$end, $tablerender);

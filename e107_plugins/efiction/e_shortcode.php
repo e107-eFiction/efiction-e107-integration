@@ -87,6 +87,7 @@ class efiction_shortcodes extends e_shortcode
     
     /*
      Not needed with e107 menus and tablerender 
+     {EFICTION_BLOCK_CAPTION=info}
      {EFICTION_BLOCK_CAPTION=random}
      {EFICTION_BLOCK_CAPTION=categories}
      {EFICTION_BLOCK_CAPTION=recent}

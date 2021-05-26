@@ -10,6 +10,8 @@ if (!getperms('P')) {
 
 require_once 'admin_leftmenu.php';
 
+e107::lan('efiction', "blocks");  
+
 class fanfiction_blocks_ui extends e_admin_ui
 {
     protected $pluginTitle = 'efiction';
@@ -35,7 +37,7 @@ class fanfiction_blocks_ui extends e_admin_ui
     protected $fields = array (
         'checkboxes' => array('title' => '',  'type' => null,  'data' => null,  'width' => '5%',  'thclass' => 'center',  'forced' => true,  'class' => 'center',  'toggle' => 'e-multiselect',  'readParms' => array(),  'writeParms' => array(), ),
         'block_id' => array('title' => LAN_ID,  'data' => 'int',  'width' => '5%',  'help' => '',  'readParms' => array(),  'writeParms' => array(),  'class' => 'left',  'thclass' => 'left', 'forced' => true, ),
-        'block_name' => array('title' => LAN_TITLE,  'type' => 'text',  'data' => 'safestr',  'width' => 'auto',  'inline' => true,  'validate' => true,  'help' => '',  'readParms' => array(),  'writeParms' => array(),  'class' => 'left',  'thclass' => 'left', ),
+        'block_name' => array('title' => LAN_TITLE,  'type' => 'text',  'data' => 'safestr',  'width' => 'auto',   'validate' => true,  'help' => '',  'readParms' => array(),  'writeParms' => array(),  'class' => 'left',  'thclass' => 'left', ),
         'block_title' => array('title' => LAN_TITLE,  'type' => 'text',  'data' => 'safestr',  'width' => 'auto',  'inline' => true,  'help' => '',  'readParms' => array(),  'writeParms' => array(),  'class' => 'left',  'thclass' => 'left', ),
 
         'block_file' => array('title' => 'File',  'type' => 'text',  'data' => 'safestr',  'width' => 'auto',  'help' => '',  'readParms' => array(),  'writeParms' => array('size' => 'block-level'),  'class' => 'left',  'thclass' => 'left', ),
@@ -53,7 +55,14 @@ class fanfiction_blocks_ui extends e_admin_ui
     );
 
     public function init()
-    {
+	{
+
+		if ($this->getAction() === 'edit') {
+            
+                $this->fields['block_name']['readonly'] = true;
+            }
+       
+
     }
 
     // ------- Customize Create --------
@@ -94,48 +103,7 @@ class fanfiction_blocks_ui extends e_admin_ui
     {
         // do something
     }
-
-    // left-panel help menu area. (replaces e_help.php used in old plugins)
-    public function renderHelp()
-    {
-        $caption = LAN_HELP;
-        $text = '<p>The status should generally start off as 
-			0 for inactive.&nbsp; There are 3 status options for blocks: </p>
-		  <div align="center">
-
-			<center>
-			<table border="1" cellpadding="5" cellspacing="0" 
-			style="border-collapse: collapse" bordercolor="#111111">
-			  <tr>
-				<th colspan="2">Status</th>
-				<th>&nbsp;Associated .tpl file</th>
-				<th>Appears</th>
-			  </tr>
-			  <tr>
-				<td>0</td>
-				<td>Inactive</td>
-				<td>The block is off. </td>
-				<td>nowhere</td>
-			  </tr>
-			  <tr>
-				<td>1</td>
-				<td>Active</td>
-				<td>The block is on.</td>
-				<td>anywhere</td>
-			  </tr>
-			  <tr>
-				<td>2</td>
-				<td>Index only</td>
-				<td>index page only.</td>
-				<td>anywhere on the index page.</td>
-			  </tr>
-			  </table>
-			</center>
-		  </div>
-		  <p>&nbsp; </p>';
-
-        return array('caption' => $caption, 'text' => $text);
-    }
+ 
 }
 
 class fanfiction_blocks_form_ui extends e_admin_form_ui
@@ -146,9 +114,9 @@ class fanfiction_blocks_form_ui extends e_admin_form_ui
         $blocks = eFiction::blocks();
 
         $block_name = $this->getController()->getFieldVar('block_name');
-		
-        $filepath = e_PLUGIN.'efiction/blocks/'.$block_name.'/admin.php';
-        $optionpath = e_PLUGIN.'efiction/blocks/'.$block_name.'/admin_options.php';
+		$block_file = $this->getController()->getFieldVar('block_file');
+       
+        $optionpath = e_PLUGIN.'efiction/admin/blocks/'.$block_name.'/'.$block_name.'_options.php';
  
         //actual value
         if (!empty($curVal)) {
@@ -162,6 +130,12 @@ class fanfiction_blocks_form_ui extends e_admin_form_ui
 
             case 'write': // Edit Page
             
+            
+               //preview 
+               include e_PLUGIN.'efiction/blocks/'.$block_file;
+ 
+               $text = $content;
+         
                //e107 way
                if ((file_exists($optionpath))) {   
                     require_once $optionpath;

@@ -108,7 +108,7 @@ class eAuthors
     
  
     /* full author data related to e107 user ID */
-    public function get_author_data_by_user_id($user_id=null)
+    public static function get_author_data_by_user_id($user_id=null)
 	{
 		$user_id = intval($user_id);
 

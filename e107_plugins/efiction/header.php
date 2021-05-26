@@ -41,7 +41,7 @@ $settings = efiction::settings();
 if(isset($skin)) $globalskin = $skin; 
  
 $settings = efiction::settings();
-if(!defined("SITEKEY")) define("SITEKEY", $settings['sitekey']);
+if(!defined("SITEKEY")) define("SITEKEY", $settings['sitekey']);   
 unset($settings['sitekey']);
 if(!defined("TABLEPREFIX")) define("TABLEPREFIX", $settings['tableprefix']);
 unset($settings['tableprefix']);
@@ -104,23 +104,7 @@ if(isset($_GET['skin'])) {
 	$siteskin = $_GET['skin'];
     e107::getSession()->set(SITEKEY."_skin", $siteskin); 
 }
-
-$v = explode(".", $version);   
-include(_BASEDIR."version.php");  
-$newV = explode(".", $version);    
-//if($v[0] == $newV[0] && ($v[1] < $newV[1] || (isset($newV[2]) && $v[2] < $newV[2]))) {
-foreach($newV AS $k => $l) {
-	if($newV[$k] > $v[$k] || (!empty($newV[$k]) && empty($v[$k]))) {
-		if(isADMIN && e_PAGE != "update.php") {
-			header("Location: update.php");
-		}
-		else if(!isADMIN && e_PAGE != "maintenance.php" && !(isset($_GET['action']) && $_GET['action'] == "login")) {
-			header("Location: maintenance.php");
-			exit( );
-		}
-	}
-}
-
+ 
 if(e107::getSession()->is(SITEKEY."_skin")) $siteskin = e107::getSession()->get(SITEKEY."_skin");
 if($maintenance && !isADMIN && e_PAGE != "maintenance.php" && !(isset($_GET['action']) && $_GET['action'] == "login")) {
 	header("Location: maintenance.php");
@@ -140,8 +124,12 @@ else $skindir = _BASEDIR."default_tpls";
 
 
 if(USERUID) {
-	$prefs = dbquery("SELECT sortby, storyindex, tinyMCE FROM ".TABLEPREFIX."fanfiction_authorprefs WHERE uid = '".USERUID."'");
-	if(dbnumrows($prefs)) list($defaultsort, $displayindex, $tinyMCE) = dbrow($prefs);
+	$my_prefs = e107::getDb()->retrieve("SELECT sortby, storyindex, tinyMCE FROM ".TABLEPREFIX."fanfiction_authorprefs WHERE uid = '".USERUID."'");
+	if($my_prefs) {
+       $defaultsort = $my_prefs['sortby'];
+       $displayindex = $my_prefs['storyindex'];
+       $tinyMCE = $my_prefs['tinyMCE'];
+    }
 }
 if(isset($_REQUEST['sort'])) $defaultsort = $_REQUEST['sort'] == "update" ? 1 : 0;
 define("_ORDERBY", " ORDER BY ".($defaultsort == 1 ? "updated DESC" : "stories.title ASC"));

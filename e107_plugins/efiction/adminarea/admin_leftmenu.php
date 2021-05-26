@@ -15,10 +15,10 @@ class efiction_adminArea extends e_admin_dispatcher
 			'uipath' 		=> null
 		),
  
-		'messages'	=> array(
-			'controller' 	=> 'fanfiction_messages_ui',
+		'custpages'	=> array(
+			'controller' 	=> 'fanfiction_custpages_ui',
 			'path' 			=> null,
-			'ui' 			=> 'fanfiction_messages_form_ui',
+			'ui' 			=> 'fanfiction_custpages_form_ui',
 			'uipath' 		=> null
 		),
 		
@@ -32,27 +32,35 @@ class efiction_adminArea extends e_admin_dispatcher
 	);
 	
 	protected $adminMenu = array(
-
-	//	'main/list'			=> array('caption'=> LAN_MANAGE, 'perm' => 'P'),  
-	//	'main/create'		=> array('caption'=> LAN_CREATE, 'perm' => 'P'),
-        'main/dasboard'		=> array('caption'=> 'SETTINGS', 'perm' => 'P',  'perm' => '0', 'url'=>'admin_settings.php'),    
+        'main/dasboard'		=> array('caption'=> LAN_EFICTION_ADMIN_PANELS,   'perm' => '0', 'url'=>'admin_settings.php'),    
         'divider2'          => array('divider'=>	true),
-        'messages/list'		=> array('caption'=> LAN_EFICTION_CUSTPAGES, 'perm' => 'P',  'perm' => '0', 'url'=>'admin_messages.php'),  
-		'messages/create'	=> array('caption'=> LAN_EFICTION_ADDCUSTPAGE, 'perm' => 'P',  'perm' => '0', 'url'=>'admin_messages.php'),   
-        'blocks/list'		=> array('caption'=> LAN_EFICTION_BLOCKS, 'perm' => 'P',  'perm' => '0', 'url'=>'admin_blocks.php'),  
-		'blockscreate'		=> array('caption'=> LAN_EFICTION_ADDBLOCK, 'perm' => 'P',  'perm' => '0', 'url'=>'admin_blocks.php'),         
- 
-		// 'main/div0'      => array('divider'=> true),
-		// 'main/custom'		=> array('caption'=> 'Custom Page', 'perm' => 'P'),
-		
+        'custpages/list'	=> array('caption'=> LAN_EFICTION_CUSTPAGES,  'perm' => 'P', 'url'=>'admin_custpages.php'),  
+		'custpages/create'	=> array('caption'=> LAN_EFICTION_ADDCUSTPAGE,  'perm' => 'P', 'url'=>'admin_custpages.php'),   
+        'blocks/list'		=> array('caption'=> LAN_EFICTION_BLOCKS,   'perm' => 'P', 'url'=>'admin_blocks.php'),  
+		'blockscreate'		=> array('caption'=> LAN_EFICTION_ADDBLOCK,   'perm' => 'P', 'url'=>'admin_blocks.php'),         
 	);
 
 	protected $adminMenuAliases = array(
-		'main/edit'	=> 'main/list'				
+		'main/edit'	=> 'main/list',
+		'custpages/edit'	=> 'custpages/list'				
 	);	
 	
 	protected $menuTitle = 'efiction';  
+
+	function init() {
+
+		switch(e_PAGE) {
+			case 'admin_custpages.php':
+				$this->defaultAction = 'list';
+				$this->defaultMode = 'custpages';
+			break;
+			
+		}
+
+
+	}
  
 }
+
 
  

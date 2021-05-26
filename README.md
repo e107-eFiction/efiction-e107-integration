@@ -109,6 +109,33 @@ _Important_: Don't use e107 EUA in any case. It complicates things.
 - [ ] add delete or set level 4 for deleted e107 user
 - [ ] check in clanmmember plugin for creating clanmember... it is similar solution
  
+**admin panels list**
+- [ ] Message Settings (1)
+- [ ] Rejection Letter (1)(2)
+- [ ] Validation Letter (1)(2)
+- [ ] Validate Submission (1)(2)
+- [ ] Censor (1)
+- [ ] Categories
+- [ ] Panels
+- [ ] Characters
+- [ ] Settings
+- [ ] Blocks
+- [ ] Ratings
+- [ ] Add New Story
+- [ ] Add New Series
+- [x] Custom Pages
+- [ ] Classifications
+- [ ] News
+- [ ] Members
+- [ ] Featured Stories
+- [ ] Submissions
+- [ ] Page Links
+- [ ] Admins
+- [ ] Mail Users
+- [ ] Skins
+- [x] PHP Info replaced e107 way
+- [ ] Action Log
+- [ ] Profile Information
 
 **user panels list**
 - [ ] contact

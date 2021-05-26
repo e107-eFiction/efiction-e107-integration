@@ -63,7 +63,26 @@ class eFiction
     public function init()
     {
     }
+    
+    
+    /* in admin.php */
+    public static function admin_panels($parm = NULL )
+    {
  
+        $panelquery = "SELECT * FROM #fanfiction_panels WHERE panel_hidden != '1' AND panel_type = 'A' AND panel_level >= ".uLEVEL." ORDER BY panel_level DESC, panel_order ASC, panel_title ASC";
+ 
+        $records = e107::getDb()->retrieve($panelquery, true);
+
+        foreach ($records as $panel) {
+        
+         	if(!$panel['panel_url']) $panellist[$panel['panel_level']][]= "<a href=\"admin.php?action=".$panel['panel_name']."\">".$panel['panel_title']."</a>";
+		    else $panellist[$panel['panel_level']][] = "<a href=\"".$panel['panel_url']."\">".$panel['panel_title']."</a>";
+         
+        }
+ 
+        return $panellist;
+    }  
+    
     
     public static function catlist()
     {
@@ -248,7 +267,7 @@ class eFiction
     }
     
     /* action is used too with:  ($action ? "panel_name = '$action' AND (panel_type = 'P' OR panel_type = 'F') in viewuser */
-    
+    /* action is used in admin.php too */ 
     public static function panel_byaction($action = '' )
     {
         /*

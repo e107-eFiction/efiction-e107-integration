@@ -10,6 +10,7 @@ if (!getperms('P'))
 }
 
 require_once("admin_leftmenu.php");
+
 				
 class admin_settings_ui extends e_admin_ui
 {
@@ -19,6 +20,12 @@ class admin_settings_ui extends e_admin_ui
 		public function dasboardPage()
 		{
 			$ns = e107::getRender();
+            
+            $vals = efiction::adminarea_panels();
+            /*
+            	foreach($panellist as $accesslevel => $row) {
+            		print_a($row);
+            	}
  
     $vals['settings']['link'] = e_HTTP."admin.php?action=settings&amp;sect=main";
     $vals['settings']['title'] = LAN_EFICTION_MAINSETTINGS;
@@ -97,7 +104,7 @@ class admin_settings_ui extends e_admin_ui
     $vals['thankyou']['caption']  = LAN_EFICTION_THANKYOU;
     $vals['thankyou']['perms'] = 0;
     $vals['thankyou']['icon_32'] = "<i class='S32 e-news-32'></i>"; 
- 
+ */
     foreach($vals AS $val) {
             $tmp = e107::getNav()->renderAdminButton($val['link'], $val['title'], $val['caption'], $val['perms'], $val['icon_32'], "div") ;
             $mainPanel .= $tmp;
@@ -108,8 +115,6 @@ class admin_settings_ui extends e_admin_ui
 			
 		}
  
-		
-        
      /**
 	 * Get Plugin Links - rewritten for v2.1.5
 	 * @param string $iconSize
@@ -143,8 +148,10 @@ class admin_settings_ui extends e_admin_ui
 class admin_settings_form_ui extends e_admin_form_ui
 {
 
-}		
+}
 		
+include ("../header.php");		
+
 new efiction_adminArea();
 
 require_once(e_ADMIN."auth.php");

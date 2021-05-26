@@ -23,6 +23,7 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
+/*
 if (!defined('e107_INIT')) { exit; }
 
 	if(isset($blocks['news']['num'])) $numupdated = $blocks['news']['num'];
@@ -58,3 +59,4 @@ if (!defined('e107_INIT')) { exit; }
 	}
 	$news->gotoBlock("_ROOT");
 	$content = $news->getOutputContent( );
+*/    
