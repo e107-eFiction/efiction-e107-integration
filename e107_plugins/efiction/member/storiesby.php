@@ -36,7 +36,7 @@ $storiesby_start = ''; //use template
 $storiesby_tablerender = varset($storiesby_template['tablerender'], $current);
 $storiesby_end = '';  //use template
  
-$itemsperpage = efiction::settings('itemsperpage');
+$itemsperpage = efiction_settings::get_single_setting('itemsperpage');
  
 if($numstories) {
     /********** STORIES START **************************************************/

@@ -32,7 +32,7 @@ class efiction_adminArea extends e_admin_dispatcher
 	);
 	
 	protected $adminMenu = array(
-        'main/dasboard'		=> array('caption'=> LAN_EFICTION_ADMIN_PANELS,   'perm' => '0', 'url'=>'admin_settings.php'),    
+        'main/dasboard'		=> array('caption'=> LAN_EFICTION_ADMIN_PANELS,   'perm' => '0', 'url'=>'admin_config.php'),    
         'divider2'          => array('divider'=>	true),
         'custpages/list'	=> array('caption'=> LAN_EFICTION_CUSTPAGES,  'perm' => 'P', 'url'=>'admin_custpages.php'),  
 		'custpages/create'	=> array('caption'=> LAN_EFICTION_ADDCUSTPAGE,  'perm' => 'P', 'url'=>'admin_custpages.php'),   

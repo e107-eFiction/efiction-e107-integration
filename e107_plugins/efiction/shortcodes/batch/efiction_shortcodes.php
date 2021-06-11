@@ -140,7 +140,7 @@
         /* {BROWSE_PAGELINKS} */
     	public function sc_browse_pagelinks($parm)
     	{
-            $itemsperpage =  efiction::settings('itemsperpage');
+            $itemsperpage =  efiction_settings::get_single_setting('itemsperpage');
  
             $pagelinks = '';
  

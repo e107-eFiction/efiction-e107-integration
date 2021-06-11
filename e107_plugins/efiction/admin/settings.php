@@ -23,7 +23,7 @@
 // ----------------------------------------------------------------------
 
 if (!defined('e107_INIT')) { exit; }
-
+ 
 function updatePanelOrder( ) {
 	
 	$ptypes = dbquery("SELECT panel_type FROM ".TABLEPREFIX."fanfiction_panels GROUP BY panel_type");
@@ -80,27 +80,8 @@ $sect = isset($_GET['sect']) ? $_GET['sect'] : "main";
 
 if(isset($_POST['submit'])) {
 	if($sect == "main") {
-		if(!preg_match("!^[a-z0-9_]{3,30}$!i", $_POST['newsitekey'])) $output .= write_error(_BADSITEKEY);
-		else {
-			$oldsitekey = $sitekey;
-			$sitekey = descript($_POST['newsitekey']);
-			$sitename = escapestring(descript(strip_tags($_POST['newsitename'])));
-			$slogan = escapestring(descript(strip_tags($_POST['newslogan'])));
-			$url = escapestring(descript(strip_tags($_POST['newsiteurl'])));
-			// if the http:// is missing add it.
-			if(substr($url, 0, 7) != "http://") $url = "http://".$url;
-			// we also want to check for a trailing slash.
-			if(substr($url, -1, 1) == "/") $url = substr($url, 0, strlen($url) - 1);
-			$tableprefix = escapestring(descript(strip_tags($_POST['newtableprefix'])));
-			$siteemail = escapestring(descript(strip_tags($_POST['newsiteemail'])));
-			$skin = escapestring(descript(strip_tags($_POST['newskin'])));
-			$language = escapestring(descript(strip_tags($_POST['newlanguage'])));
-			if(empty($sitekey)) $output .= write_message(_SITEKEYREQUIRED);
-			else {
-				if($sitekey != $oldsitekey) $output .= write_message(_SITEKEYCHANGED);
-				$result = dbquery("UPDATE ".$settingsprefix."fanfiction_settings SET sitekey = '$sitekey', sitename = '$sitename', slogan = '$slogan', url = '$url', tableprefix = '$tableprefix', siteemail = '$siteemail', skin = '$skin', language = '$language' WHERE sitekey = '$oldsitekey'");
-			}
-		}
+			$skin = e107::getParser()->toDb($_POST['newskin']);
+			$result = e107::getDb()->gen("UPDATE ".MPREFIX."fanfiction_settings SET  skin = '$skin' ");	 
 	}
 	else if($sect == "submissions") {
 		$submissionsoff = $_POST['newsubmissionsoff'] == 1 ? 1 : 0;
@@ -164,48 +145,43 @@ if(isset($_POST['submit'])) {
 		$pwdsetting = $_POST['newpwdsetting'] == 1 ? 1 : 0;
 		$result = dbquery("UPDATE ".$settingsprefix."fanfiction_settings SET alertson = '$alertson', disablepopups = '$disablepopups', agestatement = '$agestatement', pwdsetting = '$pwdsetting' WHERE sitekey ='".SITEKEY."'");
 	}
-	else if($sect == "email") {
-		$smtp_host = $_POST['newsmtp_host'];
-		$smtp_username = $_POST['newsmtp_username'];
-		$smtp_password = $_POST['newsmtp_password'];
-		$result = dbquery("UPDATE ".$settingsprefix."fanfiction_settings SET smtp_host = '$smtp_host', smtp_username = '$smtp_username', smtp_password = '$smtp_password' WHERE sitekey ='".SITEKEY."'");
-	}
+ 
 	if($result) {
-		$output .= write_message(_ACTIONSUCCESSFUL);
+		$output .= e107::getMessage()->addSuccess(_ACTIONSUCCESSFUL)->render();
 		//$sect = $sects[(array_search($sect, $sects) + 1)];  //it moves to next tab, confusing
         $sect = $sects[(array_search($sect, $sects) )];  //stay on the same tab and check result        
 		if(!$sect) $sect = $sects[0];
 	}
-	else $output .= write_error(_ERROR);
+	else $output .= e107::getMessage()->addError(_ERROR)->render();
 }
-	$settingsresults = dbquery("SELECT * FROM ".$settingsprefix."fanfiction_settings WHERE sitekey ='".SITEKEY."'");
-	$settings = dbassoc($settingsresults);
-	foreach($settings as $var => $val) {
-		$$var = stripslashes($val);
-	}
-    $newcaptcha = efiction::settings('captcha');  //used new variable to be sure old $ captcha is not used
+	$settings = efiction_settings::get_settings();
+ 
+    $newcaptcha = $settings['captcha'];  //used new variable to be sure old $ captcha is not used
     
 	$output .= "<form method='POST' class='tblborder' style='' enctype='multipart/form-data' action='".($action == "settings" ? "admin.php?action=settings" : $_SERVER['PHP_SELF']."?step=".$_GET['step'])."&amp;sect=$sect'>";
-	if($sect == "main") {
-		$output .= "<h2>"._SITEINFO."</h2>
-		<table class='acp'>
+ 
+    if($sect == "main") {
+        $sitekey = e107::getInstance()->getSitePath();
+		$caption = "<h2>"._SITEINFO."</h2>";
+        $output .= "
+		<table class='acp table table-bordered'>
 			<tr>
-				<td><label for='newsitekey'>"._SITEKEY.":</label></td><td><input type='text' class='textbox' name='newsitekey' value='".SITEKEY."'> <a href='#' class='pophelp'>[?]<span>"._HELP_SITEKEY."</span></a></td>
+				<td><label for='newsitekey'>"._SITEKEY.":</label></td><td>".$sitekey."</td><td>"._HELP_SITEKEY."</td></td>
 			</tr>
 			<tr>
-				<td><label for='newsitename'>"._SITENAME.":</label></td><td><input type='text' class='textbox' name='newsitename' value='".htmlspecialchars($sitename, ENT_QUOTES)."'> <a href='#' class='pophelp'>[?]<span>"._HELP_SITENAME."</span></a></td>
+				<td><label for='newsitename'>"._SITENAME.":</label></td><td>".SITENAME."<td>"._HELP_SITENAME."</td></td>
 			</tr>
 			<tr>
-				<td><label for='newslogan'>"._SITESLOGAN.":</label></td><td><input type='text' class='textbox' name='newslogan' value='".htmlspecialchars($slogan, ENT_QUOTES)."'> <a href='#' class='pophelp'>[?]<span>"._HELP_SLOGAN."</span></a></td>
+				<td><label for='newslogan'>"._SITESLOGAN.":</label></td><td>".SITETAG."</td><td>"._HELP_SLOGAN."</td></td>
 			</tr>
 			<tr>
-				<td><label for='newurl'>"._SITEURL.":</label></td><td><input type='text' class='textbox' name='newsiteurl' value='$url'> <a href='#' class='pophelp'>[?]<span>"._HELP_URL."</span></a></td>
+				<td><label for='newurl'>"._SITEURL.":</label></td><td>".SITEURL."</td><td>"._HELP_URL."</td></td>
 			</tr>
 			<tr>				
-				<td><label for='newtableprefix'>"._TABLEPREFIX.":</label></td><td><input type='text' class='textbox' name='newtableprefix' value='".TABLEPREFIX."'> <a href='#' class='pophelp'>[?]<span>"._HELP_TABLEPREFIX."</span></a></td>
+				<td><label for='newtableprefix'>"._TABLEPREFIX.":</label></td><td>".e107::getDB()->mySQLPrefix."</td><td>"._HELP_TABLEPREFIX."</td></td>
 			</tr>
 			<tr>				
-				<td><label for='newsiteemail'>"._ADMINEMAIL.":</label></td><td><input type='text' class='textbox' name='newsiteemail' value='$siteemail'> <a href='#' class='pophelp'>[?]<span>"._HELP_SITEEMAIL."</span></a></td>
+				<td><label for='newsiteemail'>"._ADMINEMAIL.":</label></td><td>".ADMINEMAIL."</td><td>"._HELP_SITEEMAIL."</td></td>
 			</tr>
 			<tr>				
 				<td><label for='newsiteskin'>"._DEFAULTSKIN.":</label></td><td><select name='newskin'>";
@@ -215,148 +191,140 @@ if(isset($_POST['submit'])) {
 			$output .= "<option value='$filename'".($skin == $filename ? " selected" : "").">$filename</option>";
 		}
 		closedir($directory);
-		$output .= "</select> <a href='#' class='pophelp'>[?]<span>"._HELP_SITESKIN."</span></a></td>
+		$output .= "</select> </td><td>"._HELP_SITESKIN."</td></td>
 			</tr>
 			<tr>
-				<td><label for='newlanguage'>"._LANGUAGE.":</label></td><td><select name='newlanguage'>";
-		$directory = opendir(_BASEDIR."languages");
-			while($filename = readdir($directory)) {
-				if($filename=="." || $filename==".." || substr($filename, 2) == "_admin.php") continue;
-				$output .= "<option value='".substr($filename, 0, 2)."'".
-					($language == substr($filename, 0, strpos($filename, ".php")) ? " selected" : "").">
-				".substr($filename, 0, strpos($filename, ".php"))."</option>";
-			}
-		closedir($directory);
-		$output .= "</select> <a href='#' class='pophelp'>[?]<span>"._HELP_LANGUAGE."</span></a></td></tr>";
+				<td><label for='newlanguage'>"._LANGUAGE.":</label></td><td>".e_LANGUAGE."</td><td>"._HELP_LANGUAGE."</td></td></tr>";
 	}
 	else if($sect == "submissions") {
 		$output .= "<h2>"._SUBMISSIONSETTINGS."</h2>
-		<table class='acp'>
+		<table class='acp table table-bordered'>
 			<tr>
 				<td><label for='newsubmissionsoff'>"._NOSUBS.":</label></td><td><select name='newsubmissionsoff'>
 				<option value='1'".($submissionsoff == "1" ? " selected" : "").">"._YES."</option>
 				<option value='0'".($submissionsoff == "0" ? " selected" : "").">"._NO."</option>
-			</select> <a href='#' class='pophelp'>[?]<span>"._HELP_SUBSOFF."</span></a></td>
+			</select> </td><td>"._HELP_SUBSOFF."</td></td>
 			</tr>
 			<tr>
 				<td><label for='newautovalidate'>"._AUTOVALIDATE.":</label></td><td><select name='newautovalidate'>
 				<option value='1'".($autovalidate == "1" ? "selected" : "").">"._YES."</option>
 				<option value='0'".($autovalidate == "0" ? "selected" : "").">"._NO."</option>
-			</select> <a href='#' class='pophelp'>[?]<span>"._HELP_AUTOVALIDATE."</span></a></td>
+			</select> </td><td>"._HELP_AUTOVALIDATE."</td></td>
 			</tr>		
 			<tr>
 				<td><label for='newcoauthallowed'>"._COAUTHALLOW.":</label></td><td><select name='newcoauthallowed'>
 				<option value='1'".($coauthallowed == "1" ? "selected" : "").">"._YES."</option>
 				<option value='0'".($coauthallowed == "0" ? "selected" : "").">"._NO."</option>
-			</select> <a href='#' class='pophelp'>[?]<span>"._HELP_COAUTHORS."</span></a></td>
+			</select> </td><td>"._HELP_COAUTHORS."</td></td>
 			</tr>			
 			<tr>
 				<td><label for='newroundrobins'>"._ALLOWRR.":</label></td><td><select name='newroundrobins'>
 				<option value='1'".($roundrobins == "1" ? " selected" : "").">"._YES."</option>
 				<option value='0'".($roundrobins == "0" ? " selected" : "").">"._NO."</option>
-			</select> <a href='#' class='pophelp'>[?]<span>"._HELP_ROUNDROBINS."</span></a></td>
+			</select> </td><td>"._HELP_ROUNDROBINS."</td></td>
 			</tr>			
 			<tr>
 				<td><label for='newallowseries'>"._ALLOWSERIES.":</label></td><td><select name='newallowseries'>
 				<option value='2'".($allowseries == "2" ? " selected" : "").">"._ALLMEMBERS."</option>
 				<option value='1'".($allowseries == "1" ? " selected" : "").">"._AUTHORSONLY."</option>
 				<option value='0'".($allowseries == "0" ? " selected" : "").">"._ADMINS."</option>
-			</select> <a href='#' class='pophelp'>[?]<span>"._HELP_ALLOWSERIES."</span></a></td>
+			</select> </td><td>"._HELP_ALLOWSERIES."</td></td>
 			</tr>
 			<tr>
 				<td><label for='newimageupload'>"._IMAGEUPLOAD.":</label></td><td><select name='newimageupload'>
 				<option value='1'".($imageupload == "1" ? " selected" : "").">"._YES."</option>
 				<option value='0'".($imageupload == "0" ? " selected" : "").">"._NO."</option>
-			</select> <a href='#' class='pophelp'>[?]<span>"._HELP_IMAGEUPLOAD."</span></a></td>
+			</select> </td><td>"._HELP_IMAGEUPLOAD."</td></td>
 			</tr>
-			<tr>
-				<td colspan='2'><fieldset style='margin: 0 auto;'><legend>"._IMAGESIZE." <a href='#' class='pophelp'>[?]<span>"._HELP_IMAGESIZE."</span></a></legend>
-				<label for='newimageheight'>"._MAXHEIGHT.":</label> <input  type='text' class='textbox=' name='newimageheight' value='$imageheight' size='5'> <br />
-				<label for='newimagewidth'>"._MAXWIDTH.":</label> <input  type='text' class='textbox=' name='newimagewidth' value='$imagewidth' size='5'></fieldset></td>
-			</tr>
+			<tr> <td><label for='newimageheight'>"._MAXHEIGHT.":</label></td><td><input  type='text' class='textbox=' name='newimageheight' value='$imageheight' size='5'> 
+                </td><td rowspan=2>"._IMAGESIZE."  "._HELP_IMAGESIZE." </td></tr>
+			<tr><td><label for='newimagewidth'>"._MAXWIDTH.":</label></td><td><input  type='text' class='textbox=' name='newimagewidth' value='$imagewidth' size='5'></td> 
+			
 			<tr>
 				<td><label for='newstore'>"._HOWSTORE.":</label></td><td><select name='newstore' onChange='if (this.disabled) this.selectedIndex=0' disabled>
 					<option value='files'".($store == "files" || !$store ? " selected" : "").">"._FILES."</option>
 					<option value='mysql'".($store == "mysql" ? " selected" : "").">"._MYSQL."</option>
-					</select> <input class='textbox=' type='checkbox' class='checkbox' name='r1' onClick='this.form.newstore.disabled=false' checked> <a href='#' class='pophelp'>[?]<span>"._HELP_STORE."</span></a></td>
+					</select> <input class='textbox=' type='checkbox' class='checkbox' name='r1' onClick='this.form.newstore.disabled=false' checked> </td><td>"._HELP_STORE."</td></td>
 			</tr>
 			<tr>
-				<td><label for='newstoriespath'>"._STORIESPATH.":</label></td><td><input type='text' class='textbox=' name='newstoriespath' value='$storiespath'> <a href='#' class='pophelp'>[?]<span>"._HELP_STORIESPATH."</span></a></td>
+				<td><label for='newstoriespath'>"._STORIESPATH.":</label></td><td><input type='text' class='textbox=' name='newstoriespath' value='$storiespath'> </td><td>"._HELP_STORIESPATH."</td></td>
 			</tr>
 			<tr>
-				<td colspan='2'><fieldset style='margin: 0 auto;'><legend>"._MAXMINWORDS."<a href='#' class='pophelp'>[?]<span>"._HELP_MINMAXWORDS."</span></a></legend>
-				<label for='newminwords'>"._MIN.":</label> <input  type='text' class='textbox=' name='newminwords' value='$minwords' size='5'> <br />
-				<label for='newmaxwords'>"._MAX.":</label> <input  type='text' class='textbox=' name='newmaxwords' value='$maxwords' size='7'></fieldset></td></tr>";
+                <td><label for='newminwords'>"._MIN.":</label></td>
+                <td><input  type='text' class='textbox=' name='newminwords' value='$minwords' size='5'></td> 
+				<td rowspan='2'>"._MAXMINWORDS." "._HELP_MINMAXWORDS."</td>
+            </tr>
+			<tr><td><label for='newmaxwords'>"._MAX.":</label></td><td><input  type='text' class='textbox=' name='newmaxwords' value='$maxwords' size='7'> </td></tr>";
 	}
 	else if($sect == "sitesettings") {
 		$output .= "<h2>"._SITESETTINGS."</h2>
-		<table class='acp'>
+		<table class='acp table table-bordered'>
 			<tr>
 				<td><label for='newtinyMCE'>"._USETINYMCE.": </label></td><td><select name='newtinyMCE'>
 				<option value='1'".($tinyMCE ? " selected" : "").">"._YES."</option>
 				<option value='0'".(!$tinyMCE ? " selected" : "").">"._NO."</option>
-				</select> <a href='#' class='pophelp'>[?]<span>"._HELP_TINYMCE." "._TINYMCENOTE."</span></a></td>
+				</select> </td><td>"._HELP_TINYMCE." "._TINYMCENOTE."</td></td>
 			</tr>
 			<tr>
-				<td><label for='newallowed_tags'>"._TAGS.": </label></td><td><input type='text' class='textbox'  name='newallowed_tags' value='".($allowed_tags ? $allowed_tags : "<strong><em><br /><br><blockquote><strike><font><b><i><u><center><img><a><hr><p><ul><li><ol>")."' size='40'> <a href='#' class='pophelp'>[?]<span>"._HELP_ALLOWEDTAGS." "._TINYMCENOTE."</span></a></td>
+				<td><label for='newallowed_tags'>"._TAGS.": </label></td><td><input type='text' class='textbox'  name='newallowed_tags' value='".($allowed_tags ? $allowed_tags : "<strong><em><br /><br><blockquote><strike><font><b><i><u><center><img><a><hr><p><ul><li><ol>")."' size='40'> </td><td>"._HELP_ALLOWEDTAGS." "._TINYMCENOTE."</td></td>
 			</tr>
 			<tr>
 				<td><label for='newfavorites'>"._FAVORITES.": </label></td><td><select name='newfavorites'>
 				<option value='1'".($favorites == "1" ? " selected" : "").">"._YES."</option>
 				<option value='0'".($favorites == "0" ? " selected" : "").">"._NO."</option>
-				</select><a href='#' class='pophelp'>[?]<span>"._HELP_FAVORITES."</span></a></td>
+				</select></td><td>"._HELP_FAVORITES."</td></td>
 			</tr>
 			<tr>
 				<td><label for='newmultplecats'>"._NUMCATS.": </label></td><td><select name='newmultiplecats'>
 				<option value='1'".($multiplecats == "1" ? "selected" : "").">"._MORETHANONE."</option>
 				<option value='0'".($multiplecats == "0" ? "selected" : "").">"._ONLYONE."</option>
-				</select> <a href='#' class='pophelp'>[?]<span>"._HELP_NUMCATS."</span></a></td>
+				</select> </td><td>"._HELP_NUMCATS."</td></td>
 			</tr>
 			<tr>
 				<td><label for='newnewscomments'>"._NEWSCOMMENTS.": </label></td><td><select name='newnewscomments'>
 				<option value='1'".($newscomments == "1" ? " selected" : "").">"._YES."</option>
 				<option value='0'".($newscomments == "0" ? " selected" : "").">"._NO."</option>
-				</select> <a href='#' class='pophelp'>[?]<span>"._HELP_NEWSCOMMENTS."</span></a></td>
+				</select> </td><td>"._HELP_NEWSCOMMENTS."</td></td>
 			</tr>
 			<tr>
 				<td><label for='newlogging'>"._LOGGING.": </label></td><td><select name='newlogging'>
 				<option value='1'".($logging == "1" ? " selected" : "").">"._YES."</option>
 				<option value='0'".($logging == "0" ? " selected" : "").">"._NO."</option>
-				</select> <a href='#' class='pophelp'>[?]<span>"._HELP_LOGGING."</span></a></td>
+				</select> </td><td>"._HELP_LOGGING."</td></td>
 			</tr>
 			<tr>
 				<td><label for='newmaint'>"._MAINTENANCE.": </label></td><td><select name='newmaint'>
 				<option value='1'".($maintenance == "1" ? " selected" : "").">"._YES."</option>
 				<option value='0'".($maintenance == "0" ? " selected" : "").">"._NO."</option>
-				</select> <a href='#' class='pophelp'>[?]<span>"._HELP_MAINTENANCE."</span></a></td>
+				</select> </td><td>"._HELP_MAINTENANCE."</td></td>
 			</tr>
 			<tr>
 				<td><label for='newdebug'>"._DEBUG.": </label></td><td><select name='newdebug'>
 				<option value='1'".($debug == "1" ? " selected" : "").">"._YES."</option>
 				<option value='0'".(!isset($debug) || $debug == "0" ? " selected" : "").">"._NO."</option>
-				</select> <a href='#' class='pophelp'>[?]<span>"._HELP_DEBUG."</span></a></td>
+				</select> </td><td>"._HELP_DEBUG."</td></td>
 			</tr> 
             <tr>
     		<td><label for=\"newcaptcha\">"._CAPTCHA."</label></td>
     			<td>
-    				".e107::getForm()->radio_switch('newcaptcha', $newcaptcha, _YES, _NO)."<a href='#' class='pophelp'>[?]<span>"._HELP_CAPTCHA."</span></a>
+    				".e107::getForm()->radio_switch('newcaptcha', $newcaptcha, _YES, _NO)."</td><td>"._HELP_CAPTCHA."</td>
     			</td>
     		</tr>";
 	}
 	else if($sect == "display") {
-		$settings = dbquery("SELECT defaultsort, displayindex FROM ".$settingsprefix."fanfiction_settings WHERE sitekey ='".SITEKEY."'");
-		list($sitedefaultsort, $sitedisplayindex) = dbrow($settings);
+ 	 
+		$displayindex = $settings['displayindex'];
 		$defaultdates = array("m/d/y", "m/d/Y", "m/d/Y", "d/m/Y", "d/m/y", "d M Y", 
 				"d.m.y", "Y.m.d", "m.d.Y", "d-m-y", "m-d-y", "M d Y", "M d, Y", "F d Y", "F d, Y");
 		$defaulttimes = array("h:i a", "h:i A", "H:i", "g:i a", "g:i A", "G:i", "h:i:s a", "H:i:s", "g:i:s a", "g:i:s A", "G:i:s");
 		$output .= "<h2>"._DISPLAYSETTINGS."</h2>
-		<table class='acp'>
+		<table class='acp table table-bordered'>
 			<tr>
 				<td><label for='newdateformat'>"._DATEFORMAT.":</label></td><td><select name='newdateformat'><option value=''>"._SELECTONE."</option>";
 		foreach($defaultdates as $date) {
 			$output .= "<option value='$date'>".date("$date")."</option>";
 		}
-		$output .= "</select> "._OR." <input type='text' name='customdateformat' class='textbox' value='$dateformat'> <a href='#' class='pophelp'>[?]<span>"._HELP_DATEFORMAT."</span></a></td>
+		$output .= "</select> "._OR." <input type='text' name='customdateformat' class='textbox' value='$dateformat'> </td><td>"._HELP_DATEFORMAT."</td></td>
 		</tr>
 		<tr>
 			<td><label for='newtimeformat'>"._TIMEFORMAT.":</label></td><td><select name='newtimeformat'><option value=''>"._SELECTONE."</option>";
@@ -364,125 +332,121 @@ if(isset($_POST['submit'])) {
 			$output .= "<option value='$time'>".date("$time")."</option>";
 		}
 		$output .= "
-			</select> "._OR." <input type='text' name='customtimeformat' class='textbox' value='$timeformat'> <a href='#' class='pophelp'>[?]<span>"._HELP_TIMEFORMAT."</span></a></td>
+			</select> "._OR." <input type='text' name='customtimeformat' class='textbox' value='$timeformat'> </td><td>"._HELP_TIMEFORMAT."</td></td>
 		</tr>
 		<tr>
 			<td><label for='newextendcats'>"._EXTENDCATS.":</label></td><td><select name='newextendcats'>
 				<option value='1'".($extendcats == "1" ? " selected" : "").">"._YES."</option>
 				<option value='0'".($extendcats == "0" ? " selected" : "").">"._NO."</option>
-			</select> <a href='#' class='pophelp'>[?]<span>"._HELP_EXTENDCATS."</span></a></td>
+			</select> </td><td>"._HELP_EXTENDCATS."</td></td>
 		</tr>
 		<tr>
-			<td><label for='newdisplaycolumns'>"._COLUMNS.":</label></td><td><input  type='text' class='textbox=' name='newdisplaycolumns' size='3' value='$displaycolumns'> <a href='#' class='pophelp'>[?]<span>"._HELP_COLUMNS."</span></a></td>
+			<td><label for='newdisplaycolumns'>"._COLUMNS.":</label></td><td><input  type='text' class='textbox=' name='newdisplaycolumns' size='3' value='$displaycolumns'> </td><td>"._HELP_COLUMNS."</td></td>
 		</tr>
 		<tr>
-			<td><label for='newitemsperpage'>"._NUMITEMS.":</label></td><td><input  type='text' class='textbox' name='newitemsperpage' size='3' value='$itemsperpage'> <a href='#' class='pophelp'>[?]<span>"._HELP_ITEMSPERPAGE."</span></a></td>
+			<td><label for='newitemsperpage'>"._NUMITEMS.":</label></td><td><input  type='text' class='textbox' name='newitemsperpage' size='3' value='$itemsperpage'> </td><td>"._HELP_ITEMSPERPAGE."</td></td>
 		</tr>
 		<tr>
-			<td><label for='newrecentdays'>"._RECENTDAYS.":</label></td><td><input  type='text' class='textbox' name='newrecentdays' size='3' value='$recentdays'> <a href='#' class='pophelp'>[?]<span>"._HELP_RECENTDAYS."</span></a></td>
+			<td><label for='newrecentdays'>"._RECENTDAYS.":</label></td><td><input  type='text' class='textbox' name='newrecentdays' size='3' value='$recentdays'> </td><td>"._HELP_RECENTDAYS."</td></td>
 		</tr>
 		<tr>
 			<td><label for='newdefaultsort'>"._DEFAULTSORT.":</label></td><td><select name='newdefaultsort'>
 				<option value='1'".($sitedefaultsort ? " selected" : "").">"._MOSTRECENT."</option>
 				<option value='0'".(!$sitedefaultsort ? " selected" : "").">"._ALPHA."</option>
-			</select> <a href='#' class='pophelp'>[?]<span>"._HELP_DEFAULTSORT."</span></a></td>
+			</select> </td><td>"._HELP_DEFAULTSORT."</td></td>
 		</tr>
 		<tr>
 			<td><label for='newdisplayindex'>"._STORYINDEX.":</label></td><td><select name='newstoryindex'>
 				<option value='1'".($sitedisplayindex ? " selected" : "").">"._YES."</option>
 				<option value='0'".(!$sitedisplayindex ? " selected" : "").">"._NO."</option>
-			</select> <a href='#' class='pophelp'>[?]<span>"._HELP_DISPLAYINDEX."</span></a></td>
+			</select> </td><td>"._HELP_DISPLAYINDEX."</td></td>
 		</tr>
 		<tr>
 			<td><label for='newdisplayprofile'>"._DISPLAYPROFILE.":</label></td><td><select name='newdisplayprofile'>
 				<option value='1'".($displayprofile ? " selected" : "").">"._YES."</option>
 				<option value='0'".(!$displayprofile ? " selected" : "").">"._NO."</option>
-			</select> <a href='#' class='pophelp'>[?]<span>"._HELP_DISPLAYPROFILE."</span></a></td>
+			</select> </td><td>"._HELP_DISPLAYPROFILE."</td></td>
 		</tr>
 		<tr>
 			<td><label for='newdisplayprofile'>"._LINKSTYLE.":</label></td><td><select name='newlinkstyle'>
 				<option value='2'".($linkstyle == 2 ? " selected" : "").">"._BOTHLINKSTYLE."</option>
 				<option value='1'".($linkstyle == 1 ? " selected" : "").">"._FIRSTLAST."</option>
 				<option value='0'".(!$linkstyle ? " selected" : "").">"._NEXTPREV."</option>
-			</select> <a href='#' class='pophelp'>[?]<span>"._HELP_LINKSTYLE."</span></a></td>
+			</select> </td><td>"._HELP_LINKSTYLE."</td></td>
 		</tr>
 		<tr>
-			<td><label for='newlinkrange'>"._LINKRANGE.":</label></td><td><input  type='text' class='textbox=' name='newlinkrange' size='3' value='$linkrange'> <a href='#' class='pophelp'>[?]<span>"._HELP_LINKRANGE."</span></a></td></tr>";
+			<td><label for='newlinkrange'>"._LINKRANGE.":</label></td><td><input  type='text' class='textbox=' name='newlinkrange' size='3' value='$linkrange'> </td><td>"._HELP_LINKRANGE."</td></td></tr>";
 	}
 	else if($sect == "reviews") {
 		$output .= "<h2>"._REVIEWSETTINGS."</h2>
-		<table class='acp'>
+		<table class='acp table table-bordered'>
 			<tr>
 				<td><label for='newreviewsallowed'>"._ONREVIEWS.":</label></td><td><select name='newreviewsallowed'>
 				<option value='1'".($reviewsallowed == "1" ? " selected" : "").">"._YES."</option>
 				<option value='0'".($reviewsallowed == "0" ? " selected" : "").">"._NO."</option>
-			</select> <a href='#' class='pophelp'>[?]<span>"._HELP_REVIEWSON."</span></a></td>
+			</select> </td><td>"._HELP_REVIEWSON."</td></td>
 		</tr>
 		<tr>
 				<td><label for='newanonreviews'>"._ANONREVIEWS.":</label></td><td><select name='newanonreviews'>
 				<option value='1'".($anonreviews == "1" ? " selected" : "").">"._YES."</option>
 				<option value='0'".($anonreviews == "0" ? " selected" : "").">"._NO."</option>
-				</select> <a href='#' class='pophelp'>[?]<span>"._HELP_ANONREVIEWS."</span></a></td>
+				</select> </td><td>"._HELP_ANONREVIEWS."</td></td>
 		</tr>
 		<tr>
 				<td><label for='newrevdelete'>"._REVDELETE.":</label></td><td><select name='newrevdelete'>
 				<option value='2'".($revdelete == 2 ? " selected" : "").">"._ALLREV."</option>
 				<option value='1'".($revdelete == 1 ? " selected" : "").">"._ANONREV."</option>
 				<option value='0'".(empty($revdelete) ? " selected" : "").">"._NONE."</option>
-				</select> <a href='#' class='pophelp'>[?]<span>"._HELP_REVDELETE."</span></a></td>
+				</select> </td><td>"._HELP_REVDELETE."</td></td>
 		</tr>
 		<tr>
 				<td><label for='newratings'>"._WHATRATINGS.":</label></td><td><select name='newratings'>
 				<option value='2'".($ratings == "2" ? " selected" : "").">"._LIKESYS."</option>
 				<option value='1'".($ratings == "1" ? " selected" : "").">"._STARS."</option>
 				<option value='0'".($ratings == "0" ? " selected" : "").">"._NONE."</option>
-				</select> <a href='#' class='pophelp'>[?]<span>"._HELP_RATINGS."</span></a></td>
+				</select> </td><td>"._HELP_RATINGS."</td></td>
 		</tr>
 		<tr>
 				<td><label for='newrateonly'>"._ALLOWRATEONLY.":</label></td><td><select name='newrateonly'>
 				<option value='1'".($rateonly == "1" ? " selected" : "").">"._YES."</option>
 				<option value='0'".($rateonly == "0" ? " selected" : "").">"._NO."</option>
-				</select> <a href='#' class='pophelp'>[?]<span>"._HELP_RATEONLY."</span></a></td></tr>";
+				</select> </td><td>"._HELP_RATEONLY."</td></td></tr>";
 	}
 	else if($sect == "useropts") {
 		$output .= "<h2>"._USERSETTINGS."</h2>
-		<table class='acp'>
+		<table class='acp table table-bordered'>
 			<tr>
 				<td><label for='newalertson'>"._ALERTSON.":</label></td><td><select name='newalertson'>
 				<option value='1'".($alertson == "1" ? " selected" : "").">"._YES."</option>
 				<option value='0'".($alertson == "0" ? " selected" : "").">"._NO."</option>
-			</select> <a href='#' class='pophelp'>[?]<span>"._HELP_ALERTSON."</span></a></td>
+			</select> </td><td>"._HELP_ALERTSON."</td></td>
 		</tr>
 		<tr>
 				<td><label for='newdisablepops'>"._USERPOPS.":</label></td><td><select name='newdisablepops'>
 				<option value='1'".($disablepopups ? " selected" : "").">"._YES."</option>
 				<option value='0'".(!$disablepopups ? " selected" : "").">"._NO."</option>
-			</select> <a href='#' class='pophelp'>[?]<span>"._HELP_POPUPS."</span></a></td>
+			</select> </td><td>"._HELP_POPUPS."</td></td>
 		</tr>
 		<tr>
 				<td><label for='newagestatement'>"._AGESTATEMENT.":</label></td><td><select name='newagestatement'>
 				<option value='1'".($agestatement ? " selected" : "").">"._YES."</option>
 				<option value='0'".(!$agestatement ? " selected" : "").">"._NO."</option>
-			</select> <a href='#' class='pophelp'>[?]<span>"._HELP_AGECONSENT."</span></a></td>
+			</select> </td><td>"._HELP_AGECONSENT."</td></td>
 		</tr>
 		<tr>
 				<td><label for='newpwdsetting'>"._PWDSETTING.":</label></td><td><select name='newpwdsetting'>
 				<option value='1'".($pwdsetting ? " selected" : "").">"._SELF."</option>
 				<option value='0'".(!$pwdsetting ? " selected" : "").">"._RANDOM."</option>
-			</select> <a href='#' class='pophelp'>[?]<span>"._HELP_PWD."</span></a></td></tr>";
+			</select> </td><td>"._HELP_PWD."</td></td></tr>";
 	}
 	else if($sect == "email") {
-		$output .= "<h2>"._EMAILSETTINGS."</h2>
-		<table class='acp'>
-			<tr>
-				<td><label for='newsmtp_host'>"._SMTPHOST.":</label></td><td><input name='newsmtp_host' type='text' value='$smtp_host'> <a href='#' class='pophelp'>[?]<span>"._HELP_SMTPHOST."</span></a></td>
-		</tr>
-		<tr>
-				<td><label for='newsmtp_username'>"._SMTPUSER.":</label></td><td><input name='newsmtp_username' type='text' value='$smtp_username'> <a href='#' class='pophelp'>[?]<span>"._HELP_SMTPUSER."</span></a></td>
-		</tr>
-		<tr>
-				<td><label for='newsmtp_password'>"._SMTPPASS.":</label></td><td><input name='newsmtp_password' type='password' value='$smtp_password'> <a href='#' class='pophelp'>[?]<span>"._HELP_SMTPPWD."</span></a></td></tr>";		
-		$output .= 	write_message(_SMTPOFF);
+		$caption = "<h2>"._EMAILSETTINGS."</h2>";
+		$output .= " Email settings are available in e107 Site preferencies"; 
+ 
 	}
-	$output .= "<tr><td colspan='2'><div align='center'><input type='submit' id='submit' class='button' name='submit' value='"._SUBMIT."'></div></form></td></tr></table>";
+	if($sect != "email") {
+	 $button = "<input type='submit' id='submit' class='button' name='submit' value='"._SUBMIT."'>";
+	}	
+	$output .= "<tr><td colspan='2'><div align='center'>".$button."</div></form></td></tr></table>";
+	
 ?>

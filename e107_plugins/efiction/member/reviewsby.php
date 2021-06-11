@@ -48,7 +48,7 @@ $reviewsby_start = ''; //use template
 $reviewsby_tablerender = varset($reviewsby_template['tablerender'], $current);
 $reviewsbyend = '';  //use template
  
-$itemsperpage = efiction::settings('itemsperpage');
+$itemsperpage = efiction_settings::get_single_setting('itemsperpage');
  
 if($reviewcount) {
 

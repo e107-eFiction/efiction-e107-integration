@@ -28,8 +28,8 @@ $tp = e107::getParser();
 
 e107::lan('efiction', "blocks");  
 
-$tinyMCE = efiction::settings('tinyMCE'); 
-$allowed_tags = efiction::settings('allowed_tags'); 
+$tinyMCE = efiction_settings::get_single_setting('tinyMCE'); 
+$allowed_tags = efiction_settings::get_single_setting('allowed_tags'); 
 
 function save_blocks( $blocks ) {
     $tp = e107::getParser();

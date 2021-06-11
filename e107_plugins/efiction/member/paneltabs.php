@@ -2,7 +2,7 @@
 
 if (!defined('e107_INIT')) { exit; }
  
-$favorites =  efiction::settings('favorites');
+$favorites =  efiction_settings::get_single_setting('favorites');
 $penname = $this->sc_user_penname();
  
 //panels not hidden, visible for members, type P or F if allowed)

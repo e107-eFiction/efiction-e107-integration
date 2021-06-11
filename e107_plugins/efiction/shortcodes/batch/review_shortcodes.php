@@ -69,7 +69,7 @@ class plugin_efiction_review_shortcodes extends e_shortcode
     /* {REVIEW_REVIEWDATE} */
     public function sc_review_reviewdate($parm = null)
 	{
-      $dateformat = efiction::settings('dateformat');
+      $dateformat = efiction_settings::get_single_setting('dateformat');
  
       $text = date("$dateformat", $this->var['date']);
       return $text; 
@@ -94,7 +94,7 @@ class plugin_efiction_review_shortcodes extends e_shortcode
     /* {REVIEW_ADMINOPTIONS} */
     public function sc_review_adminoptions($parm = null)
 	{
-		$revdelete =  efiction::settings('revdelete');
+		$revdelete =  efiction_settings::get_single_setting('revdelete');
  
 		if(isADMIN) $adminlink = _ADMINOPTIONS.": [<a href=\"reviews.php?action=edit&amp;reviewid=".$this->var['reviewid']."\">"._EDIT."</a>]";
 		if( isADMIN || (USERUID && USERUID == $this->var['uid'])) $adminlink .= " [<a href=\"reviews.php?action=delete&amp;reviewid=".$this->var['reviewid']."\">"._DELETE."</a>]";

@@ -3,10 +3,17 @@
 e107::lan('efiction');
 e107::lan('efiction', true);
 
+
+e107::getSingleton('efiction_settings', e_PLUGIN.'efiction/classes/settings.class.php');
+//ex. $settings = efiction_settings::get_settings();
+ 
+
 $efiction = e107::getSingleton('efiction', e_PLUGIN.'efiction/classes/efiction.class.php');
 $efiction->init();
 $eAuthors = e107::getSingleton('eauthors', e_PLUGIN.'efiction/classes/authors.class.php');
 $eAuthors->init(); 
+
+
    
 $sitekey = e107::getInstance()->getSitePath();
  

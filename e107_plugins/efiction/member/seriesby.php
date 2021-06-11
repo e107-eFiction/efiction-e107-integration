@@ -36,7 +36,7 @@ $seriesby_start = ''; //use template
 $seriesby_tablerender = varset($seriesby_template['tablerender'], $current);
 $seriesbyend = '';  //use template
  
-$itemsperpage = efiction::settings('itemsperpage');
+$itemsperpage = efiction_settings::get_single_setting('itemsperpage');
  
 if($numseries) {
     /**********SERIES START **************************************************/

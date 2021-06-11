@@ -42,8 +42,8 @@ class plugin_efiction_user_shortcodes extends e_shortcode
  
 		$action = $this->var['action'];
 		$uid = $this->var['uid'];  //needed for panels
-		$itemsperpage =  efiction::settings('itemsperpage');
-        $offset =  efiction::settings('offset');
+		$itemsperpage =  efiction_settings::get_single_setting('itemsperpage');
+        $offset =  efiction_settings::get_single_setting('offset');
  
 		$penname = $this->var['userinfo']['penname'];
  

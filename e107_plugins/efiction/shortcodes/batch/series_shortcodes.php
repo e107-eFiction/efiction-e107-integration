@@ -47,7 +47,7 @@ class plugin_efiction_series_shortcodes extends e_shortcode
     /* {SERIES_ADDTOFAVES} */
 	public function sc_series_addtofaves($parm = null)
 	{
-		$favorites =  efiction::settings('favorites');
+		$favorites =  efiction_settings::get_single_setting('favorites');
         if(isMEMBER && $favorites) {
     		$addtofaves = "[<a href=\"member.php?action=favse&amp;uid=".USERUID."&amp;add=".$this->var['seriesid']."\">"._ADDSERIES2FAVES."</a>]";
     		if($this->var['isopen'] < 2) {
@@ -134,8 +134,8 @@ class plugin_efiction_series_shortcodes extends e_shortcode
 	public function sc_series_submitreviews($parm = null)
 	{
  
-        $reviewsallowed =  efiction::settings('reviewsallowed');
-        $anonreviews   =  efiction::settings('anonreviews');
+        $reviewsallowed =  efiction_settings::get_single_setting('reviewsallowed');
+        $anonreviews   =  efiction_settings::get_single_setting('anonreviews');
         
         if($reviewsallowed && (isMEMBER || $anonreviews)) {
            $numreviews =  "[<a href=\"reviews.php?action=add&amp;type=SE&amp;item=".$this->var['seriesid']."\">"._SUBMITREVIEW."</a>]";
@@ -147,8 +147,8 @@ class plugin_efiction_series_shortcodes extends e_shortcode
 	public function sc_series_numreviews($parm = null)
 	{
 		$numreviews = '';
-        $reviewsallowed =  efiction::settings('reviewsallowed');
-        $anonreviews   =  efiction::settings('anonreviews');
+        $reviewsallowed =  efiction_settings::get_single_setting('reviewsallowed');
+        $anonreviews   =  efiction_settings::get_single_setting('anonreviews');
         
         if($reviewsallowed && (isMEMBER || $anonreviews)) {
            $numreviews =  "<a href=\"reviews.php?type=SE&amp;item=".$this->var['seriesid']."\">".$this->var['reviews']."</a>";
@@ -182,8 +182,8 @@ class plugin_efiction_series_shortcodes extends e_shortcode
 	public function sc_series_reviews($parm = null)
 	{
 		$reviews = '';
-        $reviewsallowed =  efiction::settings('reviewsallowed');
-        $anonreviews =  efiction::settings('anonreviews');
+        $reviewsallowed =  efiction_settings::get_single_setting('reviewsallowed');
+        $anonreviews =  efiction_settings::get_single_setting('anonreviews');
         
         if($reviewsallowed && (isMEMBER || $anonreviews)) {
              $reviews =  "<a href=\"reviews.php?type=SE&amp;item=".$this->var['seriesid']."\">"._REVIEWS."</a>";
@@ -194,8 +194,8 @@ class plugin_efiction_series_shortcodes extends e_shortcode
 	/* {SERIES_SCORE} */
 	public function sc_series_score($parm = null)
 	{
-        $reviewsallowed =  efiction::settings('reviewsallowed');
-        $anonreviews   =  efiction::settings('anonreviews');
+        $reviewsallowed =  efiction_settings::get_single_setting('reviewsallowed');
+        $anonreviews   =  efiction_settings::get_single_setting('anonreviews');
         if($reviewsallowed && (isMEMBER || $anonreviews)) {
             $score = ratingpics($this->var['rating']);
         }

@@ -2,7 +2,7 @@
 
 if (!defined('e107_INIT')) { exit; }
  
-$displayprofile =  efiction::settings('displayprofile'); 
+$displayprofile =  efiction_settings::get_single_setting('displayprofile'); 
  
 $profile_template = e107::getTemplate('efiction', 'profile', 'profile');  
 

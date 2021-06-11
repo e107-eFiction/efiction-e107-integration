@@ -29,20 +29,12 @@ if (!defined('e107_INIT'))
 
 require_once(_BASEDIR."config.php");
 
-$settings = efiction::settings();
- 
+$settings = efiction_settings::get_settings();
  
 if(isset($skin)) $globalskin = $skin; 
  
-$settings = efiction::settings();
- 
- 
 define("STORIESPATH", $settings['storiespath']);
 unset($settings['storiespath']);
-foreach($settings as $var => $val) {
-	$$var = stripslashes($val);
-	$settings[$var] = htmlspecialchars($val);
-}
  
 if(isset($_GET['debug'])) $debug = 1;
 if(!$displaycolumns) $displaycolumns = 1; // shouldn't happen, but just in case.

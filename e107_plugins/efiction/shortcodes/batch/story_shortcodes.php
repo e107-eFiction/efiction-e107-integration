@@ -85,7 +85,7 @@
         [<a href=\"member.php?action=favau&amp;add=".$stories['uid'].(count($stories['coauthors']) ? ",".implode(",", array_keys($stories['coauthors'])) : "")."\">"._ADDAUTHOR2FAVES."</a>]");
         */
         
-  		$favorites =  efiction::settings('favorites');
+  		$favorites =  efiction_settings::get_single_setting('favorites');
           if(isMEMBER && $favorites) {
       		$addtofaves = "[<a href=\"member.php?action=favst&amp;uid=".USERUID."&amp;add=".$this->var['sid']."\">"._ADDSTORY2FAVES."</a>]";
       		if($this->var['isopen'] < 2) {
@@ -254,7 +254,7 @@
         public function sc_story_numreviews($parm = null)
     	{
   
-          $reviewsallowed=  efiction::settings('reviewsallowed');
+          $reviewsallowed=  efiction_settings::get_single_setting('reviewsallowed');
           $text = $reviewsallowed == "1" ? "<a href=\"reviews.php?type=ST&amp;item=".$this->var['sid']."\">".$this->var['reviews']."</a>" : "" ;   
           return $text;     
         }
@@ -262,7 +262,7 @@
         public function sc_story_new($parm = null)
     	{
         	$new = '';
-            $recentdays =  efiction::settings('recentdays');
+            $recentdays =  efiction_settings::get_single_setting('recentdays');
             if(!empty($recentdays)) {
         		$recent = time( ) - ($recentdays * 24 * 60 *60);
         		if($this->var['updated'] > $recent) $new =  isset($new) ? file_exists(_BASEDIR.$new) ? "<img src='$new' alt='"._NEW."'>" : $new : _NEW;
@@ -280,7 +280,7 @@
         /* {STORY_PUBLISHED} {published} */
         public function sc_story_published($parm = null)
     	{
-          $dateformat =  efiction::settings('dateformat');          
+          $dateformat =  efiction_settings::get_single_setting('dateformat');          
           $published = date("$dateformat", $this->var['date']); 
           return $published;       
         }
@@ -309,14 +309,14 @@
         /* {STORY_REVIEWS} {reviews} */
         public function sc_story_reviews($parm = null)
     	{
-          $reviewsallowed =  efiction::settings('reviewsallowed');
+          $reviewsallowed =  efiction_settings::get_single_setting('reviewsallowed');
           $text = ($reviewsallowed ? "<a href=\"reviews.php?type=ST&amp;item=".$this->var['sid']."\">"._REVIEWS."</a>" : "");
           return $text;     
         }
         /* {STORY_ROUNDROBIN} {roundrobin} */
         public function sc_story_roundrobin($parm = null)
     	{
-          $roundrobin = efiction::settings('roundrobin');
+          $roundrobin = efiction_settings::get_single_setting('roundrobin');
           $text = $this->var['roundrobin'];   
           $text =  ($this->var['rr'] ?  (!empty($roundrobin) ? $roundrobin : "<img src=\""._BASEDIR."images/roundrobin.gif\" alt=\""._ROUNDROBIN."\">") : "");
           return $text;     
@@ -324,8 +324,8 @@
         /* {STORY_SCORE} {score} */
         public function sc_story_score($parm = null)
     	{
-            $reviewsallowed =  efiction::settings('reviewsallowed');
-            $anonreviews   =  efiction::settings('anonreviews');
+            $reviewsallowed =  efiction_settings::get_single_setting('reviewsallowed');
+            $anonreviews   =  efiction_settings::get_single_setting('anonreviews');
             if($reviewsallowed && (isMEMBER || $anonreviews)) {
                 $score = ratingpics($this->var['rating']);
             }
@@ -384,7 +384,7 @@
         /* {STORY_UPDATED} {updated}  */
         public function sc_story_updated($parm = null)
     	{
-          $dateformat =  efiction::settings('dateformat');          
+          $dateformat =  efiction_settings::get_single_setting('dateformat');          
           $updated = date("$dateformat", $this->var['updated']); 
           return $updated;     
         } 
@@ -558,8 +558,8 @@
         // Because this is used in places other than the listings of stories, we're setting it up as a function to be called as needed.
         function title_link($stories) {
             
-            $ageconsent =  efiction::settings('ageconsent');
-            $disablepopups =  efiction::settings('disablepopups');
+            $ageconsent =  efiction_settings::get_single_setting('ageconsent');
+            $disablepopups =  efiction_settings::get_single_setting('disablepopups');
             
             $ratingslist = efiction::ratingslist();
         	$rating = $stories['rid'];

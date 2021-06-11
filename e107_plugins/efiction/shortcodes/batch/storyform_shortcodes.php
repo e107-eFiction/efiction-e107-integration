@@ -60,7 +60,7 @@ class plugin_efiction_storyform_shortcodes extends e_shortcode
     public function sc_story_edit_category()
     {
         $catid = $this->var['catid'];
-        $multiplecats = efiction::settings('multiplecats');
+        $multiplecats = efiction_settings::get_single_setting('multiplecats');
         $output = '';
         if (!$multiplecats) {
             $text = '<input type="hidden" name="catid" id="catid" value="1">';
@@ -87,7 +87,7 @@ class plugin_efiction_storyform_shortcodes extends e_shortcode
     /* {STORY_EDIT_COAUTHORS} */
     public function sc_story_edit_coauthors()
     {
-        $coauthallowed = efiction::settings('coauthallowed');
+        $coauthallowed = efiction_settings::get_single_setting('coauthallowed');
 
         if ($coauthallowed) {
             $authors = eAuthors::get_authors_list();  //all available authors
@@ -110,7 +110,7 @@ class plugin_efiction_storyform_shortcodes extends e_shortcode
     /* {STORY_EDIT_SUMMARY} */
     public function sc_story_edit_summary()
     {
-        $tinyMCE = efiction::settings('tinyMCE');  
+        $tinyMCE = efiction_settings::get_single_setting('tinyMCE');  
          $text = e107::getForm()->textarea('summary', $this->var['summary'], '3', '58', array('class' => 'useeditor form-control', 'required' => 1, ));
         return $text;
     }
@@ -309,7 +309,7 @@ class plugin_efiction_storyform_shortcodes extends e_shortcode
     /* {STORY_EDIT_STORYTEXT} == chapter text in fact */
     public function sc_story_edit_storytext()
     {
-        $tinyMCE = efiction::settings('tinyMCE'); $tinyMCE = false;
+        $tinyMCE = efiction_settings::get_single_setting('tinyMCE'); $tinyMCE = false;
         if ($tinyMCE) {
             $text = e107::getForm()->bbarea('storytext', $this->var['storytext'], null, array('required' => true)); 
         } else {
@@ -340,7 +340,7 @@ class plugin_efiction_storyform_shortcodes extends e_shortcode
     /* {STORY_EDIT_CHAPTERNOTES} */
     public function sc_story_edit_chapternotes()
     {
-        $tinyMCE = efiction::settings('tinyMCE'); $tinyMCE = false;
+        $tinyMCE = efiction_settings::get_single_setting('tinyMCE'); $tinyMCE = false;
         if ($tinyMCE) {
             $text = e107::getForm()->bbarea('endnotes', $this->var['endnotes'] ) ;
         } else {

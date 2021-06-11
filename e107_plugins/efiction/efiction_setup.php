@@ -105,9 +105,6 @@ if (!class_exists('efiction_setup')) {
 							'sitekey'     => SITEKEY,
 							'sitename' => $pref['sitename'] ,    //fix this
 							'slogan' =>  $pref['sitedescription'] ,	//fix this
-							'smtp_host'   => $pref['smtp_server'] ,  //fix this
-							'smtp_username'     => $pref['smtp_username'] ,  //fix this
-							'smtp_password'    =>  $pref['smtp_password'] ,  //fix this
 							'url'     =>   $pref['siteurl'] ,  //fix this
 							'siteemail'       => $pref['siteadminemail'] ,  //or 'replyto_email'
 							'tableprefix'   => MPREFIX,

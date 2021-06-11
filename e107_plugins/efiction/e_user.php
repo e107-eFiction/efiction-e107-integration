@@ -25,7 +25,7 @@ class efiction_user // plugin-folder + '_user'
   
 	}
 
-	
+	/*
 	function profile($udata)  // display on user profile page.
 	{
  
@@ -51,7 +51,7 @@ class efiction_user // plugin-folder + '_user'
 		}
  
 		return $var;
-	}
+	}*/
 
 }	
 

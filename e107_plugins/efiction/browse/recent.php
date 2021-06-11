@@ -22,7 +22,7 @@
 // ----------------------------------------------------------------------
 if (!defined('e107_INIT')) { exit; }
 
-    $recentdays =  efiction::settings('recentdays');
+    $recentdays =  efiction_settings::get_single_setting('recentdays');
     $rss = $pagelinks['rss']['link'];
     $rss =  e107::getParser()->replaceConstants($rss, 'full');	
 	$caption = ($recentdays ? e107::getParser()->lanVars(LAN_RECENTSTORIES, $recentdays) : _MOSTRECENT)." ".$rss;

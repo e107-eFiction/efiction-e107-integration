@@ -267,7 +267,7 @@ class eFiction
 
     public static function userpanels()
     {
-        $settings = self::settings();
+        $settings = efiction_settings::get_settings();
         $submissionsoff = $settings['submissionsoff'];
         $favorites = $settings['favorites'];
 
@@ -293,7 +293,7 @@ class eFiction
 
     public static function favourite_panels($uid = null)
     {
-        $settings = self::settings();
+        $settings = efiction_settings::get_settings();
         $submissionsoff = $settings['submissionsoff'];
         $favorites = $settings['favorites'];
 
@@ -393,34 +393,7 @@ class eFiction
         return $ret;
     }
 
-    /*
-    $settingsresults = dbquery("SELECT * FROM ".$settingsprefix."fanfiction_settings WHERE sitekey = '".$sitekey."'");
-$settings = dbassoc($settingsresults);
-if(!defined("SITEKEY")) define("SITEKEY", $settings['sitekey']);
-unset($settings['sitekey']);
-if(!defined("TABLEPREFIX")) define("TABLEPREFIX", $settings['tableprefix']);
-unset($settings['tableprefix']);
-define("STORIESPATH", $settings['storiespath']);
-unset($settings['storiespath']);
-foreach($settings as $var => $val) {
-    $$var = stripslashes($val);
-    $settings[$var] = htmlspecialchars($val);
-}
-*/
-
-    public static function settings($setting_name = null)
-    {
-        $settingslist = array();
-        $settingsquery = "SELECT * FROM #fanfiction_settings WHERE sitekey = '".SITEKEY."'"  ;
-        $settings = e107::getDb()->retrieve($settingsquery);
-
-        if ($setting_name) {
-            return $settings[$setting_name];
-        }
-
-        return $settings;
-    }
-
+ 
     // replace for e107::getParser()->truncate($text, $limit); see issue https://github.com/e107inc/e107/issues/4480
     public static function truncate_text($str, $n = 75, $delim = '...')
     {
