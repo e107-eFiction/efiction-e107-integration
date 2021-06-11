@@ -72,13 +72,13 @@ $PROFILE_TEMPLATE['profile']['content'] = '
 			</div> 
 			{PROFILE_AUTHORFIELDS} 
 			<div class="row codeblock">
-			{PROFILE_CODEBLOCK=userprofile}
+			 {PROFILE_CODEBLOCK=userprofile}
 			</div>
 		</div>
 	</div> 
 </div>
-<div class=\"adminoptions\">{PROFILE_ADMINOPTIONS}</div> {PROFILE_REPORTTHIS: class=btn btn-light}
-</div>';
+<div class=\"adminoptions\">{PROFILE_ADMINOPTIONS}</div> 
+{PROFILE_REPORTTHIS: class=btn btn-light}';
 
 $PROFILE_TEMPLATE['profile']['tablerender']  = "simplecard";
 

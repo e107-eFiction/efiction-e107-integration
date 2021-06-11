@@ -24,8 +24,8 @@ $current = "browse";
 $displayform = 1;
 
 // Include some files for page setup and core functions
-include ("header.php");
 require_once(HEADERF);
+include ("header.php");
 
 if(isset($_GET['type'])) $type = descript($_GET['type']);
 else $type = false;

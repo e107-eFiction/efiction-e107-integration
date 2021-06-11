@@ -231,9 +231,9 @@ in blocks - shoutbox + poll
 
 **EditBio**
 
-- [ ] delete not used fields
-- [ ] replace with usersettings
-- [ ] replace links
+- [x] delete not used fields
+- [x] replace with usersettings
+- [x] replace links
 
 **Blocks**
 
@@ -487,3 +487,6 @@ conversion to timestamp... ???
 
 
 
+userskin
+removed
+skinnew

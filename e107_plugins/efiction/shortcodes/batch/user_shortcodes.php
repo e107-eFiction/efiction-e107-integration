@@ -39,27 +39,14 @@ class plugin_efiction_user_shortcodes extends e_shortcode
     /* {USER_OUTPUT} */
     public function sc_user_output($parm = null)
 	{
-		global  $offset;
-
+ 
 		$action = $this->var['action'];
 		$uid = $this->var['uid'];  //needed for panels
 		$itemsperpage =  efiction::settings('itemsperpage');
-
-		//$offset = $this->var['offset'];
+        $offset =  efiction::settings('offset');
+ 
 		$penname = $this->var['userinfo']['penname'];
-
-		/*
-		$panelquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE ".($action ? "panel_name = '$action' AND (panel_type = 'P' OR panel_type = 'F')" : "panel_type = 'P' AND panel_hidden = 0 ORDER BY panel_order ASC")." LIMIT 1");
-
-		if($panelquery) {
-			$panel = dbassoc($panelquery);   
-			if(!empty($panel['panel_url']) && file_exists(_BASEDIR.$panel['panel_url'])) include(_BASEDIR.$panel['panel_url']);
-			else if(file_exists(_BASEDIR."user/".$panel['panel_name'].".php")) include(_BASEDIR."user/".$panel['panel_name'].".php");
-			else $output .= write_error("(A) "._ERROR);
-		}
-		else if($action) $output .= write_error("(B) "._ERROR);
-		*/
-
+ 
 		$panel = e107::getDb()->retrieve("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE ".($action ? "panel_name = '$action' 
         AND (panel_type = 'P' OR panel_type = 'F')" : "panel_type = 'P' AND panel_hidden = 0 ORDER BY panel_order ASC")." LIMIT 1");
  

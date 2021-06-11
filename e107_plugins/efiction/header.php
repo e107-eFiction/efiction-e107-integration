@@ -27,12 +27,6 @@ if (!defined('e107_INIT'))
 }
  
 
-// Defines the character set for your language/location
- 
-define ("_BASEDIR", e_PLUGIN."efiction/"); ;
- 
-define("_ADMINBASEDIR", e_PLUGIN."efiction/admin/");
-
 require_once(_BASEDIR."config.php");
 
 $settings = efiction::settings();
@@ -41,10 +35,7 @@ $settings = efiction::settings();
 if(isset($skin)) $globalskin = $skin; 
  
 $settings = efiction::settings();
-if(!defined("SITEKEY")) define("SITEKEY", $settings['sitekey']);   
-unset($settings['sitekey']);
-if(!defined("TABLEPREFIX")) define("TABLEPREFIX", $settings['tableprefix']);
-unset($settings['tableprefix']);
+ 
  
 define("STORIESPATH", $settings['storiespath']);
 unset($settings['storiespath']);
@@ -97,14 +88,30 @@ if(isset($PHP_SELF)) $PHP_SELF = htmlspecialchars(descript($PHP_SELF), ENT_QUOTE
 
 // Set these variables to start.
 $agecontsent = false; $viewed = false; 
-
+ 
 require_once("includes/get_session_vars.php");
  
 if(isset($_GET['skin'])) {
 	$siteskin = $_GET['skin'];
     e107::getSession()->set(SITEKEY."_skin", $siteskin); 
 }
- 
+
+$v = explode(".", $version);   
+include(_BASEDIR."version.php");  
+$newV = explode(".", $version);    
+//if($v[0] == $newV[0] && ($v[1] < $newV[1] || (isset($newV[2]) && $v[2] < $newV[2]))) {
+foreach($newV AS $k => $l) {
+	if($newV[$k] > $v[$k] || (!empty($newV[$k]) && empty($v[$k]))) {
+		if(isADMIN && e_PAGE != "update.php") {
+			header("Location: update.php");
+		}
+		else if(!isADMIN && e_PAGE != "maintenance.php" && !(isset($_GET['action']) && $_GET['action'] == "login")) {
+			header("Location: maintenance.php");
+			exit( );
+		}
+	}
+}
+
 if(e107::getSession()->is(SITEKEY."_skin")) $siteskin = e107::getSession()->get(SITEKEY."_skin");
 if($maintenance && !isADMIN && e_PAGE != "maintenance.php" && !(isset($_GET['action']) && $_GET['action'] == "login")) {
 	header("Location: maintenance.php");
@@ -112,11 +119,12 @@ if($maintenance && !isADMIN && e_PAGE != "maintenance.php" && !(isset($_GET['act
 }
 
 $blocks = efiction::blocks();
-
+ 
 if(e107::getSession()->is(SITEKEY."_viewed")) $viewed = e107::getSession()->get(SITEKEY."_viewed"); 
+
 if(isset($_GET['ageconsent'])) e107::getSession()->set(SITEKEY."_ageconsent", 1);
 if(isset($_GET['warning'])) e107::getSession()->set(SITEKEY."_warned_{$_GET['warning']}", 1);
-
+ 
  
 if(is_dir(_BASEDIR."skins/$siteskin")) $skindir = _BASEDIR."skins/$siteskin";
 else if(is_dir(_BASEDIR."skins/".$settings['skin'])) $skindir = _BASEDIR."skins/".$defaultskin;
@@ -124,12 +132,8 @@ else $skindir = _BASEDIR."default_tpls";
 
 
 if(USERUID) {
-	$my_prefs = e107::getDb()->retrieve("SELECT sortby, storyindex, tinyMCE FROM ".TABLEPREFIX."fanfiction_authorprefs WHERE uid = '".USERUID."'");
-	if($my_prefs) {
-       $defaultsort = $my_prefs['sortby'];
-       $displayindex = $my_prefs['storyindex'];
-       $tinyMCE = $my_prefs['tinyMCE'];
-    }
+	$prefs = dbquery("SELECT sortby, storyindex, tinyMCE FROM ".TABLEPREFIX."fanfiction_authorprefs WHERE uid = '".USERUID."'");
+	if(dbnumrows($prefs)) list($defaultsort, $displayindex, $tinyMCE) = dbrow($prefs);
 }
 if(isset($_REQUEST['sort'])) $defaultsort = $_REQUEST['sort'] == "update" ? 1 : 0;
 define("_ORDERBY", " ORDER BY ".($defaultsort == 1 ? "updated DESC" : "stories.title ASC"));

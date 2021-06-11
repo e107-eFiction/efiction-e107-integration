@@ -1,19 +1,7 @@
 <?php
-
-// TODO: FIX, temp solution
-
-if (!defined('TABLEPREFIX')) {
-    define('TABLEPREFIX', MPREFIX);
-}
-
+ 
 //e107::lan('efiction'); loaded in e_module
-
-$efiction = e107::getSingleton('efiction', e_PLUGIN.'efiction/efiction.class.php');
-$efiction->init();
-$eAuthors = e107::getSingleton('eauthors', e_PLUGIN.'efiction/authors.class.php');
-$eAuthors->init(); 
-   
-
+ 
 require_once e_PLUGIN."efiction/includes/queries.php";
 
 $newcaptcha = efiction::settings('captcha');

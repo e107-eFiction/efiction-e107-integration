@@ -156,7 +156,7 @@ class efiction_shortcodes extends e_shortcode
  
 
     /*  {EFICTION_LINK} */
-    /* {EFICTION_LINK=rss} - doesn't work on live site, on local it works. Data issue? */
+    /*  {EFICTION_LINK=rss} - doesn't work on live site, on local it works. Data issue? */
     /*  example for login menu 
         {EFICTION_LINK: key=adminarea&class=list-group-item} 
         {EFICTION_LINK: key=login&class=list-group-item}   
@@ -166,8 +166,7 @@ class efiction_shortcodes extends e_shortcode
 		if($parm == "") { return ''; }
         
         $key = (!empty($parm['key'])) ? $parm['key'] : $parm;
-	    $efiction = e107::getSingleton('efiction', e_PLUGIN.'efiction/efiction.class.php');
-		 
+	    $efiction = e107::getSingleton('efiction', e_PLUGIN.'efiction/classes/efiction.class.php');
 		$link = $efiction->get_userlink($key);
          
 		$class = (!empty($parm['class'])) ? $parm['class']. ' ' .$key  : $key;
@@ -178,6 +177,27 @@ class efiction_shortcodes extends e_shortcode
 		else return "";
 		 
     }
+
+	/* {EFICTION_MENU_CONTENT} */
+	public function sc_efiction_menu_content()
+	{
+		//$block = $efiction->get_block('menu'); 
+		$blocks = efiction::blocks();
+		$pagelinks = efiction::userlinks();
+
+		foreach ($blocks['menu']['content'] as $page) {
+			if (isset($pagelinks[$page]['link'])) {
+				if (empty($blocks[$block]['style'])) {
+					$content .= '<li '.($current == $page ? 'id="menu_current"' : '').'>'.$pagelinks[$page]['link'].'</li>';
+				} else {
+					$content .= $pagelinks[$page]['link'];
+				}
+			}
+		}
+
+		return $content;
+	}
+
  
 
      /* {EFICTION_SORTFORM} */

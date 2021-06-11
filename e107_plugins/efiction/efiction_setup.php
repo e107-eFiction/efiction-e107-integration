@@ -98,9 +98,7 @@ if (!class_exists('efiction_setup')) {
      			{
 
 					if($table == 'fanfiction_settings')  {
-						
-						
-
+ 
 						include(e_PLUGIN."efiction/version.php");
 						
 						$insert = array(
@@ -116,10 +114,9 @@ if (!class_exists('efiction_setup')) {
 							'skin'  => $pref['sitetheme'] ,  //fix this  
 							'hiddenskins' => '' ,
 							'language' => $pref['sitelanguage'] ,     // fix this English = en
-							'hiddenskins' => '' ,
 							'submissionsoff' => 0 ,
 							'storiespath' => 'stories' , //not supported
-							'store' => 'files' ,
+							'store' => 'db' ,
 							'autovalidate' => 0 ,
 							'coauthallowed' => 0 ,
 							'maxwords' => 0 ,
@@ -185,7 +182,7 @@ if (!class_exists('efiction_setup')) {
 							array("admins","Admins","","1","6","0","A"),
 							array("classifications","Classifications","","2","4","0","A"),
 							array("categories","Categories","","2","1","0","A"),
-							array("custpages","Custom Pages","","1","4","0","A"),
+							array("custpages","Custom Pages",e_PLUGIN_ABS.'efiction/adminarea/admin_custpages.php',"1","4","0","A"),
 							array("validate","Validate Submission","","3","0","1","A"),
 							array("yesletter","Validation Letter","","3","0","1","A"),
 							array("noletter","Rejection Letter","","3","0","1","A"),
@@ -203,7 +200,7 @@ if (!class_exists('efiction_setup')) {
 							array("stats","View Your Statistics","","1","3","0","U"),
 							array("newstory","Add New Story","stories.php?action=newstory","1","1","0","S"),
 							array("newseries","Add New Series","series.php?action=add","1","3","0","S"),
-							array("managestories","Manage Stories","stories.php?action=viewstories","1","2","0","S"),
+							array("managestories","Manage Stories","managestories.php?action=viewstories","1","2","0","S"),
 							array("manageseries","Manage Series","series.php?action=manage","1","4","0","S"),
 							array("reviewsby","Your Reviews","","1","0","1","U"),
 							array("storiesby","Stories by {author}","","0","1","0","P"),
@@ -217,7 +214,7 @@ if (!class_exists('efiction_setup')) {
 							array("recent","Most Recent","","0","0","1","B"),
 							array("featured","Featured Stories","","0","0","1","B"),
 							array("panels","Panels","","1","1","0","A"),
-							array("phpinfo","PHP Info","","1","7","0","A"),
+							array("phpinfo","PHP Info",e_ADMIN_ABS.'phpinfo.php',"1","7","0","A"),
 							array("contact","Contact","","0","0","1","P"),
 							array("series", "Series", "", "0", "4", "0", "B"),
 							array("viewlog", "Action Log", "", "1", "8", "0", "A"),
@@ -356,7 +353,6 @@ if (!class_exists('efiction_setup')) {
 							
 							$insert2 = array(
 								'uid'    =>  $dbinsertid,
-								'userskin'  => $pref['sitetheme'],
 								'level' => 1,  //main admin
 								'_DUPLICATE_KEY_UPDATE' => 1
 							);
@@ -443,7 +439,7 @@ if (!class_exists('efiction_setup')) {
 
         public function upgrade_post($var)
         {
-			 //$this->add_tables($var);  
+			 $this->add_tables($var);  
             
             $this->add_default_data($var); 
 			

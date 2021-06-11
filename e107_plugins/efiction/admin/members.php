@@ -174,7 +174,7 @@ $confirm = isset($_GET['confirm']) ? $_GET['confirm'] : false;
 					$skinquery = dbquery("SELECT skin FROM ".$settingsprefix."fanfiction_settings WHERE sitekey ='".SITEKEY."'");
 					list($skin) = dbrow($skinquery);
 				}
-				dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_authorprefs(uid, userskin, storyindex, sortby) VALUES('$newuid', '$skin', '$displayindex', '$defaultsort')");
+				dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_authorprefs(uid, storyindex, sortby) VALUES('$newuid', $displayindex', '$defaultsort')");
 				
 				$output .= write_message(_ACTIONSUCCESSFUL);
 			}

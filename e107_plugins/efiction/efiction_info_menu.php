@@ -37,9 +37,7 @@
  * #######################################
  */
 
-if (!defined('e107_INIT')) {
-    exit;
-}
+if (!defined('e107_INIT')) { exit; }
 
 if (class_exists('efiction')) {
  

@@ -27,8 +27,9 @@ if(isset($_GET['action']) && ($_GET['action'] == "categories" || $_GET['action']
 $disableTiny = true;
 
 // Include some files for page setup and core functions
-include ("header.php");
 require_once(HEADERF);
+include ("header.php");
+
 
 //make a new TemplatePower object
 if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/default.tpl" );
@@ -37,29 +38,29 @@ include(_BASEDIR."includes/pagesetup.php");
 
 e107::lan('efiction',true );
 // end basic page setup
- 
+
 // check that user has permissions to perform this action before going further.  Otherwise kick 'em
 	if(!isADMIN) accessDenied( );
-    
-    $admincats = e107::getDb()->retrieve("SELECT categories AS admincats FROM #fanfiction_authorprefs WHERE uid = '".USERUID."' LIMIT 1");
+	$adminquery = dbquery("SELECT categories FROM ".TABLEPREFIX."fanfiction_authorprefs WHERE uid = '".USERUID."' LIMIT 1");
+	list($admincats) = dbrow($adminquery);
 	if(empty($admincats)) $admincats = "0";
-    
 	$output = "<div style='text-align: center; margin: 1em;'>";
-    
-    $panellist = efiction::admin_panels();
-    
-	 
+	$panelquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_hidden != '1' AND panel_type = 'A' AND panel_level >= ".uLEVEL." ORDER BY panel_level DESC, panel_order ASC, panel_title ASC");
+	if(!dbnumrows($panelquery)) $output .= _FATALERROR;
+	$panellist = array();
+	while($panel = dbassoc($panelquery)) {
+		if(!$panel['panel_url']) $panellist[$panel['panel_level']][]= "<a href=\"admin.php?action=".$panel['panel_name']."\">".$panel['panel_title']."</a>";
+		else $panellist[$panel['panel_level']][] = "<a href=\"".$panel['panel_url']."\">".$panel['panel_title']."</a>";
+	}
 	foreach($panellist as $accesslevel => $row) {
 		$output .= implode(" | ", $row)."<br />";
 	}
-    
 	$output .= "</div>\n";
 	if($action) {
- 
-        $panelquery = "SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_name = '$action' AND panel_type = 'A' LIMIT 1";
- 
-		if($panel  = e107::getDb()->retrieve($panelquery)) {
- 
+		$panelquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_name = '$action' AND panel_type = 'A' LIMIT 1");
+		if(dbnumrows($panelquery)) {
+			$panel = dbassoc($panelquery);
+            
 			if((isset($panel['panel_level']) ? $panel['panel_level'] : 0) >= uLEVEL) { 
          
 				if($panel['panel_url'] && file_exists(_BASEDIR.$panel['panel_url'])) require_once(_BASEDIR.$panel['panel_url']);
@@ -69,28 +70,23 @@ e107::lan('efiction',true );
 		}
 	}
 	else {
-        // admin notices 
 		if (file_exists("install"))
 			$output .= write_error(_SECURITYDELETE);
-    		$adminnotices = "";
-    		$count = e107::getDb()->retrieve("SELECT COUNT(DISTINCT chapid) AS count FROM #fanfiction_chapters WHERE validated < 1");
- 
-    		if($count) $adminnotices .= write_message(sprintf(_QUEUECOUNT, $count));
-            
-    	    $codequery = "SELECT * FROM #fanfiction_codeblocks WHERE code_type = 'adminnotices'";
-            $codes = e107::getDb()->retrieve($codequery, true);
-            foreach ($codes as $code) {
-                //example:   
-                eval($code['code_text']);
-            }
-            
+		$adminnotices = "";
+		$countquery = dbquery("SELECT COUNT(DISTINCT chapid) FROM ".TABLEPREFIX."fanfiction_chapters WHERE validated < 1");
+		list($count) = dbrow($countquery);
+		if($count) $adminnotices .= write_message(sprintf(_QUEUECOUNT, $count));
+		$codequery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'adminnotices'");
+		while($code = dbassoc($codequery)) {
+			eval($code['code_text']);
+		}
 		$output .= write_message($adminnotices);
- 
-    }	
- 
- 
+		$output .= write_message(_RUNNINGVERSION);
+	}	
+	$tpl->assign( "output", $output );
+    $output = $tpl->getOutputContent();  
     $output = e107::getParser()->parseTemplate($output, true);
     e107::getRender()->tablerender($caption, $output, $current);
- 
+	dbclose( );
     require_once(FOOTERF);  
     exit( );

@@ -9,7 +9,6 @@
  * IMPORTANT: Make sure the redirect script uses the following code to load class2.php: 
  * 
  * 	if (!defined('e107_INIT'))
- * 	{
  * 		require_once(__DIR__.'/../../class2.php');
  * 	}
  * 
@@ -31,7 +30,7 @@ class efiction_url // plugin-folder + '_url'
 		$config['adminarea'] = array(
 			'alias'         => 'admin.php',
 			'regex'			=> '^{alias}\/?([\?].*)?\/?$', 
-			'sef'			=> '{alias}', 
+			'sef'			=> '{alias}xx{query}', 
 			'redirect'		=> '{e_PLUGIN}efiction/admin.php$1', 	
 			'sef'			=> 'admin.php',   
 		);
@@ -138,17 +137,7 @@ class efiction_url // plugin-folder + '_url'
 			'redirect'		=> '{e_PLUGIN}efiction/viewstory.php$1', 	 		// file-path of what to load when the regex returns true.
 		);   
  
-		$config['submission'] = array(
-            'alias'         => 'submission.php',
-			'regex'			=> '^{alias}\/?([\?].*)?\/?$', 
-			'sef'			=> '{alias}', 
-			'redirect'		=> '{e_PLUGIN}efiction/viewpage.php?page=rules$1', 	 		// file-path of what to load when the regex returns true.
-		);      
-        
-        
-        
-        
-        $config['index'] = array(
+		$config['index'] = array(
             'alias'         => 'efiction',
 			'regex'			=> '^{alias}\/?$', 						// matched against url, and if true, redirected to 'redirect' below.
 			'sef'			=> '{alias}', 							// used by e107::url(); to create a url from the db table.

@@ -24,14 +24,6 @@ if (!defined('e107_INIT')) { exit; }
 		$output = "<div id=\"pagetitle\">".$panel['panel_title']."</div>";
 		$where = false;
 	switch($list) {
-		case "popskins":
-			$result = dbquery("SELECT userskin, COUNT(userskin) as count FROM ".TABLEPREFIX."fanfiction_authorprefs GROUP BY userskin ORDER BY count DESC");
-			$count = 1;
-			while($popskin = dbassoc($result)) {
-				$output .= "$count. ".$popskin['userskin']."<br />";
-				$count++;
-			}
-			break;
 		case "favauthors":
 			$result = dbquery("SELECT count( fav.item ) AS count, "._UIDFIELD." as uid, "._PENNAMEFIELD." as penname FROM ".TABLEPREFIX."fanfiction_favorites AS fav, "._AUTHORTABLE." WHERE fav.item = "._UIDFIELD." AND fav.type = 'AU' GROUP  BY fav.item ORDER  BY count DESC LIMIT 10");
 			if(dbnumrows($result) == 0) $output .= write_message(_NORESULTS);

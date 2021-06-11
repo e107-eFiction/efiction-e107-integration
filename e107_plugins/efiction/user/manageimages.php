@@ -23,7 +23,7 @@
 // ----------------------------------------------------------------------
 
 if (!defined('e107_INIT')) { exit; }
-var_dump(STORIESPATH);
+ 
 // $upfile = isset($_FILES['upfile']) ? $_FILES['upfile'] : false;
 include(_BASEDIR."includes/upload_class.php");
 function buildImageList( ) {

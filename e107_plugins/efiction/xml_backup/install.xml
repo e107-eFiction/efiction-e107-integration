@@ -3,14 +3,6 @@
 	<database>
 	<dbTable name="fanfiction_blocks">
 		<item>
-			<field name="block_id">11</field>
-			<field name="block_name">linktous</field>
-			<field name="block_title">Link to Us</field>
-			<field name="block_file">linktous/linktous.php</field>
-			<field name="block_status">0</field>
-			<field name="block_variables"></field>
-		</item>
-		<item>
 			<field name="block_id">10</field>
 			<field name="block_name">countdown</field>
 			<field name="block_title">Countdown</field>
