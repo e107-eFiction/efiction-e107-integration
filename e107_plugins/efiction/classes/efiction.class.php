@@ -41,35 +41,7 @@ class eFiction
 {
     protected $pref = array();
 
-    private static $admin_panel_icons = array(
-        'maintenance' => '<i class="S32 e-configure-32"></i>',
-        'modules' => '<i class="S32 e-plugins-32"></i>',
-        'newstory' => '<i class="S32 e-add-32"></i>',
-        'addseries' => '<i class="S32 e-articles-32"></i>',
-        'news' => '<i class="S32 e-news-32"></i>',
-        'mailusers' => '<i class="S32 e-mail-32"></i>',
-        'blocks' => '<i class="S32 e-welcome-32"></i>',
-        'admins' => '<i class="S32 e-cat_users-32"></i>',
-        'submitted' => '<i class="S32 e-notify-32"></i>',
-        'skins' => '<i class="S32 e-themes-32"></i>',
-        //find better icons later
-        'featured' => '<i class="S32 e-frontpage-32"></i>',
-        'manual' => '<i class="S32 e-forums-32"></i>',
 
-        'versioncheck' => '<i class="S32 e-cat_users-32"></i>',
-        'characters' => '<i class="S32 e-content-32"></i>',
-        'ratings' => '<i class="S32 e-reviews-32"></i>',
-        'members' => '<i class="S32 e-users-32"></i>',
-        'classifications' => '<i class="S32 e-rename-32"></i>',
-        'categories' => '<i class="S32 e-prefs-32"></i>',
-        'settings' => '<i class="S32 e-configure-32"></i>',
-        'panels' => '<i class="S32 e-rename-32"></i>',
-        'custpages' => '<i class="S32 e-prefs-32"></i>',
-        'viewlog' => '<i class="S32 e-warning-32"></i>',
-        'authorfields' => '<i class="S32 e-userclass-32"></i>',
-        'phpinfo' => '<i class="S32 e-userclass-32"></i>',
-        'links' => '<i class="S32 e-userclass-32"></i>',
-    );
 
     public function __construct()
     {
@@ -115,34 +87,7 @@ class eFiction
         return $perms;
     }
 
-    /* in adminarea.php */
-    public static function adminarea_panels($parm = null)
-    {
-        $panelquery = "SELECT * FROM #fanfiction_panels WHERE panel_hidden != '1' AND panel_type = 'A' AND panel_level >= ".uLEVEL.' ORDER BY panel_level DESC, panel_order ASC, panel_title ASC';
-
-        $records = e107::getDb()->retrieve($panelquery, true);
-
-        foreach ($records as $panel) {
-            $key = $panel['panel_name'];
-            if (!$panel['panel_url']) {
-                $link = e_HTTP.'admin.php?action='.$panel['panel_name'];
-            } else {
-                $link = e_HTTP.$panel['panel_url'];
-            }
-
-            $vals[$key]['link'] = $link;
-            $vals[$key]['title'] = $panel['panel_title'];
-            $vals[$key]['caption'] = $panel['panel_title'];
-            $vals[$key]['perms'] = 0;
-            $vals[$key]['icon_32'] = self::$admin_panel_icons[$key];
-
-            /*	if(!$panel['panel_url']) $panellist[$panel['panel_level']][]= "<a href=\"admin.php?action=".$panel['panel_name']."\">".$panel['panel_title']."</a>";
-               else $panellist[$panel['panel_level']][] = "<a href=\"".$panel['panel_url']."\">".$panel['panel_title']."</a>";
-            */
-        }
-
-        return $vals;
-    }
+ 
 
     public static function catlist()
     {
@@ -329,7 +274,7 @@ class eFiction
     public static function panel_byaction($action = '')
     {
         /*
-        $settings = self::settings();
+         
         $submissionsoff = $settings['submissionsoff'];
         $favorites = $settings['favorites'];
 
@@ -438,7 +383,7 @@ class eFiction
     {
         global  $linkstyle, $linkrange;
 
-        $itemsperpage = efiction::settings('itemsperpage');
+        $itemsperpage = efiction_settings::get_single_setting('itemsperpage');
 
         $pages = '';
         $itemsperpage = $itemsperpage * $columns;

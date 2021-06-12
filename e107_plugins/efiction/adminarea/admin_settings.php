@@ -30,37 +30,32 @@ require_once(e_ADMIN."auth.php");
 
 e107::lan('efiction');
 e107::lan('efiction', true);
-e107::lan('efiction', 'install' );
  
+
+if(isset($_GET['action']))
+{
+	$action = e107::getParser()->filter($_GET['action'], 'str');
+}
 if(isset($_GET['sect']))
 {
-	//	$action = key($_POST['nextStep']);
-	$sect= e107::getParser()->toDb($_GET['sect']);  
+	$par = e107::getParser()->filter($_GET['sect'], 'str'); 
 }
-
-
-if(function_exists('settings'))
+if(isset($_GET['message']))
 {
-	$result = call_user_func('settings', $sect);
+	$par = e107::getParser()->filter($_GET['message'], 'str'); 
+}
+ 
+if(function_exists($action))
+{
+	$result = call_user_func($action, $par);
 }
 
  
 require(e_ADMIN . 'footer.php');
 
-function danger_message($message = '') {
-	$text = '<div class="s-message"><div class=" alert alert-danger"><div class="s-message-body">'.$message.'</div></div>';
-
-	return $text;
-}
 
 function settings($sect) {
  
-	$sitekey = e107::getInstance()->getSitePath();
-	if(!e107::getDb()->isTable('fanfiction_settings')) {
-		$output = danger_message('Your table '.MPREFIX.'fanfiction_settings already exists.');
-		e107::getRender()->tablerender('',     $output);
-	}  
-
 	$output = '';
 	include(e_PLUGIN."efiction/admin/settings.php");
 
@@ -68,21 +63,30 @@ function settings($sect) {
 
 }
 
+function censor($sect) {
  
+	$output = '';
+	include(e_PLUGIN."efiction/admin/censor.php");
+
+	e107::getRender()->tablerender($caption,   $output); 
+
+}
+
+function messages($message) {
+ 
+	$output = '';
+	include(e_PLUGIN."efiction/admin/messages.php");
+
+	e107::getRender()->tablerender($caption,   $output); 
+
+}
 
 function admin_settings_adminmenu()
 {
 /*
 	$output .= "<h1>"._SETTINGS."</h1><div style='text-align: center;'>
  
- 
-	<a href='admin.php?action=censor'>"._CENSOR."</a> <br />
-	<a href='admin.php?action=messages&message=welcome'>"._WELCOME."</a> | 
-	<a href='admin.php?action=messages&message=copyright'>"._COPYRIGHT."</a> | 
-	<a href='admin.php?action=messages&message=printercopyright'>"._PRINTERCOPYRIGHT."</a> | 
-	<a href='admin.php?action=messages&message=tinyMCE'>"._TINYMCE."</a> | 
-	<a href='admin.php?action=messages&message=nothankyou'>"._NOTHANKYOU."</a> | 
-	<a href='admin.php?action=messages&message=thankyou'>"._THANKYOU."</a><br />";
+	 
 	$settingsquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_type = 'AS' ORDER BY panel_title");
 	while($os = dbassoc($settingsquery)) {
 		if($os['panel_url']) $othersettings[] = "<a href='".$os['panel_url']."'>".$os['panel_title']."</a>";
@@ -93,30 +97,61 @@ $output .= "</div> ";
 	$sect = 'main';
 
 	$var['main']['text'] = _MAINSETTINGS;
-	$var['main']['link'] = e_SELF . "?sect=main";
+	$var['main']['link'] = e_SELF . "?action=settings&sect=main";
 
 	$var['submissions']['text'] = _SUBMISSIONSETTINGS;
-	$var['submissions']['link'] = e_SELF . "?sect=submissions";
+	$var['submissions']['link'] = e_SELF . "?action=settings&sect=submissions";
 
 	$var['sitesettings']['text'] = _SITESETTINGS;
-	$var['sitesettings']['link'] =  e_SELF . "?sect=sitesettings";
+	$var['sitesettings']['link'] =  e_SELF . "?action=settings&sect=sitesettings";
 
 	$var['display']['text'] = _DISPLAYSETTINGS;
-	$var['display']['link'] = e_SELF . "?sect=display";
+	$var['display']['link'] = e_SELF . "?action=settings&sect=display";
 
 	$var['reviews']['text'] = _REVIEWSETTINGS;
-	$var['reviews']['link'] = e_SELF . "?sect=reviews";
+	$var['reviews']['link'] = e_SELF . "?action=settings&sect=reviews";
 
 	$var['useropts']['text'] = _USERSETTINGS;
-	$var['useropts']['link'] = e_SELF . "?sect=useropts";
+	$var['useropts']['link'] = e_SELF . "?action=settings&sect=useropts";
 
 	$var['email']['text'] = _EMAILSETTINGS;
-	$var['email']['link'] = e_SELF . "?sect=email";
+	$var['email']['link'] = e_SELF . "?action=settings&sect=email";
  
+	$var['censor']['text'] = _CENSOR;
+	$var['censor']['link'] = e_SELF . "?action=censor";
+
+	$var['welcome']['text'] = _WELCOME;
+	$var['welcome']['link'] = e_SELF . "?action=messages&message=welcome";
+
+	$var['copyright']['text'] = _COPYRIGHT;
+	$var['copyright']['link'] = e_SELF . "?action=messages&message=copyright";
+
+	$var['printercopyright']['text'] = _PRINTERCOPYRIGHT;
+	$var['printercopyright']['link'] = e_SELF . "?action=messages&message=printercopyright";
+
+	$var['tinyMCE']['text'] = _TINYMCE;
+	$var['tinyMCE']['link'] = e_SELF . "?action=messages&message=tinyMCE";
+
+	$var['nothankyou']['text'] = _NOTHANKYOU;
+	$var['nothankyou']['link'] = e_SELF . "?action=messages&message=nothankyou";
+
+	$var['thankyou']['text'] = _THANKYOU;
+	$var['thankyou']['link'] = e_SELF . "?action=messages&message=thankyou";
+
+	$var['back']['text'] = LAN_BACK;
+	$var['back']['link'] =  e_PLUGIN."efiction/admin_config.php";	
+
+ 
+	if(isset($_GET['action']) && $_GET['action'] == "censor") {
+		$active = "censor";
+	} 
+	if(isset($_GET['message'])) {
+		$active = "message";
+	}
 	if(isset($_GET['sect']))
 	{
-		$action =  e107::getParser()->toDb($_GET['sect']);  
+		$active =  e107::getParser()->toDb($_GET['sect']);  
 	}
 
-	show_admin_menu(_SETTINGS, $action, $var);
+	show_admin_menu(_SETTINGS, $active, $var);
 }

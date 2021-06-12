@@ -47,7 +47,7 @@ Header("Content-Disposition: attachment; filename='$file_name'");
 
 session_start( );
 require_once("../includes/queries.php");
-require_once("../includes/get_session_vars.php");
+require_once("../inc/get_session_vars.php");
 $debug = false;  // Because we don't want debug info mucking up our backup.
 
 if(!isADMIN) die( );

@@ -14,7 +14,6 @@ CREATE TABLE `fanfiction_authorprefs` (
   `sortby` tinyint(1) NOT NULL default '0',
   `storyindex` tinyint(1) NOT NULL default '0',
   `validated` tinyint(1) NOT NULL default '0',
-  `level` tinyint(1) NOT NULL default '0',
   `categories` varchar(200) NOT NULL default '0',
   `contact` tinyint(1) NOT NULL default '0',
   `stories` int(11) NOT NULL default '0',
@@ -38,11 +37,9 @@ CREATE TABLE `fanfiction_authors` (
   `date` datetime NOT NULL default '0000-00-00 00:00:00',
   `admincreated` int(11) NOT NULL default '0',
   `password` varchar(40) NOT NULL default '0',
-  `user_id` int(11) NOT NULL,
   PRIMARY KEY  (`uid`),
   KEY `penname` (`penname`),
   KEY `admincreated` (`admincreated`),
-  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB;
 
 -- --------------------------------------------------------

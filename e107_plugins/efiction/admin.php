@@ -19,6 +19,7 @@
 //
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
+if (!defined('e107_INIT')) { exit; }
 
 $current = "adminarea";
 
@@ -39,34 +40,28 @@ include(_BASEDIR."includes/pagesetup.php");
 e107::lan('efiction',true );
 // end basic page setup
 
-// check that user has permissions to perform this action before going further.  Otherwise kick 'em
+	// check that user has permissions to perform this action before going further.  Otherwise kick 'em
 	if(!isADMIN) accessDenied( );
 	$adminquery = dbquery("SELECT categories FROM ".TABLEPREFIX."fanfiction_authorprefs WHERE uid = '".USERUID."' LIMIT 1");
 	list($admincats) = dbrow($adminquery);
 	if(empty($admincats)) $admincats = "0";
+
+	//displays available admin panels 
 	$output = "<div style='text-align: center; margin: 1em;'>";
-	$panelquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_hidden != '1' AND panel_type = 'A' AND panel_level >= ".uLEVEL." ORDER BY panel_level DESC, panel_order ASC, panel_title ASC");
-	if(!dbnumrows($panelquery)) $output .= _FATALERROR;
-	$panellist = array();
-	while($panel = dbassoc($panelquery)) {
-		if(!$panel['panel_url']) $panellist[$panel['panel_level']][]= "<a href=\"admin.php?action=".$panel['panel_name']."\">".$panel['panel_title']."</a>";
-		else $panellist[$panel['panel_level']][] = "<a href=\"".$panel['panel_url']."\">".$panel['panel_title']."</a>";
-	}
+ 
+	$panellist = efiction_panels::get_admin_panels(); 
+
 	foreach($panellist as $accesslevel => $row) {
 		$output .= implode(" | ", $row)."<br />";
 	}
 	$output .= "</div>\n";
+
 	if($action) {
-		$panelquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_name = '$action' AND panel_type = 'A' LIMIT 1");
-		if(dbnumrows($panelquery)) {
-			$panel = dbassoc($panelquery);
-            
-			if((isset($panel['panel_level']) ? $panel['panel_level'] : 0) >= uLEVEL) { 
-         
+		$panel =  efiction_panels::get_single_panel($action, "A"); //level is checked inside
+		if($panel) {  
 				if($panel['panel_url'] && file_exists(_BASEDIR.$panel['panel_url'])) require_once(_BASEDIR.$panel['panel_url']);
 				else if (file_exists(_BASEDIR."admin/{$action}.php")) require_once(_BASEDIR."admin/{$action}.php");
-			}
-			else accessDenied( );
+
 		}
 	}
 	else {

@@ -3,20 +3,18 @@
 e107::lan('efiction');
 e107::lan('efiction', true);
 
+include e_PLUGIN.'efiction/inc/corefunctions.php';
 
 e107::getSingleton('efiction_settings', e_PLUGIN.'efiction/classes/settings.class.php');
-//ex. $settings = efiction_settings::get_settings();
- 
+e107::getSingleton('efiction_authors', e_PLUGIN.'efiction/classes/authors.class.php');
+e107::getSingleton('efiction_panels', e_PLUGIN.'efiction/classes/panels.class.php');
+e107::getSingleton('efiction_ratings', e_PLUGIN.'efiction/classes/ratings.class.php');
 
 $efiction = e107::getSingleton('efiction', e_PLUGIN.'efiction/classes/efiction.class.php');
 $efiction->init();
-$eAuthors = e107::getSingleton('eauthors', e_PLUGIN.'efiction/classes/authors.class.php');
-$eAuthors->init(); 
 
-
-   
 $sitekey = e107::getInstance()->getSitePath();
- 
+
 if (!defined('SITEKEY') && $sitekey) {
     define('SITEKEY', $sitekey);
 }
@@ -24,7 +22,7 @@ if (!defined('SITEKEY') && $sitekey) {
 /* temp */
 if (!defined('TABLEPREFIX')) {
     define('TABLEPREFIX', MPREFIX);
-} 
+}
 
 /* temp */
 if (!defined('_BASEDIR')) {
@@ -33,6 +31,5 @@ if (!defined('_BASEDIR')) {
 
 /* temp */
 if (!defined('_ADMINBASEDIR')) {
-    define('_ADMINBASEDIR', e_PLUGIN."efiction/admin/");
+    define('_ADMINBASEDIR', e_PLUGIN.'efiction/admin/');
 }
- 

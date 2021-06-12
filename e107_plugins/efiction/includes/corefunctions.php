@@ -71,45 +71,7 @@ function captcha_confirm() {
 	return false;
 }
 
-// Sanitizes user input to help prevent XSS attacks 
-function descript($text) {
-	// Convert problematic ascii characters to their true values
-	$search = array("40","41","58","65","66","67","68","69","70",
-		"71","72","73","74","75","76","77","78","79","80","81",
-		"82","83","84","85","86","87","88","89","90","97","98",
-		"99","100","101","102","103","104","105","106","107",
-		"108","109","110","111","112","113","114","115","116",
-		"117","118","119","120","121","122");
-	
-	$replace = array("(",")",":","a","b","c","d","e","f","g","h",
-		"i","j","k","l","m","n","o","p","q","r","s","t","u",
-		"v","w","x","y","z","a","b","c","d","e","f","g","h",
-		"i","j","k","l","m","n","o","p","q","r","s","t","u",
-		"v","w","x","y","z");
-
-	$entities = count($search);
-	
-	for ($i=0;$i < $entities;$i++) $text = preg_replace("#(&\#)(0*".$search[$i]."+);*#si", $replace[$i], $text);
-
-	// the following is based on code from bitflux (http://blog.bitflux.ch/wiki/)	
-	// Kill hexadecimal characters completely
-	$text = preg_replace('#(&\#x)([0-9A-F]+);*#si', "", $text);
-
-	// remove any attribute starting with "on" or xmlns
-
-	$text = preg_replace('#(<[^>]+[\\"\'\s])(onmouseover|onmousedown|onmouseup|onmouseout|onmousemove|onclick|ondblclick|onload|xmlns)[^>]*>#iU', ">", $text);
-
-	// remove javascript: and vbscript: protocol
-	
-	$text = preg_replace('#([a-z]*)=([\`\'\"]*)script:#iU', '$1=$2nojscript...', $text);
-	$text = preg_replace('#([a-z]*)=([\`\'\"]*)javascript:#iU', '$1=$2nojavascript...', $text);
-	$text = preg_replace('#([a-z]*)=([\'\"]*)vbscript:#iU', '$1=$2novbscript...', $text);
-
-	//<span style="width: expression(alert('Ping!'));"></span> (only affects ie...)
-	$text = preg_replace('#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU', "$1>", $text);
-	$text = preg_replace('#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU', "$1>", $text);
-	return $text;
-}
+ 
 
 // Call this function when the user tries to do something they shouldn't have access to.
 function accessDenied($str = ""){
@@ -395,23 +357,8 @@ function replace_naughty($text) {
 	$text = preg_replace($naughtywords, $replace, $text);
 	return $text;
 }
-
-// Format for messages sent back from various forms and actions 
-function write_message($str) {
-	return "<div style='text-align: center; margin: 1em;'>$str</div>";
-}
-
-// Formats error messages sent back from various forms and actions
-function write_error($str) {
-	return "<div style='text-align: center; margin: 1em;' class='errortext'>$str</div>";
-}
-
-// Checks that the given $num is actually a number.  Used to help prevent XSS attacks.
-function isNumber($num) {
-	if(empty($num)) return false;
-	if(!is_string($num)) return false;
-	return preg_match("/^[0-9]+$/", $num);
-}
+ 
+ 
 
 // May be needed for sites that have bridged the authors table
 function check_prefs($uid) {

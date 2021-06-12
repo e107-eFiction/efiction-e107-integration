@@ -31,7 +31,7 @@ class efiction_user // plugin-folder + '_user'
  
         $tp = e107::getParser();
         
-        $adata = eauthors::get_author_data_by_user_id($udata['user_id']); 
+        $adata = efiction_authors::get_single_author_by_user($udata['user_id']); 
  
         $author_uid = $adata['uid'];
         

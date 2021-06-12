@@ -46,14 +46,8 @@ if (!class_exists('efiction_setup')) {
         
         function __construct() {
         
-         $this->tables_list = array('fanfiction_authorprefs', 'fanfiction_authors', 'fanfiction_blocks', 'fanfiction_categories', 'fanfiction_chapters',
-          'fanfiction_characters', 'fanfiction_classes', 'fanfiction_classtypes', 'fanfiction_coauthors', 'fanfiction_codeblocks', 'fanfiction_comments', 'fanfiction_favorites',
-          'fanfiction_inseries', 'fanfiction_log', 'fanfiction_messages', 'fanfiction_modules', 'fanfiction_news','fanfiction_pagelinks','fanfiction_panels', 'fanfiction_ratings','fanfiction_reviews',
-          'fanfiction_series', 'fanfiction_stats', 'fanfiction_stories', 'fanfiction_settings' );            
-        
-         $this->tables_data = array('fanfiction_settings','fanfiction_panels','fanfiction_pagelinks', 'fanfiction_blocks', 'fanfiction_messages', 'fanfiction_authors', 'fanfiction_stats' );
+          
         }
-        
         public function install_pre($var)
         {
            
@@ -84,6 +78,22 @@ if (!class_exists('efiction_setup')) {
                     }
                }  
             } 
+		}
+
+		public function fix_user_extended_fields() {
+
+         	$query = "UPDATE `".MPREFIX."user_extended_struct` SET `user_extended_struct_signup` = '1' WHERE `e107_user_extended_struct`.`user_extended_struct_name` = 'plugin_efiction_betareader'";
+
+			e107::getDB()->gen($query); 
+
+			$query = "UPDATE `".MPREFIX."user_extended_struct` SET `user_extended_struct_write` = '250' WHERE `e107_user_extended_struct`.`user_extended_struct_name` = 'plugin_efiction_author'";
+
+			e107::getDB()->gen($query); 
+
+			$query = "UPDATE `".MPREFIX."user_extended_struct` SET `user_extended_struct_write` = '250' WHERE `e107_user_extended_struct`.`user_extended_struct_name` = 'plugin_efiction_level'";
+			
+			e107::getDB()->gen($query); 
+
 		}
 
 
@@ -393,6 +403,7 @@ if (!class_exists('efiction_setup')) {
             
             $this->add_default_data($var); 
             
+			$this->fix_user_extended_fields($var);
         }
 
         public function uninstall_options()
@@ -436,7 +447,7 @@ if (!class_exists('efiction_setup')) {
 
         public function upgrade_post($var)
         {
-			 $this->add_tables($var);  
+		    $this->add_tables($var);  
             
             $this->add_default_data($var); 
 			

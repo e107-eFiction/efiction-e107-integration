@@ -33,7 +33,7 @@ function updatePanelOrder( ) {
 				$count = 1;
 				$plist = dbquery("SELECT panel_name, panel_id FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_hidden = '0' AND panel_type = '".$ptype['panel_type']."' AND panel_level = '$x' ORDER BY panel_level, panel_order");
 				while($p = dbassoc($plist)) {
-					dbquery("UPDATE ".TABLEPREFIX."fanfiction_panels SET panel_order = '$count' WHERE panel_id = '".$p['panel_id']."' LIMIT 1");
+					e107::getDb()->gen("UPDATE ".TABLEPREFIX."fanfiction_panels SET panel_order = '$count' WHERE panel_id = '".$p['panel_id']."' LIMIT 1");
 					$count++;
 				}
 			}
@@ -42,13 +42,13 @@ function updatePanelOrder( ) {
 			$count = 1;
 			$plist = dbquery("SELECT panel_name, panel_id FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_hidden = '0' AND panel_type = '".$ptype['panel_type']."' ORDER BY ".($ptype['panel_type'] == "A" ? "panel_level," : "")."panel_order");
 			while($p = dbassoc($plist)) {
-				dbquery("UPDATE ".TABLEPREFIX."fanfiction_panels SET panel_order = '$count' WHERE panel_id = '".$p['panel_id']."' LIMIT 1");
+				e107::getDb()->gen("UPDATE ".TABLEPREFIX."fanfiction_panels SET panel_order = '$count' WHERE panel_id = '".$p['panel_id']."' LIMIT 1");
 				$count++;
 			}
 		}
 	}
 }
-
+//don't set action here, let in admin.php not to conflict with e107 admin files
 if($action == "settings") {
 $output .= "<h1>"._SETTINGS."</h1><div style='text-align: center;'>
 	<a href='admin.php?action=settings&amp;sect=main'>"._MAINSETTINGS."</a> |
@@ -96,10 +96,11 @@ if(isset($_POST['submit'])) {
 		$imageupload = $_POST['newimageupload'] == 1 ? 1 : 0;
 		$imageheight = isNumber($_POST['newimageheight']) ? $_POST['newimageheight'] : 0;
 		$imagewidth = isNumber($_POST['newimagewidth']) ? $_POST['newimagewidth'] : 0;
-		$result = dbquery("UPDATE ".$settingsprefix."fanfiction_settings SET submissionsoff = '$submissionsoff', autovalidate = '$autovalidate', coauthallowed = '$coauthallowed', store = '$store', storiespath = '$storiespath', minwords = '$minwords', maxwords = '$maxwords', imageupload = '$imageupload', imageheight = '$imageheight', imagewidth = '$imagewidth', roundrobins = '$roundrobins', allowseries = '$allowseries' WHERE sitekey ='".SITEKEY."'");
+		$result = e107::getDb()->gen("UPDATE ".MPREFIX."fanfiction_settings SET submissionsoff = '$submissionsoff', autovalidate = '$autovalidate', coauthallowed = '$coauthallowed', store = '$store', storiespath = '$storiespath', minwords = '$minwords', maxwords = '$maxwords', imageupload = '$imageupload', imageheight = '$imageheight', imagewidth = '$imagewidth', roundrobins = '$roundrobins', allowseries = '$allowseries' WHERE sitekey ='".SITEKEY."'");
+	 
 		if($action == "settings") {
-			dbquery("UPDATE ".TABLEPREFIX."fanfiction_panels SET panel_hidden = '".($imageupload ? "0" : "1")."' WHERE panel_name LIKE 'manageimages'");
-			dbquery("UPDATE ".TABLEPREFIX."fanfiction_panels SET panel_hidden = '".($allowseries ? "0" : "1")."' WHERE (panel_name LIKE '%series%' OR panel_title LIKE '%series%') AND panel_type != 'A' AND panel_type != 'B'");
+			e107::getDb()->gen("UPDATE ".MPREFIX."fanfiction_panels SET panel_hidden = '".($imageupload ? "0" : "1")."' WHERE panel_name LIKE 'manageimages'");
+			e107::getDb()->gen("UPDATE ".MPREFIX."fanfiction_panels SET panel_hidden = '".($allowseries ? "0" : "1")."' WHERE (panel_name LIKE '%series%' OR panel_title LIKE '%series%') AND panel_type != 'A' AND panel_type != 'B'");
 			updatePanelOrder( );
 		}
 
@@ -114,7 +115,7 @@ if(isset($_POST['submit'])) {
 		$maintenance = $_POST['newmaint'] == 1 ? 1 : 0;
 		$debug = $_POST['newdebug'] == 1 ? 1 : 0;
 		$newcaptcha = $_POST['newcaptcha'] == 1 ? 1 : 0;
-		$result = dbquery("UPDATE ".$settingsprefix."fanfiction_settings SET tinyMCE = '$tinyMCE', favorites = '$favorites', multiplecats = '$multiplecats', allowed_tags = '$allowed_tags', newscomments = '$newscomments', logging = '$logging', maintenance = '$maintenance', debug = '$debug', captcha = '$newcaptcha' WHERE sitekey ='".SITEKEY."'");
+		$result = e107::getDb()->gen("UPDATE ".MPREFIX."fanfiction_settings SET tinyMCE = '$tinyMCE', favorites = '$favorites', multiplecats = '$multiplecats', allowed_tags = '$allowed_tags', newscomments = '$newscomments', logging = '$logging', maintenance = '$maintenance', debug = '$debug', captcha = '$newcaptcha' WHERE sitekey ='".SITEKEY."'");
 	}
 	else if($sect == "display") {
 		$dateformat = $_POST['newdateformat'] ? descript(strip_tags($_POST['newdateformat'])) : descript(strip_tags($_POST['customdateformat']));
@@ -128,7 +129,7 @@ if(isset($_POST['submit'])) {
 		$displayprofile = $_POST['newdisplayprofile'] == 1 ? 1 : 0;
 		$defaultsort = $_POST['newdefaultsort'] == 1 ? 1 : 0;
 		if(isNumber($_POST['newrecentdays'])) $recentdays = $_POST['newrecentdays'];
-		$result = dbquery("UPDATE ".$settingsprefix."fanfiction_settings SET dateformat = '$dateformat', timeformat = '$timeformat', extendcats = '$extendcats', displaycolumns = '$displaycolumns', itemsperpage = '$itemsperpage', displayindex = '$displayindex', defaultsort = '$defaultsort', recentdays = '$recentdays', displayprofile = '$displayprofile', linkstyle = '$linkstyle', linkrange = '$linkrange' WHERE sitekey ='".SITEKEY."'");
+		$result = e107::getDb()->gen("UPDATE ".MPREFIX."fanfiction_settings SET dateformat = '$dateformat', timeformat = '$timeformat', extendcats = '$extendcats', displaycolumns = '$displaycolumns', itemsperpage = '$itemsperpage', displayindex = '$displayindex', defaultsort = '$defaultsort', recentdays = '$recentdays', displayprofile = '$displayprofile', linkstyle = '$linkstyle', linkrange = '$linkrange' WHERE sitekey ='".SITEKEY."'");
 	}
 	else if($sect == "reviews") {
 		$reviewsallowed = $_POST['newreviewsallowed'] == 1 ? 1 : 0;
@@ -136,30 +137,41 @@ if(isset($_POST['submit'])) {
 		$rateonly = $_POST['newrateonly'] == 1 ? 1 : 0;
 		$ratings = isset($_POST['newratings']) && isNumber($_POST['newratings']) ? $_POST['newratings'] : 0;
 		$revdelete = isset($_POST['newrevdelete']) && isNumber($_POST['newrevdelete']) ? $_POST['newrevdelete'] : 0;
-		$result = dbquery("UPDATE ".$settingsprefix."fanfiction_settings SET reviewsallowed = '$reviewsallowed', anonreviews = '$anonreviews', rateonly = '$rateonly', ratings = '$ratings', revdelete = '$revdelete' WHERE sitekey ='".SITEKEY."'");
+		$result = e107::getDb()->gen("UPDATE ".MPREFIX."fanfiction_settings SET reviewsallowed = '$reviewsallowed', anonreviews = '$anonreviews', rateonly = '$rateonly', ratings = '$ratings', revdelete = '$revdelete' WHERE sitekey ='".SITEKEY."'");
 	}
 	else if($sect == "useropts") {
 		$alertson = $_POST['newalertson'] == 1 ? 1 : 0;
 		$disablepopups = $_POST['newdisablepops'] == 1 ? 1 : 0;
 		$agestatement  = $_POST['newagestatement'] == 1 ? 1 : 0;
 		$pwdsetting = $_POST['newpwdsetting'] == 1 ? 1 : 0;
-		$result = dbquery("UPDATE ".$settingsprefix."fanfiction_settings SET alertson = '$alertson', disablepopups = '$disablepopups', agestatement = '$agestatement', pwdsetting = '$pwdsetting' WHERE sitekey ='".SITEKEY."'");
+		$result = e107::getDb()->gen("UPDATE ".MPREFIX."fanfiction_settings SET alertson = '$alertson', disablepopups = '$disablepopups', agestatement = '$agestatement', pwdsetting = '$pwdsetting' WHERE sitekey ='".SITEKEY."'");
 	}
  
-	if($result) {
+	if($result > 0) {
 		$output .= e107::getMessage()->addSuccess(_ACTIONSUCCESSFUL)->render();
 		//$sect = $sects[(array_search($sect, $sects) + 1)];  //it moves to next tab, confusing
         $sect = $sects[(array_search($sect, $sects) )];  //stay on the same tab and check result        
 		if(!$sect) $sect = $sects[0];
 	}
+	elseif($result === 0) {
+		$output .= e107::getMessage()->addInfo(LAN_NO_CHANGE)->render();
+	}
 	else $output .= e107::getMessage()->addError(_ERROR)->render();
+
+
 }
 	$settings = efiction_settings::get_settings();
  
     $newcaptcha = $settings['captcha'];  //used new variable to be sure old $ captcha is not used
     
-	$output .= "<form method='POST' class='tblborder' style='' enctype='multipart/form-data' action='".($action == "settings" ? "admin.php?action=settings" : $_SERVER['PHP_SELF']."?step=".$_GET['step'])."&amp;sect=$sect'>";
- 
+	$action = e107::getParser()->filter($_GET['action'], 'str');
+	$sect = e107::getParser()->filter($_GET['sect'], 'str'); 
+/*
+	$output .= "<form method='POST' class='tblborder' style='' enctype='multipart/form-data' action='".($action == "settings" ? "admin.php?action=settings" : $_SERVER['PHP_SELF']."?action=".$action)."&amp;sect=$sect'>";
+*/ 
+
+$output .= "<form method='POST' class='tblborder' style='' enctype='multipart/form-data' action='". e_SELF."?action=".$action."&amp;sect=$sect'>";
+
     if($sect == "main") {
         $sitekey = e107::getInstance()->getSitePath();
 		$caption = "<h2>"._SITEINFO."</h2>";

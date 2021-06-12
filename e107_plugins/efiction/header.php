@@ -35,7 +35,9 @@ if(isset($skin)) $globalskin = $skin;
  
 define("STORIESPATH", $settings['storiespath']);
 unset($settings['storiespath']);
- 
+foreach($settings as $var => $val) {
+	$$var = stripslashes($val);
+} 
 if(isset($_GET['debug'])) $debug = 1;
 if(!$displaycolumns) $displaycolumns = 1; // shouldn't happen, but just in case.
 if($words) $words = explode(", ", $words);
@@ -81,7 +83,7 @@ if(isset($PHP_SELF)) $PHP_SELF = htmlspecialchars(descript($PHP_SELF), ENT_QUOTE
 // Set these variables to start.
 $agecontsent = false; $viewed = false; 
  
-require_once("includes/get_session_vars.php");
+require_once("inc/get_session_vars.php");
  
 if(isset($_GET['skin'])) {
 	$siteskin = $_GET['skin'];
@@ -89,7 +91,7 @@ if(isset($_GET['skin'])) {
 }
 
 $v = explode(".", $version);   
-include(_BASEDIR."version.php");  
+include(_BASEDIR."version.php");   
 $newV = explode(".", $version);    
 //if($v[0] == $newV[0] && ($v[1] < $newV[1] || (isset($newV[2]) && $v[2] < $newV[2]))) {
 foreach($newV AS $k => $l) {

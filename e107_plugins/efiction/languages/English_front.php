@@ -13,7 +13,7 @@ define ("LAN_EFICTION_HOME", "Home");
 define ("LAN_EFICTION_CHALLENGES", "Challenges");
 define ("LAN_EFICTION_LOGOUT", "Logout"); 
 define ("LAN_EFICTION_NEWS", "News Archive");
-define ("LAN_EFICTION_RSS", "<img src='"._BASEDIR."/images/xml.gif' alt='RSS' border='0'>");
+define ("LAN_EFICTION_RSS", "<img src='".e_PLUGIN."efiction/images/xml.gif' alt='RSS' border='0'>");
 define ("LAN_EFICTION_RULES", "Rules");
 define ("LAN_EFICTION_TENS", "Top Tens");
 define ("LAN_EFICTION_TOS", "Terms of Service");

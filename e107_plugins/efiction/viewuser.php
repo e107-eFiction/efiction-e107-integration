@@ -38,7 +38,7 @@ if(empty($uid)) {
 $userinfo = e107::getDb()->retrieve("SELECT *, UNIX_TIMESTAMP(date) as date FROM "._AUTHORTABLE." LEFT JOIN ".TABLEPREFIX."fanfiction_authorprefs as ap ON ap.uid = "._UIDFIELD." WHERE "._UIDFIELD." = '$uid' LIMIT 1");
 
 if($userinfo) {
-	$userinfo['user_id'] = eauthors::get_user_id_by_author_id($uid);  //used for e107 stuff
+	$userinfo['user_id'] = fiction_authors::get_single_user_by_author($uid);  //used for e107 stuff
 	$userinfo['action'] = $action;  //used for tabs
 	$userinfo['current'] = $viewuser; //default for tablerender
 	$viewuser_template = e107::getTemplate('efiction', 'user', 'user');

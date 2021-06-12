@@ -20,27 +20,24 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-$current = "maintenance";
+if (!defined('e107_INIT')) { exit; }
 
-// Include some files for page setup and core functions
-include ("header.php");
-require_once(HEADERF);
+// Sanitizes user input to help prevent XSS attacks 
+function descript($text) {
+  return e107::getParser()->toDB($text);
+}
 
-if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/default.tpl" );
-else $tpl = new TemplatePower(_BASEDIR."default_tpls/default.tpl");
+// Checks that the given $num is actually a number.  Used to help prevent XSS attacks.
+function isNumber($num) {
+  return e107::getParser()->filter($num, 'int');
+}
 
-include(_BASEDIR."includes/pagesetup.php");
-$page = dbquery("SELECT message_title, message_text FROM ".TABLEPREFIX."fanfiction_messages WHERE message_name = 'maintenance' LIMIT 1");
-if(dbnumrows($page)) list($title, $text) = dbrow($page);
-else $text = write_message(_ERROR);
-$caption = $title;
-$output =  $text;
-$tpl->assign("output", $output);
+// Formats error messages sent back from various forms and actions
+function write_error($str) {
+ return e107::getMessage()->addError($str)->render();
+}
 
-    $output = $tpl->getOutputContent();  
-    $output = e107::getParser()->parseTemplate($output, true);
-    $caption = $title;
-    e107::getRender()->tablerender($caption, $output, $current);
-dbclose( );
-    require_once(FOOTERF);  
-    exit( );
+// Format for messages sent back from various forms and actions
+function write_message($str) {
+ return e107::getMessage()->addInfo($str)->render();
+}

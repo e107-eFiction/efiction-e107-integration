@@ -45,10 +45,11 @@ $output .= "<div id=\"pagetitle\">"._RATINGS."</div>";
 		{
 			$showlist = 0;
 			$output .= write_message(_CONFIRMDELETE."<br /><br />
-[ <a href=\"admin.php?action=ratings&delete=$rid&confirm=yes\">"._YES."</a> | <a href=\"admin.php?action=ratings&delete=$rid&confirm=no\">"._NO."</a> ]");
+[ <a href=\"".e_SELF."?action=ratings&delete=$rid&confirm=yes\">"._YES."</a> | <a href=\"".e_SELF."?action=ratings&delete=$rid&confirm=no\">"._NO."</a> ]");
 		}
 	}
 	if (isset($_POST["submit"]) && ((isset($_GET['rid']) && isNumber($_GET['rid'])) || $_GET['rid'] == "new")) {
+
 		$newrate = escapestring(strip_tags(descript($_POST['rating'])));
 		$newtext = escapestring(strip_tags(descript($_POST['warningtext'])));
 		$ratingwarning = isset($_POST['ratingwarning']) ? 1 : 0;
@@ -58,6 +59,7 @@ $output .= "<div id=\"pagetitle\">"._RATINGS."</div>";
 		else $ratingquery = "UPDATE ".TABLEPREFIX."fanfiction_ratings SET rating = '$newrate', ratingwarning = '$ratingwarning', warningtext = '$newtext' WHERE rid = '".$_GET['rid']."'";
 		dbquery($ratingquery);
 		if($_GET["rid"] != "new" && $newrate != $_POST['oldrating']) dbquery("UPDATE ".TABLEPREFIX."fanfiction_stories SET rid = '$newrate' WHERE rid = '".$_POST['oldrating']."'");
+		
 		$output .= write_message(_ACTIONSUCCESSFUL);
 	}
 	else if(isset($_GET["rid"])) {
@@ -67,41 +69,49 @@ $output .= "<div id=\"pagetitle\">"._RATINGS."</div>";
 			$ratingquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_ratings WHERE rid = '".$_GET['rid']."' LIMIT 1");
 			$rating = dbassoc($ratingquery);
 		}
-		$output .= "<form method=\"POST\" id='settingsform' enctype=\"multipart/form-data\" action=\"admin.php?action=ratings&rid=".$_GET['rid']."\">
+		$output .= "<form method=\"POST\" id='settingsform' enctype=\"multipart/form-data\" action=\"".e_SELF."?action=ratings&rid=".$_GET['rid']."\">
 			<div class='sectionheader'>".($new ? _NEWRAT : _EDITRAT)."</div>
-			<div><label for='rating'>"._RATING.": </label> 
-			<INPUT  type=\"text\" class=\"textbox=\" name=\"rating\"".($new ? "" : "value=\"".$rating['rating']."\"")."><A HREF=\"#\" class=\"pophelp\">[?]<span>"._HELP_RATING."</span></A>";
+			<table class='acp table table-bordered'>
+			<tr><td><label for='rating'>"._RATING.": </label></td><td>
+			<INPUT  type=\"text\" class=\"tbox form-control\" name=\"rating\"".($new ? "" : "value=\"".$rating['rating']."\"").">
+			<br><span>"._HELP_RATING."</span></td></tr>";
+
 		if(isset($rating)) 
 			$output .= "<input type=\"hidden\" name=\"oldrating\" value=\"".$rating['rating']."\">";
-		$warninglevel = isset($rating) ? sprintf("%03b", $rating['ratingwarning']) : array(0,0,0);
-		$output .= "</div><div><label for='ratingwarning'>"._WARNINGPOP.": </label>
-		<INPUT type=\"checkbox\" class=\"checkbox\" name=\"ratingwarning\"".(!$new && $warninglevel[2] ? " checked" : "")."><A HREF=\"#\" class=\"pophelp\">[?]<span>"._HELP_RATINGWARNING."</span></A></div>
-		<div><label for='ageconsent'>"._AGECHECK.": </label>
-		<INPUT type=\"checkbox\" class=\"checkbox\" name=\"ageconsent\"".(!$new && $warninglevel[1] ? " checked" : "")."><A HREF=\"#\" class=\"pophelp\">[?]<span>"._HELP_RATINGCONSENT."</span></A></div>
-		<div><label for='rusersonly'>"._RUSERSONLY.": </label>
-		<INPUT type=\"checkbox\" class=\"checkbox\" name=\"rusersonly\"".(!$new && $warninglevel[0] ? " checked" : "")."><A HREF=\"#\" class=\"pophelp\">[?]<span>"._HELP_RATINGUSERS."</span></A></div>
-		<div><label for='warningtext'>"._WARNINGTEXT.": </label>
-		<textarea class=\"textarea\" name=\"warningtext\" cols=\"35\" rows=\"4\">".($new ? "" : $rating['warningtext'])."</TEXTAREA>";
-		if($tinyMCE) 
-			$output .= "<div class='tinytoggle'><input type='checkbox' name='toggle' onclick=\"toogleEditorMode('warningtext');\" checked><label for='toggle'>"._TINYMCETOGGLE."</label></div>";	
-		$output .= "</div><div style='text-align: center;'><A HREF=\"#\" class=\"pophelp\">[?]<span>"._HELP_RATINGWARNTEXT."</span></A></div><INPUT type=\"submit\" class=\"button\" id='submit' value=\""._SUBMIT."\" name=\"submit\">";
+			$warninglevel = isset($rating) ? sprintf("%03b", $rating['ratingwarning']) : array(0,0,0);
+
+			$output .= "<tr><td><label for='ratingwarning'>"._WARNINGPOP.": </label></td><td>
+			<INPUT type=\"checkbox\" class=\"checkbox\" name=\"ratingwarning\"".(!$new && $warninglevel[2] ? " checked" : "")."><br><span>"._HELP_RATINGWARNING."</span></td></tr>
+			<tr><td><label for='ageconsent'>"._AGECHECK.": </label></td><td>
+			<INPUT type=\"checkbox\" class=\"checkbox\" name=\"ageconsent\"".(!$new && $warninglevel[1] ? " checked" : "")."><br><span>"._HELP_RATINGCONSENT."</span></td></tr>
+			<tr><td><label for='rusersonly'>"._RUSERSONLY.": </label></td><td>
+			<INPUT type=\"checkbox\" class=\"checkbox\" name=\"rusersonly\"".(!$new && $warninglevel[0] ? " checked" : "")."><br><span>"._HELP_RATINGUSERS."</span></td></tr>
+			<tr><td><label for='warningtext'>"._WARNINGTEXT.": </label></td><td>
+			<textarea class=\"textarea \" name=\"warningtext\" cols=\"80\" rows=\"4\">".($new ? "" : $rating['warningtext'])."</TEXTAREA>";
+				
+			$output .= "<br><span>"._HELP_RATINGWARNTEXT."</td></tr>
+			</table>
+			<INPUT type=\"submit\" class=\"button\" id='submit' value=\""._SUBMIT."\" name=\"submit\">";
 	}
+
 	if($showlist) {
-		$result = dbquery("SELECT * from ".TABLEPREFIX."fanfiction_ratings");
+		$result = efiction_ratings::get_ratings();
 
 		//List of current ratings
-		$output .= "<table class=\"tblborder\" cellspacing=\"0\" cellpadding=\"o\" align=\"center\" style='margin: 0 auto;'>
-		<tr><th colspan=\"3\" align=\"center\" class=\"tblborder\">"._RATINGS."</th></tr>";
+		$caption = _RATINGS;
+
+		$output .= "<table class=\"tblborder table table-bordered\" cellspacing=\"0\" cellpadding=\"o\" align=\"center\" style='margin: 0 auto;'>
+		 ";
 		$output .= "<tr><td class=\"tblborder\"><b>"._RATING."</b></td><td class=\"tblborder\"><b>"._WARNING."</b></td><td class=\"tblborder\"><b>"._OPTIONS."</b></td></tr>";
-		while ($ratingresults = dbassoc($result))
+		foreach($result AS $ratingresults)
 		{
 		$output .= "<tr><td class=\"tblborder\">".$ratingresults['rating'];
 			if($ratingresults['ratingwarning'] >= 1)
 				$output .= "</td><td class=\"tblborder\">"._YES."";
 			else
 				$output .= "</td><td class=\"tblborder\">"._NO."";
-			$output .= "</td><td class=\"tblborder\"><a href=\"admin.php?action=ratings&rid=".$ratingresults['rid']."\">"._EDIT."</a> | <a href=\"admin.php?action=ratings&delete=".$ratingresults['rid']."\">"._DELETE."</td></tr>";
+			$output .= "</td><td class=\"tblborder\"><a href=\"".e_SELF."?action=ratings&rid=".$ratingresults['rid']."\">"._EDIT."</a> | <a href=\"".e_SELF."?action=ratings&delete=".$ratingresults['rid']."\">"._DELETE."</td></tr>";
 		}
-		$output .= "<tr><td colspan=\"3\" align=\"center\" class=\"tblborder\"><a href=\"admin.php?action=ratings&rid=new\">"._ADDRAT."</a></td></tr></table>";
+		$output .= "<tr><td colspan=\"3\" align=\"center\" class=\"tblborder\"><a href=\"".e_SELF."?action=ratings&rid=new\">"._ADDRAT."</a></td></tr></table>";
 	}
 ?>

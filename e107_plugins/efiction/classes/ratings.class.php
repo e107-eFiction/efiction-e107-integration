@@ -36,48 +36,59 @@
  * #######################################
  */
 
-if (!class_exists('efiction_settings')) {
-    class efiction_settings
+if (!class_exists('efiction_ratings')) {
+    class efiction_ratings
     {
         public function __construct()
         {
         }
+ 
 
-        public static function get_settings()
+		/* all data, id => array() */
+		public static function get_ratings()
+		{
+			$ratingslist = array();
+
+			$table_name = MPREFIX.'fanfiction_ratings';
+			$$query = 'SELECT * FROM '.$table_name  ;
+
+			$result = e107::getDb()->retrieve($ratlist, true);
+
+			foreach ($result as $rate) {
+				$ratingslist[$rate['rid']] = array('name' => $rate['rating'], 'ratingwarning' => $rate['ratingwarning'], 'warningtext' => $rate['warningtext']);
+			}
+
+			return $ratingslist;
+		}
+
+
+		/* used for ratings select in storyform */
+		/* ID => NAME */
+		// used in story_shortcodes.php, series_shortcodes.php
+		public function get_ratings_list()
+		{
+			$authors = array();
+			$ratingquery = 'SELECT rid, rating FROM #fanfiction_ratings';
+			$ratingsarray = e107::getDb()->retrieve($ratingquery, true);
+
+			foreach ($ratingsarray as $ratingresult) {
+				$ratings[$ratingresult['rid']] = $ratingresult['rating'];
+			}
+
+			return $ratings;
+		}
+
+        public static function get_single_rating($rating_name)
         {
-            $table_name = MPREFIX.'fanfiction_settings';
+            $ratings = self::get_ratings();
 
-            $sitekey = e107::getInstance()->getSitePath();
-
-            $query = 'SELECT * FROM '.$table_name." WHERE sitekey = '".$sitekey."' LIMIT 1 "  ;
-
-            $settings = e107::getDb()->retrieve($query);
-
-            /* replace not used settings */
-            $settings['sitekey'] = $sitekey;
-            $settings['sitename'] = SITENAME;
-            $settings['slogan'] = SITETAG;
-            $settings['url'] = SITEURL;
-            $settings['tableprefix'] = e107::getDB()->mySQLPrefix;
-            $settings['siteemail'] = ADMINEMAIL;
-            $settings['language'] = e_LANGUAGE;
-
-            unset($settings['smtp_host'], $settings['smtp_username'], $settings['smtp_password']);
-
-            return $settings;
-        }
-
-        public static function get_single_setting($setting_name)
-        {
-            $settings = self::get_settings();
-
-            if ($setting_name) {
-                return $settings[$setting_name];
+            if ($rating_name) {
+                return $ratings[$rating_name];
             }
 
             return null;
         }
     }
 
-    new efiction_settings();
+    new efiction_ratings();
 }

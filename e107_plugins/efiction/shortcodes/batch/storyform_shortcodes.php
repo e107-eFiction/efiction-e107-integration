@@ -75,7 +75,7 @@ class plugin_efiction_storyform_shortcodes extends e_shortcode
     public function sc_story_edit_author()
     {
         if ($this->admin) {
-            $authors = eAuthors::get_authors_list();
+            $authors = efiction_authors::get_authors_list();
             $text = e107::getForm()->select('uid', $authors, $this->var['uid'], array('required' => 1, 'data-width'=>'100%', 'class'=>'form-control select2-single' ), _AUTHOR);
         } else {
             return '';
@@ -90,7 +90,7 @@ class plugin_efiction_storyform_shortcodes extends e_shortcode
         $coauthallowed = efiction_settings::get_single_setting('coauthallowed');
 
         if ($coauthallowed) {
-            $authors = eAuthors::get_authors_list();  //all available authors
+            $authors = efiction_authors::get_authors_list();  //all available authors
             $text = e107::getForm()->select('coauthors', $authors, $this->var['coauthors'], array('data-width'=>'100%', 'class' => 'form-control select2-multiple', 'multiple' => 1), true);
         } else {
             return '';
