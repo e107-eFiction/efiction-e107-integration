@@ -25,30 +25,28 @@
 if (!defined('e107_INIT')) {
     exit;
 }
-
+ 
 if (USERID) {  //fully managed by e107, user is logged in
     $userData = e107::user(USERID);
-
+ 
     $author_uid = $userData['user_plugin_efiction_author'];
     $author_level = $userData['user_plugin_efiction_level'];
 
+	if ($author_level != -1) {   //it can be admin without author, uLevel is too important to relay on author ID
+		define('uLEVEL', $author_level);
+		define('isADMIN', uLEVEL > 0 ? true : false);
+	}
+
     if ($author_uid > 0) { //user is author
         $authordata = efiction_authors::get_single_author($author_uid);
-
-        if ($author_level != -1) {
-            define('USERUID', $authordata['uid']);
-            define('USERPENNAME', $authordata['penname']);
-            // the following line fixes missing authorpref rows
-
-            define('uLEVEL', $author_level);
-            define('isADMIN', uLEVEL > 0 ? true : false);
-            define('isMEMBER', true);
-            if (e107::getSession()->is(SITEKEY.'_ageconsent')) {
-                $ageconsent = e107::getSession()->get(SITEKEY.'_ageconsent');
-            } else {
-                $ageconsent = $authordata['ageconsent'];
-            }
-        }
+		define('USERUID', $authordata['uid']);
+		define('USERPENNAME', $authordata['penname']);
+		define('isMEMBER', true);
+		if (e107::getSession()->is(SITEKEY.'_ageconsent')) {
+			$ageconsent = e107::getSession()->get(SITEKEY.'_ageconsent');
+		} else {
+			$ageconsent = $authordata['ageconsent'];
+		}    
     }
 } else {
     if (!defined('USERUID')) {

@@ -30,7 +30,7 @@ class efiction_sitelink // include plugin-folder in the name.
 		
 		$links = array();
 			
-        $links[1]  = array('function' => "home",          'name'	=> 'Home - no sublinks');	    
+        $links[1]  = array('function' => "home",          'name'	=> 'Block Menu');	    
 		$links[2]  = array('function' => "recent",        'name'	=> 'Most Recent - no sublinks' );	
         $links[3]  = array('function' => "login",         'name'	=> 'Login - no sublinks');	    
 		$links[4]  = array('function' => "adminarea",     'name'	=> 'Admin - no sublinks' );		
@@ -58,7 +58,7 @@ class efiction_sitelink // include plugin-folder in the name.
         return $links;
 	}
 	
-	function home()  {  return null;  }	
+ 
     function recent()  {  return null;  }	
     function login()  {  return null;  }	
     function adminarea()  {  return null;  }	
@@ -81,7 +81,35 @@ class efiction_sitelink // include plugin-folder in the name.
     function lostpassword()  {  return null;  }
     function newsarchive()  {  return null;  }
     function charslink()  {  return null;  }
-    function ratings()  {  return null;  }    
+    function ratings()  {  return null;  }   
+	
+	function home() 
+	{
+		//$blocks = efiction::blocks();
+		//$pagelinks = efiction::sitelinks();
+		
+		foreach ($blocks['menu']['content'] as $page) {
+		 
+			if (isset($pagelinks[$page]['link_url'])) {
+ 
+				$sublinks[$pagelinks[$page]['link_name']] = array(
+    				'link_name'			=> $pagelinks[$page]['link_text'],
+    				'link_url'			=> $pagelinks[$page]['link_url'],
+    				'link_description'	=> '',
+    				'link_button'		=> '',
+    				'link_category'		=> '',
+    				'link_order'		=> '',
+    				'link_parent'		=> '',
+    				'link_open'			=> $pagelinks[$page]['link_target'],
+                    'link_function'		=> $pagelinks[$page]['link_name'],
+    				'link_class'		=> '' 
+    			);
+			}
+		}
+ 
+		return $sublinks;
+
+	}
         
 	function browse() 
 	{
@@ -103,7 +131,7 @@ class efiction_sitelink // include plugin-folder in the name.
     				'link_order'		=> '',
     				'link_parent'		=> '',
     				'link_open'			=> '',
-                    'link_open'			=> 'efiction',
+                    'link_function'			=> 'efiction',
     				'link_class'		=> '' 
     			);
         }
@@ -119,7 +147,7 @@ class efiction_sitelink // include plugin-folder in the name.
         				'link_order'		=> '',
         				'link_parent'		=> '',
         				'link_open'			=> '',
-                        'link_open'			=> 'efiction',
+                        'link_function'			=> 'efiction',
         				'link_class'		=> '' 
         			);
     	}
@@ -149,7 +177,7 @@ class efiction_sitelink // include plugin-folder in the name.
     				'link_order'		=> '',
     				'link_parent'		=> '',
     				'link_open'			=> '',
-                    'link_open'			=> 'efiction',
+                    'link_function'			=> 'efiction',
     				'link_class'		=> '' 
     			);
         } 
@@ -175,7 +203,7 @@ class efiction_sitelink // include plugin-folder in the name.
     				'link_order'		=> '',
     				'link_parent'		=> '',
     				'link_open'			=> '',
-                    'link_open'			=> 'efiction',
+                    'link_function'			=> 'efiction',
     				'link_class'		=> '' 
     			);
         } 

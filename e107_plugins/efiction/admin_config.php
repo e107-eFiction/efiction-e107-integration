@@ -3,7 +3,7 @@
 // Generated e107 Plugin Admin Area 
 
 require_once('../../class2.php');
-if (!getperms('P')) 
+if (!e_UC_ADMIN) 
 {
 	e107::redirect('admin');
 	exit;
@@ -12,11 +12,146 @@ if (!getperms('P'))
 e107::lan('efiction');
 e107::lan('efiction', true);
 
-require_once(e_ADMIN."auth.php");
-require_once("inc/get_session_vars.php");
 
+require_once("inc/get_session_vars.php");
+ 
 require_once(_BASEDIR."includes/queries.php"); //TEMP Fix header.php and pagesetup.php
 
+
+class efiction_adminArea extends e_admin_dispatcher
+{
+
+    protected $modes = array(
+
+    		'main'	=> array(
+    			'controller' 	=> 'admin_settings_ui',
+    			'path' 			=> null,
+    			'ui' 			=> 'admin_settings_form_ui',
+    			'uipath' 		=> null
+    		),
+    );    
+    
+    protected $adminMenu = array(
+    'main/index'		=> array('caption'=> LAN_EFICTION_ADMIN_PANELS,   'perm' => true, 'url'=>'admin_config.php'),    
+    );
+ 
+    
+  
+    
+   function init()
+   {
+		$panellist = efiction_panels::get_adminmenu_panels(); 
+		foreach($panellist as $accesslevel => $panels) {
+			$this->adminMenu[] = array(
+				'header' => _LEVEL . ": ". $accesslevel 
+			);
+
+			foreach($panels as $mode => $value)
+			{
+	
+				$action = '';
+				if (empty($action))
+				{
+					$action = 'list';
+				} 
+			
+				$menu = $mode . '/'.$action;
+				
+				if($value['type'] == "e107") { //generate modes only in e107 only way
+					$this->adminMenu[$menu] = array(
+						'caption' => $value['text']  ,
+						'perm' => $value['perm'],
+					/*	'url' => $value['link'] */
+					);
+				
+					$this->modes[$mode] = array(
+						'controller' => 'fanfiction_'.$mode.'_ui',
+						'path' => 'adminarea/admin_'.$mode.'.php', 
+						'ui' => 'fanfiction_'.$key.'_form_ui',
+						'uipath' => 'adminarea/admin_'.$mode.'.php', 
+					);
+
+				}
+				elseif($value['type'] == "both") {
+					$this->adminMenu[$menu] = array(
+						'caption' => $value['text']  ,
+						'perm' => $value['perm'],
+					 	'uri' => $value['link']  
+					);
+				}
+				else  {
+					$this->adminMenu[$menu] = array(
+						'caption' => $value['text']  ,
+						'perm' => $value['perm'],
+					 	'uri' => $value['link']  
+					);
+				}
+			 
+			
+			}
+		}	
+   }
+      
+}
+class admin_settings_ui extends e_admin_ui
+{
+			
+ 
+		// optional - a custom page.  
+		public function indexPage()
+		{
+			 
+			$ns = e107::getRender();
+		 
+		
+			$panellist = efiction_panels::get_adminmenu_panels(); 
+			foreach($panellist as $accesslevel => $panels) {
+				$mainPanel .= '
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							  <h3 class="panel-title">Level: '.$accesslevel.'</h3>
+						</div>
+						<div class="panel-body">';
+ 
+					foreach($panels AS $val) {
+						$caption = $val['caption'];
+						if($val['type'] == "e107") {$caption = " <i class='fa fa-check bg-success'></i> ";  }
+						if($val['type'] == "both") {$caption = " <i class='fa fa-eye bg-info'></i> ";  }
+						$tmp = e107::getNav()->renderAdminButton($val['link'], $val['title']. $caption, $caption, $val['perm'], $val['icon_32'], "div") ;
+						$mainPanel .= $tmp;
+								
+					}  
+					$mainPanel .= "</div>
+					</div>";
+				 
+			}
+		
+	 
+			e107::getRender()->tablerender($caption,   $mainPanel); 	
+		}
+
+ 
+}
+				
+
+
+class admin_settings_form_ui extends e_admin_form_ui
+{
+
+}
+		
+ //include ("../header.php");		
+
+new efiction_adminArea();
+ 
+require_once(e_ADMIN."auth.php");
+ 
+e107::getAdminUI()->runPage();
+
+require_once(e_ADMIN."footer.php");
+exit;
+
+/*
 $action = '';
  
 if(isset($_GET['action']))
@@ -24,15 +159,7 @@ if(isset($_GET['action']))
 	$action = e107::getParser()->filter($_GET['action'], 'str');
 } 
 
-if(isset($_GET['rid']))
-{
-	$par = e107::getParser()->filter($_GET['rid'], 'int'); 
-}
-
-if(empty($action)) {
-	$result = call_user_func('main', $par);
-
-}
+ 
 elseif(function_exists($action))
 {
 	$result = call_user_func($action, $par);
@@ -45,11 +172,25 @@ function main($action) {
     $vals = efiction_panels::get_adminarea_panels();
 
 	foreach($vals AS $val) {
-		$tmp = e107::getNav()->renderAdminButton($val['link'], $val['title'], $val['caption'], $val['perms'], $val['icon_32'], "div") ;
-		$mainPanel .= $tmp;
-				
+		$panelslist[$val['panel_level']][] = $val;
 	}
 
+	foreach($panelslist AS $level => $panels) {  //do it better way, don't display empty panellist
+		$mainPanel .= '
+		<div class="panel panel-default">
+			<div class="panel-heading">
+		  		<h3 class="panel-title">Level: '.$level.'</h3>
+			</div>
+			<div class="panel-body">';
+	 
+		foreach($panels AS $val) {
+			$tmp = e107::getNav()->renderAdminButton($val['link'], $val['title'], $val['caption'], $val['perms'], $val['icon_32'], "div") ;
+			$mainPanel .= $tmp;
+					
+		}  
+		$mainPanel .= "</div>
+		</div>";
+	}
 	e107::getRender()->tablerender($caption,   $mainPanel); 
 
 }
@@ -57,27 +198,21 @@ function main($action) {
 function ratings($rid = NULL) {
   
 	$output = '';
-	include(e_PLUGIN."efiction/admin/ratings.php");
-
-	e107::getRender()->tablerender($caption,   $output); 
-
-}
+	//include(e_PLUGIN."efiction/admin/ratings.php");
+	define('ADMIN_AREA', true);
+	
  
+	include(e_PLUGIN."efiction/adminarea/admin_ratings.php");
+	new fanfiction_ratings_adminArea();
+	$html =  e107::getAdminUI()->runPage("raw");
+ 
+	$caption = $html[0]; 
+	$output = $html[1];
+	//e107::getRender()->tablerender($caption,   $output); 
+	 
+}
+*/
 
 require(e_ADMIN . 'footer.php');
 
-
-function admin_config_adminmenu()
-{
-	$action = 1;
-
-	$panellist = efiction_panels::get_adminmenu_panels(); 
-
-    foreach($panellist AS $panel) {
-
-	}
-	if(isset($_GET['action'])  ) {
-		$active = e107::getParser()->toDb($_GET['action']);  ;
-	}
-    show_admin_menu(_ADMIN, $action, $panellist);
-}
+ 

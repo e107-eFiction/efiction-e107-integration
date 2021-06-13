@@ -69,6 +69,12 @@ if (!class_exists('efiction_panels')) {
 			'links' => '<i class="S32 e-userclass-32"></i>',
 		);
 
+		//list of panels fully managed with new admin UI  $mode+$action
+		private static $only_e107_panels = array('ratings', 'panels', 'links');
+
+		//both way $action + $par
+		private static $supported_panels = array('settings');
+
         public function __construct()
         {
         }
@@ -81,7 +87,12 @@ if (!class_exists('efiction_panels')) {
 			$records = e107::getDb()->retrieve($panelquery, true);
 
 			foreach ($records as $panel) {
-				if (!$panel['panel_url']) {
+				$key = $panel['panel_name'];
+				if(in_array($key, self::$only_e107_panels))  { 		 
+						$link = e_PLUGIN.'efiction/admin_config.php?mode='.$panel['panel_name']."&action=list";
+						$panellist[$panel['panel_level']][] = '<a href="'.$link.'">'.$panel['panel_title'].'</a>';
+				}
+				elseif(!$panel['panel_url']) {
 					$panellist[$panel['panel_level']][] = '<a href="'.e_SELF.'?action='.$panel['panel_name'].'">'.$panel['panel_title'].'</a>';
 				} else {
 					$panellist[$panel['panel_level']][] = '<a href="'.$panel['panel_url'].'">'.$panel['panel_title'].'</a>';
@@ -94,6 +105,7 @@ if (!class_exists('efiction_panels')) {
 		/* returns panels array for e107 admin menu, sorted by level, each level contains full path to files */
 		public static function get_adminmenu_panels()
         {
+ 
 			$panelquery = "SELECT * FROM ".MPREFIX."fanfiction_panels WHERE panel_hidden != '1' AND panel_type = 'A' AND panel_level >= ".uLEVEL.' ORDER BY panel_level DESC, panel_order ASC, panel_title ASC';
 
 			$records = e107::getDb()->retrieve($panelquery, true);
@@ -101,52 +113,48 @@ if (!class_exists('efiction_panels')) {
 			$supported = array("settings", "ratings");
 
 			foreach ($records as $panel) {
-				$key = $panel['panel_name'];   
-				if(in_array($key, $supported))  {  
-					if (!$panel['panel_url']) {
-						$link = e_SELF.'?action='.$panel['panel_name'];
-						if($key == "settings") {
-							$link = e_PLUGIN.'efiction/adminarea/admin_settings.php?action='.$panel['panel_name'].'&sect=main';
-						}
-					} else {
-						$link = e_HTTP.$panel['panel_url'];
-					}
-
-					$vals[$key]['link'] = $link;
-					$vals[$key]['text'] = $panel['panel_title'];
-			   }
-			}
- 
-			return $vals;
-        }	
-		
-		/* in adminarea.php */
-		public static function get_adminarea_panels($parm = null)
-		{
-			$panelquery = "SELECT * FROM #fanfiction_panels WHERE panel_hidden != '1' AND panel_type = 'A' AND panel_level >= ".uLEVEL.' ORDER BY panel_level DESC, panel_order ASC, panel_title ASC';
-	
-			$records = e107::getDb()->retrieve($panelquery, true);
-	
-			foreach ($records as $panel) {
+				
 				$key = $panel['panel_name'];
-				if (!$panel['panel_url']) {
+				if(in_array($key, self::$only_e107_panels))  { 
+					$link = e_PLUGIN.'efiction/admin_config.php?mode='.$panel['panel_name']."&action=list";
+					$type = "e107";
+				}
+				elseif(in_array($key,  self::$supported_panels))  {
+					$link = e_PLUGIN.'efiction/adminarea/admin_'.$panel['panel_name'].'.php?action='.$panel['panel_name'];
+					$type = "both";
+				}
+				elseif (!$panel['panel_url']) {
 					$link = e_HTTP.'admin.php?action='.$panel['panel_name'];
+					$type = "efiction";
 				} else {
 					$link = e_HTTP.$panel['panel_url'];
+					$type = "efiction";
 				}
-	
-				$vals[$key]['link'] = $link;
-				$vals[$key]['title'] = $panel['panel_title'];
-				$vals[$key]['caption'] = $panel['panel_title'];
-				$vals[$key]['perms'] = 0;
-				$vals[$key]['icon_32'] = self::$admin_panel_icons[$key];
-		
+				 
+				$perm = 0;
+
+				switch($panel['panel_level']) {
+					case 3: $perm = "P"; break; //core issue
+					case 2: $perm = "P"; break;
+					case 1: $perm = "0"; break;
+				}
+
+
+				$panellist[$panel['panel_level']][$key]['icon_16'] = self::$admin_panel_icons[$key];	
+				$panellist[$panel['panel_level']][$key]['icon_32'] = self::$admin_panel_icons[$key];		
+				$panellist[$panel['panel_level']][$key]['link'] = $link;
+				$panellist[$panel['panel_level']][$key]['text'] = $panel['panel_title'];
+				$panellist[$panel['panel_level']][$key]['title'] = $panel['panel_title'];
+				$panellist[$panel['panel_level']][$key]['perm'] = $perm;
+				//for correct generation admin menu
+				$panellist[$panel['panel_level']][$key]['type'] = $type;
+		 
 			}
-	
-			return $vals;
-		}
-
-
+ 
+			return $panellist;
+        }	
+		
+ 
 		public static function get_single_panel($name = NULL, $type = NULL)
         {
 			if (empty($name)) {

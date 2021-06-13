@@ -74,10 +74,9 @@ $output .= "</div> ";
 }	
 
 $sects = array("main", "submissions", "sitesettings", "display", "reviews", "useropts", "email");
-//if(!isset($_GET['sect'])) $sect = "main";
-//else $sect = $_GET['sect'];
+ 
 $sect = isset($_GET['sect']) ? $_GET['sect'] : "main";
-
+ 
 if(isset($_POST['submit'])) {
 	if($sect == "main") {
 			$skin = e107::getParser()->toDb($_POST['newskin']);
@@ -165,7 +164,7 @@ if(isset($_POST['submit'])) {
     $newcaptcha = $settings['captcha'];  //used new variable to be sure old $ captcha is not used
     
 	$action = e107::getParser()->filter($_GET['action'], 'str');
-	$sect = e107::getParser()->filter($_GET['sect'], 'str'); 
+	$sect = e107::getParser()->filter($sect, 'str'); 
 /*
 	$output .= "<form method='POST' class='tblborder' style='' enctype='multipart/form-data' action='".($action == "settings" ? "admin.php?action=settings" : $_SERVER['PHP_SELF']."?action=".$action)."&amp;sect=$sect'>";
 */ 

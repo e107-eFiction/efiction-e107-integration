@@ -386,7 +386,9 @@ function build_pagelinks($url, $total, $offset = 0, $columns = 1) {
    
 	global  $linkstyle, $linkrange;
     
-    $itemsperpage = efiction_settings::get_single_setting('itemsperpage');
+    $itemsperpage =  efiction_settings::get_single_setting('itemsperpage') ;
+	if($itemsperpage < 1  ) $itemsperpage = 10;
+ 
 	$pages = "";
 	$itemsperpage = $itemsperpage * $columns;
 

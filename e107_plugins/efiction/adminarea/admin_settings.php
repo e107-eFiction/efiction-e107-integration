@@ -40,6 +40,8 @@ if(isset($_GET['sect']))
 {
 	$par = e107::getParser()->filter($_GET['sect'], 'str'); 
 }
+ 
+
 if(isset($_GET['message']))
 {
 	$par = e107::getParser()->filter($_GET['message'], 'str'); 
@@ -50,13 +52,15 @@ if(function_exists($action))
 	$result = call_user_func($action, $par);
 }
 
- 
+
+
 require(e_ADMIN . 'footer.php');
 
 
 function settings($sect) {
  
 	$output = '';
+ 
 	include(e_PLUGIN."efiction/admin/settings.php");
 
 	e107::getRender()->tablerender($caption,   $output); 

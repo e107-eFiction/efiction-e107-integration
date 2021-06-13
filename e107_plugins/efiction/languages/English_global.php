@@ -8,6 +8,6 @@
 +----------------------------------------------------------------------+
 */
 
-define("LAN_PLUGIN_EFICTION_NAME", "");
+define("LAN_PLUGIN_EFICTION_NAME", "eFiction Plugin");
 define("LAN_PLUGIN_EFICTION_SUMMARY", "");
 define("LAN_PLUGIN_EFICTION_DESCRIPTION", "");

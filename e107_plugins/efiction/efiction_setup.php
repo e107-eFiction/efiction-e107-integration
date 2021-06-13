@@ -174,7 +174,6 @@ if (!class_exists('efiction_setup')) {
 
 						$panellist = array(
 							array("submitted","Submissions", "","3","5","0","A"),
-							array("versioncheck", "Version Check", "", "3", "7", "0", "A"),
 							array("newstory","Add New Story","stories.php?action=newstory&admin=1","3","3","0","A"),
 							array("addseries","Add New Series","series.php?action=add","3","3","0","A"),
 							array("news","News","","3","5","0","A"),
@@ -221,7 +220,6 @@ if (!class_exists('efiction_setup')) {
 							array("recent","Most Recent","","0","0","1","B"),
 							array("featured","Featured Stories","","0","0","1","B"),
 							array("panels","Panels","","1","1","0","A"),
-							array("phpinfo","PHP Info",e_ADMIN_ABS.'phpinfo.php',"1","7","0","A"),
 							array("contact","Contact","","0","0","1","P"),
 							array("series", "Series", "", "0", "4", "0", "B"),
 							array("viewlog", "Action Log", "", "1", "8", "0", "A"),
@@ -246,7 +244,6 @@ if (!class_exists('efiction_setup')) {
 							array("favau","Favorite Authors","","0","0","1","U"),
 							array("favlist","{author}\'s Favorites","viewuser.php?action=manfavs","0","5","0","F"),
 							array("skins", "Skins", "", "3", "6", "0", "A"),
-							array("authorfields", "Profile Information", "", "1", "9", "0", "A"),
 							array("maintenance", "Archive Maintenance", "", "1", "10", "0", "A"),
 							array("manual", "Admin Manual", "", "3", "6", "0", "A"),
 							array('modules', 'Modules', '', 1, "11", 0, 'A')

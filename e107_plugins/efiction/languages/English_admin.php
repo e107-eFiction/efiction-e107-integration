@@ -9,7 +9,7 @@
 */
 
 /* Left menu */
-define("LAN_EFICTION_ADMIN_PANELS", "Admin Panels");
+define("LAN_EFICTION_ADMIN_PANELS", "Main Page");
 define("LAN_EFICTION_ADDCUSTPAGE", "Add New Custom Page");
 define("LAN_EFICTION_ADDBLOCK", "Add New Block");
 define("LAN_EFICTION_BLOCKS", "Blocks");
