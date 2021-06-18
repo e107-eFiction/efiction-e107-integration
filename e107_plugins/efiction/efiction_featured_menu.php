@@ -41,11 +41,7 @@ if (!defined('e107_INIT')) {
     exit;
 }
 
-if (class_exists('efiction')) {
-    if (e_DEBUG) {
-        echo e107::getMessage()->addInfo('efiction class is available')->render();
-    }
-
+ 
 	$template = e107::getTemplate('efiction', 'blocks', 'featured', true, true);
 
     $blocks = efiction::blocks();
@@ -78,10 +74,6 @@ if (class_exists('efiction')) {
         $sc->setVars($stories);
         $text .= e107::getParser()->parseTemplate($template['item'], true, $sc);
     }
-} else {
-    if (e_DEBUG) {
-        echo e107::getMessage()->addError('efiction class is not set')->render();
-    }
-}
+ 
 
 e107::getRender()->tablerender($caption, $start.$text.$end, $tablerender);

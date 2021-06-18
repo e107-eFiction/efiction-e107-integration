@@ -1,29 +1,36 @@
 <?php
 
-// ----------------------------------------------------------------------
-// eFiction 3.2
-// Copyright (c) 2007 by Tammy Keefer
-// Valid HTML 4.01 Transitional
-// Based on eFiction 1.1
-// Copyright (C) 2003 by Rebecca Smallwood.
-// http://efiction.sourceforge.net/
-// ----------------------------------------------------------------------
-// LICENSE
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License (GPL)
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// To read the license please visit http://www.gnu.org/copyleft/gpl.html
-// ----------------------------------------------------------------------
-
 if (!defined('e107_INIT')) { exit; }
 
-$content = "{MENU: path=efiction/efiction_random}";
-$content = e107::getParser()->parseTemplate($content, true); 
+$template = e107::getTemplate('efiction', 'blocks', 'random', true, true);
+$blocks = efiction_blocks::get_blocks();
+
+$caption = $blocks['random']['title'];
+$var = array('BLOCK_CAPTION' => $caption);
+$caption = e107::getParser()->simpleParse($template['caption'], $var);
+
+$sc = e107::getScParser()->getScObject('story_shortcodes', 'efiction', false);
+$text = '';
+
+$limit = isset($blocks['random']['limit']) && $blocks['random']['limit'] > 0 ? $blocks['random']['limit'] : 1;
+$sumlength  = isset($blocks['random']['sumlength']) && $blocks['random']['sumlength'] > 0 ? $blocks['random']['sumlength'] :75;
+
+$query = _STORYQUERY." ORDER BY rand( ) DESC LIMIT $limit";
+$result = e107::getDb()->retrieve($query, true);
+
+$start = $template['start']; 
+$end = $template['end'];
+$tablerender= varset($template['tablerender'], '');
+
+foreach ($result as $stories) {
+	if (!isset($blocks['random']['allowtags'])) {
+		$stories['summary'] = e107::getParser()->toText($stories['summary']);
+	} else {
+		$stories['summary'] = e107::getParser()->toHTML($stories['summary'], true, 'SUMMARY');
+	}
+	$$stories['sumlength'] = $sumlength ;
+	$sc->setVars($stories);
+	$text .= e107::getParser()->parseTemplate($template['item'], true, $sc);
+}
+
+$content =  e107::getRender()->tablerender($caption, $start.$text.$end, $tablerender, true);

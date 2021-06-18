@@ -25,4 +25,6 @@
 
 if (!defined('e107_INIT')) { exit; }
 
-dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_blocks(`block_name`, `block_title`, `block_status`, `block_file`, `block_variables`) VALUES('search', 'Search', '0', 'search/search.php', '');");
+
+$query = "INSERT INTO ".MPREFIX."fanfiction_blocks(`block_name`, `block_title`, `block_status`, `block_file`, `block_variables`) VALUES('search', 'Search', '0', 'search/search.php', '')";
+e107::getDb()->gen($query);

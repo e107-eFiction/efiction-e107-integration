@@ -85,9 +85,9 @@ class efiction_sitelink // include plugin-folder in the name.
 	
 	function home() 
 	{
-		//$blocks = efiction::blocks();
-		//$pagelinks = efiction::sitelinks();
-		
+		$blocks = efiction_blocks::get_blocks();
+		$pagelinks = efiction::sitelinks();
+		 
 		foreach ($blocks['menu']['content'] as $page) {
 		 
 			if (isset($pagelinks[$page]['link_url'])) {
@@ -106,7 +106,7 @@ class efiction_sitelink // include plugin-folder in the name.
     			);
 			}
 		}
- 
+		
 		return $sublinks;
 
 	}

@@ -25,5 +25,8 @@
 
 if (!defined('e107_INIT')) { exit; }
 
-dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_blocks(`block_name`, `block_title`, `block_status`, `block_file`, `block_variables`) VALUES('countdown', 'Countdown', '0', 'countdown/block.php', '');");
-?>
+
+$query = "INSERT INTO ".MPREFIX."fanfiction_blocks(`block_name`, `block_title`, `block_status`, `block_file`, `block_variables`) VALUES('countdown', 'Countdown', '0', 'countdown/block.php', '')";
+ 
+e107::getDb()->gen($query);
+

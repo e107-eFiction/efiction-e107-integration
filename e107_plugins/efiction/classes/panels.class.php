@@ -73,7 +73,9 @@ if (!class_exists('efiction_panels')) {
 		private static $only_e107_panels = array('ratings', 'panels', 'links');
 
 		//both way $action + $par
-		private static $supported_panels = array('settings');
+		private static $supported_panels = array('settings', 'blocks');
+
+		private static $removed_panels = array('versioncheck','mailusers','phpinfo', 'authorfields');
 
         public function __construct()
         {
@@ -178,8 +180,25 @@ if (!class_exists('efiction_panels')) {
 			
 		}
 
-        public static function get_panels()
+        public static function get_removed_panels()
         {
+			$panellist = self::get_adminmenu_panels();
+			$text = NULL;
+			
+			foreach($panellist AS $rows) {
+				foreach($rows AS $key => $panel) {
+					 
+					if(in_array($key, self::$removed_panels))  {  
+						$warning .= $key.", "; 
+					}		
+				}
+				if($warning) {
+					$message = "You are using not supported panels:<i>" . $warning .'</i> you should delete them';
+					$text =  write_message($message);
+				}
+			}
+			
+			return $text;
         }
  
     }

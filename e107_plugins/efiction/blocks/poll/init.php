@@ -27,8 +27,24 @@ if (!defined('e107_INIT')) {
     exit;
 }
 
-$query = 'INSERT INTO '.MPREFIX."fanfiction_blocks(`block_name`, `block_title`, `block_status`, `block_file`, `block_variables`) VALUES('menu', 'Main Menu', '0', 'menu/menu.php', '')";
-
-$blocks['menu'] = array('title' => 'Main Menu', 'status' => '0', 'file' => 'menu/menu.php');
+$query = 'INSERT INTO '.MPREFIX."fanfiction_blocks(`block_name`, `block_title`, `block_status`, `block_file`, `block_variables`) VALUES('poll', 'Poll', '0', 'poll/poll.php', '')";
+e107::getDb()->gen($query);
+$query = 'CREATE TABLE IF NOT EXISTS `'.MPREFIX."fanfiction_poll_votes` (
+  `vote_id` int(11) NOT NULL auto_increment,
+  `vote_user` int(11) NOT NULL default '0',
+  `vote_opt` int(11) NOT NULL default '0',
+  `vote_poll` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`vote_id`),
+  KEY `vote_user` (`vote_user`,`vote_poll`)
+) ENGINE=MyISAM;" ;
+e107::getDb()->gen($query);
+$query = 'CREATE TABLE IF NOT EXISTS `'.MPREFIX.'fanfiction_poll` (
+`poll_id` INT NOT NULL AUTO_INCREMENT ,
+`poll_question` VARCHAR( 250 ) NOT NULL ,
+`poll_opts` TEXT NOT NULL ,
+`poll_start` DATETIME NOT NULL ,
+`poll_end` DATETIME NULL ,
+`poll_results` VARCHAR( 250 ) NULL ,
+PRIMARY KEY ( `poll_id` ))';
 
 e107::getDb()->gen($query);

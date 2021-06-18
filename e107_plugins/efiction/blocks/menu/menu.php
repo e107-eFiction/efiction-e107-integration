@@ -19,3 +19,4 @@ if (!defined('e107_INIT')) { exit; }
 	}
 	if(empty($blocks[$block]['style'])) $content = "<ul>$content</ul>";
 	$content = "<div id=\"$block\">$content</div>";
+?>

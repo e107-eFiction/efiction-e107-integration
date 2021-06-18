@@ -23,8 +23,42 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-if (!defined('e107_INIT')) { exit; }
+if (!defined('e107_INIT')) {
+    exit;
+}
 
-$content = "{MENU: path=efiction/efiction_featured}";
-$content = e107::getParser()->parseTemplate($content, true); 
+$template = e107::getTemplate('efiction', 'blocks', 'featured', true, true);
+
+$blocks = efiction_blocks::get_blocks();
+
+$caption = $blocks['featured']['title'];
+$block_key = 'featured';
+$var = array('BLOCK_CAPTION' => $caption);
+$caption = e107::getParser()->simpleParse($template['caption'], $var);
+
+$sc = e107::getScParser()->getScObject('story_shortcodes', 'efiction', false);
+$text = '';
+
+$limit = isset($blocks['featured']['limit']) && $blocks['featured']['limit'] > 0 ? $blocks['featured']['limit'] : 1;
+$sumlength = isset($blocks['featured']['sumlength']) && $blocks['featured']['sumlength'] > 0 ? $blocks['featured']['sumlength'] : 75;
+
+$query = _STORYQUERY." AND stories.featured = '1'".($limit ? " LIMIT $limit" : '');
+
+$result = e107::getDb()->retrieve($query, true);
+
+$start = $template['start'];
+$end = $template['end'];
+$tablerender = varset($template['tablerender'], '');
  
+foreach ($result as $stories) {
+    if (!isset($blocks['featured']['allowtags'])) {
+        $stories['summary'] = e107::getParser()->toText($stories['summary']);
+    } else {
+        $stories['summary'] = e107::getParser()->toHTML($stories['summary'], true, 'SUMMARY');
+    }
+    $stories['sumlength'] = $sumlength;
+    $sc->setVars($stories);
+    $text .= e107::getParser()->parseTemplate($template['item'], true, $sc);
+}
+
+$content = e107::getRender()->tablerender($caption, $start.$text.$end, $tablerender, true);

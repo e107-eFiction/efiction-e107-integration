@@ -46,6 +46,10 @@ class fanfiction_panels_ui extends e_admin_ui
     public function init()
     {
  
+		if($warning = efiction_panels::get_removed_panels()) {
+			echo $warning;
+		}
+		
 		$this->postFilterMarkup = $this->AddButton(); 
 
 		$paneltypes = array("A" => "[A] "._ADMIN, "U" => "[U]"._USERACCOUNT, "P" => "[P] "._PROFILE, "F" => "[F] "._FAVOR, "S" => "[S] "._SUBMISSIONS, "B" => "[B] "._BROWSE, "L" => "[L] "._10LISTS,  "M" => "[M] "._MEMBERS);

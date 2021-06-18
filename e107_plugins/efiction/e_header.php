@@ -85,6 +85,23 @@ tinymce.init({
 
  e107::js('footer-inline',$mceScript,'jquery' );
 
+ /* used for block previews */
+ $csscode = "
+ hr.preview {
+	border-top: 1px solid #8c8b8b;
+	border-bottom: 1px solid #fff;
+	height: initial;
+}
+hr.preview:after {
+	content: '';
+	display: block;
+	margin-top: 2px;
+	border-top: 1px solid #8c8b8b;
+	border-bottom: 1px solid #fff;
+}";
+
+e107::css("inline",  $csscode);
+
  
 
  

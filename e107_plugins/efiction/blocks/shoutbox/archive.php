@@ -24,12 +24,10 @@
 // ----------------------------------------------------------------------
 
 
-// Include some files for page setup and core functions
 include ("../../header.php");
-require_once(HEADERF);
 
 if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/default.tpl" );
-else $tpl = new TemplatePower(_BASEDIR."default_tpls/default.tpl");
+else $tpl = new TemplatePower("../../default_tpls/default.tpl");
 //let TemplatePower do its thing, parsing etc.
 
 include("../../includes/pagesetup.php");
@@ -45,7 +43,7 @@ if(dbnumrows($shouts) > 0) {
 	else $shoutdate = $dateformat." ".$timeformat;
 	$output .= "<div class='sectionheader'>"._SHOUTARCHIVE."</div><div style='width: 80%;margin: 0 auto;'>";
 	while($shout = dbassoc($shouts)) {
-		if(isNumber($shout['shout_name']) && isset($shout['penname'])) $shoutname = "<a href='viewuser.php?uid=".$shout['shout_name']."'>".$shout['penname']."</a>";
+		if(isNumber($shout['shout_name']) && isset($shout['penname'])) $shoutname = "<a href='"._BASEDIR."viewuser.php?uid=".$shout['shout_name']."'>".$shout['penname']."</a>";
 		else if(isset($shout['shout_name'])) $shoutname = $shout['shout_name'];
 		else $shout = _GUEST; // Just in case.
 		$output .= "
@@ -57,11 +55,7 @@ if(dbnumrows($shouts) > 0) {
 	if($totalshouts > $itemsperpage) $output .= build_pagelinks("archive.php?", $totalshouts, $offset);
 }
 else $output .= write_message(_NOSHOUTS);
-$caption = _SHOUTARCHIVE;
-$tpl->assign("output",  $output );
-    $output = $tpl->getOutputContent();  
-    $output = e107::getParser()->parseTemplate($output, true);
-    e107::getRender()->tablerender($caption, $output, $current);
-dbclose( );
-    require_once(FOOTERF);  
-    exit( );
+$tpl->assign("output", "<div id='pagetitle'>"._SHOUTARCHIVE."</div>\n\n$output");
+$tpl->printToScreen();
+
+?>

@@ -181,7 +181,6 @@ if (!class_exists('efiction_setup')) {
 							array("characters","Characters","","2","2","0","A"),
 							array("ratings","Ratings","","2","3","0","A"),
 							array("members","Members","","2","5","0","A"),
-							array("mailusers","Mail Users","","2","6","0","A"),
 							array("settings","Settings","","1","2","0","A"),
 							array("blocks","Blocks","","1","3","0","A"),
 							array("censor","Censor","","1","0","1","A"),

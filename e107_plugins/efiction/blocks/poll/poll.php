@@ -77,3 +77,4 @@ else  {
 	  }
 }
 	$content .= "<div style='text-align: center;'><a href='"._BASEDIR."blocks/poll/pollarchive.php'>"._POLLARCHIVE."</a></div>";
+?>

@@ -18,6 +18,7 @@ require_once("inc/get_session_vars.php");
 require_once(_BASEDIR."includes/queries.php"); //TEMP Fix header.php and pagesetup.php
 
 
+ 
 class efiction_adminArea extends e_admin_dispatcher
 {
 
@@ -32,12 +33,12 @@ class efiction_adminArea extends e_admin_dispatcher
     );    
     
     protected $adminMenu = array(
-    'main/index'		=> array('caption'=> LAN_EFICTION_ADMIN_PANELS,   'perm' => true, 'url'=>'admin_config.php'),    
+    'main/index'		=> array('caption'=> LAN_EFICTION_ADMIN_PANELS,   'url'=>'admin_config.php'),    
+    'main/prefs'		=> array('caption'=> LAN_PREFS   ),    
     );
+
+	protected $menuTitle = LAN_PLUGIN_EFICTION;
  
-    
-  
-    
    function init()
    {
 		$panellist = efiction_panels::get_adminmenu_panels(); 
@@ -61,8 +62,10 @@ class efiction_adminArea extends e_admin_dispatcher
 					$this->adminMenu[$menu] = array(
 						'caption' => $value['text']  ,
 						'perm' => $value['perm'],
-					/*	'url' => $value['link'] */
-					);
+					); 
+                    $this->pageTitles[$mode.'/edit'] =  LAN_EDIT;
+	                $this->pageTitles[$mode.'/create'] =   $value['text'] . " - ". LAN_CREATE  ;   
+					
 				
 					$this->modes[$mode] = array(
 						'controller' => 'fanfiction_'.$mode.'_ui',
@@ -86,21 +89,37 @@ class efiction_adminArea extends e_admin_dispatcher
 					 	'uri' => $value['link']  
 					);
 				}
-			 
-			
+                
+                
+ 
 			}
-		}	
+		}
+ 	
    }
       
 }
 class admin_settings_ui extends e_admin_ui
 {
-			
- 
+	    protected $pluginName = 'efiction';	
+		protected $pluginTitle		= LAN_PLUGIN_EFICTION;
+        
+        protected $prefs = array(
+			'pref_author_after_login'	   				=> array('title'=> 'Auto Create Author after user login in', 'type'=>'boolean', 'data' => 'int', 'help'=>'If user doesn\'t have Author ID, new author is created after first log in'),
+		);
+        
+         protected $adminMenuAliases = array(
+    		'ratings/edit'	=> 'ratings/list'
+    	);
+        
 		// optional - a custom page.  
 		public function indexPage()
 		{
 			 
+			if($warning = efiction_panels::get_removed_panels()) {
+				echo $warning;
+			}
+
+			
 			$ns = e107::getRender();
 		 
 		
@@ -129,6 +148,8 @@ class admin_settings_ui extends e_admin_ui
 	 
 			e107::getRender()->tablerender($caption,   $mainPanel); 	
 		}
+        
+        
 
  
 }
