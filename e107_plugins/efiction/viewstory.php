@@ -53,8 +53,8 @@ if(empty($chapter)) $chapter = isset($_GET['chapter']) && isNumber($_GET['chapte
 	$warninglevel = sprintf("%03b", $rating['ratingwarning']);
 	$title = $storyinfo['title'];
 	if($warninglevel[0] && !isMEMBER) $warning = _RUSERSONLY."<br />";
-	else if($warninglevel[1] && empty($_SESSION[SITEKEY."_ageconsent"]) && !$ageconsent) $warning = _AGECHECK."<br /><a href='viewstory.php?sid=".$storyinfo['sid']."&amp;ageconsent=ok&amp;warning=".$storyinfo['rid']."'>".$rating['warningtext']."</a>";
-	else if($warninglevel[2] && empty($_SESSION[SITEKEY."_warned"][$storyinfo['rid']])) {
+	else if($warninglevel[1] && !e107::getSession()->is(SITEKEY."_ageconsent") && !$ageconsent) $warning = _AGECHECK."<br /><a href='viewstory.php?sid=".$storyinfo['sid']."&amp;ageconsent=ok&amp;warning=".$storyinfo['rid']."'>".$rating['warningtext']."</a>";
+	else if($warninglevel[2] && !e107::getSession()->is(SITEKEY."_warned_{$storyinfo['rid']}")) {
 		$warning = $rating['warningtext']."<br /><a href='viewstory.php?sid=".$storyinfo['sid']."&amp;warning=".$storyinfo['rid']."'>"._CONTINUE."</a>";
 	}
 
@@ -344,7 +344,7 @@ else {
 	if(empty($viewed) || (is_array($viewed) && !in_array($sid, $viewed))) {
 		dbquery("UPDATE ".TABLEPREFIX."fanfiction_stories SET count = count + 1 WHERE sid = '$sid'  LIMIT 1");
 		$viewed[] = $sid;
-		$_SESSION['viewed'] = $viewed;
+		e107::getSession()->set(SITEKEY."_viewed", $viewed);  
 	}
 	dbquery("UPDATE ".TABLEPREFIX."fanfiction_chapters SET count = count + 1 WHERE chapid = '$chapid' LIMIT 1");
 	// end counters

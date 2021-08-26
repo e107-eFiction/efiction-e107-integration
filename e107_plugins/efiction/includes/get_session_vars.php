@@ -22,7 +22,11 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-if(!defined("_CHARSET")) exit( );
+if (!defined('e107_INIT')) {
+    exit;
+}
+
+
 // Get session variables from cookie data if not logged in.
 // To bridge to another program replace (or add to) this information with the bridge to your other script.  See examples in the includes/bridges/ folder.
 if (!empty($_COOKIE[$sitekey."_useruid"])) {
@@ -32,14 +36,19 @@ if (!empty($_COOKIE[$sitekey."_useruid"])) {
 		define("USERPENNAME", $userdata['penname']);
 		// the following line fixes missing authorpref rows
 		if(empty($userdata['userskin'] )) dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_authorprefs(uid, userskin, storyindex, sortby, tinyMCE) VALUES('".$userdata['uid']."', '$defaultskin', '$displayindex', '$defaultsort', '$tinyMCE')");
-		if(!isset($_SESSION[$sitekey."_skin"]) && !empty($userdata['userskin'])) $siteskin = $userdata['userskin'];
-		else if(isset($_SESSION[$sitekey."_skin"])) $siteskin = $_SESSION[$sitekey."_skin"];
-		else $siteskin = $defaultskin;
+ 
+        if (e107::getSession()->is(SITEKEY.'_skin')) $siteskin= e107::getSession()->get(SITEKEY.'_skin');
+        elseif(!empty($userdata['userskin']))  $siteskin = $userdata['userskin'];
+        else $siteskin = $defaultskin; 
+         
+        
 		define("uLEVEL", $userdata['level']);
 		define("isADMIN", uLEVEL > 0 ? true : false);
 		define("isMEMBER", true);
-		if(EMPTY($_SESSION[$sitekey."_agecontsent"])) $ageconsent = $userdata['ageconsent'];
-		else $ageconsent = $_SESSION[$sitekey."_agecontsent"];
+        
+        if (e107::getSession()->is(SITEKEY.'_ageconsent')) $ageconsent = e107::getSession()->get(SITEKEY.'_ageconsent');
+		else $ageconsent = $authordata['ageconsent'];
+ 
 	}
 }
 if(!empty($_SESSION[$sitekey."_useruid"]) && !defined("USERUID")) {
@@ -49,14 +58,16 @@ if(!empty($_SESSION[$sitekey."_useruid"]) && !defined("USERUID")) {
 		define("USERPENNAME", $userdata['penname']);
 		// the following line fixes missing authorpref rows
 		if(empty($userdata['userskin'] )) dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_authorprefs(uid, userskin, storyindex, sortby, tinyMCE) VALUES('".$userdata['uid']."', '$defaultskin', '$displayindex', '$defaultsort', '$tinyMCE')");
-		if(!isset($_SESSION[$sitekey."_skin"]) && !empty($userdata['userskin'])) $siteskin = $userdata['userskin'];
-		else if(isset($_SESSION[$sitekey."_skin"])) $siteskin = $_SESSION[$sitekey."_skin"];
-		else $siteskin = $defaultskin;
+		
+        if (e107::getSession()->is(SITEKEY.'_skin')) $siteskin= e107::getSession()->get(SITEKEY.'_skin');
+        elseif(!empty($userdata['userskin']))  $siteskin = $userdata['userskin'];
+        else $siteskin = $defaultskin; 
+        
 		define("uLEVEL", $userdata['level']);
 		define("isADMIN", uLEVEL > 0 ? true : false);
 		define("isMEMBER", true);
-		if(!isset($_SESSION[$sitekey."_agecontsent"])) $ageconsent = $userdata['ageconsent'];
-		else $ageconsent = $_SESSION[$sitekey."_agecontsent"];
+        if (e107::getSession()->is(SITEKEY.'_ageconsent')) $ageconsent = e107::getSession()->get(SITEKEY.'_ageconsent');
+		else $ageconsent = $authordata['ageconsent'];
 	}
 }
 if(!defined("USERUID")) define("USERUID", 0);

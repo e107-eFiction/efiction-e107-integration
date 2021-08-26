@@ -21,6 +21,12 @@
 // ----------------------------------------------------------------------
 
 // Force the argument separator to be standards compliant
+
+if (!defined('e107_INIT'))
+{
+	require_once(__DIR__.'/../../class2.php');
+}
+
 @ ini_set('arg_separator.output','&amp;'); 
 if(isset($_GET['debug'])) @ error_reporting(E_ALL);
 if(isset($_GET['benchmark'])) {
@@ -54,11 +60,10 @@ foreach ($_GET as $v) {
 	}
 }
 unset($v);
-
-if(!isset($_SESSION)) session_start();
+ 
 // clear the global variables if register globals is on.
 if(ini_get('register_globals')) {
-	$arrayList = array_merge($_SESSION, $_GET, $_POST, $_COOKIE);
+	$arrayList = array_merge($_GET, $_POST, $_COOKIE);
 	foreach($arrayList as $k => $v) {
 		unset($GLOBALS[$k]);
 	}
@@ -138,7 +143,7 @@ require_once("includes/get_session_vars.php");
 
 if(isset($_GET['skin'])) {
 	$siteskin = $_GET['skin'];
-	$_SESSION[SITEKEY."_skin"] = $siteskin;
+	e107::getSession()->set(SITEKEY."_skin", $siteskin);
 }
 
 $v = explode(".", $version);
@@ -158,7 +163,9 @@ foreach($newV AS $k => $l) {
 	}
 }
 
-if(!empty($_SESSION[SITEKEY."_skin"])) $siteskin = $_SESSION[SITEKEY."_skin"];
+ 
+if (e107::getSession()->is(SITEKEY.'_skin')) $siteskin = e107::getSession()->get(SITEKEY.'_skin');
+
 if($maintenance && !isADMIN && basename($_SERVER['PHP_SELF']) != "maintenance.php" && !(isset($_GET['action']) && $_GET['action'] == "login")) {
 	header("Location: maintenance.php");
 	exit( );
@@ -173,10 +180,10 @@ while($block = dbassoc($blockquery)) {
 }
 
 // This session variable is used to track the story views
-if(isset($_SESSION[SITEKEY."_viewed"])) $viewed = $_SESSION[SITEKEY."_viewed"];
+if(e107::getSession()->is(SITEKEY."_viewed")) $viewed = e107::getSession()->get(SITEKEY."_viewed"); 
 
-if(isset($_GET['ageconsent'])) $_SESSION[SITEKEY."_ageconsent"] = 1;
-if(isset($_GET['warning'])) $_SESSION[SITEKEY."_warned"][$_GET['warning']] = 1;
+if(isset($_GET['ageconsent'])) e107::getSession()->set(SITEKEY."_ageconsent", 1);
+if(isset($_GET['warning'])) e107::getSession()->set(SITEKEY."_warned_{$_GET['warning']}", 1);
 
 if(file_exists("languages/{$language}.php")) require_once ("languages/{$language}.php");
 else require_once ("languages/en.php");
@@ -444,7 +451,6 @@ $headerSent = true;
 include (_BASEDIR."includes/class.TemplatePower.inc.php");
 if($debug == 1) {
 	@ error_reporting(E_ALL);
-	echo "\n<!-- \$_SESSION \n"; print_r($_SESSION); echo " -->";
 	echo "\n<!-- \$_COOKIE \n"; print_r($_COOKIE); echo " -->";
 	echo "\n<!-- \$_POST \n"; print_r($_POST); echo " -->";
 }

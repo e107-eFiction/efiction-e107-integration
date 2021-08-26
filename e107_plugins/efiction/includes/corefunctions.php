@@ -63,10 +63,10 @@ function recurseCategories($catid) {
 
 // Captcha script validation
 function captcha_confirm() {
-	if(empty($_SESSION[SITEKEY.'_digit'])) return false;
-	$digit = $_SESSION[SITEKEY.'_digit'];
+	if(!e107::getSession()->is(SITEKEY."_digit")) return false;
+	$digit =  e107::getSession()->get(SITEKEY."_digit"); 
 	$userdigit = $_POST['userdigit'];
-	unset($_SESSION[SITEKEY.'_digit']);
+	e107::getSession()->clear(SITEKEY."_digit"); 
 	if($digit == md5(SITEKEY.$userdigit) && $userdigit > 1) return true;
 	return false;
 }
@@ -243,11 +243,11 @@ function title_link($stories) {
 		else {
 			$warning = "";
 			$warninglevel = sprintf("%03b", $ratingslist[$rating]['ratingwarning']);
-			if($warninglevel[2] && !isset($_SESSION[SITEKEY."_warned"][$rating])) {
+			if($warninglevel[2] && !e107::getSession()->is(SITEKEY."_warned_{$rating}")) {
 				$location = "viewstory.php?sid=".$stories['sid']."&amp;warning=$rating";
 				$warning = $warningtext;
 			}
-			if($warninglevel[1] && !$ageconsent && empty($_SESSION[SITEKEY.'_ageconsent'])) {
+			if($warninglevel[1] && !$ageconsent && !e107::getSession()->is(SITEKEY."_ageconsent")) {
 				$location = "viewstory.php?sid=".$stories['sid']."&amp;ageconsent=ok&amp;warning=$rating";
 				$warning = _AGECHECK." - "._AGECONSENT." ".$warningtext." -- 1";
 			}

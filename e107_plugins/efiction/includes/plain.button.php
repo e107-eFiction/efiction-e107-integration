@@ -1,9 +1,15 @@
 <?php
 
-session_start();
+if (!defined('e107_INIT'))
+{
+	require_once(__DIR__.'/../../../class2.php');
+}
+
+
 define("_BASEDIR", "../");
 include("../config.php");
-unset($_SESSION[$sitekey.'_digit']);
+
+e107::getSession()->clear(SITEKEY."_digit"); 
 
 $image = imagecreate(120, 30);
 
@@ -35,7 +41,8 @@ for ($i = 0; $i < 5; $i++) {
 
 $digit = "$cnum[0]$cnum[1]$cnum[2]$cnum[3]$cnum[4]";
 
-$_SESSION[$sitekey.'_digit'] = md5($sitekey.$digit);
+e107::getSession()->set(SITEKEY."_digit", md5($sitekey.$digit));
+
 header('Content-type: image/png');
 imagepng($image);
 imagedestroy($image);
