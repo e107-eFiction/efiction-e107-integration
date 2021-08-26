@@ -4,12 +4,12 @@ if(!defined("_CHARSET")) exit( );
 	$longform = "{penname} {password} {rememberme} {go} <div id='loginlinks'>{register} | {lostpwd}</div>";
 	$shortform = "{penname} {password} {rememberme} {go}";
 if(!isMEMBER) {
-	$content = "<form method=\"POST\" id=\"loginblock\" enctype=\"multipart/form-data\" action=\""._BASEDIR."member.php?action=login\">";
-	$replace = array("<label for=\"penname=\">"._PENNAME.":</label><INPUT type=\"text\" class=\"textbox\" name=\"penname\" id=\"penname\" size=\"15\">", 
-			"<label for=\"password\">"._PASSWORD.":</label><INPUT type=\"password\" class=\"textbox\" name=\"password\" id=\"password\" size=\"15\">",
-			"<span id='rememberme'><INPUT type=\"checkbox\" class=\"checkbox\" name=\"cookiecheck\" id=\"cookiecheck\" value=\"1\"><label for=\"cookiecheck=\">"._REMEMBERME."</label></span>",
+	$content = "<form method=\"post\" onsubmit=\"hashLoginPassword(this);return true\" action=\"".e_SELF."\" accept-charset=\"UTF-8\">";
+	$replace = array("<label for=\"penname=\">"._PENNAME.":</label><INPUT type=\"text\" class=\"textbox\" name=\"username\" id=\"username\" size=\"15\">", 
+			"<label for=\"password\">"._PASSWORD.":</label><INPUT type=\"password\" class=\"textbox\" name=\"userpass\" id=\"userpass\" size=\"15\">",
+			"<span id='rememberme'><INPUT type=\"checkbox\" class=\"checkbox\" name=\"code-verify\" id=\"code-verify\" value=\"1\"><label for=\"code-verify\">"._REMEMBERME."</label></span>",
 			(!empty($pagelinks['register']['link']) ? $pagelinks['register']['link'] : ""), $pagelinks['lostpassword']['link'],
-			"<INPUT type=\"submit\" class=\"button\" name=\"submit\" value=\""._GO."\">");
+			"<INPUT type=\"submit\" class=\"button\" name=\"userlogin\" value=\""._GO."\">");
 	$search = array("@\{penname\}@", "@\{password\}@", "@\{rememberme\}@", "@\{register\}@", "@\{lostpwd\}@", "@\{go\}@");
 	if(!empty($blocks['login']['template'])) $content .= preg_replace($search, $replace, stripslashes($blocks['login']['template']));
 	else $content .= preg_replace( $search, $replace , (!empty($blocks['login']['form']) ? $longform : $shortform));		
