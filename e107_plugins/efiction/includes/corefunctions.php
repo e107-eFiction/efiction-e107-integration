@@ -434,10 +434,9 @@ function build_pagelinks($url, $total, $offset = 0, $columns = 1) {
 	$itemsperpage = $itemsperpage * $columns;
 
 	if($itemsperpage >= $total) return;
- 	if($itemsperpage == 0) return;   
 
 	if(empty($linkrange)) $linkrange = 4;
- 
+
 	$totpages = floor($total/$itemsperpage) + ($total % $itemsperpage ? 1 : 0);
 	$curpage = floor($offset/$itemsperpage) + 1;
 	if(!$linkstyle) $startrange = $curpage;
