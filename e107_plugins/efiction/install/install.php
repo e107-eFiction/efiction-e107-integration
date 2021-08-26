@@ -947,7 +947,6 @@ if(!empty(\$sitekey)) \$dbconnect = dbconnect(\$dbhost, \$dbuser,\$dbpass, \$dbn
 		else { 
 			if(file_exists("../config.php") && !isset($mysql_access)) include("../config.php");
 			if(isset($tinyMCE)) $output .= write_message(_CONFIG2DETECTED);
-			else if(isset($sitename)) $output .= write_message(_CONFIG1DETECTED);
 			else {
 				$output .=  
 					"<form method='POST' enctype='multipart/form-data' action='install.php?step=1' class='tblborder' style='width: 350px; margin: 1em auto;'>

@@ -1,9 +1,8 @@
 # eFiction customized for future combination with e107
 
-IN DEVELOPMENT Still standalone efiction version but without conflicts with e107
+##This is still the standalone efiction version but without conflicts with e107
 
-This is just backup and notes...
-THIS REPO contains files before changing efiction code itself. Main reason is for it is to have be able to start from beginning if integration ends badly. 
+This is just backup and notes... THIS REPO contains files before changing the efiction code itself. The main reason is for it is to have been able to start from the beginning if integration ends dead end.
 
 
 ## Database changes 
