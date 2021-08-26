@@ -21,19 +21,16 @@
 // ----------------------------------------------------------------------
 if(isset($_GET['action'])) $current = $_GET['action'];
 else $current = "login";
-
-	if($current == "logout" ) {
-		define("_LOGOUTCHECK", true);		
-		include("user/logout.php");
-	}
-	
-	if(!empty($_POST['submit']) && $current == "login") {
-	session_start();
-	define("_LOGINCHECK", true);		
-		include("user/login.php");
-	}
-
+ 
 require_once("header.php");
+
+if($current == "logout") e107::redirect(SITEURL."index.php?logout");
+
+if(!empty($_POST['submit']) && $current == "login") {
+   e107::redirect(e_LOGIN); 
+}
+
+
 //make a new TemplatePower object
 if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/default.tpl" );
 else $tpl = new TemplatePower("default_tpls/default.tpl");
@@ -60,6 +57,11 @@ else if(!empty($action)) {
 	if(dbnumrows($panelquery)) {
 		$panel = dbassoc($panelquery);
 		if($panel['panel_level'] > 0 && !isMEMBER) accessDenied( );
+        
+        if($action == "register") e107::redirect(e_SIGNUP); 
+        if($action == "login") e107::redirect(e_LOGIN); 
+        if($action == "lostpassword") e107::redirect(SITEURL."fpw.php");
+        
 		if($panel['panel_url'] && file_exists(_BASEDIR.$panel['panel_url'])) require_once(_BASEDIR.$panel['panel_url']);
 		else if(file_exists("user/{$action}.php")) require_once("user/{$action}.php");
 		else $output = write_error(_ERROR);
