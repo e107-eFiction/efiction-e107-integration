@@ -30,8 +30,8 @@ include ("header.php");
 
 //make a new TemplatePower object
 if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/default.tpl" );
-else $tpl = new TemplatePower("default_tpls/default.tpl");
-include("includes/pagesetup.php");
+else $tpl = new TemplatePower(_BASEDIR."default_tpls/default.tpl");
+include(_BASEDIR."includes/pagesetup.php");
 if(file_exists("languages/".$language."_admin.php")) include_once("languages/".$language."_admin.php");
 else include_once("languages/en_admin.php");
 // end basic page setup
@@ -79,6 +79,10 @@ else include_once("languages/en_admin.php");
 		$output .= write_message(_RUNNINGVERSION);
 	}	
 	$tpl->assign( "output", $output );
-	$tpl->printToScreen();
+	//$tpl->xprintToScreen( );
 	dbclose( );
-?>
+	$text = $tpl->getOutputContent(); 
+	e107::getRender()->tablerender($caption, $text, $current);
+	require_once(FOOTERF); 
+	exit;
+ 

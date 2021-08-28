@@ -27,10 +27,10 @@ include ("header.php");
 
 	//make a new TemplatePower object
 if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/default.tpl" );
-else $tpl = new TemplatePower("default_tpls/default.tpl");
+else $tpl = new TemplatePower(_BASEDIR."default_tpls/default.tpl");
 $tpl->assignInclude( "header", "./$skindir/header.tpl" );
 $tpl->assignInclude( "footer", "./$skindir/footer.tpl" );
-include("includes/pagesetup.php");
+include(_BASEDIR."includes/pagesetup.php");
 
 	$output .= "<h1>"._CONTACTUS."</h1>";
 
@@ -56,11 +56,13 @@ include("includes/pagesetup.php");
 		<input type='hidden' name='reportpage' value='".descript($_GET['url'])."'></td></tr>";
 		$output .= "<tr><td><label for='comments'>"._COMMENTS.":</label></td><td> <TEXTAREA  class='textbox' name='comments' cols='50' rows='6'></TEXTAREA></td></tr>";
 		if(!USERUID && !empty($captcha)) $output .= "<tr><td><span class='label'>"._CAPTCHANOTE."</span></td><td><img width=120 height=30 src='"._BASEDIR."includes/button.php' alt='CAPTCHA image'><br /><br /><input MAXLENGTH=5 SIZE=5 name='userdigit' type='text' value=''></td></tr>";
-		$output .= "<tr><td colspan='2'><div style='text-align: center;'><INPUT name='submit' class='button' type='submit' value='"._SUBMIT."'></td></tr></table></form>";
+		$output .= "<tr><td colspan='2'><div style='text-align: center;'><INPUT name='submit' class='button' type='submit' value='"._SUBMIT."'></div></td></tr></table></form>";
 	}
 
 	$tpl->assign( "output", $output );	
-$output = $tpl->getOutputContent( );  
-$output = e107::getParser()->parseTemplate($output, true); 
-echo $output;
-dbclose( );
+    //$tpl->xprintToScreen( );
+    dbclose( );
+    $text = $tpl->getOutputContent(); 
+    e107::getRender()->tablerender($caption, $text, $current);
+    require_once(FOOTERF); 
+    exit;

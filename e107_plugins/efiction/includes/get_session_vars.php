@@ -40,11 +40,12 @@ if (USERID) {  //fully managed by e107, user is logged in
 		// the following line fixes missing authorpref rows
 		if(empty($userdata['userskin'] )) dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_authorprefs(uid, userskin, storyindex, sortby, tinyMCE) VALUES('".$userdata['uid']."', '$defaultskin', '$displayindex', '$defaultsort', '$tinyMCE')");
  
-        if (e107::getSession()->is(SITEKEY.'_skin')) $siteskin= e107::getSession()->get(SITEKEY.'_skin');
+        if (e107::getSession()->is(SITEKEY.'_skin')) $siteskin= e107::getSession()->get(SITEKEY.'_skin'); 
         elseif(!empty($userdata['userskin']))  $siteskin = $userdata['userskin'];
         else $siteskin = $defaultskin; 
          
-        
+        }
+ 
 		define("uLEVEL", $userdata['level']);
 		define("isADMIN", uLEVEL > 0 ? true : false);
 		define("isMEMBER", true);
@@ -53,7 +54,7 @@ if (USERID) {  //fully managed by e107, user is logged in
 		else $ageconsent = $authordata['ageconsent'];
       }
    }
-}
+
 
 if(!defined("USERUID")) define("USERUID", 0);
 if(!defined("USERPENNAME")) define("USERPENNAME", false);

@@ -33,10 +33,10 @@ if(!empty($_POST['submit']) && $current == "login") {
 
 //make a new TemplatePower object
 if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/default.tpl" );
-else $tpl = new TemplatePower("default_tpls/default.tpl");
+else $tpl = new TemplatePower(_BASEDIR."default_tpls/default.tpl");
 if(file_exists("$skindir/listings.tpl")) $tpl->assignInclude( "listings", "./$skindir/listings.tpl" );
 else $tpl->assignInclude( "listings", "./default_tpls/listings.tpl" );
-include("includes/pagesetup.php");
+include(_BASEDIR."includes/pagesetup.php");
 
 if($action) $current = $action;
 else $current = "user";
@@ -70,6 +70,9 @@ else if(!empty($action)) {
 }
 else $output = write_error(_NOTAUTHORIZED);
 $tpl->assign( "output", $output );
-$tpl->printToScreen();
+//$tpl->xprintToScreen( );
 dbclose( );
-?>
+$text = $tpl->getOutputContent(); 
+e107::getRender()->tablerender($caption, $text, $current);
+require_once(FOOTERF); 
+exit;

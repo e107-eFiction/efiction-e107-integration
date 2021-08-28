@@ -137,11 +137,11 @@ for($a = $offset + 1; $a <= $itemsperpage + $offset; $a++) {
 	$stories = isset($serieslist[$a]) ? $serieslist[$a] : false;
 	if(isset($stories['seriesid'])) {
 		$tpl->newBlock("seriesblock");
-		include("includes/seriesblock.php");
+		include(_BASEDIR."includes/seriesblock.php");
 	}
 	else if(isset($stories['sid'])) {
 		$tpl->newBlock("storyblock");
-		include("includes/storyblock.php");
+		include(_BASEDIR."includes/storyblock.php");
 // print_r($stories);
 	}
 	$tpl->gotoBlock("_ROOT");
@@ -152,6 +152,8 @@ if($scount > $itemsperpage) {
 }
 $tpl->gotoBlock( "_ROOT" );
 $tpl->assign("output", $output);
-$tpl->printToScreen( );
-
-?>
+//$tpl->xprintToScreen( );
+$text = $tpl->getOutputContent(); 
+e107::getRender()->tablerender($caption, $text, $current);
+require_once(FOOTERF); 
+exit;

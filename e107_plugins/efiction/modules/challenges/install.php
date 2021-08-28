@@ -75,5 +75,8 @@ else {
 }
 }
 $tpl->assign("output", $output);
-$tpl->printToScreen( );
-?>
+//$tpl->xprintToScreen( );
+$text = $tpl->getOutputContent(); 
+e107::getRender()->tablerender($caption, $text, $current);
+require_once(FOOTERF); 
+exit;

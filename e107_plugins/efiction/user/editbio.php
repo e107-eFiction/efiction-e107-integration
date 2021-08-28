@@ -73,9 +73,12 @@ function random_string ($charset_string, $length)
 						if($_POST['password'] != $_POST['password2']) {
 							$output .=  write_error(_PASSWORDTWICE);
 							$tpl->assign("output", $output);
-							$tpl->printToScreen( );
+							//$tpl->xprintToScreen( );
 							dbclose( );
-							exit( );
+							$text = $tpl->getOutputContent(); 
+							e107::getRender()->tablerender($caption, $text, $current);
+							require_once(FOOTERF); 
+							exit;
 						}
 						$pass = $_POST['password2'];
 						$encryppass = md5($pass);

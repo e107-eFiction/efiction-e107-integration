@@ -50,9 +50,12 @@ if(!defined("_CHARSET")) exit( );
 		$reviews = dbassoc($result);
 		if(!empty($reviews['respond'])) {
 			$tpl->assign("output", write_message(_ALREADYRESPONDED));
-			$tpl->printToScreen( );
+			//$tpl->xprintToScreen( );
 			dbclose( );
-			exit( );
+			$text = $tpl->getOutputContent(); 
+			e107::getRender()->tablerender($caption, $text, $current);
+			require_once(FOOTERF); 
+			exit;
 
 		}
 		$type = $reviews['type'];
@@ -102,7 +105,7 @@ if(!defined("_CHARSET")) exit( );
 				$member = _ANONYMOUS;
 			}
 			if(file_exists("$skindir/reviewblock.tpl")) $revlist = new TemplatePower( "$skindir/reviewblock.tpl" );
-			else $revlist = new TemplatePower("default_tpls/reviewblock.tpl");
+			else $revlist = new TemplatePower(_BASEDIR."default_tpls/reviewblock.tpl");
 			$revlist->prepare( );
 			$revlist->newBlock("reviewsblock");
 			$revlist->assign("reviewer"   , $reviewer );

@@ -33,8 +33,8 @@ $tpl = new TemplatePower( file_exists("$skindir/default.tpl") ?  "$skindir/defau
 $tpl->assignInclude( "header", "./$skindir/header.tpl" );
 $tpl->assignInclude( "footer", "./$skindir/footer.tpl" );
 
-include("includes/pagesetup.php");
-include("includes/storyform.php");
+include(_BASEDIR."includes/pagesetup.php");
+include(_BASEDIR."includes/storyform.php");
 
 
 // before doing anything else check if the visitor is logged in.  If they are, check if they're an admin.  If not, check that they're 
@@ -72,13 +72,13 @@ function preview_story($stories) {
 
 	$count = 0;
 	if(file_exists("$skindir/listings.tpl")) $tpl = new TemplatePower( "$skindir/listings.tpl" );
-	else $tpl = new TemplatePower("default_tpls/listings.tpl");
+	else $tpl = new TemplatePower(_BASEDIR."default_tpls/listings.tpl");
 	if(count($stories['coauthors']) > 0) $stories['coauthors'] = 1;
 	$tpl->prepare( );
 	$tpl->newBlock("listings");
 	$tpl->newBlock("storyblock");
 	$tpl->assignGlobal("skindir", $skindir);
-	include("includes/storyblock.php");
+	include(_BASEDIR."includes/storyblock.php");
 	$text = $tpl->getOutputContent( );
 	$count = 0;
 	if(!empty($stories['storytext'])) {
@@ -89,7 +89,7 @@ function preview_story($stories) {
 		if(file_exists("./$skindir/viewstory.tpl")) $tpl = new TemplatePower("./$skindir/viewstory.tpl");
 		else $tpl = new TemplatePower(_BASEDIR."default_tpls/viewstory.tpl");
 		$tpl->prepare( );			
-		include("includes/storyblock.php");
+		include(_BASEDIR."includes/storyblock.php");
 		$tpl->assign("adminlinks", $adminlinks);
 		if($stories['inorder'] == 1 && !empty($stories['storynotes'])) {
 			$tpl->gotoBlock("_ROOT");
@@ -288,7 +288,7 @@ function newstory( ) {
 		}
 		// validate fic, send story alerts, and mail admins
 		if($validated) {
-			include("includes/emailer.php");
+			include(_BASEDIR."includes/emailer.php");
 			if(!isset($storytitle)) $storytitle = $title;
 			if(!$newchapter) {
 				foreach($catid as $cat) { categoryitems($cat, 1); }
@@ -336,7 +336,7 @@ function newstory( ) {
 		else {
 			$adminquery = dbquery("SELECT "._EMAILFIELD." as email, "._PENNAMEFIELD." as penname, contact,categories FROM ".TABLEPREFIX."fanfiction_authorprefs as ap, "._AUTHORTABLE." WHERE "._UIDFIELD." = ap.uid AND level > 0 AND level < 4");
 			if(empty($storytitle)) $storytitle = $title;
-			include("includes/emailer.php");
+			include(_BASEDIR."includes/emailer.php");
 			while($admins = dbassoc($adminquery)) {
 				global $sitename, $siteemail;
 				if($admins['contact'] == 1) {
@@ -559,9 +559,12 @@ function editchapter( $chapid ) {
 			unset($_POST['submit']);
 			$output = write_message(_STORYUPDATED).editstory($sid);
 			$tpl->assign( "output", $output );
-			$tpl->printToScreen( );
+			//$tpl->xprintToScreen( );
 			dbclose( );
-			exit( );
+			$text = $tpl->getOutputContent(); 
+			e107::getRender()->tablerender($caption, $text, $current);
+			require_once(FOOTERF); 
+			exit;
 		}
 	}
 	$output .= "<div class=\"tblborder\" style=\"width: 550px; margin: 0 auto; padding: 5px;\">
@@ -705,7 +708,7 @@ function editstory($sid) {
 			$oldcats = explode(",", $oldcats);
 			if($validated) {
 				if(!$oldvalid) {
-					include("includes/emailer.php");
+					include(_BASEDIR."includes/emailer.php");
 					list($newchapter) = dbrow(dbquery("SELECT validated FROM ".TABLEPREFIX."fanfiction_chapters WHERE sid = '$sid' AND inorder = '1'"));
 					if(!$newchapter) {
 						if($alertson) {
@@ -819,9 +822,12 @@ function editstory($sid) {
 			}
 			$output .= write_message(_STORYUPDATED."  ".($admin ? _BACK2ADMIN : _BACK2ACCT));
 			$tpl->assign( "output", $output );
-			$tpl->printToScreen( );
+			//$tpl->xprintToScreen( );
 			dbclose( );
-			exit( );
+			$text = $tpl->getOutputContent(); 
+			e107::getRender()->tablerender($caption, $text, $current);
+			require_once(FOOTERF); 
+			exit;
 		}
 	}
 	$query = dbquery("SELECT DATE_FORMAT(date, '$dateformat') as date, wordcount, uid FROM ".TABLEPREFIX."fanfiction_stories WHERE sid = '$sid' LIMIT 1");
@@ -931,7 +937,7 @@ function delete( ) {
 			return "<center>"._ACTIONSUCCESSFUL."</center>".editstory( $sid );
 		}
 		else {
-			include("includes/deletefunctions.php");
+			include(_BASEDIR."includes/deletefunctions.php");  
 			deleteStory($story);
 		}
 		$output = write_message(_ACTIONSUCCESSFUL."  ".($admin ? _BACK2ADMIN : viewstories( )));	
@@ -975,6 +981,9 @@ switch($action) {
 }
 
 	$tpl->assign( "output", $output );
-	$tpl->printToScreen();
+	//$tpl->xprintToScreen( );
 	dbclose( );
-?>
+	$text = $tpl->getOutputContent(); 
+	e107::getRender()->tablerender($caption, $text, $current);
+	require_once(FOOTERF); 
+	exit;

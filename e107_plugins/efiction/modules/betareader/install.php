@@ -47,5 +47,8 @@ else {
 	$output = write_message(_CONFIRMINSTALL."<br /><a href='install.php?confirm=yes'>"._YES."</a> "._OR." <a href='install.php?confirm=no'>"._NO."</a>");
 }
 $tpl->assign("output", $output);
-$tpl->printToScreen( );
-?>
+//$tpl->xprintToScreen( );
+$text = $tpl->getOutputContent(); 
+e107::getRender()->tablerender($caption, $text, $current);
+require_once(FOOTERF); 
+exit;

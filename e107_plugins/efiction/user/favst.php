@@ -71,7 +71,7 @@ if(empty($favorites)) accessDenied( );
 		else {
 			$tpl->newBlock("listings");
 			$tpl->newBlock("storyblock");
-			include("includes/storyblock.php");
+			include(_BASEDIR."includes/storyblock.php");
 			$tpl->gotoBlock("listings");
 			$tpl->assign("pagelinks", "<form method=\"POST\" enctype=\"multipart/form-data\" action=\"member.php?action=favst&amp;".($edit? "edit=$edit" : "add=1")."&amp;sid=".(isset($sid) ? $sid : $edit)."\">\n
 				<div style=\"width: 350px; margin: 0 auto; text-align: left;\"><label for=\"comments\">"._COMMENTS.":</label><br />
@@ -90,7 +90,7 @@ if(empty($favorites)) accessDenied( );
 			$count = 0;
 			while($stories = dbassoc($list)) { 
 				$tpl->newBlock("storyblock");
-				include("includes/storyblock.php");
+				include(_BASEDIR."includes/storyblock.php");
 				if(!empty($stories['comments']) || USERUID == $uid || isADMIN) {
 				if(file_exists("./$skindir/favcomment.tpl")) $cmt = new TemplatePower( "./$skindir/favcomment.tpl" );
 				else $cmt = new TemplatePower( "./default_tpls/favcomment.tpl" );

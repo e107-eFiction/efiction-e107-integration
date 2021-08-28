@@ -63,12 +63,15 @@ if(empty($chapter)) $chapter = isset($_GET['chapter']) && isNumber($_GET['chapte
 		$current = "storyerror";
 		// load our template files to set up the page.
 		if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/default.tpl" );
-		else $tpl = new TemplatePower("default_tpls/default.tpl");
-		include("includes/pagesetup.php");
+		else $tpl = new TemplatePower(_BASEDIR."default_tpls/default.tpl");
+		include(_BASEDIR."includes/pagesetup.php");
 		$tpl->assign("output", "<div id='pagetitle'>".$title."</div>".write_error($warning));
-		$tpl->printToScreen( );
+		//$tpl->xprintToScreen( );
 		dbclose( );
-		exit( ); 
+		$text = $tpl->getOutputContent(); 
+		e107::getRender()->tablerender($caption, $text, $current);
+		require_once(FOOTERF); 
+		exit;
 	}
 	// End 
 
@@ -78,13 +81,13 @@ if($action == "printable") {
 	$settingsresults = dbquery("SELECT store, storiespath FROM ".$settingsprefix."fanfiction_settings WHERE sitekey = '".SITEKEY."'");
 	list($store, $storiespath) = dbrow($settingsresults);
 	if(file_exists("$skindir/printstory.tpl")) $tpl = new TemplatePower( "$skindir/printstory.tpl" );
-	else $tpl = new TemplatePower("default_tpls/printstory.tpl");
-	include("includes/pagesetup.php");
+	else $tpl = new TemplatePower(_BASEDIR."default_tpls/printstory.tpl");
+	include(_BASEDIR."includes/pagesetup.php");
 	$tpl->assign("title", stripslashes($storyinfo['title']));
 	$tpl->assign("author", author_link($storyinfo));
 	if(empty($chapter)) $chapter = "all"; // shouldn't happen but just in case
 	$stories = $storyinfo;
-	include("includes/storyblock.php");
+	include(_BASEDIR."includes/storyblock.php");
 	unset($stories);
 	if($chapter == "all") {
 		if($storyinfo['storynotes']) {
@@ -137,9 +140,12 @@ if($action == "printable") {
 		if(empty($c['validated']) && !isADMIN && USERUID != $c['uid'] && !in_array(USERUID, $stories['coauthors'])) {
 			$warning = write_error(_ACCESSDENIED);
 			$tpl->assign("archivedat", $warning);
-			$tpl->printToScreen( );
+			//$tpl->xprintToScreen( );
 			dbclose( );
-			exit( );
+			$text = $tpl->getOutputContent(); 
+			e107::getRender()->tablerender($caption, $text, $current);
+			require_once(FOOTERF); 
+			exit;
 		}
 
 		if($c['inorder'] == 1 && !empty($storyinfo['storynotes'])) {
@@ -191,15 +197,15 @@ if($action == "printable") {
 }
 else if(($displayindex && empty($chapter)) || !empty($_GET['index'])) {
 	if(file_exists("$skindir/storyindex.tpl")) $tpl = new TemplatePower( "$skindir/storyindex.tpl" );
-	else $tpl = new TemplatePower("default_tpls/storyindex.tpl");
-	include("includes/pagesetup.php");
+	else $tpl = new TemplatePower(_BASEDIR."default_tpls/storyindex.tpl");
+	include(_BASEDIR."includes/pagesetup.php");
 	$stories = $storyinfo;
 	// Hook for adding content to only the index of the story.
 	$codeblocks = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'storyindex'");
 	while($code = dbassoc($codeblocks)) {
 		eval($code['code_text']);
 	}
-	include("includes/storyblock.php");
+	include(_BASEDIR."includes/storyblock.php");
 	$printicon = "<a href=\"viewstory.php?action=printable&amp;textsize=$textsize&amp;sid=$sid&amp;chapter=all\" target=\"_blank\"><img src='".(isset($printer) ? $printer : "images/print.gif")."' border='0' alt='"._PRINTER."'></a>";
 	if($reviewsallowed && (isMEMBER || $anonreviews))
 			$reviewslink = "<a href=\"reviews.php?action=add&amp;item=$sid&amp;next=2&amptype=ST\">"._SUBMITREVIEW."</a>";
@@ -240,8 +246,8 @@ else if(($displayindex && empty($chapter)) || !empty($_GET['index'])) {
 }
 else {
 	if(file_exists("$skindir/viewstory.tpl")) $tpl = new TemplatePower( "$skindir/viewstory.tpl" );
-	else $tpl = new TemplatePower("default_tpls/viewstory.tpl");
-	include("includes/pagesetup.php");
+	else $tpl = new TemplatePower(_BASEDIR."default_tpls/viewstory.tpl");
+	include(_BASEDIR."includes/pagesetup.php");
 	$jumpmenu = "";
 	$jumpmenu2 = "";
 	if(empty($chapter) || !$chapter) $chapter = 1;
@@ -310,7 +316,7 @@ else {
 	$stories = $storyinfo;
 	$tpl->gotoBlock("_ROOT");
 	$jumpmenu2 = ""; 
-	include("includes/storyblock.php");
+	include(_BASEDIR."includes/storyblock.php");
 	unset($adminlinks);
 	if(isADMIN && uLEVEL < 3) 
 		$adminlinks = "<div class=\"adminoptions\"><span class='label'>"._ADMINOPTIONS.":</span> "._EDIT." - <a href=\"stories.php?action=editstory&amp;sid=$sid&amp;admin=1\">"._STORY."</a> "._OR." <a href=\"stories.php?action=editchapter&amp;chapid=$chapid&amp;admin=1\">"._CHAPTER."</a> | "._DELETE." - <a href=\"stories.php?action=delete&amp;sid=$sid&amp;admin=1\">"._STORY."</a> "._OR." <a href=\"stories.php?action=delete&amp;chapid=$chapid&amp;sid=$sid&amp;admin=1\">"._CHAPTER."</a></div>";
@@ -335,7 +341,7 @@ else {
 		if(isMEMBER || $anonreviews) {
 			$item = $sid;
 			$type = "ST";
-			include("includes/reviewform.php");
+			include(_BASEDIR."includes/reviewform.php");  
 		}
 		else $form = write_message(sprintf(_LOGINTOREVIEW, strtolower($pagelinks['login']['link']), strtolower($pagelinks['register']['link'])));
 	}
@@ -399,7 +405,9 @@ $codeblocks = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE 
 while($code = dbassoc($codeblocks)) {
 	eval($code['code_text']);
 }
-$tpl->printToScreen();
+//$tpl->xprintToScreen( );
 dbclose( );
-
-?>
+$text = $tpl->getOutputContent(); 
+e107::getRender()->tablerender($caption, $text, $current);
+require_once(FOOTERF); 
+exit;

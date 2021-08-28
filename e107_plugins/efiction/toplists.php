@@ -25,14 +25,14 @@ $current = "tens";
 include ("header.php");
 
 if(file_exists("$skindir/browse.tpl")) $tpl = new TemplatePower( "$skindir/browse.tpl" );
-else $tpl = new TemplatePower("default_tpls/browse.tpl");
+else $tpl = new TemplatePower(_BASEDIR."default_tpls/browse.tpl");
 if(file_exists("$skindir/listings.tpl")) $tpl->assignInclude("listings", "./$skindir/listings.tpl");
 else $tpl->assignInclude( "listings", "./default_tpls/listings.tpl" );
 $tpl->assignInclude( "header", "./$skindir/header.tpl" );
 $tpl->assignInclude( "footer", "./$skindir/footer.tpl" );
 
 $list = isset($_GET['list']) ? $_GET['list'] : false;
-include("includes/pagesetup.php");
+include(_BASEDIR."includes/pagesetup.php");
 	if(!$list) {
 		$output = "<div id='pagetitle'>".$pagelinks['tens']['text']."</div>";
 		$lists = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_type = 'L' AND panel_hidden != '1' AND panel_level = '0' ORDER BY panel_order");
@@ -57,5 +57,8 @@ include("includes/pagesetup.php");
 	}
 
 $tpl->assign("output", $output);
-$tpl->printToScreen( );
-?>
+//$tpl->xprintToScreen( );
+$text = $tpl->getOutputContent(); 
+e107::getRender()->tablerender($caption, $text, $current);
+require_once(FOOTERF); 
+exit;

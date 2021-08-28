@@ -25,9 +25,9 @@ $current = "news";
 include ("header.php");
 
 if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/default.tpl" );
-else $tpl = new TemplatePower("default_tpls/default.tpl");
+else $tpl = new TemplatePower(_BASEDIR."default_tpls/default.tpl");
 
-include("includes/pagesetup.php");
+include(_BASEDIR."includes/pagesetup.php");
 
 
 if(isset($_REQUEST['nid'])) $nid = $_REQUEST['nid'];
@@ -147,6 +147,9 @@ else {
 	$tpl->assign("output", $output);
 }
 
-$tpl->printToScreen();
+//$tpl->xprintToScreen( );
 dbclose( );
-?>
+$text = $tpl->getOutputContent(); 
+e107::getRender()->tablerender($caption, $text, $current);
+require_once(FOOTERF); 
+exit;

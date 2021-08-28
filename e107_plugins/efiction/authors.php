@@ -32,9 +32,8 @@ include ("header.php");
 
 //make a new TemplatePower object
 if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/default.tpl" );
-else $tpl = new TemplatePower("default_tpls/default.tpl");
-include("includes/pagesetup.php");
-
+else $tpl = new TemplatePower(_BASEDIR."default_tpls/default.tpl");
+include(_BASEDIR."includes/pagesetup.php");
 // end basic page setup
 
 $pagetitle = "<div id=\"pagetitle\">";
@@ -85,6 +84,9 @@ $listOpts = ""; $countquery = "";
 	include("includes/members_list.php");
 
 	$tpl->assign( "output", $output );
-	$tpl->printToScreen();
+	//$tpl->xprintToScreen( );
 	dbclose( );
-?>
+	$text = $tpl->getOutputContent(); 
+	e107::getRender()->tablerender($caption, $text, $current);
+	require_once(FOOTERF); 
+	exit;

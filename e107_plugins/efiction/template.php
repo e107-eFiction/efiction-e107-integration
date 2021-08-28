@@ -39,7 +39,7 @@ $tpl->assignInclude( "footer", "./$skindir/footer.tpl" );
 //let TemplatePower do its thing, parsing etc.
 $tpl->prepare();
 
-include("includes/pagesetup.php");
+include(_BASEDIR."includes/pagesetup.php");
 
 //Start modifying below:
 
@@ -50,6 +50,9 @@ panel in the admin area.*/
 
 //Don't modify below this line	
 $tpl->assign("output", $output);
-$tpl->printToScreen();
+//$tpl->xprintToScreen( );
 dbclose( );
-?>
+$text = $tpl->getOutputContent(); 
+e107::getRender()->tablerender($caption, $text, $current);
+require_once(FOOTERF); 
+exit;

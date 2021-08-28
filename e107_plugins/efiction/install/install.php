@@ -974,6 +974,9 @@ if(!empty(\$sitekey)) \$dbconnect = dbconnect(\$dbhost, \$dbuser,\$dbpass, \$dbn
 }
 $tpl->assign("output", $output);
 
-$tpl->printToScreen();
+//$tpl->xprintToScreen( );
 if(isset($_GET['step']) && $_GET['step'] > 2) dbclose( );
-?>
+$text = $tpl->getOutputContent(); 
+e107::getRender()->tablerender($caption, $text, $current);
+require_once(FOOTERF); 
+exit;

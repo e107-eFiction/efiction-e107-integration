@@ -119,8 +119,12 @@ function accessDenied($str = ""){
 	else $output = write_error(_NOTAUTHORIZED);
 	if(!empty($tpl)) {
 		$tpl->assign("output", $output);
-		$tpl->printToScreen( );
+		//$tpl->xprintToScreen( );
 		dbclose( );
+		$text = $tpl->getOutputContent(); 
+		e107::getRender()->tablerender($caption, $text, $current);
+		require_once(FOOTERF); 
+		exit;
 	}
 	else echo $output;
 	exit( );
@@ -132,9 +136,12 @@ function errorExit( $msg = ""){
 
 	$output .= write_error(_ERROR.(!empty($msg) ? " " : "").$msg);
 	$tpl->assign("output", $output);
-	$tpl->printToScreen( );
+	//$tpl->xprintToScreen( );
 	dbclose( );
-	exit( );
+	$text = $tpl->getOutputContent(); 
+	e107::getRender()->tablerender($caption, $text, $current);
+	require_once(FOOTERF); 
+	exit;
 }
 // The next three functions are used to calculate the series reviews and rating
 

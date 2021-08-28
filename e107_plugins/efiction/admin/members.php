@@ -193,9 +193,12 @@ $confirm = isset($_GET['confirm']) ? $_GET['confirm'] : false;
 				$where = "";
 				$output .= write_message(_FUNCTIONDISABLED);
 				$tpl->assign("output", $output);
-				$tpl->printToScreen( );
+				//$tpl->xprintToScreen( );
 				dbclose( );
-				exit();
+				$text = $tpl->getOutputContent(); 
+				e107::getRender()->tablerender($caption, $text, $current);
+				require_once(FOOTERF); 
+				exit;
 			}
 			else {
 				$where = " WHERE author.admincreated = '1'";

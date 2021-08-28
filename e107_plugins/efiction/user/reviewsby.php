@@ -23,7 +23,7 @@
 // ----------------------------------------------------------------------
 
 if(!defined("_CHARSET")) exit( );
-if(!function_exists("catlist")) include("includes/listings.php");
+if(!function_exists("catlist")) include(_BASEDIR."includes/listings.php");  
 
 if(!isset($uid)) {
 	$uid = USERUID;
@@ -45,7 +45,7 @@ if($reviewcount) {
 		if(empty($lastreview)) $lastreview = array('type' => '', 'item' => '');
 		$adminlink = "";
 		if(file_exists("$skindir/reviewblock.tpl")) $revlist = new TemplatePower( "$skindir/reviewblock.tpl" );
-		else $revlist = new TemplatePower("default_tpls/reviewblock.tpl");
+		else $revlist = new TemplatePower(_BASEDIR."default_tpls/reviewblock.tpl");
 		$revlist->prepare( );
 		if($reviews['type'] == 'ST') {
 			$storyquery = dbquery(_STORYQUERY." AND sid = '".$reviews['item']."' LIMIT 1");
@@ -53,7 +53,7 @@ if($reviewcount) {
 			$authoruid = $stories['uid'];
 			if($lastreview['type'] != 'ST' || $lastreview['item'] != $reviews['item']) {
 				$tpl->newBlock("storyblock");
-				include("includes/storyblock.php");
+				include(_BASEDIR."includes/storyblock.php");
 			}
 			if($reviews['chapid']) {
 				$chapquery = dbquery("SELECT title, inorder FROM ".TABLEPREFIX."fanfiction_chapters WHERE chapid = '".$reviews['chapid']."' LIMIT 1");
@@ -64,7 +64,7 @@ if($reviewcount) {
 			$storyquery = dbquery(_SERIESQUERY." AND seriesid = '".$reviews['item']."' LIMIT 1");
 			$stories = dbassoc($storyquery);
 			$authoruid = $stories['uid'];
-			include("includes/seriesblock.php");
+			include(_BASEDIR."includes/seriesblock.php");
 		}
 		else { 
 			$codeblocks = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'reviewsby'");

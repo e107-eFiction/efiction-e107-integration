@@ -109,8 +109,11 @@ else if($action == "add" || $action == "edit") {
 		else if(!isMEMBER && $captcha && !captcha_confirm()) {
 			$output .= write_error(_CAPTCHAFAIL);
 			$tpl->assign("output", $output);
-			$tpl->printToScreen( );
-			exit( );
+			//$tpl->xprintToScreen( );
+			$text = $tpl->getOutputContent(); 
+			e107::getRender()->tablerender($caption, $text, $current);
+			require_once(FOOTERF); 
+			exit;
 		}
 		else {
 			if($action != "edit") 
@@ -124,8 +127,11 @@ else if($action == "add" || $action == "edit") {
 			}
 			$output .= write_message(_ACTIONSUCCESSFUL."  <a href=\""._BASEDIR."browse.php?type=challenges\">"._BACK2PREVIOUS."</a>");
 			$tpl->assign("output", $output);
-			$tpl->printToScreen( );
-			exit( );
+			//$tpl->xprintToScreen( );
+			$text = $tpl->getOutputContent(); 
+			e107::getRender()->tablerender($caption, $text, $current);
+			require_once(FOOTERF); 
+			exit;
 		}		
 	}
 	if($action == "edit" && $chalid) {
@@ -327,5 +333,8 @@ else {
 }
 
 $tpl->assign("output", $output);
-$tpl->printToScreen( );
-?>
+//$tpl->xprintToScreen( );
+$text = $tpl->getOutputContent(); 
+e107::getRender()->tablerender($caption, $text, $current);
+require_once(FOOTERF); 
+exit;

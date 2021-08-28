@@ -28,13 +28,13 @@ if($_GET['action'] == "add" || $_GET['action'] == "edit") $displayform = 1;
 include ("header.php");
 //make a new TemplatePower object
 if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/default.tpl" );
-else $tpl = new TemplatePower("default_tpls/default.tpl");
+else $tpl = new TemplatePower(_BASEDIR."default_tpls/default.tpl");
 if(file_exists("$skindir/listings.tpl")) $tpl->assignInclude( "listings", "./$skindir/listings.tpl" );
 else $tpl->assignInclude( "listings", "./default_tpls/listings.tpl" );
 $tpl->assignInclude( "header", "./$skindir/header.tpl" );
 $tpl->assignInclude( "footer", "./$skindir/footer.tpl" );
 
-include("includes/pagesetup.php");
+include(_BASEDIR."includes/pagesetup.php");
 $seriesid = isset($_GET['seriesid']) && isNumber($_GET['seriesid']) ? $_GET['seriesid'] : false;
 $showlist = true;
 $inorder = isset($_GET['inorder']) && isNumber($_GET['inorder']) ? $_GET['inorder'] : false;
@@ -373,6 +373,9 @@ if($showlist) {
 		$output .= "<tr><td colspan='2' align='center' class=\"tblborder\"><a href='series.php?action=add'>"._ADDSERIES."</a></td></tr></table>";
 	}
 }
-$tpl->assign("output", $output);
-$tpl->printToScreen( );
-?>
+
+//$tpl->xprintToScreen( );
+$text = $tpl->getOutputContent(); 
+e107::getRender()->tablerender($caption, $text, $current);
+require_once(FOOTERF); 
+exit;

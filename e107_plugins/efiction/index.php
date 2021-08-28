@@ -20,29 +20,23 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-$current = $_GET['page'];
+$current = "home";
 
 include ("header.php");
 
 //make a new TemplatePower object
 
-if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/default.tpl" );
-else $tpl = new TemplatePower(_BASEDIR."default_tpls/default.tpl");
+if(file_exists("$skindir/index.tpl")) $tpl = new TemplatePower( "$skindir/index.tpl" );
+else $tpl = new TemplatePower(_BASEDIR."default_tpls/index.tpl");
 //let TemplatePower do its thing, parsing etc.
-
+ 
 include(_BASEDIR."includes/pagesetup.php");
+$query = dbquery("SELECT message_text FROM ".TABLEPREFIX."fanfiction_messages WHERE message_name = 'welcome'");
+list($welcome) = dbrow($query);
+$tpl->assign("welcome", stripslashes($welcome));
 
-$page = dbquery("SELECT message_title, message_text FROM ".TABLEPREFIX."fanfiction_messages WHERE ".($current ? "message_name = '".escapestring($current)."'" : "message_id = '".(isNumber($_GET['id']) ? $_GET[id] : "0")."'")." LIMIT 1");
-if(dbnumrows($page)) list($title, $text) = dbrow($page);
-else $text = write_message(_ERROR);
-if(strpos($text, "?>") === false) $tpl->assign("output", "<div id='pagetitle'>$title</div>\n\n$text");
-else {
-	eval("?>".$text."<?php ");
-	$tpl->assign("output", "<div id='pagetitle'>$title</div>\n\n$text");
-}
 //$tpl->xprintToScreen( );
-			dbclose( );
-			$text = $tpl->getOutputContent(); 
-			e107::getRender()->tablerender($caption, $text, $current);
-			require_once(FOOTERF); 
-			exit;
+$text = $tpl->getOutputContent(); 
+e107::getRender()->tablerender($caption, $text, $current);
+require_once(FOOTERF); 
+exit;

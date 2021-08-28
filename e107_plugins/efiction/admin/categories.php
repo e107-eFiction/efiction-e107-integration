@@ -99,9 +99,12 @@ function relevelcategory($cat, $leveldown) {
 		if(isset($_POST['catid']) && $_POST['parentcatid'] == $_POST['catid']) {
 			$output .= write_error(_ACTIONCANCELLED." "._CATERROR);
 			$tpl->assign( "output", $output );
-			$tpl->printToScreen();
+			//$tpl->xprintToScreen( );
 			dbclose( );
-			exit( );
+			$text = $tpl->getOutputContent(); 
+			e107::getRender()->tablerender($caption, $text, $current);
+			require_once(FOOTERF); 
+			exit;
 		}
 		if($_POST['parentcatid'] != "-1") 	{
 			$parentquery = dbquery("SELECT leveldown FROM ".TABLEPREFIX."fanfiction_categories WHERE catid = '$_POST[parentcatid]'");

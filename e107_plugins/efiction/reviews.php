@@ -27,7 +27,7 @@ include ("header.php");
 
 //make a new TemplatePower object
 if(file_exists("$skindir/reviews.tpl")) $tpl = new TemplatePower( "$skindir/reviews.tpl" );
-else $tpl = new TemplatePower("default_tpls/reviews.tpl");
+else $tpl = new TemplatePower(_BASEDIR."default_tpls/reviews.tpl");
 if(file_exists("$skindir/reviewblock.tpl")) $tpl->assignInclude("reviewsblock", "$skindir/reviewblock.tpl" );
 else $tpl->assignInclude("reviewsblock", "default_tpls/reviewblock.tpl");
 $tpl->assignInclude( "header", "./$skindir/header.tpl" );
@@ -36,7 +36,7 @@ $tpl->assignInclude( "footer", "./$skindir/footer.tpl" );
 //let TemplatePower do its thing, parsing etc.
 $tpl->prepare();
 
-include("includes/pagesetup.php");
+include(_BASEDIR."includes/pagesetup.php");
 
 $reviewid = isset($_REQUEST['reviewid']) ? $_REQUEST['reviewid'] : false;
 if(!isNumber($reviewid)) unset($reviewid);
@@ -415,6 +415,8 @@ else {
 	$tpl->assign("reviewform", $form);
 
 }
-$tpl->assign("output", $output);
-$tpl->printToScreen( );
-?>
+//$tpl->xprintToScreen( );
+$text = $tpl->getOutputContent(); 
+e107::getRender()->tablerender($caption, $text, $current);
+require_once(FOOTERF); 
+exit;

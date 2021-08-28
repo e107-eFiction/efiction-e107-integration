@@ -30,8 +30,8 @@ $blocks['info']['status'] = 0;
 
 //make a new TemplatePower object
 if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/default.tpl" );
-else $tpl = new TemplatePower("default_tpls/default.tpl");
-include("includes/pagesetup.php");
+else $tpl = new TemplatePower(_BASEDIR."default_tpls/default.tpl");
+include(_BASEDIR."includes/pagesetup.php");
 if(file_exists("languages/".$language."_admin.php")) include_once("languages/".$language."_admin.php");
 else include_once("languages/en_admin.php");
 // end basic page setup
@@ -41,9 +41,12 @@ $output .= "<script language=\"javascript\" type=\"text/javascript\">
 location = \"maintenance.php\";
 </script>";
 $tpl->assign( "output", $output );
-$tpl->printToScreen();
+//$tpl->xprintToScreen( );
 dbclose( );
-exit( );
+$text = $tpl->getOutputContent(); 
+e107::getRender()->tablerender($caption, $text, $current);
+require_once(FOOTERF); 
+exit;
 }
 $oldVersion = explode(".", $settings['version']);
 $confirm = isset($_GET['confirm']) ? $_GET['confirm'] : false;
@@ -329,6 +332,9 @@ else {
 }
 else $output .= write_message(_ALREADYUPDATED);
 $tpl->assign( "output", $output );
-$tpl->printToScreen();
+//$tpl->xprintToScreen( );
 dbclose( );
-?>
+$text = $tpl->getOutputContent(); 
+e107::getRender()->tablerender($caption, $text, $current);
+require_once(FOOTERF); 
+exit;

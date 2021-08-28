@@ -50,7 +50,7 @@ $disablesorts = array("categories");
 			unset($catinfo);
 			$count++;
 			if(file_exists("$skindir/categories.tpl")) $cat = new TemplatePower( "$skindir/categories.tpl" );
-			else $cat = new TemplatePower("default_tpls/categories.tpl");
+			else $cat = new TemplatePower(_BASEDIR."default_tpls/categories.tpl");
 			$cat->prepare( );
 			$cat->newBlock("categoryblock");
 			$cat->assign("image", ($cats['image'] && file_exists("$skindir/images/".$cats['image']) ? "<img src=\"$skindir/images/".$cats['image']."\" alt=\"".$cats['category']."\" title=\"".$cats['category']."\">" : ""));

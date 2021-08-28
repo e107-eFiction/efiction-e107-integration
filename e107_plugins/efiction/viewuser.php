@@ -29,14 +29,14 @@ include ("header.php");
 
 //make a new TemplatePower object
 if(file_exists("$skindir/user.tpl")) $tpl = new TemplatePower( "$skindir/user.tpl" );
-else $tpl = new TemplatePower("default_tpls/user.tpl");
+else $tpl = new TemplatePower(_BASEDIR."default_tpls/user.tpl");
 if(file_exists("$skindir/listings.tpl")) $tpl->assignInclude( "listings", "./$skindir/listings.tpl" );
 else $tpl->assignInclude( "listings", "./default_tpls/listings.tpl" );
 $tpl->assignInclude( "header", "./$skindir/header.tpl" );
 $tpl->assignInclude( "footer", "./$skindir/footer.tpl" );
 if(file_exists("$skindir/profile.tpl")) $tpl->assignInclude("profile", "$skindir/profile.tpl");
 else $tpl->assignInclude("profile", "./default_tpls/profile.tpl");
-include("includes/pagesetup.php");	
+include(_BASEDIR."includes/pagesetup.php");
 // If uid isn't a number kill the script with an error message.  The only way this happens is a hacker.
 if(empty($uid)) {
 	if(!isMEMBER) accessDenied( );
@@ -122,6 +122,9 @@ while($panel = dbassoc($panelquery)) {
 }
 $tpl->gotoBlock("_ROOT");	
 $tpl->assign( "output", $output );
-$tpl->printToScreen();
+//$tpl->xprintToScreen( );
 dbclose( );
-?>
+$text = $tpl->getOutputContent(); 
+e107::getRender()->tablerender($caption, $text, $current);
+require_once(FOOTERF); 
+exit;

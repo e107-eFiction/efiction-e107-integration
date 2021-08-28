@@ -27,6 +27,18 @@ if (!defined('e107_INIT'))
 	require_once(__DIR__.'/../../class2.php');
 }
 
+ //e_ROUTE is available
+if(e_CURRENT_PLUGIN == "efiction") {
+ define("THEME_LAYOUT", "efiction");
+}
+ 
+require_once(HEADERF); 
+//THEME_LAYOUT is available
+ 
+include_once(_BASEDIR."includes/queries.php");
+
+require_once(_BASEDIR."includes/get_session_vars.php");
+
 @ ini_set('arg_separator.output','&amp;'); 
 if(isset($_GET['debug'])) @ error_reporting(E_ALL);
 if(isset($_GET['benchmark'])) {
@@ -34,6 +46,7 @@ if(isset($_GET['benchmark'])) {
 	$start = ((float)$usec + (float)$sec);
 }
 $headerSent = false;
+
 if(get_magic_quotes_gpc()){
 	foreach($_POST as $var => $val) {
 		$_POST[$var] = is_array( $val ) ? array_map( 'stripslashes', $val ) : stripslashes( $val );
@@ -58,10 +71,11 @@ foreach ($_GET as $v) {
 		include("languages/en.php"); // no language set yet, so default to English.	
 		die (_POSSIBLEHACK);
 	}
-}
+} 
 unset($v);
  
 // clear the global variables if register globals is on.
+
 if(ini_get('register_globals')) {
 	$arrayList = array_merge($_GET, $_POST, $_COOKIE);
 	foreach($arrayList as $k => $v) {
@@ -69,51 +83,22 @@ if(ini_get('register_globals')) {
 	}
 }                   
  
-Header('Cache-Control: private, no-cache, must-revalidate, max_age=0, post-check=0, pre-check=0');
-header ("Pragma: no-cache"); 
-header ("Expires: 0"); 
-header("Content-Type: text/html; charset="._CHARSET);
+ 
 
-// Locate config.php and set the basedir path
-$folder_level = "";
-while (!file_exists($folder_level."header.php")) { $folder_level .= "../"; }
-if(!defined("_BASEDIR")) define("_BASEDIR", $folder_level);
 
-@ include_once(_BASEDIR."config.php");
-if(empty($sitekey)) {
-	header("Location: install/install.php");
-	exit( );
-}
-if(isset($skin)) $globalskin = $skin; 
-$settingsresults = dbquery("SELECT * FROM ".$settingsprefix."fanfiction_settings WHERE sitekey = '".$sitekey."'");
-$settings = dbassoc($settingsresults);
-if(!defined("SITEKEY")) define("SITEKEY", $settings['sitekey']);
-unset($settings['sitekey']);
-if(!defined("TABLEPREFIX")) define("TABLEPREFIX", $settings['tableprefix']);
-unset($settings['tableprefix']);
-define("STORIESPATH", $settings['storiespath']);
-unset($settings['storiespath']);
-foreach($settings as $var => $val) {
-	$$var = stripslashes($val);
-	$settings[$var] = htmlspecialchars($val);
-}
 
 if(isset($_GET['debug'])) $debug = 1;
 if(!$displaycolumns) $displaycolumns = 1; // shouldn't happen, but just in case.
 if($words) $words = explode(", ", $words);
 else $words = array( );
-// Fix for sites with 2.0 or 1.1 running as well as 3.0 with register_globals on.
-$defaultskin = $skin;
-
-if(isset($globalskin)) $skin = $globalskin;
-
+ 
 if(isset($_GET['action'])) $action = strip_tags($_GET['action']);
 else $action = false;
 
 if(file_exists(_BASEDIR."languages/{$language}.php")) include (_BASEDIR."languages/{$language}.php");
 else include (_BASEDIR."languages/en.php");
 
-include_once(_BASEDIR."includes/queries.php");
+
 include_once(_BASEDIR."includes/corefunctions.php");
 
 // Check and/or set some variables used at various points throughout the script
@@ -138,14 +123,7 @@ if(isset($PHP_SELF)) $PHP_SELF = htmlspecialchars(descript($PHP_SELF), ENT_QUOTE
 
 // Set these variables to start.
 $agecontsent = false; $viewed = false; 
-
-require_once("includes/get_session_vars.php");
-
-if(isset($_GET['skin'])) {
-	$siteskin = $_GET['skin'];
-	e107::getSession()->set(SITEKEY."_skin", $siteskin);
-}
-
+ 
 $v = explode(".", $version);
 include("version.php");
 $newV = explode(".", $version);
@@ -164,7 +142,7 @@ foreach($newV AS $k => $l) {
 }
 
  
-if (e107::getSession()->is(SITEKEY.'_skin')) $siteskin = e107::getSession()->get(SITEKEY.'_skin');
+
 
 if($maintenance && !isADMIN && basename($_SERVER['PHP_SELF']) != "maintenance.php" && !(isset($_GET['action']) && $_GET['action'] == "login")) {
 	header("Location: maintenance.php");
@@ -187,9 +165,7 @@ if(isset($_GET['warning'])) e107::getSession()->set(SITEKEY."_warned_{$_GET['war
 
 if(file_exists("languages/{$language}.php")) require_once ("languages/{$language}.php");
 else require_once ("languages/en.php");
-if(is_dir(_BASEDIR."skins/$siteskin")) $skindir = _BASEDIR."skins/$siteskin";
-else if(is_dir(_BASEDIR."skins/".$settings['skin'])) $skindir = _BASEDIR."skins/".$defaultskin;
-else $skindir = _BASEDIR."default_tpls";
+
 if(USERUID) {
 	$prefs = dbquery("SELECT sortby, storyindex, tinyMCE FROM ".TABLEPREFIX."fanfiction_authorprefs WHERE uid = '".USERUID."'");
 	if(dbnumrows($prefs)) list($defaultsort, $displayindex, $tinyMCE) = dbrow($prefs);
@@ -223,26 +199,18 @@ if($current == "viewuser" && isNumber($uid)) {
 	list($penname) = dbrow($author);
 	$titleinfo = "$sitename :: $penname";
 }
-echo _DOCTYPE."<html><head>";
-echo "<meta charset='utf-8' />";
+ 
+//echo _DOCTYPE."<html><head>";
+ /*
 if(!isset($titleinfo)) $titleinfo = "$sitename :: $slogan";
 if(isset($metaDesc)) echo "<meta name='description' content='$metaDesc'>";
 echo "<title>$titleinfo</title>";
-
-// ---------- Favicon ---------
-if (file_exists($skindir."/images/favicon.ico")) 
-{
-	echo "<link rel='icon' href='".THEME_ABS."favicon.ico' type='image/x-icon' />\n<link rel='shortcut icon' href='".THEME_ABS."favicon.ico' type='image/xicon' />\n";
-}
-elseif (file_exists(_BASEDIR."favicon.ico")) 
-{
-	echo "<link rel='icon' href='"._BASEDIR."favicon.ico' type='image/x-icon' />\n<link rel='shortcut icon' href='"._BASEDIR."favicon.ico' type='image/xicon' />\n";
-}
+*/
  
+/*
 
-echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset="._CHARSET."\">";
 if(!isset($_GET['action']) || $_GET['action'] != "printable") {
-echo "<script language=\"javascript\" type=\"text/javascript\" src=\""._BASEDIR."includes/javascript.js\"></script>
+ 
 <link rel=\"alternate\" type=\"application/rss+xml\" title=\"$sitename RSS Feed\" href=\""._BASEDIR."rss.php\">";
 if(!empty($tinyMCE)) {
 	echo "<script language=\"javascript\" type=\"text/javascript\" src=\""._BASEDIR."tinymce/js/tinymce/tinymce.min.js\"></script>
@@ -300,62 +268,19 @@ var tinyMCEmode = true;
 			tinyMCE.execCommand('mceRemoveControl', false, id);
 	}
 ";
-/*echo "
-var tinyMCEmode = true;
-	function toogleEditorMode(id) {
-		var elm = document.getElementById(id);
-
-		if (tinyMCE.get(id) == null)
-			tinyMCE.execCommand('mceAddControl', false, id);
-		else
-			tinyMCE.execCommand('mceRemoveControl', false, id);
-	}
-";*/
+ 
 echo " --></script>";
 }
 }
-if(isset($displayform) && $displayform == 1) {
-echo "<script language=\"javascript\" type=\"text/javascript\" src=\""._BASEDIR."includes/xmlhttp.js\"></script>";
-echo "<script language=\"javascript\" type=\"text/javascript\">
-lang = new Array( );
-
-lang['Back2Cats'] = '"._BACK2CATS."';
-lang['ChooseCat'] = '"._CHOOSECAT."';
-lang['Categories'] = '"._CATEGORIES."';
-lang['Characters'] = '"._CHARACTERS."';
-lang['MoveTop'] = '"._MOVETOP."';
-lang['TopLevel'] = '"._TOPLEVEL."';
-lang['CatLocked'] = '"._CATLOCKED."';
-basedir = '"._BASEDIR."';
-
-categories = new Array( );
-characters = new Array( );
-\n";
-/*
-	$result = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_categories ORDER BY leveldown, displayorder");
-$x = 0;
-	while($category = dbassoc($result)) {
-		echo "categories[$x] = new category(".$category['parentcatid'].", ".$category['catid'].", \"". str_replace('"', '\"', stripslashes($category['category']))."\", ".$category['locked'].", ".$category['displayorder'].");\r\n";
-		$catlist[$category['catid']] = array("name" => stripslashes($category['category']), "pid" => $category['parentcatid'], "locked" => (isADMIN ? 0 : $category['locked']), "order" => $category['displayorder'], "leveldown" => $category['leveldown']);
-		$x++;
-	}
-$x = 0;
-	$result = dbquery("SELECT charname, catid, charid FROM ".TABLEPREFIX."fanfiction_characters ORDER BY charname");
-	while($char = dbassoc($result)) {
-		echo "characters[$x] = new character(".$char['charid'].", ".$char['catid'].", \"".str_replace('"', '\"', stripslashes($char['charname']))."\");\r\n";
-		$charlist[$char['charid']] = array("name" => stripslashes($char['charname']), "catid" => $char['catid']);
-		$x++;
-	}
+ 
 */
-echo "</script>";
-}
 if(file_exists("extra_header.php")) include_once("extra_header.php");
 if(file_exists("$skindir/extra_header.php")) include_once("$skindir/extra_header.php");
 if(!$displaycolumns) $displaycolumns = 1;
 $colwidth = floor(100/$displaycolumns);
+/*
 if(!empty($_GET['action']) && $_GET['action'] == "printable") {
-	if(file_exists("$skindir/printable.css")) echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"$skindir/printable.css\">";
-	else echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"default_tpls/printable.css\">";
+	 
 	echo "<script type='text/javascript'>
 <!--
 if (window.print) {
@@ -369,89 +294,19 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 </script>";
 }
 else {
-echo "<style type=\"text/css\">
-#columncontainer { margin: 1em auto; width: auto; padding: 5%;}
-#browseblock, #memberblock { width: 100%; padding: 0; margin: 0; float: left; border: 0px solid transparent; }
-.column { float: left; width: ".($colwidth - 1)."%; }
-html>body .column { width: $colwidth%; }
-.cleaner { clear: both; height: 1px; font-size: 1px; margin: 0; padding: 0; background: transparent; }
-#settingsform { margin: 0; padding: 0; border: none; }
-#settingsform FORM { width: 100%; margin: 0 10%; }
-#settingsform LABEL { float: left; display: block; width: 30%; text-align: right; padding-right: 10px; clear: left; }
-#settingsform DIV { clear: both;}
-#settingsform .fieldset SPAN { float: left; display: block; width: 30%; text-align: right; padding-right: 10px; clear: left;}
-#settingsform .fieldset LABEL { float: none; width: auto; display: inline; text-align: left; clear: none; }
-#settingsform { float: left; margin: 1ex 10%; }
-#settingsform .tinytoggle { text-align: center; }
-#settingsform .tinytoggle LABEL { float: none; display: inline; width: auto; text-align: center; padding: 0; clear: none; }
-#settingsform #submitdiv { text-align: center; width: 100%;clear: both; height: 3em; }
-#settingsform #submitdiv #submit { position: absolute; z-index: 10001; margin: 1em; }
-a.pophelp{
-    position: relative; /* this is the key*/
-    vertical-align: super;
-}
-
-a.pophelp:hover{z-index:100; border: none; text-decoration: none;}
-
-a.pophelp span{display: none; position: absolute; top: -25em; left: 20em; }
-
-a.pophelp:hover span{ /*the span will display just on :hover state*/
-    display:block;
-    position: absolute;
-    top: -3em; left: 8em; width: 225px;
-    border:1px solid #000;
-    background-color:#CCC; color:#000;
-    text-decoration: none;
-    text-align: left;
-    padding: 5px;
-    font-weight: normal;
-    visibility: visible;
-}
-.required { color: red; }
-.shim {
-	position: absolute;
-	display: none;
-	height: 0;
-	width:0;
-	margin: 0;
-	padding: 0;
-	z-index: 100;
-}
-
-.ajaxOptList {
-	background: #CCC;
-	border: 1px solid #000;
-	margin: 0;
-	position: absolute;
-	padding: 0;
-	z-index: 1000;
-	text-align: left;
-}
-.ajaxListOptOver {
-	padding: 4px;
-	background: #CCC;
-	margin: 0;
-}
-.ajaxListOpt {
-	background: #EEE;
-	padding: 4px;
-	margin: 0;
-}
-.multiSelect {
-	width: 300px;
-}
-
-</style>
-<link rel='stylesheet' type='text/css' href='$skindir/style.css' /> \n
+ 
 <meta name='viewport' content='width=device-width, initial-scale=1.0' />
 ";
 }
 echo "</head>";
+*/
 $headerSent = true;
 include (_BASEDIR."includes/class.TemplatePower.inc.php");
+ 
 if($debug == 1) {
 	@ error_reporting(E_ALL);
 	echo "\n<!-- \$_COOKIE \n"; print_r($_COOKIE); echo " -->";
 	echo "\n<!-- \$_POST \n"; print_r($_POST); echo " -->";
 }
-?>
+ 
+
