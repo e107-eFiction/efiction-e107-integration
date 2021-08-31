@@ -49,8 +49,8 @@ include(_BASEDIR."includes/pagesetup.php");
 			$panel = dbassoc($panelquery);
 			$output .= "<div id='pagetitle'>".$panel['panel_title']."</div>";
 			$numrows = 0;
-			if($panel['panel_url'] && file_exists(_BASEDIR.$panel['panel_url'])) include($panel['panel_url']);
-			else if(file_exists("toplists/{$type}.php")) include("toplists/{$type}.php");
+			if($panel['panel_url'] && file_exists(_BASEDIR.$panel['panel_url'])) include(_BASEDIR.$panel['panel_url']);
+			else if(file_exists(_BASEDIR."toplists/{$type}.php")) include(_BASEDIR."toplists/{$type}.php");
 			else $output .= write_error(_ERROR);
 		}
 		else $output .= write_error(_ERROR);		

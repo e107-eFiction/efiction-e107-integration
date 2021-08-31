@@ -21,6 +21,7 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
+exit();
 
 function random_char($string)
 {

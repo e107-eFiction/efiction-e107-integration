@@ -46,8 +46,8 @@ else include_once("languages/en_admin.php");
 	if(!dbnumrows($panelquery)) $output .= _FATALERROR;
 	$panellist = array();
 	while($panel = dbassoc($panelquery)) {
-		if(!$panel['panel_url']) $panellist[$panel['panel_level']][]= "<a href=\"admin.php?action=".$panel['panel_name']."\">".$panel['panel_title']."</a>";
-		else $panellist[$panel['panel_level']][] = "<a href=\"".$panel['panel_url']."\">".$panel['panel_title']."</a>";
+		if(!$panel['panel_url']) $panellist[$panel['panel_level']][]= "<a href=\""._BASEDIR."admin.php?action=".$panel['panel_name']."\">".$panel['panel_title']."</a>";
+		else $panellist[$panel['panel_level']][] = "<a href=\""._BASEDIR.$panel['panel_url']."\">".$panel['panel_title']."</a>";
 	}
 	foreach($panellist as $accesslevel => $row) {
 		$output .= implode(" | ", $row)."<br />";
@@ -59,7 +59,7 @@ else include_once("languages/en_admin.php");
 			$panel = dbassoc($panelquery);
 			if((isset($panel['panel_level']) ? $panel['panel_level'] : 0) >= uLEVEL) {
 				if($panel['panel_url'] && file_exists(_BASEDIR.$panel['panel_url'])) require_once(_BASEDIR.$panel['panel_url']);
-				else if (file_exists("admin/{$action}.php")) require_once("admin/{$action}.php");
+				else if (file_exists(_BASEDIR."admin/{$action}.php")) require_once("admin/{$action}.php");
 			}
 			else accessDenied( );
 		}
