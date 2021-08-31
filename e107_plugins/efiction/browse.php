@@ -219,8 +219,8 @@ if($type) {
 	if(dbnumrows($panelquery)) {
 		$numrows = 0;
 		$panel = dbassoc($panelquery);
-		if($panel['panel_url'] && file_exists(_BASEDIR.$panel['panel_url'])) include($panel['panel_url']);
-		else if(file_exists("browse/{$type}.php")) include("browse/{$type}.php");
+		if($panel['panel_url'] && file_exists(_BASEDIR.$panel['panel_url'])) include(_BASEDIR.$panel['panel_url']);
+		else if(file_exists(_BASEDIR."browse/{$type}.php")) include(_BASEDIR."browse/{$type}.php");
 		else $output .= write_error(_ERROR);
 	}
 	else $output .= write_error(_ERROR);

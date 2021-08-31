@@ -26,6 +26,8 @@ if (!defined('e107_INIT')) {
     exit;
 }
 
+global $siteskin;
+ 
 if (USERID) {  //fully managed by e107, user is logged in
     $memberData = e107::user(USERID);
     $author_uid = $memberData['user_plugin_efiction_author'];
@@ -33,14 +35,16 @@ if (USERID) {  //fully managed by e107, user is logged in
     if ($author_uid > 0) { //user is author 
     $userdata = dbassoc(dbquery("SELECT ap.*, "._UIDFIELD." as uid, "._PENNAMEFIELD." as penname, "._EMAILFIELD." as email, "._PASSWORDFIELD." as password FROM "._AUTHORTABLE." 
     LEFT JOIN ".TABLEPREFIX."fanfiction_authorprefs as ap ON ap.uid = "._UIDFIELD." WHERE "._UIDFIELD." = '".$author_uid."'"));
-    
-	if($userdata && $userdata['level'] != -1 ) {
+     
+	if($userdata && $userdata['level'] != -1 ) {   
 		define("USERUID", $userdata['uid']);
 		define("USERPENNAME", $userdata['penname']);
 		// the following line fixes missing authorpref rows
 		if(empty($userdata['userskin'] )) dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_authorprefs(uid, userskin, storyindex, sortby, tinyMCE) VALUES('".$userdata['uid']."', '$defaultskin', '$displayindex', '$defaultsort', '$tinyMCE')");
  
-        if (e107::getSession()->is(SITEKEY.'_skin')) $siteskin= e107::getSession()->get(SITEKEY.'_skin'); 
+        if (e107::getSession()->is(SITEKEY.'_skin')) {  
+          $siteskin= e107::getSession()->get(SITEKEY.'_skin'); 
+        }
         elseif(!empty($userdata['userskin']))  $siteskin = $userdata['userskin'];
         else $siteskin = $defaultskin; 
          
@@ -62,5 +66,4 @@ if(!defined("uLEVEL")) define("uLEVEL", 0);
 if(!defined("isMEMBER")) define("isMEMBER", false);
 if(!defined("isADMIN")) define("isADMIN", false);
 if(empty($siteskin)) $siteskin = $defaultskin;
-
  

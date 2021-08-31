@@ -25,15 +25,18 @@
 
 if(!defined("_CHARSET")) exit( );
 
-
+global $siteskin;
+ 
 $querystring = "";
+
 foreach($_GET as $key=>$value) {
 	if($key != "skin") $querystring .= "&amp;$key=$value";
 }
+ 
 if(!isset($hiddenskins)) $hiddenskins = array( );
 if(is_string($hiddenskins)) $hiddenskins = explode(",", $hiddenskins);
 
-$content = "<select name=\"skin\" onChange=\"document.location = '".$_SERVER['PHP_SELF']."?skin=' + this.options[this.selectedIndex].value + '$querystring';\">";
+$content = "<select name=\"skin\" onChange=\"document.location = '".e_SELF."?skin=' + this.options[this.selectedIndex].value + '$querystring';\">";
 $directory = opendir(_BASEDIR."skins");
 while($filename = readdir($directory)) {
 	if($filename== "." || $filename== ".." || !is_dir(_BASEDIR."skins/".$filename) || (in_array($filename, $hiddenskins) && !isADMIN)) continue;

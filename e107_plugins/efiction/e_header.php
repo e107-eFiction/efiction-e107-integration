@@ -4,8 +4,10 @@ global $skindir, $skinfolder;
 
 if(deftrue('USER_AREA')) // prevents inclusion of JS/CSS/meta in the admin area.
 {
- 
-	$inline_css = '
+    if(!$displaycolumns) $displaycolumns = 1;  //this is pref, fix me
+    $colwidth = floor(100/$displaycolumns);
+     
+	$inline_css = "
 		#columncontainer { margin: 1em auto; width: auto; padding: 5%;}
 		#browseblock, #memberblock { width: 100%; padding: 0; margin: 0; float: left; border: 0px solid transparent; }
 		.column { float: left; width: ".($colwidth - 1)."%; }
@@ -73,7 +75,7 @@ if(deftrue('USER_AREA')) // prevents inclusion of JS/CSS/meta in the admin area.
 			padding: 4px;
 			margin: 0;
 		}
-		.multiSelect {width: 300px;}';
+		.multiSelect {width: 300px;}";
 
 	if(!isset($_GET['action']) || $_GET['action'] != "printable") 
 	{
@@ -107,7 +109,7 @@ if(deftrue('USER_AREA')) // prevents inclusion of JS/CSS/meta in the admin area.
 		else e107::css("efiction", "default_tpls/printable.css");
 	}
 	else {
-		e107::css("efiction", $skinfolder."/style.css") ;
+		
 		e107::css("inline", $inline_css) ;
 	}	
  	

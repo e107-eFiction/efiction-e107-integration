@@ -1,5 +1,5 @@
 <?php
-if(!defined("_CHARSET")) exit( );
+if(!defined("e107_INIT")) exit( );
 
 global $language, $numupdated;
 $blockquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_blocks WHERE block_name = 'countdown'");
@@ -9,7 +9,7 @@ while($block = dbassoc($blockquery)) {
 	 $blocks[$block['block_name']]['file'] = $block['block_file'];
 	$blocks[$block['block_name']]['status'] = $block['block_status'];
 }
-include("blocks/countdown/block.php");
+include("blocks/countdown/countdown.php");
 	if(isset($_POST['submit'])) {
 		if(!empty($_POST['target'])) $blocks['countdown']['target'] = escapestring($_POST['target']);
 		else unset($blocks['countdown']['target']);

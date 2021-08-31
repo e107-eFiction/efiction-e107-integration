@@ -276,8 +276,8 @@ echo " --></script>";
 */
 if(file_exists("extra_header.php")) include_once("extra_header.php");
 if(file_exists("$skindir/extra_header.php")) include_once("$skindir/extra_header.php");
-if(!$displaycolumns) $displaycolumns = 1;
-$colwidth = floor(100/$displaycolumns);
+ 
+ 
 /*
 if(!empty($_GET['action']) && $_GET['action'] == "printable") {
 	 
