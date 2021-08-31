@@ -24,7 +24,7 @@
 // ----------------------------------------------------------------------
 
 if(!defined("_CHARSET")) exit( );
-
+ 
 	$output .= "<div id='pagetitle'>"._CHARACTERS."</div>";
 	if(isset($_GET["delete"])) {
 		$charid = $_GET["delete"];
@@ -82,7 +82,7 @@ if(!defined("_CHARSET")) exit( );
 			if($tinyMCE) 
 				$output .= "<div class='tinytoggle'><input type='checkbox' name='toggle' onclick=\"toogleEditorMode('bio$x');\" checked><label for='toggle'>"._TINYMCETOGGLE."</label></div>";	
 		}
-		$output .= "<div id='submitdiv'><INPUT type=\"submit\" id=\"submit\" class=\"button\" name=\"submit\" value=\""._SUBMIT."\"></div></form></div><div style='clear: both;'>";
+		$output .= "<div id='submitdiv'><INPUT type=\"submit\" id=\"submit\" class=\"button\" name=\"submit\" value=\""._SUBMIT."\"></div></form></div>";
 		unset($_POST['submit']);
 	}
 	if(isset($_POST["submit"])) {

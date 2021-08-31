@@ -13,13 +13,13 @@ if(deftrue('USER_AREA')) // prevents inclusion of JS/CSS/meta in the admin area.
 		.column { float: left; width: ".($colwidth - 1)."%; }
 		html>body .column { width: $colwidth%; }
 		.cleaner { clear: both; height: 1px; font-size: 1px; margin: 0; padding: 0; background: transparent; }
-		#settingsform { margin: 0; padding: 0; border: none; }
-		#settingsform FORM { width: 100%; margin: 0 10%; }
-		#settingsform LABEL { float: left; display: block; width: 30%; text-align: right; padding-right: 10px; clear: left; }
-		#settingsform DIV { clear: both;}
+		#settingsform { margin: auto; padding: 0; border: none;  }
+		#settingsform form { width: 100%; margin: 0 10%; }
+		#settingsform label { float: left; display: block; width: 30%; text-align: right; padding-right: 10px; clear: left; }
+		#settingsform div { clear: both;}
 		#settingsform .fieldset SPAN { float: left; display: block; width: 30%; text-align: right; padding-right: 10px; clear: left;}
 		#settingsform .fieldset LABEL { float: none; width: auto; display: inline; text-align: left; clear: none; }
-		#settingsform { float: left; margin: 1ex 10%; }
+ 
 		#settingsform .tinytoggle { text-align: center; }
 		#settingsform .tinytoggle LABEL { float: none; display: inline; width: auto; text-align: center; padding: 0; clear: none; }
 		#settingsform #submitdiv { text-align: center; width: 100%;clear: both; height: 3em; }
