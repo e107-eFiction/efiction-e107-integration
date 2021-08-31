@@ -3,11 +3,15 @@
 if (!defined('_BASEDIR')) define('_BASEDIR', e_PLUGIN.'efiction/');
 if (!defined('TABLEPREFIX')) define('TABLEPREFIX', MPREFIX);
 
-@ include_once(_BASEDIR."config.php");
+$sitekey = defset(SITEKEY, "settings"); 
+require_once(_BASEDIR."includes/dbfunctions.php");
+ 
+/*
 if(empty($sitekey)) {
 	header("Location: install/install.php");
 	exit( );
 }
+*/
 
 if(e_ADMIN_AREA === true)  {}  //USER_AREA is not defined
 else { 
@@ -34,8 +38,7 @@ else {
   /**************  LOAD EFICTION SETTINGS ***************************************/    
   $settingsresults = dbquery("SELECT * FROM ".$settingsprefix."fanfiction_settings WHERE sitekey = '".$sitekey."'");
   $settings = dbassoc($settingsresults); 
- 
-  //if(!defined("SITEKEY"))   define("SITEKEY", $sitekey);  
+  
   unset($settings['sitekey']);
    
   unset($settings['tableprefix']);
