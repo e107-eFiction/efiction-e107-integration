@@ -199,7 +199,7 @@ if(isset($_POST['submit'])) {
 				<td><label for='newurl'>"._SITEURL.":</label></td><td><input type='text' class='textbox' name='newsiteurl' value='$url'> <a href='#' class='pophelp'>[?]<span>"._HELP_URL."</span></a></td>
 			</tr>
 			<tr>				
-				<td><label for='newMPREFIX'>"._MPREFIX.":</label></td><td><input type='text' class='textbox' name='newMPREFIX' value='".MPREFIX."'> <a href='#' class='pophelp'>[?]<span>"._HELP_MPREFIX."</span></a></td>
+				<td><label for='newMPREFIX'>"._TABLEPREFIX.":</label></td><td><input type='text' class='textbox' name='newMPREFIX' value='".MPREFIX."'> <a href='#' class='pophelp'>[?]<span>"._HELP_MPREFIX."</span></a></td>
 			</tr>
 			<tr>				
 				<td><label for='newsiteemail'>"._ADMINEMAIL.":</label></td><td><input type='text' class='textbox' name='newsiteemail' value='$siteemail'> <a href='#' class='pophelp'>[?]<span>"._HELP_SITEEMAIL."</span></a></td>
