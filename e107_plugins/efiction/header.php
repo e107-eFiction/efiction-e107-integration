@@ -63,7 +63,7 @@ if(get_magic_quotes_gpc()){
 }
 
 // Defines the character set for your language/location
-define ("_CHARSET", "utf-8");
+define("_CHARSET", CHARSET);
 
 // Prevent possible XSS attacks via $_GET.
 foreach ($_GET as $v) {
