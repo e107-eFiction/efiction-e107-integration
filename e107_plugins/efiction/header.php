@@ -34,6 +34,12 @@ if(e_CURRENT_PLUGIN == "efiction") {
  
 require_once(HEADERF); 
 //THEME_LAYOUT is available
+
+$settings = efiction_settings::get_settings();
+//print_a($settings);
+foreach($settings as $var => $val) {
+  	$$var = stripslashes($val);
+}
  
 include_once(_BASEDIR."includes/queries.php");
 
@@ -123,7 +129,7 @@ if(isset($PHP_SELF)) $PHP_SELF = htmlspecialchars(descript($PHP_SELF), ENT_QUOTE
 
 // Set these variables to start.
 $agecontsent = false; $viewed = false; 
- 
+ /*
 $v = explode(".", $version);
 include("version.php");
 $newV = explode(".", $version);
@@ -148,7 +154,7 @@ if($maintenance && !isADMIN && basename($_SERVER['PHP_SELF']) != "maintenance.ph
 	header("Location: maintenance.php");
 	exit( );
 }
-
+*/
 $blockquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_blocks");
 while($block = dbassoc($blockquery)) {
 	$blocks[$block['block_name']] = unserialize($block['block_variables']);
