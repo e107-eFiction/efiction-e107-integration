@@ -31,6 +31,7 @@ else $tpl = new TemplatePower(_BASEDIR."default_tpls/index.tpl");
  
 include(_BASEDIR."includes/pagesetup.php");
 $query = dbquery("SELECT message_text FROM ".TABLEPREFIX."fanfiction_messages WHERE message_name = 'welcome'");
+
 list($welcome) = dbrow($query);
 $tpl->assign("welcome", stripslashes($welcome));
 

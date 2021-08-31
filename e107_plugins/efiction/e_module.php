@@ -2,8 +2,8 @@
  
 if (!defined('_BASEDIR')) define('_BASEDIR', e_PLUGIN.'efiction/');
 if (!defined('TABLEPREFIX')) define('TABLEPREFIX', MPREFIX);
-
-$sitekey = defset(SITEKEY, "settings"); 
+if (!defined('SITEKEY'))  define('SITEKEY', $e107->site_path);
+ 
 require_once(_BASEDIR."includes/dbfunctions.php");
  
 /*
@@ -35,19 +35,13 @@ else {
     	 define("USERTHEME", $siteskin);
   }
  
-  /**************  LOAD EFICTION SETTINGS ***************************************/    
-  $settingsresults = dbquery("SELECT * FROM ".$settingsprefix."fanfiction_settings WHERE sitekey = '".$sitekey."'");
-  $settings = dbassoc($settingsresults); 
+   /* LOAD CLASSES */
+  e107::getSingleton('efiction_blocks', e_PLUGIN.'efiction/classes/blocks.class.php');
+  e107::getSingleton('efiction_pagelinks', e_PLUGIN.'efiction/classes/pagelinks.class.php');
+  e107::getSingleton('efiction_settings', e_PLUGIN.'efiction/classes/settings.class.php');
   
-  unset($settings['sitekey']);
-   
-  unset($settings['tableprefix']);
-  define("STORIESPATH", $settings['storiespath']);
-  unset($settings['storiespath']);
-  foreach($settings as $var => $val) {
-  	$$var = stripslashes($val);
-  	$settings[$var] = htmlspecialchars($val);
-  }
+  /**************  LOAD EFICTION SETTINGS ***************************************/    
+  $settings = efiction_settings::get_settings();
   
   $defaultskin = $settings['skin']; //used in get_session_vars.php
   $skin = $settings['skin']; //used for authorprefs
@@ -68,10 +62,8 @@ else {
   }
    
    
-  /* LOAD CLASSES */
-  e107::getSingleton('efiction_blocks', e_PLUGIN.'efiction/classes/blocks.class.php');
-  e107::getSingleton('efiction_pagelinks', e_PLUGIN.'efiction/classes/pagelinks.class.php');
 
+  
  }
  
  

@@ -71,7 +71,9 @@ if(!defined("_CHARSET")) exit( );
 	if(count($storycodeblocks)) foreach($storycodeblocks as $c) { eval($c); } 
 	$tpl->assign("classifications", $allclasslist);
 	$seriesquery = "SELECT series.* FROM ".TABLEPREFIX."fanfiction_inseries as list, ".TABLEPREFIX."fanfiction_series as series WHERE list.sid = '".$stories['sid']."' AND series.seriesid = list.seriesid";
-	$seriesresult = dbquery($seriesquery) or die(_FATALERROR."<br>Query: $seriesquery<br>Error: (".mysql_errno( ).") ".mysql_error( ));
+	var_dump(dbquery($seriesquery));
+    $seriesresult = dbquery($seriesquery);
+    /*  or die(_FATALERROR."<br>Query: $seriesquery<br>Error: (".e107::getDb()->getLastErrorNumber().") ".e107::getDb()->getLastErrorText()); */
 	$serieslinks = array( );
 	while($s = dbassoc($seriesresult)) {
 		if(isset($action) && $action == "printable") $serieslinks[] = stripslashes($s['title']);

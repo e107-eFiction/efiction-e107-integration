@@ -22,27 +22,27 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-if(!defined("_CHARSET")) exit( );
+if(!defined("e107_INIT")) exit( );
 
 function updatePanelOrder( ) {
 	
-	$ptypes = dbquery("SELECT panel_type FROM ".TABLEPREFIX."fanfiction_panels GROUP BY panel_type");
+	$ptypes = dbquery("SELECT panel_type FROM ".MPREFIX."fanfiction_panels GROUP BY panel_type");
 	while($ptype = dbassoc($ptypes)) {
 		if($ptype['panel_type'] == "A") {
 			for($x = 1; $x < 5; $x++) {
 				$count = 1;
-				$plist = dbquery("SELECT panel_name, panel_id FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_hidden = '0' AND panel_type = '".$ptype['panel_type']."' AND panel_level = '$x' ORDER BY panel_level, panel_order");
+				$plist = dbquery("SELECT panel_name, panel_id FROM ".MPREFIX."fanfiction_panels WHERE panel_hidden = '0' AND panel_type = '".$ptype['panel_type']."' AND panel_level = '$x' ORDER BY panel_level, panel_order");
 				while($p = dbassoc($plist)) {
-					dbquery("UPDATE ".TABLEPREFIX."fanfiction_panels SET panel_order = '$count' WHERE panel_id = '".$p['panel_id']."' LIMIT 1");
+					dbquery("UPDATE ".MPREFIX."fanfiction_panels SET panel_order = '$count' WHERE panel_id = '".$p['panel_id']."' LIMIT 1");
 					$count++;
 				}
 			}
 		}
 		else {
 			$count = 1;
-			$plist = dbquery("SELECT panel_name, panel_id FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_hidden = '0' AND panel_type = '".$ptype['panel_type']."' ORDER BY ".($ptype['panel_type'] == "A" ? "panel_level," : "")."panel_order");
+			$plist = dbquery("SELECT panel_name, panel_id FROM ".MPREFIX."fanfiction_panels WHERE panel_hidden = '0' AND panel_type = '".$ptype['panel_type']."' ORDER BY ".($ptype['panel_type'] == "A" ? "panel_level," : "")."panel_order");
 			while($p = dbassoc($plist)) {
-				dbquery("UPDATE ".TABLEPREFIX."fanfiction_panels SET panel_order = '$count' WHERE panel_id = '".$p['panel_id']."' LIMIT 1");
+				dbquery("UPDATE ".MPREFIX."fanfiction_panels SET panel_order = '$count' WHERE panel_id = '".$p['panel_id']."' LIMIT 1");
 				$count++;
 			}
 		}
@@ -65,7 +65,7 @@ $output .= "<h1>"._SETTINGS."</h1><div style='text-align: center;'>
 	<a href='admin.php?action=messages&message=tinyMCE'>"._TINYMCE."</a> | 
 	<a href='admin.php?action=messages&message=nothankyou'>"._NOTHANKYOU."</a> | 
 	<a href='admin.php?action=messages&message=thankyou'>"._THANKYOU."</a><br />";
-	$settingsquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_type = 'AS' ORDER BY panel_title");
+	$settingsquery = dbquery("SELECT * FROM ".MPREFIX."fanfiction_panels WHERE panel_type = 'AS' ORDER BY panel_title");
 	while($os = dbassoc($settingsquery)) {
 		if($os['panel_url']) $othersettings[] = "<a href='".$os['panel_url']."'>".$os['panel_title']."</a>";
 	}
@@ -90,14 +90,14 @@ if(isset($_POST['submit'])) {
 			if(substr($url, 0, 7) != "http://") $url = "http://".$url;
 			// we also want to check for a trailing slash.
 			if(substr($url, -1, 1) == "/") $url = substr($url, 0, strlen($url) - 1);
-			$tableprefix = escapestring(descript(strip_tags($_POST['newtableprefix'])));
+			$MPREFIX = escapestring(descript(strip_tags($_POST['newMPREFIX'])));
 			$siteemail = escapestring(descript(strip_tags($_POST['newsiteemail'])));
 			$skin = escapestring(descript(strip_tags($_POST['newskin'])));
 			$language = escapestring(descript(strip_tags($_POST['newlanguage'])));
 			if(empty($sitekey)) $output .= write_message(_SITEKEYREQUIRED);
 			else {
 				if($sitekey != $oldsitekey) $output .= write_message(_SITEKEYCHANGED);
-				$result = dbquery("UPDATE ".$settingsprefix."fanfiction_settings SET sitekey = '$sitekey', sitename = '$sitename', slogan = '$slogan', url = '$url', tableprefix = '$tableprefix', siteemail = '$siteemail', skin = '$skin', language = '$language' WHERE sitekey = '$oldsitekey'");
+				$result = dbquery("UPDATE ".MPREFIX."fanfiction_settings SET sitekey = '$sitekey', sitename = '$sitename', slogan = '$slogan', url = '$url', MPREFIX = '$MPREFIX', siteemail = '$siteemail', skin = '$skin', language = '$language' WHERE sitekey = '$oldsitekey'");
 			}
 		}
 	}
@@ -114,10 +114,10 @@ if(isset($_POST['submit'])) {
 		$imageupload = $_POST['newimageupload'] == 1 ? 1 : 0;
 		$imageheight = isNumber($_POST['newimageheight']) ? $_POST['newimageheight'] : 0;
 		$imagewidth = isNumber($_POST['newimagewidth']) ? $_POST['newimagewidth'] : 0;
-		$result = dbquery("UPDATE ".$settingsprefix."fanfiction_settings SET submissionsoff = '$submissionsoff', autovalidate = '$autovalidate', coauthallowed = '$coauthallowed', store = '$store', storiespath = '$storiespath', minwords = '$minwords', maxwords = '$maxwords', imageupload = '$imageupload', imageheight = '$imageheight', imagewidth = '$imagewidth', roundrobins = '$roundrobins', allowseries = '$allowseries' WHERE sitekey ='".SITEKEY."'");
+		$result = dbquery("UPDATE ".MPREFIX."fanfiction_settings SET submissionsoff = '$submissionsoff', autovalidate = '$autovalidate', coauthallowed = '$coauthallowed', store = '$store', storiespath = '$storiespath', minwords = '$minwords', maxwords = '$maxwords', imageupload = '$imageupload', imageheight = '$imageheight', imagewidth = '$imagewidth', roundrobins = '$roundrobins', allowseries = '$allowseries' WHERE sitekey ='".SITEKEY."'");
 		if($action == "settings") {
-			dbquery("UPDATE ".TABLEPREFIX."fanfiction_panels SET panel_hidden = '".($imageupload ? "0" : "1")."' WHERE panel_name LIKE 'manageimages'");
-			dbquery("UPDATE ".TABLEPREFIX."fanfiction_panels SET panel_hidden = '".($allowseries ? "0" : "1")."' WHERE (panel_name LIKE '%series%' OR panel_title LIKE '%series%') AND panel_type != 'A' AND panel_type != 'B'");
+			dbquery("UPDATE ".MPREFIX."fanfiction_panels SET panel_hidden = '".($imageupload ? "0" : "1")."' WHERE panel_name LIKE 'manageimages'");
+			dbquery("UPDATE ".MPREFIX."fanfiction_panels SET panel_hidden = '".($allowseries ? "0" : "1")."' WHERE (panel_name LIKE '%series%' OR panel_title LIKE '%series%') AND panel_type != 'A' AND panel_type != 'B'");
 			updatePanelOrder( );
 		}
 
@@ -132,7 +132,7 @@ if(isset($_POST['submit'])) {
 		$maintenance = $_POST['newmaint'] == 1 ? 1 : 0;
 		$debug = $_POST['newdebug'] == 1 ? 1 : 0;
 		$captcha = $_POST['newcaptcha'] == 1 ? 1 : 0;
-		$result = dbquery("UPDATE ".$settingsprefix."fanfiction_settings SET tinyMCE = '$tinyMCE', favorites = '$favorites', multiplecats = '$multiplecats', allowed_tags = '$allowed_tags', newscomments = '$newscomments', logging = '$logging', maintenance = '$maintenance', debug = '$debug', captcha = '$captcha' WHERE sitekey ='".SITEKEY."'");
+		$result = dbquery("UPDATE ".MPREFIX."fanfiction_settings SET tinyMCE = '$tinyMCE', favorites = '$favorites', multiplecats = '$multiplecats', allowed_tags = '$allowed_tags', newscomments = '$newscomments', logging = '$logging', maintenance = '$maintenance', debug = '$debug', captcha = '$captcha' WHERE sitekey ='".SITEKEY."'");
 	}
 	else if($sect == "display") {
 		$dateformat = $_POST['newdateformat'] ? descript(strip_tags($_POST['newdateformat'])) : descript(strip_tags($_POST['customdateformat']));
@@ -146,7 +146,7 @@ if(isset($_POST['submit'])) {
 		$displayprofile = $_POST['newdisplayprofile'] == 1 ? 1 : 0;
 		$defaultsort = $_POST['newdefaultsort'] == 1 ? 1 : 0;
 		if(isNumber($_POST['newrecentdays'])) $recentdays = $_POST['newrecentdays'];
-		$result = dbquery("UPDATE ".$settingsprefix."fanfiction_settings SET dateformat = '$dateformat', timeformat = '$timeformat', extendcats = '$extendcats', displaycolumns = '$displaycolumns', itemsperpage = '$itemsperpage', displayindex = '$displayindex', defaultsort = '$defaultsort', recentdays = '$recentdays', displayprofile = '$displayprofile', linkstyle = '$linkstyle', linkrange = '$linkrange' WHERE sitekey ='".SITEKEY."'");
+		$result = dbquery("UPDATE ".MPREFIX."fanfiction_settings SET dateformat = '$dateformat', timeformat = '$timeformat', extendcats = '$extendcats', displaycolumns = '$displaycolumns', itemsperpage = '$itemsperpage', displayindex = '$displayindex', defaultsort = '$defaultsort', recentdays = '$recentdays', displayprofile = '$displayprofile', linkstyle = '$linkstyle', linkrange = '$linkrange' WHERE sitekey ='".SITEKEY."'");
 	}
 	else if($sect == "reviews") {
 		$reviewsallowed = $_POST['newreviewsallowed'] == 1 ? 1 : 0;
@@ -154,20 +154,20 @@ if(isset($_POST['submit'])) {
 		$rateonly = $_POST['newrateonly'] == 1 ? 1 : 0;
 		$ratings = isset($_POST['newratings']) && isNumber($_POST['newratings']) ? $_POST['newratings'] : 0;
 		$revdelete = isset($_POST['newrevdelete']) && isNumber($_POST['newrevdelete']) ? $_POST['newrevdelete'] : 0;
-		$result = dbquery("UPDATE ".$settingsprefix."fanfiction_settings SET reviewsallowed = '$reviewsallowed', anonreviews = '$anonreviews', rateonly = '$rateonly', ratings = '$ratings', revdelete = '$revdelete' WHERE sitekey ='".SITEKEY."'");
+		$result = dbquery("UPDATE ".MPREFIX."fanfiction_settings SET reviewsallowed = '$reviewsallowed', anonreviews = '$anonreviews', rateonly = '$rateonly', ratings = '$ratings', revdelete = '$revdelete' WHERE sitekey ='".SITEKEY."'");
 	}
 	else if($sect == "useropts") {
 		$alertson = $_POST['newalertson'] == 1 ? 1 : 0;
 		$disablepopups = $_POST['newdisablepops'] == 1 ? 1 : 0;
 		$agestatement  = $_POST['newagestatement'] == 1 ? 1 : 0;
 		$pwdsetting = $_POST['newpwdsetting'] == 1 ? 1 : 0;
-		$result = dbquery("UPDATE ".$settingsprefix."fanfiction_settings SET alertson = '$alertson', disablepopups = '$disablepopups', agestatement = '$agestatement', pwdsetting = '$pwdsetting' WHERE sitekey ='".SITEKEY."'");
+		$result = dbquery("UPDATE ".MPREFIX."fanfiction_settings SET alertson = '$alertson', disablepopups = '$disablepopups', agestatement = '$agestatement', pwdsetting = '$pwdsetting' WHERE sitekey ='".SITEKEY."'");
 	}
 	else if($sect == "email") {
 		$smtp_host = $_POST['newsmtp_host'];
 		$smtp_username = $_POST['newsmtp_username'];
 		$smtp_password = $_POST['newsmtp_password'];
-		$result = dbquery("UPDATE ".$settingsprefix."fanfiction_settings SET smtp_host = '$smtp_host', smtp_username = '$smtp_username', smtp_password = '$smtp_password' WHERE sitekey ='".SITEKEY."'");
+		$result = dbquery("UPDATE ".MPREFIX."fanfiction_settings SET smtp_host = '$smtp_host', smtp_username = '$smtp_username', smtp_password = '$smtp_password' WHERE sitekey ='".SITEKEY."'");
 	}
 	if($result) {
 		$output .= write_message(_ACTIONSUCCESSFUL);
@@ -176,7 +176,7 @@ if(isset($_POST['submit'])) {
 	}
 	else $output .= write_error(_ERROR);
 }
-	$settingsresults = dbquery("SELECT * FROM ".$settingsprefix."fanfiction_settings WHERE sitekey ='".SITEKEY."'");
+	$settingsresults = dbquery("SELECT * FROM ".MPREFIX."fanfiction_settings WHERE sitekey ='".SITEKEY."'");
 	$settings = dbassoc($settingsresults);
 	foreach($settings as $var => $val) {
 		$$var = stripslashes($val);
@@ -199,7 +199,7 @@ if(isset($_POST['submit'])) {
 				<td><label for='newurl'>"._SITEURL.":</label></td><td><input type='text' class='textbox' name='newsiteurl' value='$url'> <a href='#' class='pophelp'>[?]<span>"._HELP_URL."</span></a></td>
 			</tr>
 			<tr>				
-				<td><label for='newtableprefix'>"._TABLEPREFIX.":</label></td><td><input type='text' class='textbox' name='newtableprefix' value='".TABLEPREFIX."'> <a href='#' class='pophelp'>[?]<span>"._HELP_TABLEPREFIX."</span></a></td>
+				<td><label for='newMPREFIX'>"._MPREFIX.":</label></td><td><input type='text' class='textbox' name='newMPREFIX' value='".MPREFIX."'> <a href='#' class='pophelp'>[?]<span>"._HELP_MPREFIX."</span></a></td>
 			</tr>
 			<tr>				
 				<td><label for='newsiteemail'>"._ADMINEMAIL.":</label></td><td><input type='text' class='textbox' name='newsiteemail' value='$siteemail'> <a href='#' class='pophelp'>[?]<span>"._HELP_SITEEMAIL."</span></a></td>
@@ -340,7 +340,7 @@ if(isset($_POST['submit'])) {
 				</select><a href='#' class='pophelp'>[?]<span>"._HELP_CAPTCHA."</span></a></td></tr>";
 	}
 	else if($sect == "display") {
-		$settings = dbquery("SELECT defaultsort, displayindex FROM ".$settingsprefix."fanfiction_settings WHERE sitekey ='".SITEKEY."'");
+		$settings = dbquery("SELECT defaultsort, displayindex FROM ".MPREFIX."fanfiction_settings WHERE sitekey ='".SITEKEY."'");
 		list($sitedefaultsort, $sitedisplayindex) = dbrow($settings);
 		$defaultdates = array("m/d/y", "m/d/Y", "m/d/Y", "d/m/Y", "d/m/y", "d M Y", 
 				"d.m.y", "Y.m.d", "m.d.Y", "d-m-y", "m-d-y", "M d Y", "M d, Y", "F d Y", "F d, Y");
