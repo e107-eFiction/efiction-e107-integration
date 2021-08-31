@@ -23,89 +23,35 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-if(!defined("_CHARSET")) exit( );
-
-
+if (!defined('e107_INIT')) { exit; }
 
 function sendemail($to_name,$to_email,$from_name,$from_email,$subject,$message,$type="plain",$cc="",$bcc="") {
                  
-	global $language, $smtp_host, $smtp_username, $smtp_password, $siteemail;     
-   
-	// Check for hackers and spammers and bad input
-	if(!isset($_SERVER['HTTP_USER_AGENT'])) return false;
-	$badStrings = array("Content-Type:", "MIME-Version:", "Content-Transfer-Encoding:", "bcc:", "cc:");
-	$checks = array($to_name, $to_email, $from_name, $from_email, $subject);
-	foreach($checks as $check) {
-		foreach($badStrings as $bad){
-			if(strpos($check, $bad) !== false) return false; // Spammer
-		}
-	}
-	unset($bad, $badStrings, $checks, $check);
-	if (!((bool) preg_match('/^[-_a-z0-9\'+*$^&%=~!?{}]++(?:\.[-_a-z0-9\'+*$^&%=~!?{}]+)*+@(?:(?![-.])[-a-z0-9.]+(?<![-.])\.[a-z]{2,6}|\d{1,3}(?:\.\d{1,3}){3})(?::\d++)?$/iD', $to_email))) return false; // Bad e-mail
-	if (!((bool) preg_match('/^[-_a-z0-9\'+*$^&%=~!?{}]++(?:\.[-_a-z0-9\'+*$^&%=~!?{}]+)*+@(?:(?![-.])[-a-z0-9.]+(?<![-.])\.[a-z]{2,6}|\d{1,3}(?:\.\d{1,3}){3})(?::\d++)?$/iD', $from_email))) {
-		echo "bad email";
-		return false; // Bad e-mail
-	}
-	if (empty($_SERVER['HTTP_USER_AGENT']) || !$_SERVER['REQUEST_METHOD'] == "POST") return false; // Spammer
-	$subject = descript(strip_tags($subject));
-	$message = descript($message);
-	// End paranoia
+    $eml = array();
+	$eml['email_subject']		= $subject;
+	$eml['send_html']			= true;
+	$eml['email_body']			= $message;
+	$eml['template']			= 'default';
+    // $eml['sender_email']        = $from_email;  always $pref['replyto_email']
+    // $eml['sender_name']         = $from_name;   always $pref['replyto_name']
  
-	// Try to determine the right $type setting
- 	if(strpos($message, "<br>") || strpos($message, "</p>") || strpos($message, "<br />") || strpos($message, "<br>") || strpos($message, "<a href")) $type = "html";
-	
-	require_once(_BASEDIR."includes/PHPMailerAutoload.php");
-	$mail = new PHPMailer;
-	if(file_exists(_BASEDIR."languages/mailer/phpmailer.lang-".$language.".php"))
-		$mail->SetLanguage($language, _BASEDIR."languages/mailer/");
-	else 
-		$mail->SetLanguage("en", _BASEDIR."languages/mailer/");
+    $eml['cc']			= $cc;
+    $eml['bcc']			= $bcc;
+    
+    if($type == 'plain')   { 
+       $eml['template'] =  'textonly'; 
+       $eml['send_html'] =  false;  
+    }  //texthtml
 
-	if(!$smtp_host) {
-		$mail->IsMail( );
-	}
-	else { 
-		$mail->IsSMTP( );
-		$mail->Host = $smtp_host;
-		$mail->SMTPAuth = true;
-		$mail->Username = $smtp_username;
-		$mail->Password = $smtp_password;
-	}
-	$mail->CharSet = _CHARSET;
-	$mail->From = $siteemail;
-	$mail->FromName = $from_name;
-	$mail->AddAddress($to_email, $to_name);
-	$mail->AddReplyTo($from_email, $from_name);
-	if($cc) {
-		$cc = explode(", ", $cc);
-		foreach ($cc as $ccaddress) {
-			$mail->AddCC($ccaddress);
-		}
-	}
-	if ($bcc) {
-		$bcc = explode(", ", $bcc);
-		foreach ($bcc as $bccaddress) {
-			$mail->AddBCC($bccaddress);
-		}
-	}
-	if ($type == "plain") {
-		$mail->IsHTML(false);
-	} else {
-		$mail->IsHTML(true);
-	}
-	
-	$mail->Subject = $subject;
-	$mail->Body = $message;
-	if(!$mail->Send()) {
-		$mail->ErrorInfo;
-		$mail->ClearAllRecipients();
-		$mail->ClearReplyTos();
-		return $mail->ErrorInfo;
-	} else {
-		$mail->ClearAllRecipients(); 
-		$mail->ClearReplyTos();
+ 	if(e107::getEmail()->sendEmail($to_email, $to_name, $eml))
+	{
 		return true;
 	}
-
+	else
+	{
+		return false;
+	}
+   
 }
-?>
+
+ 

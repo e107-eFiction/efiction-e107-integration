@@ -4,6 +4,21 @@ global $skindir, $skinfolder;
 
 if(deftrue('USER_AREA')) // prevents inclusion of JS/CSS/meta in the admin area.
 {
+
+    /* CAPTCHA REPLACEMENT *****************************************************/
+    $newcaptcha = efiction_settings::get_single_setting('captcha');  
+    
+    if($newcaptcha && extension_loaded('gd'))
+    {
+    	define('USE_IMAGECODE', TRUE);
+    }
+    else
+    {
+    	define('USE_IMAGECODE', FALSE);
+    }
+
+
+    /* DISPLAY LOOK ************************************************************/
     if(!$displaycolumns) $displaycolumns = 1;  //this is pref, fix me
     $colwidth = floor(100/$displaycolumns);
      

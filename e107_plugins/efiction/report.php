@@ -24,6 +24,8 @@
 $current = "contactus";
 
 include ("header.php");
+ 
+$sec_image = e107::getSecureImg();
 
 	//make a new TemplatePower object
 if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/default.tpl" );
@@ -35,12 +37,28 @@ include(_BASEDIR."includes/pagesetup.php");
 	$output .= "<h1>"._CONTACTUS."</h1>";
 
 	if(isset($_POST['submit'])) {
-		if($captcha && !isMEMBER && !captcha_confirm()) $output .= write_error(_CAPTCHAFAIL);
-		else {
-			include("includes/emailer.php");
-			$result = sendemail($sitename, $siteemail, $_POST['email'], $_POST['email'], (!empty($_POST['reportpage']) ? _REPORT.": " : "").descript(strip_tags($_POST['subject'])), format_story(descript($_POST['comments'])).(!empty($_POST['reportpage']) ? "<br /><br /><a href='$url/".$_POST['reportpage']."'>$url/".$_POST['reportpage']."</a>" : "").(isMEMBER ? sprintf(_SITESIG2, "<a href='".$url."/viewuser.php?uid=".USERUID."'>".USERPENNAME."</a>") : _SITESIG), "html");
-			if($result) $output .= write_message(_EMAILSENT);
-			else $output .= write_error(_EMAILFAILED);
+		if (USE_IMAGECODE && isset($_POST['rand_num']) && (e107::getSecureImg()->invalidCode($_POST['rand_num'], $_POST['code_verify']))) {
+		    $output .= write_error(_CAPTCHAFAIL);
+	    } else {
+    		$sender = check_email($_POST['email_send']);
+    		$subject = e107::getParser()->toEmail($_POST['subject'], true, 'RAWTEXT');
+    		$body = nl2br(e107::getParser()->toEmail($_POST['email'], true, 'RAWTEXT'));
+    
+            $send_to = SITEADMINEMAIL;
+    		$send_to_name = ADMIN;
+                    
+            $eml = array(
+    				'subject'      => $subject,
+    				'sender_name'  => $sender_name,
+    				'body'         => $body,
+    				'replyto'      => $sender,
+    				'replytonames' => $sender_name,
+    				'template'     => 'default'
+    		);
+                
+            $message = e107::getEmail()->sendEmail($sender, $send_to_name, $eml) ? _EMAILSENT : _EMAILFAILED;
+            
+            e107::getRender()->tablerender('', "<div class='alert alert-success'>" . $message . "</div>");
 		}
 	}
 	else
@@ -55,8 +73,14 @@ include(_BASEDIR."includes/pagesetup.php");
 		</select>
 		<input type='hidden' name='reportpage' value='".descript($_GET['url'])."'></td></tr>";
 		$output .= "<tr><td><label for='comments'>"._COMMENTS.":</label></td><td> <TEXTAREA  class='textbox' name='comments' cols='50' rows='6'></TEXTAREA></td></tr>";
-		if(!USERUID && !empty($captcha)) $output .= "<tr><td><span class='label'>"._CAPTCHANOTE."</span></td><td><img width=120 height=30 src='"._BASEDIR."includes/button.php' alt='CAPTCHA image'><br /><br /><input MAXLENGTH=5 SIZE=5 name='userdigit' type='text' value=''></td></tr>";
-		$output .= "<tr><td colspan='2'><div style='text-align: center;'><INPUT name='submit' class='button' type='submit' value='"._SUBMIT."'></div></td></tr></table></form>";
+ 
+        if (!USERUID && USE_IMAGECODE) {
+    		//one table field to be able to use recaptcha
+    		$output .= "<tr><td><label for='code_verify'>".e107::getSecureImg()->renderLabel().'</label></td><td>';
+    		$output .= e107::getSecureImg()->renderimage();
+    		$output .= e107::getSecureImg()->renderInput().'</td></tr>';
+	    } 
+        $output .= "<tr><td colspan='2'><div style='text-align: center;'><INPUT name='submit' class='button' type='submit' value='"._SUBMIT."'></div></td></tr></table></form>";
 	}
 
 	$tpl->assign( "output", $output );	
