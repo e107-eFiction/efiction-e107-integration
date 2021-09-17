@@ -1,8 +1,9 @@
 <?php
 
 global $skindir, $skinfolder;
+ 
 
-if(deftrue('USER_AREA')) // prevents inclusion of JS/CSS/meta in the admin area.
+if(deftrue('USER_AREA') && (e_PAGE != "menus.php") )    // prevents inclusion of JS/CSS/meta in the admin area.
 {
 
     /* CAPTCHA REPLACEMENT *****************************************************/
@@ -17,11 +18,12 @@ if(deftrue('USER_AREA')) // prevents inclusion of JS/CSS/meta in the admin area.
     	define('USE_IMAGECODE', FALSE);
     }
 
-
+  
     /* DISPLAY LOOK ************************************************************/
+    $displaycolumns = efiction_settings::get_single_setting('displaycolumns');  
     if(!$displaycolumns) $displaycolumns = 1;  //this is pref, fix me
     $colwidth = floor(100/$displaycolumns);
-     
+ 
 	$inline_css = "
 		#columncontainer { margin: 1em auto; width: auto; padding: 5%;}
 		#browseblock, #memberblock { width: 100%; padding: 0; margin: 0; float: left; border: 0px solid transparent; }

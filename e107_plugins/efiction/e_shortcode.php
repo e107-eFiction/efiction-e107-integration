@@ -80,4 +80,37 @@ class efiction_shortcodes extends e_shortcode
            
         return $block_content;    
     }
+    
+    
+    /*  {EFICTION_LINK} */
+    /*  {EFICTION_LINK=rss} - doesn't work on live site, on local it works. Data issue? */
+    /*  example for login menu 
+    {EFICTION_LINK: key=adminarea&class=list-group-item} 
+    {EFICTION_LINK: key=login&class=list-group-item}   
+    {EFICTION_LINK=adminarea} 
+    {EFICTION_LINK=login} 
+    {EFICTION_LINK=logout}
+    */
+    public function sc_efiction_link($parm = '')
+    { 
+		if($parm == "") { return ''; }
+    
+        $key = (!empty($parm['key'])) ? $parm['key'] : $parm;
+        
+	     
+	    $link = efiction_pagelinks::get_single_link($key);
+        /* why don't use this: $url = e107::url('efiction', $key, $data);
+          key for e107::url() is admin.php not adminarea
+          use still need link name
+        */ 
+ 
+		$class = (!empty($parm['class'])) ? $parm['class']. ' ' .$key  : $key;
+        
+		if($link) {    
+			return $link;
+		}
+		else return "";
+		 
+    }
+    
 }

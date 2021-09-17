@@ -139,7 +139,7 @@ class efiction_url // plugin-folder + '_url'
 		);  
  
 		$config['index'] = array(
-            'alias'         => 'efiction.php',
+            'alias'         => 'efiction',
 			'regex'			=> '^{alias}\/?([\?].*)?\/?$', 					 
 			'sef'			=> '{alias}', 							 
 			'redirect'		=> '{e_PLUGIN}efiction/efiction.php$1', 		 

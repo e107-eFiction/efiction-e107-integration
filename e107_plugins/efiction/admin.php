@@ -27,7 +27,7 @@ if(isset($_GET['action']) && ($_GET['action'] == "categories" || $_GET['action']
 $disableTiny = true;
 
 include ("header.php");
-
+ 
 //make a new TemplatePower object
 if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/default.tpl" );
 else $tpl = new TemplatePower(_BASEDIR."default_tpls/default.tpl");

@@ -374,6 +374,7 @@ if($showlist) {
 	}
 }
 
+$tpl->assign( "output", $output );
 //$tpl->xprintToScreen( );
 $text = $tpl->getOutputContent(); 
 e107::getRender()->tablerender($caption, $text, $current);

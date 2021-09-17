@@ -16,33 +16,16 @@ if(empty($sitekey)) {
 if(e_ADMIN_AREA === true)  {}  //USER_AREA is not defined
 else { 
      
-  /**************  DETECT THEME + SKIN HERE *************************************/
-  //in e_module is not defined USER
-  //in e_module is not defined LAYOUT
-  //in e_module is not defined e_CURRENT_PLUGIN
-  
-  if(isset($_GET['skin'])) { //first priority 
-  	$siteskin = $_GET['skin'];
-  	e107::getSession()->set(SITEKEY."_skin", $siteskin);  
-  }
-  else { 
-      if (e107::getSession()->is(SITEKEY.'_skin')) $siteskin = e107::getSession()->get(SITEKEY.'_skin');
-  }
-    
-  //quests, user have it set in session too, list of supported themes 
-  $st = array("Epiphany", "Sommerbrise");
-  if (in_array($siteskin, $st)) {  
-    	 define("USERTHEME", $siteskin);
-  }
  
    /* LOAD CLASSES */
   e107::getSingleton('efiction_blocks', e_PLUGIN.'efiction/classes/blocks.class.php');
-  e107::getSingleton('efiction_pagelinks', e_PLUGIN.'efiction/classes/pagelinks.class.php');
+  e107::getSingleton('efiction_pagelinks', e_PLUGIN.'efiction/classes/pagelinks.class.php');  
   e107::getSingleton('efiction_settings', e_PLUGIN.'efiction/classes/settings.class.php');
+  e107::getSingleton('efiction_authors', e_PLUGIN.'efiction/classes/authors.class.php');  
   
   /**************  LOAD EFICTION SETTINGS ***************************************/    
   $settings = efiction_settings::get_settings();
-  
+ 
   $defaultskin = $settings['skin']; //used in get_session_vars.php
   $skin = $settings['skin']; //used for authorprefs
   

@@ -95,7 +95,6 @@ define('_NO', 'No');
 define('_NODBFUNCTIONALITY', 'It appears no applicable database functionality for PHP has not been enabled in the php configuration for this website.  Please consult the PHP documentation or ask your hosting provider.');
 define('_NOMAILSENT', 'We encountered an error.  No e-mail was sent.');
 define('_NONE', 'None');
-define('_NOSKIN', "The skin you selected in your user profile seems to be missing.  The site's default skin will be used instead. Please edit your profile to choose another skin.");
 define('_NORESULTS', 'No results found.');
 define('_NOTAUTHORIZED', 'You are not authorized to access that function.');
 define('_NOTCONNECTED', 'ERROR: Failed to connect to the database!');
@@ -290,7 +289,6 @@ define('_DEFAULTSORT', 'Default Story Sort');
 define('_DISPLAYINDEX', 'Display table of contents for stories.');
 define('_EDITPREFS', 'Edit Preferences');
 define('_REQUIREDFIELDS', 'Indicates required fields.');
-define('_SKIN', 'Skin');
 define('_USETINYMCE', 'Use tinyMCE WYSWYG editor');
 
 // User - Edit Bio/Registration (default)
@@ -428,7 +426,6 @@ define('_HELP_TOC', 'Check this box if you wish to see the story index first rat
 define('_HELP_TINYMCE', 'Check this box if you wish to use the tinyMCE editor when entering content in forms.  You will have the option to toggle the editor on/off if need be.');
 define('_HELP_AGE', 'By agreeing, you are confirming you are above the age of majority in your locality and that you wish to view the adult oriented material on this site.');
 define('_HELP_DEFAULTSORT', 'Select the order in which to sort stories by default.  Your choices are Alphabetically or Most Recent (newest to oldest).');
-define('_HELP_SKIN', 'Choose the appearance of the site.');
 
 // Log strings
 define('_LOG_ADMIN_DEL', "<a href='viewuser.php?uid=%2\$d'>%1\$s</a> deleted <a href='viewstory.php?sid=%4\$d'>%3\$s</a> by <a href='viewuser.php?uid=%6\$d'>%5\$s</a>.");

@@ -17,6 +17,6 @@ if(!defined("e107_INIT")) exit( );
 			else $content .= $pagelinks[$page]['link'];
 		}
 	}
-	if(empty($blocks[$block]['style'])) $content = "<ul class=\"sitelinks-navbar navbar-nav mx-auto\">$content</ul>";
+	if(empty($blocks[$block]['style'])) $content = "<ul id=\"nav\" class=\"efiction-menu\">$content</ul>";
 	$content = $content;
 ?>

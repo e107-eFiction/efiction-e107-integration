@@ -1,8 +1,4 @@
-<!-- START BLOCK : header -->
-	<div class="login"><span class="fa fa-sign-in"></span> {adminarea} {login} {logout}</div>
-	<div id="sitename">{sitename}</div>
-	<div id="slogan">{slogan}</div>
-	<div id="menu">{menu_content}</div>
+ 
 	<div class="grid-wrapper container">	
 		<div class="gb-25 sidebar">
 				

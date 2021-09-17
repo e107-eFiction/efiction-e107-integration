@@ -27,6 +27,7 @@ It also checks the common $_GET variables and cleans them up to prevent hacking 
 */
 
 if(!defined("_CHARSET")) exit( );
+ 
 
 $favtypes = array("SE" => "series", "ST" => "stories", "AU" =>"authors");
 $revtypes = array("SE" => "series", "ST" => "stories");

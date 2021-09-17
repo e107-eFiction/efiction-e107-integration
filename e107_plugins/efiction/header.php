@@ -44,6 +44,7 @@ foreach($settings as $var => $val) {
 include_once(_BASEDIR."includes/queries.php");
 
 require_once(_BASEDIR."includes/get_session_vars.php");
+ 
 
 @ ini_set('arg_separator.output','&amp;'); 
 if(isset($_GET['debug'])) @ error_reporting(E_ALL);
