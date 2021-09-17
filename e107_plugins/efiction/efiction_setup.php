@@ -168,7 +168,6 @@ if (!class_exists('efiction_setup')) {
 							array("noletter","Rejection Letter","","3","0","1","A"),
 							array("links","Page Links","","1","5","0","A"),
 							array("messages","Message Settings","","2","0","1","A"),
-							array("login","Login","login.php","0","0","1","U"),  //e107
 							array("logout","Logout","index.php?logout","1","5","0","U"),   //e107
 							array("revreceived","Reviews Received","","1","0","1","U"),
 							array("editprefs","Edit Preferences","","1","2","0","U"),
@@ -233,7 +232,6 @@ if (!class_exists('efiction_setup')) {
 						$pagelist = array(
 							array("home","Home","index.php","0","0"),
 							array("recent","Most Recent","browse.php?type=recent","0","0"),
-							array("login","Login","login.php","0","0"),
 							array("adminarea","Admin","admin.php","0","2"),
 							array("logout","Logout","index.php?logout","0","1"),
 							array("featured","Featured Stories","browse.php?type=featured","0","0"),
@@ -272,7 +270,6 @@ if (!class_exists('efiction_setup')) {
 							array("categories","Categories","categories/categories.php","1",""),
 							array("featured","Featured Stories","featured/featured.php","1",""),
 							array("info","Site Info","info/info.php","2",""),
-							array("login","Log In","login/login.php","1",""),
 							array("menu","Main Menu","menu/menu.php","1",""),
 							array("random","Random Story","random/random.php","2",""),
 							array("recent","Most Recent","recent/recent.php","2","a:1:{s:3:\"num\";s:1:\"1\";}"),
@@ -359,7 +356,7 @@ if (!class_exists('efiction_setup')) {
                             e107::getMessage()->addDebug(print_a($ret['failed'], true));
                         }
                     }
-                    */
+                    
      			}            
             }
                    
@@ -398,7 +395,7 @@ if (!class_exists('efiction_setup')) {
          	foreach($this->tables_data AS $table) {
                 if(e107::getDb()->count($table) == 0)
      			{
-     				return true;	 
+                     return true;	 
      			}            
             }
         }
@@ -411,7 +408,7 @@ if (!class_exists('efiction_setup')) {
         public function upgrade_post($var)
         { 
             
-            $this->add_default_data($var); 
+         //   $this->add_default_data($var); 
 			
         }
     }
