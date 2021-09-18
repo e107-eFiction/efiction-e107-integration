@@ -60,20 +60,9 @@ if(!defined("_CHARSET")) exit( );
 		$output .= "<label for='sortby'>"._DEFAULTSORT.": </label><select name='sortby' class='textbox'>
 				<option value='1'".($user['sortby'] ? " selected" : "").">"._MOSTRECENT."</option>
 				<option value='0'".(!$user['sortby'] ? " selected" : "").">"._ALPHA."</option>
-			</select><A HREF=\"#\" class=\"pophelp\">[?]<span>"._HELP_DEFAULTSORT."</span></A><br />
-			<label for='skinnew'>"._SKIN.":</label> <select name=\"skinnew\">";
+			</select><A HREF=\"#\" class=\"pophelp\">[?]<span>"._HELP_DEFAULTSORT."</span></A><br />";
 		if(!isset($hiddenskins)) $hiddenskins = array( );
-		if(is_string($hiddenskins)) $hiddenskins = explode(",", $hiddenskins);
-			$directory = opendir(_BASEDIR."skins");
-		while($filename = readdir($directory)) {
-			if($filename== "." || $filename== ".." || !is_dir(_BASEDIR."skins/".$filename) || (in_array($filename, $hiddenskins) && !isADMIN)) continue;
-			$skinlist[strtolower($filename)] = "<option value=\"$filename\"".($siteskin == $filename ? " selected" : "").">$filename</option>";
-		}
-		ksort($skinlist);
-		foreach($skinlist as $s) { $output .= $s; }
-		unset($skinlist, $s);
-		closedir($directory);
-		$output .= "</select><A HREF=\"#\" class=\"pophelp\">[?]<span>"._HELP_SKIN."</span></A><br /><INPUT type=\"submit\" class=\"button\" id=\"submit\" name=\"submit\" value=\""._SUBMIT."\"></form>";
+		$output .= "<INPUT type=\"submit\" class=\"button\" id=\"submit\" name=\"submit\" value=\""._SUBMIT."\"></form>";
 	}
 
 ?>
