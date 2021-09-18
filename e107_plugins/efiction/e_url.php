@@ -130,14 +130,7 @@ class efiction_url // plugin-folder + '_url'
 			'sef'			=> '{alias}', 
 			'redirect'		=> '{e_PLUGIN}efiction/viewstory.php$1', 	 		 
 		);   
-        
-        $config['ffnews'] = array(
-            'alias'         => 'ffnews.php',
-			'regex'			=> '^{alias}\/?([\?].*)?\/?$', 
-			'sef'			=> '{alias}', 
-			'redirect'		=> '{e_PLUGIN}efiction/ffnews.php$1', 	 		 
-		);  
-        
+ 
         $config['admin'] = array(
             'alias'         => 'admin.php',
 			'regex'			=> '^{alias}\/?([\?].*)?\/?$', 

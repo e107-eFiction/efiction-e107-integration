@@ -153,7 +153,6 @@ if (!class_exists('efiction_setup')) {
 							array("submitted","Submissions", "","3","5","0","A"),
 							array("newstory","Add New Story","stories.php?action=newstory&admin=1","3","3","0","A"),
 							array("addseries","Add New Series","series.php?action=add","3","3","0","A"),
-							array("news","News","","3","5","0","A"),
 							array("featured","Featured Stories","","3","5","0","A"),
 							array("characters","Characters","","2","2","0","A"),
 							array("ratings","Ratings","","2","3","0","A"),
@@ -195,7 +194,6 @@ if (!class_exists('efiction_setup')) {
 							array("recent","Most Recent","","0","0","1","B"),
 							array("featured","Featured Stories","","0","0","1","B"),
 							array("panels","Panels","","1","1","0","A"),
-							array("contact","Contact","","0","0","1","P"),
 							array("series", "Series", "", "0", "4", "0", "B"),
 							array("viewlog", "Action Log", "", "1", "8", "0", "A"),
 							array("shortstories","10 Shortest Stories","toplists/default.php","0","6","0","L"), 
@@ -245,7 +243,6 @@ if (!class_exists('efiction_setup')) {
 							array("series","Series","browse.php?type=series","0","0"),
 							array("tens","Top Tens","toplists.php","0","0"),
 							array("challenges","Challenges","modules/challenges/challenges.php","0","0"),
-							array("contactus","Contact Us","contact.php","0","0"),
 							array("rules","Rules","viewpage.php?page=rules","0","0"),
 							array("tos","Terms of Service","viewpage.php?page=tos","0","0"),
 							array("rss","<img src=\'images/xml.gif\' alt=\'RSS\' border=\'0\'>","rss.php","0","0"),
@@ -253,7 +250,6 @@ if (!class_exists('efiction_setup')) {
 							array("titles","Titles","browse.php?type=titles","0","0"),
 							array("register","Register","signup.php","0","0"),
 							array("lostpassword","Lost Password","fpw.php","0","0"),
-							array("newsarchive","News Archive","news.php","0","0"),
 							array("browse","Browse","browse.php","0","0"),
 							array("charslink", "Characters", "browse.php?type=characters","0","0"),
 							array("ratings", "Ratings", "browse.php?type=ratings", "0", "0"),
@@ -275,21 +271,18 @@ if (!class_exists('efiction_setup')) {
 							array("menu","Main Menu","menu/menu.php","1",""),
 							array("random","Random Story","random/random.php","2",""),
 							array("recent","Most Recent","recent/recent.php","2","a:1:{s:3:\"num\";s:1:\"1\";}"),
-							array("skinchange","Skin Change","skinchange/skinchange.php","1",""),
-							array("news","Site News","news/news.php","1","a:1:{s:3:\"num\";s:1:\"1\";}")
+							array("skinchange","Skin Change","skinchange/skinchange.php","1","")
+                             
 						);
 
 						foreach($blocklist as $block) {
 							$block_settings = e107::getDB()->escape($block[4]);
 							$query = "INSERT INTO `#fanfiction_blocks` (`block_name`, `block_title`, `block_file`, `block_status`, `block_variables`) VALUES('".$block[0]."', '".$block[1]."', '".$block[2]."', '".$block[3]."', '".$block_settings."')";
 							e107::getDB()->gen($query);		 
-	 	
+	 	                }
 					}
 					elseif($table == 'fanfiction_messages') {
 						$messageslist = array(
-							array(1,"welcome","", "This is your welcome message. It appears on the index page. Include it in your .tpl files with {welcome}."),
-							array(2, 'copyright', '', "This is your sample copyright footer.  Include it in your footer.tpl with <b>{footer}</b><br />\r\n<u>Disclaimer:</u>All publicly recognizable characters, settings, etc. are the property of their respective owners.  The original characters and plot are the property of the author.
-                            No money is being made from this work.  No copyright infringement is intended.\r\n"),
 							array(3, 'help', 'Help', "<h3>FAQ</h3><p><strong>I forgot my password!&nbsp; What do I do now?</strong></p><p>To recover a lost password, <a href=\"member.php?action=lostpassword\">click here</a> and enter the e-mail address with which you registered.&nbsp; Your password will be sent to you shortly.</p><p><strong>What kinds of stories are allowed?</strong></p><p>See our <a href=\""._BASEDIR."submission.php\">Submission Rules.</a></p><p><strong>How do I contact the site administrators?</strong></p><p>You can e-mail us via our <a href=\"contact.php\">contact form.</a></p><p><strong>How do I submit stories?</strong></p><p>If you have not already done so, please <a href=\"member.php?action=newaccount\">register for an account</a>. Once you\'ve logged in, click on <a href=\"member.php\">Account Information</a> and choose <a href=\"stories.php?action=newstory\">Add Story</a>.&nbsp; The form presented there will allow you to submit your story.</p><p><strong>What are the ratings used on the site?</strong></p><p>We use the ratings system from <a href=\"http://www.fictionratings.com/\">www.fictionratings.com</a>.</p><p><strong>What are the story classifications?</strong></p><p>Stories are classified by categories, genres, and warnings.</p>"),
 							array(4, 'nothankyou', 'Submission Rejection', 'Your recent submission of \"{storytitle} : {chaptertitle}\" to {sitename} did not meet our requirements for submission.  Please review our {rules}.<br /><br />\r\n\r\n{adminname}'),
 							array(5, 'printercopyright', '', "<u>Disclaimer:</u> All publicly recognizable characters and settings are the property of their respective owners. The original characters and plot are the property of the author. No money is being made from this work. No copyright infringement is intended."),

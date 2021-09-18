@@ -15,14 +15,8 @@
 			<div class="gb-33"><h3>{recent_title}</h3>{recent_content}</div>
 			<div class="gb-33"><h3>{random_title}</h3>{random_content}</div>
 	</div>
-	
-<!-- START BLOCK : footer -->
-<div class="gb-full footer">
-		<hr />
-		{footer}
-		<div class="copyright">Skin by <a href="http://artphilia.de">Artphilia Designs</a>. All rights reserved.</div>
-</div>
+ 
 
 </div> <!-- closing content grid -->   			
-<!-- END BLOCK : footer -->
+ 
  

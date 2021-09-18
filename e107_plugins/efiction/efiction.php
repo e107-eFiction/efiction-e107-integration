@@ -22,21 +22,14 @@
 
 $current = "home";
 
-include ("header.php");
+if (!defined('e107_INIT'))
+{
+	require_once(__DIR__.'/../../class2.php');
+}
 
-//make a new TemplatePower object);
-if(file_exists("$skindir/index.tpl")) $tpl = new TemplatePower( "$skindir/index.tpl" );
-else $tpl = new TemplatePower(_BASEDIR."default_tpls/index.tpl");
-//let TemplatePower do its thing, parsing etc.
+$url = e107::url("efiction", 'browse','full');
  
-include(_BASEDIR."includes/pagesetup.php");
-$query = dbquery("SELECT message_text FROM ".TABLEPREFIX."fanfiction_messages WHERE message_name = 'welcome'");
 
-list($welcome) = dbrow($query);
-$tpl->assign("welcome", stripslashes($welcome));
-
-//$tpl->xprintToScreen( );
-$text = $tpl->getOutputContent(); 
-e107::getRender()->tablerender($caption, $text, $current);
-require_once(FOOTERF); 
+e107::redirect($url);
+ 
 exit;

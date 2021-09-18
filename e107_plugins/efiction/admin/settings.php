@@ -59,7 +59,6 @@ $output .= "<h1>"._SETTINGS."</h1><div style='text-align: center;'>
 	<a href='admin.php?action=settings&amp;sect=useropts'>"._USERSETTINGS."</a> |
 	<a href='admin.php?action=settings&amp;sect=email'>"._EMAILSETTINGS."</a> |
 	<a href='admin.php?action=censor'>"._CENSOR."</a> <br />
-	<a href='admin.php?action=messages&message=welcome'>"._WELCOME."</a> | 
 	<a href='admin.php?action=messages&message=copyright'>"._COPYRIGHT."</a> | 
 	<a href='admin.php?action=messages&message=printercopyright'>"._PRINTERCOPYRIGHT."</a> | 
 	<a href='admin.php?action=messages&message=tinyMCE'>"._TINYMCE."</a> | 
