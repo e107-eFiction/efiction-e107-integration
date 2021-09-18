@@ -20,14 +20,20 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
+/* in header.php with HEADERF
+if (!defined('e107_INIT'))
+{
+	require_once(__DIR__.'/../../class2.php');
+}
+*/
 $current = "adminarea";
 
 if(isset($_GET['action']) && ($_GET['action'] == "categories" || $_GET['action'] == "admins")) $displayform = 1;
 
 $disableTiny = true;
-
-include ("header.php");
  
+include ("header.php");
+ print_a($displayform);
 //make a new TemplatePower object
 if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/default.tpl" );
 else $tpl = new TemplatePower(_BASEDIR."default_tpls/default.tpl");

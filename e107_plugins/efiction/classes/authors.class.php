@@ -56,9 +56,9 @@ if (!class_exists('efiction_authors')) {
 			author.email as email, 
 			author.password as password,
 			user_id AS e107_user_id 
-			FROM #fanfiction_authors as author 
-			LEFT JOIN #fanfiction_authorprefs as ap ON ap.uid = author.uid WHERE author.uid = '".$uid."'"  ;
-
+			FROM ".MPREFIX."fanfiction_authors as author  
+			LEFT JOIN ".MPREFIX."fanfiction_authorprefs as ap ON ap.uid = author.uid WHERE author.uid =  ".$uid ;
+ 
             $authordata = e107::getDb()->retrieve($authorquery);
 
             $var = array();
@@ -66,7 +66,7 @@ if (!class_exists('efiction_authors')) {
             if ($authordata) {
                 $var = $authordata;
             }
-
+ 
             return $var;
         }
            

@@ -22,6 +22,14 @@
 
 // page template setup
 
+/* in header.php with HEADERF
+if (!defined('e107_INIT'))
+{
+	require_once(__DIR__.'/../../class2.php');
+}
+*/
+
+
 $current = "stories";
 
 if($_GET['action'] != "newchapter") $displayform = 1;
@@ -80,6 +88,7 @@ function preview_story($stories) {
 	$tpl->assignGlobal("skindir", $skindir);
 	include(_BASEDIR."includes/storyblock.php");
 	$text = $tpl->getOutputContent( );
+ 
 	$count = 0;
 	if(!empty($stories['storytext'])) {
 		$text .= "<br /><br />";
@@ -132,6 +141,7 @@ function newstory( ) {
 		$uid = USERUID;
 		$penname = USERPENNAME;
 	}
+ 
 	$title = isset($_POST['title']) ? descript(strip_tags($_POST['title'], $allowed_tags)) : "";
 	$summary = isset($_POST['summary']) ? replace_naughty(descript(strip_tags($_POST['summary'], $allowed_tags))) : "";
 	$storynotes = isset($_POST['storynotes']) ? descript(strip_tags($_POST['storynotes'], $allowed_tags)) : "";
@@ -210,7 +220,8 @@ function newstory( ) {
 
 		$result = dbquery("SELECT "._UIDFIELD." as uid, "._PENNAMEFIELD." as penname, "._EMAILFIELD." as email, validated FROM "._AUTHORTABLE.", ".TABLEPREFIX."fanfiction_authorprefs as ap WHERE "._UIDFIELD." = '$uid' AND ap.uid = "._UIDFIELD." LIMIT 1");
 		$user = dbassoc($result);
-		$authorpenname = $user['penname'];
+ 
+        $authorpenname = $user['penname'];
 		if(!$validated && (($autovalidate && !isADMIN) || $user['validated'] || $storyvalid == 2)) $validated = 1;
 		else if(!$validated) $validated = 0;
 		if($admin && USERUID != $uid) {
@@ -219,9 +230,11 @@ function newstory( ) {
 				return $output;
 			}
 		}
-		if($store == "mysql")
+ 
+		if($store == "db")
 		{
 			if(!$newchapter) {
+            
 				$insert = dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_stories (title, summary, storynotes, catid, classes, charid,  rid, date, updated, uid, validated, rr, completed, wordcount, featured, coauthors) VALUES ('".addslashes($title)."', '".addslashes(format_story($summary))."', '".addslashes(format_story($storynotes))."', '".($catid ? implode(",", $catid) : "")."', '".($classes? implode(",", $classes) : "")."', '".($charid ? implode(",", $charid) : "")."', '$rid', now(), now(), '$uid', '$validated', '$rr', '$complete', '$wordcount', '$feat', '$coauthors')");
 				$sid = dbinsertid( );
 				$inorder = 1;
@@ -230,7 +243,8 @@ function newstory( ) {
 				$inorder = $_GET['inorder'] + 1;
 			}
 			$query2 = dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_chapters (title, inorder, notes, endnotes, validated, wordcount, sid, uid, storytext) VALUES('".addslashes(($chaptertitle != "" ? $chaptertitle : $title))."', '$inorder', '".addslashes(format_story($notes))."', '".addslashes(format_story($endnotes))."', '$validated', '$wordcount', '$sid', '$uid', '".addslashes($storytext)."')");
-			if(!$admin) $output = write_message(_STORYADDED).viewstories( );
+ 
+            if(!$admin) $output = write_message(_STORYADDED).viewstories( );
 			else $output .= write_message(_ACTIONSUCCESSFUL).editstory( $sid );
 		}
 		else if ($store == "files")

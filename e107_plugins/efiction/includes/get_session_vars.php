@@ -39,8 +39,8 @@ if (USERID) {  //fully managed by e107, user is logged in
 	}
 
     if ($author_uid > 0) { //user is author
-        $authordata = efiction_authors::get_single_author($author_uid);
-		define('USERUID', $authordata['uid']);
+        $authordata = efiction_authors::get_single_author($author_uid);   
+		define('USERUID', $authordata['author_uid']);
 		define('USERPENNAME', $authordata['penname']);
 		define('isMEMBER', true);
 		if (e107::getSession()->is(SITEKEY.'_ageconsent')) {
@@ -86,4 +86,5 @@ if (!defined('isADMIN')) {
 if (empty($siteskin)) {
     $siteskin = $defaultskin;
 }
+ 
  

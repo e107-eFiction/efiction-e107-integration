@@ -1,6 +1,6 @@
 <?php
 
-global $skindir, $skinfolder;
+global $skindir, $skinfolder, $displayform;
  
 
 if(deftrue('USER_AREA') && (e_PAGE != "menus.php") )    // prevents inclusion of JS/CSS/meta in the admin area.
@@ -99,6 +99,7 @@ if(deftrue('USER_AREA') && (e_PAGE != "menus.php") )    // prevents inclusion of
 		e107::js("url", _BASEDIR."includes/javascript.js", "jquery" ); 
 	}
 
+ 
 	if(isset($displayform) && $displayform == 1) 
 	{
 		e107::js('url',  _BASEDIR."includes/userselect.js" , 'jquery' );

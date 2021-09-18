@@ -77,6 +77,8 @@ if (!class_exists('efiction_settings')) {
 
             return null;
         }
+        
+        
     }
 
     new efiction_settings();

@@ -79,7 +79,7 @@ while($code = dbassoc($codequery)) {
 }
 if(!empty($dynamicfields)) $tpl->assign("authorfields", $dynamicfields);
 /* End dynamic fields */
-$tpl->assign("reportthis", "[<a href=\""._BASEDIR."contact.php?action=report&amp;url=viewuser.php?uid=".$uid."\">"._REPORTTHIS."</a>]");
+$tpl->assign("reportthis", "[<a href=\""._BASEDIR."report.php?action=report&amp;url=viewuser.php?uid=".$uid."\">"._REPORTTHIS."</a>]");
 $adminopts = "";
 if(isADMIN && uLEVEL < 3) {
 	$adminopts .= "<div class=\"adminoptions\"><span class='label'>"._ADMINOPTIONS.":</span> ".(isset($userinfo['validated']) && $userinfo['validated'] ? "[<a href=\"admin.php?action=members&amp;revoke=$uid\" class=\"vuadmin\">"._REVOKEVAL."</a>] " : "[<a href=\"admin.php?action=members&amp;validate=$uid\" class=\"vuadmin\">"._VALIDATE."</a>] ")."[<a href=\"member.php?action=editbio&amp;uid=$uid\" class=\"vuadmin\">"._EDIT."</a>] [<a href=\"admin.php?action=members&amp;delete=$uid\" class=\"vuadmin\">"._DELETE."</a>]";
