@@ -96,6 +96,7 @@ define('_NODBFUNCTIONALITY', 'It appears no applicable database functionality fo
 define('_NOMAILSENT', 'We encountered an error.  No e-mail was sent.');
 define('_NONE', 'None');
 define('_NORESULTS', 'No results found.');
+define('_NOSTORIES', 'No stories found for this author.');
 define('_NOTAUTHORIZED', 'You are not authorized to access that function.');
 define('_NOTCONNECTED', 'ERROR: Failed to connect to the database!');
 define('_OPTIONS', 'Options');

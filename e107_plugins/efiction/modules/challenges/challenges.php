@@ -279,7 +279,7 @@ else {
 
 	$catid = isset($_GET['catid']) ? $_GET['catid'] : false;	
 	if($chalid) {
-		if(file_exists("./$skindir/challenges_title.tpl")) $challenges = new TemplatePower("./$skindir/challenges_title.tpl");
+		if(file_exists("$skindir/challenges_title.tpl")) $challenges = new TemplatePower("$skindir/challenges_title.tpl");
 		else $challenges = new TemplatePower(_BASEDIR."modules/challenges/default_tpls/challenges_title.tpl");
 		$challenges->prepare( );
 

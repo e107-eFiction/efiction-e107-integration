@@ -6,7 +6,6 @@
 // Copyright (C) 2003 by Rebecca Smallwood.
 // http://efiction.sourceforge.net/
 // ----------------------------------------------------------------------
-// LICENSE
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License (GPL)
@@ -34,7 +33,7 @@ if(!defined("_CHARSET")) exit( );
 		$count = 0;
 		$column = 1;
 		$authorquery = $authorquery. " ORDER BY "._PENNAMEFIELD." LIMIT $offset,$limit";
-		$result2 = dbquery($authorquery);
+		$result2 = dbquery($authorquery);   
 		$output .= "<div id=\"columncontainer\"><div id=\"memberblock\">".($displaycolumns ? "<div class=\"column\">" : "");
 		while($author = dbassoc($result2)) {
 			$count++;

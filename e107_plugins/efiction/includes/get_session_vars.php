@@ -30,7 +30,7 @@ if (!defined('e107_INIT')) {
 if (USERID) {  //fully managed by e107, user is logged in
     $userData = e107::user(USERID);
  
-    $author_uid = $userData['user_plugin_efiction_author'];
+    $author_uid = $userData['user_plugin_efiction_author_uid'];
     $author_level = $userData['user_plugin_efiction_level'];
 
 	if ($author_level != -1) {   //it can be admin without author, uLevel is too important to relay on author ID

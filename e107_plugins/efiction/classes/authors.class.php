@@ -44,7 +44,6 @@ if (!class_exists('efiction_authors')) {
         {
         }
 
- 
         public static function get_single_author($uid = null)
         {
             $uid = intval($uid);
@@ -85,6 +84,23 @@ if (!class_exists('efiction_authors')) {
 
             return efiction_authors::get_single_author($author_uid);
         }
+        
+        
+         public static function get_user_id_by_author_uid($uid = null)
+        {
+            $uid = intval($uid);
+
+            if (empty($uid)) {
+                return false;
+            }
+
+            $where = ' user_plugin_efiction_author_uid = '.$uid;
+
+            $user_id = e107::getDb()->retrieve('user_extended', '	user_extended_id', $where);
+ 
+            return $user_id;
+        }
+        
 
         
     }

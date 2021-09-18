@@ -43,5 +43,5 @@ if($numstories) {
 	if($numstories > $itemsperpage) $tpl->assign("pagelinks", build_pagelinks("viewuser.php?action=storiesby&amp;uid=$uid".(isset($_GET['sort']) ? ($_GET['sort'] == "alpha" ? "&amp;sort=alpha" : "&amp;sort=update") : "")."&amp;", $numstories, $offset));
 	$tpl->gotoBlock("_ROOT");
 }
-else $output .= write_message(_NORESULTS);
+else $output .= write_message(_NOSTORIES);
 ?>

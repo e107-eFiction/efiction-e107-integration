@@ -10,7 +10,7 @@ if(!defined("e107_INIT")) exit( );
 		}
 	}
 	else {
-		$pages = array('home', 'recent', 'titles', 'catslink', 'series', 'members', 'authors', 'challenges', 'search', 'tens', 'featured', 'help', 'contactus', 'login', 'logout', 'adminarea');
+		$pages = array('home', 'recent', 'titles', 'catslink', 'series',  'authors', 'search', 'tens', 'featured', 'help', 'contactus' );
 		foreach($pages as $page) {
 			if(empty($pagelinks[$page])) continue;
 			if(empty($blocks[$block]['style'])) $content .= "<li ".($current == $page ? "id=\"menu_current\"" : "").">".$pagelinks[$page]['link']."</li>";

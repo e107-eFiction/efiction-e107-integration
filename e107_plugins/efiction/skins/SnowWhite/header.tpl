@@ -1,5 +1,5 @@
  
-	<div class="grid-wrapper container">	
+	<div class="grid-wrapper container min-vh-100">	
 		<div class="gb-25 sidebar">
 				
 				<h3><span>{info_title}</span></h3>{info_content}<br /><br />{online_content}

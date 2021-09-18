@@ -29,8 +29,8 @@ else include_once(_BASEDIR."modules/challenges/languages/en.php");
 $chalquery = dbquery("SELECT chal.*, "._PENNAMEFIELD." as penname FROM ".TABLEPREFIX."fanfiction_challenges as chal, "._AUTHORTABLE." WHERE "._UIDFIELD." = chal.uid ORDER BY chal.responses DESC LIMIT 10");
 if(dbnumrows($chalquery) > 0) {
 	$count = 0;
-	if(file_exists("./$skindir/challenges.tpl")) $challenges = new TemplatePower("./$skindir/challenges.tpl");
-	else $challenges = new TemplatePower("./"._BASEDIR."modules/challenges/default_tpls/challenges.tpl");
+	if(file_exists("$skindir/challenges.tpl")) $challenges = new TemplatePower("$skindir/challenges.tpl");
+	else $challenges = new TemplatePower(_BASEDIR."modules/challenges/default_tpls/challenges.tpl");
 	$challenges->prepare( );
 	while($challenge = dbassoc($chalquery)) {
 		$challenges->newBlock("challenge");

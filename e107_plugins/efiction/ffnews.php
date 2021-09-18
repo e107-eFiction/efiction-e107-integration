@@ -55,9 +55,9 @@ if($nid) {
 	}
 	$newsquery = dbquery("SELECT n.*, UNIX_TIMESTAMP(n.time) as date FROM ".TABLEPREFIX."fanfiction_news as n WHERE n.nid = '$nid' LIMIT 1");
 	$stories = dbassoc($newsquery);
-	if(file_exists("./$skindir/newsbox.tpl"))
-		$news = new TemplatePower( "./$skindir/newsbox.tpl" );
-	else $news = new TemplatePower( "./default_tpls/newsbox.tpl" );
+	if(file_exists("$skindir/newsbox.tpl"))
+		$news = new TemplatePower( "$skindir/newsbox.tpl" );
+	else $news = new TemplatePower( BASEDIR."default_tpls/newsbox.tpl" );
 	$news->prepare( );	
 	//create a new number_row block
 	$news->newBlock("newsbox");
@@ -115,9 +115,9 @@ if($nid) {
 }
 else {
 	$output .= "<div id=\"pagetitle\">"._NEWS."</div>";
-	if(file_exists("./$skindir/newsbox.tpl"))
-		$news = new TemplatePower( "./$skindir/newsbox.tpl" );
-	else $news = new TemplatePower( "./default_tpls/newsbox.tpl" );
+	if(file_exists("$skindir/newsbox.tpl"))
+		$news = new TemplatePower( _BASEDIR."$skindir/newsbox.tpl" );
+	else $news = new TemplatePower(_BASEDIR."default_tpls/newsbox.tpl" );
 	$news->prepare( );
 	$cquery = dbquery("SELECT count(nid) FROM ".TABLEPREFIX."fanfiction_news");
 	list($count) = dbrow($cquery);

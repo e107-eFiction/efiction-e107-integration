@@ -34,8 +34,8 @@ if(!empty($_POST['submit']) && $current == "login") {
 //make a new TemplatePower object
 if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/default.tpl" );
 else $tpl = new TemplatePower(_BASEDIR."default_tpls/default.tpl");
-if(file_exists("$skindir/listings.tpl")) $tpl->assignInclude( "listings", "./$skindir/listings.tpl" );
-else $tpl->assignInclude( "listings", "./default_tpls/listings.tpl" );
+if(file_exists("$skindir/listings.tpl")) $tpl->assignInclude( "listings", "$skindir/listings.tpl" );
+else $tpl->assignInclude( "listings",_BASEDIR."default_tpls/listings.tpl" );
 include(_BASEDIR."includes/pagesetup.php");
 
 if($action) $current = $action;
@@ -63,7 +63,7 @@ else if(!empty($action)) {
         if($action == "lostpassword") e107::redirect(SITEURL."fpw.php");
         
 		if($panel['panel_url'] && file_exists(_BASEDIR.$panel['panel_url'])) require_once(_BASEDIR.$panel['panel_url']);
-		else if(file_exists("user/{$action}.php")) require_once("user/{$action}.php");
+		else if(file_exists(_BASEDIR."user/{$action}.php")) require_once(_BASEDIR."user/{$action}.php");
 		else $output = write_error(_ERROR);
 	}
 	else $output .= write_error(_ERROR);

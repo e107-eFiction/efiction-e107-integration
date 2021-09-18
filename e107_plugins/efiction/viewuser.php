@@ -31,22 +31,24 @@ include ("header.php");
 if(file_exists("$skindir/user.tpl")) $tpl = new TemplatePower( "$skindir/user.tpl" );
 else $tpl = new TemplatePower(_BASEDIR."default_tpls/user.tpl");
 if(file_exists("$skindir/listings.tpl")) $tpl->assignInclude( "listings", "./$skindir/listings.tpl" );
-else $tpl->assignInclude( "listings", "./default_tpls/listings.tpl" );
-$tpl->assignInclude( "header", "./$skindir/header.tpl" );
-$tpl->assignInclude( "footer", "./$skindir/footer.tpl" );
+else $tpl->assignInclude( "listings",_BASEDIR."default_tpls/listings.tpl" );
+$tpl->assignInclude( "header", "$skindir/header.tpl" );
+$tpl->assignInclude( "footer", "$skindir/footer.tpl" );
 if(file_exists("$skindir/profile.tpl")) $tpl->assignInclude("profile", "$skindir/profile.tpl");
-else $tpl->assignInclude("profile", "./default_tpls/profile.tpl");
+else $tpl->assignInclude("profile", _BASEDIR."default_tpls/profile.tpl");
 include(_BASEDIR."includes/pagesetup.php");
 // If uid isn't a number kill the script with an error message.  The only way this happens is a hacker.
 if(empty($uid)) {
 	if(!isMEMBER) accessDenied( );
 	else $uid = USERUID;
-}
-if($displayprofile) include("user/profile.php");
+} 
+
+if($displayprofile) include(_BASEDIR."user/profile.php");  
 else if(isADMIN && uLEVEL < 3) {
 	$result2 = dbquery("SELECT * FROM "._AUTHORTABLE." LEFT JOIN ".TABLEPREFIX."fanfiction_authorprefs as ap ON ap.uid = "._UIDFIELD." WHERE "._UIDFIELD." = '$uid' LIMIT 1");
 	$userinfo = dbassoc($result2);
-	$adminopts = "<div class=\"adminoptions\"><span class='label'>"._ADMINOPTIONS.":</span> ".(isset($userinfo['validated']) && $userinfo['validated'] ? "[<a href=\"admin.php?action=members&amp;revoke=$uid\" class=\"vuadmin\">"._REVOKEVAL."</a>] " : "[<a href=\"admin.php?action=members&amp;validate=$uid\" class=\"vuadmin\">"._VALIDATE."</a>] ")."[<a href=\"member.php?action=editbio&amp;uid=$uid\" class=\"vuadmin\">"._EDIT."</a>] [<a href=\"admin.php?action=members&amp;delete=$uid\" class=\"vuadmin\">"._DELETE."</a>]";
+	$adminopts = "<div class=\"adminoptions\"><span class='label'>"._ADMINOPTIONS.":</span> ".(isset($userinfo['validated']) && $userinfo['validated'] ? "[<a href=\"admin.php?action=members&amp;revoke=$uid\" class=\"vuadmin\">"._REVOKEVAL."</a>] " : "[<a href=\"admin.php?action=members&amp;validate=$uid\" class=\"vuadmin\">"._VALIDATE."</a>] ")
+    ."[<a href=\"member.php?action=editbio&amp;uid=$uid\" class=\"vuadmin\">"._EDIT."</a>] [<a href=\"admin.php?action=members&amp;delete=$uid\" class=\"vuadmin\">"._DELETE."</a>]";
 	$adminopts .= " [<a href=\"admin.php?action=members&amp;".($userinfo['level'] < 0 ? "unlock=".$userinfo['uid']."\" class=\"vuadmin\">"._UNLOCKMEM : "lock=".$userinfo['uid']."\" class=\"vuadmin\">"._LOCKMEM)."</a>]";
 	$adminopts .= " [<a href=\"admin.php?action=admins&amp;".(isset($userinfo['level']) && $userinfo['level'] > 0 ? "revoke=$uid\" class=\"vuadmin\">"._REVOKEADMIN."</a>] [<a href=\"admin.php?action=admins&amp;do=edit&amp;uid=$uid\" class=\"vuadmin\">"._EDITADMIN : "do=new&amp;uid=$uid\" class=\"vuadmin\">"._MAKEADMIN)."</a>]</div>";
 	$tpl->assign("adminoptions", $adminopts);
@@ -57,19 +59,20 @@ $infoquery = dbquery("SELECT "._PENNAMEFIELD." as penname FROM "._AUTHORTABLE." 
 list($penname) = dbrow($infoquery);
 $tpl->assign("pagetitle", "<div id='pagetitle'>$penname</div>");
 $panelquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE ".($action ? "panel_name = '$action' AND (panel_type = 'P' OR panel_type = 'F')" : "panel_type = 'P' AND panel_hidden = 0 ORDER BY panel_order ASC")." LIMIT 1");
+ 
 if($panelquery) {
-	$panel = dbassoc($panelquery);
+	$panel = dbassoc($panelquery);   
 	if(!empty($panel['panel_url']) && file_exists(_BASEDIR.$panel['panel_url'])) include(_BASEDIR.$panel['panel_url']);
-	else if(file_exists("user/".$panel['panel_name'].".php")) include("user/".$panel['panel_name'].".php");
-	else $output .= write_error(_ERROR);
+	else if(file_exists(_BASEDIR."user/".$panel['panel_name'].".php")) include(_BASEDIR."user/".$panel['panel_name'].".php");
+	else $output .= write_error("(1)"._ERROR);
 }
-else if($action) $output .= write_error(_ERROR);
+else if($action) $output .= write_error("(2)"._ERROR);
 
 $tpl->gotoBlock("_ROOT");
 $panelquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_hidden != '1' AND panel_level = '0' AND (panel_type = 'P'".($favorites ? " OR panel_type = 'F'" : "").") ORDER BY panel_type DESC, panel_order ASC, panel_title ASC");
 $numtabs = dbnumrows($panelquery);
 $tabwidth = floor(100 / $numtabs);
-if(!$panelquery) $output .= write_error(_ERROR);
+if(!$panelquery) $output .= write_error("(3)"._ERROR);
 
 // Special tab counts
 $codequery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'userTabs'");

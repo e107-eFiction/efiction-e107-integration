@@ -37,9 +37,11 @@ CREATE TABLE `fanfiction_authors` (
  `date` int(11) NOT NULL default '0',
  `admincreated` int(11) NOT NULL default '0',
  `password` varchar(40) NOT NULL default '0',
- PRIMARY KEY (`uid`),
- KEY `penname` (`penname`),
- KEY `admincreated` (`admincreated`)
+ `user_id` int(11) NOT NULL,
+  PRIMARY KEY  (`uid`),
+  KEY `penname` (`penname`),
+  KEY `admincreated` (`admincreated`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB;
 
 -- --------------------------------------------------------

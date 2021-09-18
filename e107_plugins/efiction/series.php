@@ -29,10 +29,10 @@ include ("header.php");
 //make a new TemplatePower object
 if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/default.tpl" );
 else $tpl = new TemplatePower(_BASEDIR."default_tpls/default.tpl");
-if(file_exists("$skindir/listings.tpl")) $tpl->assignInclude( "listings", "./$skindir/listings.tpl" );
-else $tpl->assignInclude( "listings", "./default_tpls/listings.tpl" );
-$tpl->assignInclude( "header", "./$skindir/header.tpl" );
-$tpl->assignInclude( "footer", "./$skindir/footer.tpl" );
+if(file_exists("$skindir/listings.tpl")) $tpl->assignInclude( "listings", "$skindir/listings.tpl" );
+else $tpl->assignInclude( "listings",_BASEDIR."default_tpls/listings.tpl" );
+$tpl->assignInclude( "header", "$skindir/header.tpl" );
+$tpl->assignInclude( "footer", "$skindir/footer.tpl" );
 
 include(_BASEDIR."includes/pagesetup.php");
 $seriesid = isset($_GET['seriesid']) && isNumber($_GET['seriesid']) ? $_GET['seriesid'] : false;

@@ -29,9 +29,9 @@ if($_GET['action'] == "newstory" || $_GET['action'] == "editstory") $current = "
 
 include ("header.php");
 
-$tpl = new TemplatePower( file_exists("$skindir/default.tpl") ?  "$skindir/default.tpl" : "default_tpls/default.tpl");
-$tpl->assignInclude( "header", "./$skindir/header.tpl" );
-$tpl->assignInclude( "footer", "./$skindir/footer.tpl" );
+$tpl = new TemplatePower( file_exists("$skindir/default.tpl") ?  "$skindir/default.tpl" : _BASEDIR."default_tpls/default.tpl");
+$tpl->assignInclude( "header", "$skindir/header.tpl" );
+$tpl->assignInclude( "footer", "$skindir/footer.tpl" );
 
 include(_BASEDIR."includes/pagesetup.php");
 include(_BASEDIR."includes/storyform.php");
@@ -86,7 +86,7 @@ function preview_story($stories) {
 		if(isset($_GET['textsize'])) $textsize = $_GET['textsize'];
 		else $textsize = 0;
 		
-		if(file_exists("./$skindir/viewstory.tpl")) $tpl = new TemplatePower("./$skindir/viewstory.tpl");
+		if(file_exists("$skindir/viewstory.tpl")) $tpl = new TemplatePower("$skindir/viewstory.tpl");
 		else $tpl = new TemplatePower(_BASEDIR."default_tpls/viewstory.tpl");
 		$tpl->prepare( );			
 		include(_BASEDIR."includes/storyblock.php");

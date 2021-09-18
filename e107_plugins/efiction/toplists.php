@@ -26,10 +26,10 @@ include ("header.php");
 
 if(file_exists("$skindir/browse.tpl")) $tpl = new TemplatePower( "$skindir/browse.tpl" );
 else $tpl = new TemplatePower(_BASEDIR."default_tpls/browse.tpl");
-if(file_exists("$skindir/listings.tpl")) $tpl->assignInclude("listings", "./$skindir/listings.tpl");
-else $tpl->assignInclude( "listings", "./default_tpls/listings.tpl" );
-$tpl->assignInclude( "header", "./$skindir/header.tpl" );
-$tpl->assignInclude( "footer", "./$skindir/footer.tpl" );
+if(file_exists("$skindir/listings.tpl")) $tpl->assignInclude("listings", "$skindir/listings.tpl");
+else $tpl->assignInclude( "listings",_BASEDIR."default_tpls/listings.tpl" );
+$tpl->assignInclude( "header", "$skindir/header.tpl" );
+$tpl->assignInclude( "footer", "$skindir/footer.tpl" );
 
 $list = isset($_GET['list']) ? $_GET['list'] : false;
 include(_BASEDIR."includes/pagesetup.php");

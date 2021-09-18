@@ -76,10 +76,10 @@ class efiction_url // plugin-folder + '_url'
 		);
 
 		$config['series'] = array(
-            'alias'         => 'manageseries.php',
+            'alias'         => 'series.php',
 			'regex'			=> '^{alias}\/?([\?].*)?\/?$', 
 			'sef'			=> '{alias}', 
-			'redirect'		=> '{e_PLUGIN}efiction/manageseries.php$1',  	 
+			'redirect'		=> '{e_PLUGIN}efiction/series.php$1',  	 
 		);
 
 		$config['stories'] = array(
@@ -87,7 +87,14 @@ class efiction_url // plugin-folder + '_url'
 			'regex'			=> '^{alias}\/?([\?].*)?\/?$', 
 			'sef'			=> '{alias}', 
 			'redirect'		=> '{e_PLUGIN}efiction/stories.php$1', 	 		 
-		);  
+		); 
+        
+		$config['rules'] = array(
+            'alias'         => 'submission.php',
+			'regex'			=> '^{alias}', 
+			'sef'			=> '{alias}', 
+			'redirect'		=> '{e_PLUGIN}efiction/viewpage.php?page=rules', 	 		 
+		);           
 
 		$config['toplists'] = array(
             'alias'         => 'toplists.php',

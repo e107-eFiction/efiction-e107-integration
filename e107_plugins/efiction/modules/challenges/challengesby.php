@@ -37,7 +37,7 @@ if($numchal) {
 	$infoquery = dbquery("SELECT "._PENNAMEFIELD." as penname FROM "._AUTHORTABLE." WHERE "._UIDFIELD." = '$uid' LIMIT 1");
 	list($penname) = dbrow($infoquery);
 	$output .= "<div class='sectionheader'>"._CHALLENGESBY." $penname</div>";
-	if(file_exists("./$skindir/challenges.tpl")) $challenges = new TemplatePower("./$skindir/challenges.tpl");
+	if(file_exists("$skindir/challenges.tpl")) $challenges = new TemplatePower("$skindir/challenges.tpl");
 	else $challenges = new TemplatePower(_BASEDIR."modules/challenges/default_tpls/challenges.tpl");
 	$challenges->prepare( );
 	$chalquery = dbquery("SELECT chal.*, "._PENNAMEFIELD." as penname FROM ".TABLEPREFIX."fanfiction_challenges as chal, "._AUTHORTABLE." WHERE "._UIDFIELD." = chal.uid AND chal.uid = '$uid' LIMIT $offset, $itemsperpage");
