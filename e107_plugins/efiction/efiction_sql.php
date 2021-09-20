@@ -5,19 +5,19 @@
 -- 
 
 CREATE TABLE `fanfiction_authorprefs` (
-  `uid` int(11) NOT NULL default '0',
-  `newreviews` tinyint(1) NOT NULL default '0',
-  `newrespond` tinyint(1) NOT NULL default '0',
-  `ageconsent` tinyint(1) NOT NULL default '0',
-  `alertson` tinyint(1) NOT NULL default '0',
-  `tinyMCE` tinyint(1) NOT NULL default '0',
-  `sortby` tinyint(1) NOT NULL default '0',
-  `storyindex` tinyint(1) NOT NULL default '0',
-  `validated` tinyint(1) NOT NULL default '0',
-  `categories` varchar(200) NOT NULL default '0',
-  `contact` tinyint(1) NOT NULL default '0',
-  `stories` int(11) NOT NULL default '0',
-  PRIMARY KEY (`uid`)
+ `uid` int(11) NOT NULL default '0',
+ `newreviews` tinyint(1) NOT NULL default '0',
+ `newrespond` tinyint(1) NOT NULL default '0',
+ `ageconsent` tinyint(1) NOT NULL default '0',
+ `alertson` tinyint(1) NOT NULL default '0',
+ `tinyMCE` tinyint(1) NOT NULL default '0',
+ `sortby` tinyint(1) NOT NULL default '0',
+ `storyindex` tinyint(1) NOT NULL default '0',
+ `validated` tinyint(1) NOT NULL default '0',
+ `categories` varchar(200) NOT NULL default '0',
+ `contact` tinyint(1) NOT NULL default '0',
+ `stories` int(11) NOT NULL default '0',
+ PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
@@ -35,13 +35,13 @@ CREATE TABLE `fanfiction_authors` (
  `bio` text NOT NULL,
  `image` varchar(200) NOT NULL default '',
  `date` int(11) NOT NULL default '0',
- `admincreated` int(11) NOT NULL default '0',
+ `admincreated` TINYINT(1) NOT NULL default '0',
  `password` varchar(40) NOT NULL default '0',
  `user_id` int(11) NOT NULL,
-  PRIMARY KEY  (`uid`),
-  KEY `penname` (`penname`),
-  KEY `admincreated` (`admincreated`),
-  KEY `user_id` (`user_id`)
+ PRIMARY KEY (`uid`),
+ KEY `penname` (`penname`),
+ KEY `admincreated` (`admincreated`),
+ KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
@@ -274,22 +274,7 @@ CREATE TABLE `fanfiction_modules` (
  KEY `name_version` (`name`,`version`)
 ) ENGINE=InnoDB;
 
--- --------------------------------------------------------
-
--- 
--- Table structure for table `fanfiction_news`
--- 
-
-CREATE TABLE `fanfiction_news` (
- `nid` int(11) NOT NULL auto_increment,
- `author` varchar(60) NOT NULL default '',
- `title` varchar(255) NOT NULL default '',
- `story` text NOT NULL,
- `time` int(11) NOT NULL default '0',
- `comments` int(11) NOT NULL default '0',
- PRIMARY KEY (`nid`)
-) ENGINE=InnoDB;
-
+ 
 -- --------------------------------------------------------
 
 -- 
@@ -336,9 +321,9 @@ CREATE TABLE `fanfiction_panels` (
 CREATE TABLE `fanfiction_ratings` (
  `rid` int(11) NOT NULL auto_increment,
  `rating` varchar(60) NOT NULL default '',
- `ratingwarning` int(1) NOT NULL default '0',
- `ageconsent` 	 int(1) NOT NULL default '0',
- `rusersonly` 	 int(1) NOT NULL default '0',
+ `ratingwarning` tinyint(1) NOT NULL default '0',
+ `ageconsent` 	 tinyint(1) NOT NULL default '0',
+ `rusersonly` 	 tinyint(1) NOT NULL default '0',
  `warningtext` text NOT NULL,
  PRIMARY KEY (`rid`),
  KEY `rating` (`rating`)
@@ -392,8 +377,10 @@ CREATE TABLE `fanfiction_series` (
  `challenges` varchar(200) NOT NULL default '',
  `genres` varchar(250) NOT NULL default '',
  PRIMARY KEY (`seriesid`),
- KEY `catid` (`catid`),
- KEY `owner` (`uid`,`title`)
+  KEY `catid` (`catid`),
+  KEY `characters` (`characters`),
+  KEY `classes` (`classes`),
+  KEY `owner` (`uid`,`title`)
 ) ENGINE=InnoDB;
 
 -- --------------------------------------------------------

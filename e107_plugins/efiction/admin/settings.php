@@ -80,7 +80,7 @@ if(isset($_POST['submit'])) {
 	if($sect == "main") {
 		if(!preg_match("!^[a-z0-9_]{3,30}$!i", $_POST['newsitekey'])) $output .= write_error(_BADSITEKEY);
 		else {
-			$oldsitekey = $sitekey;
+			$oldsitekey = $sitekey;  
 			$sitekey = descript($_POST['newsitekey']);
 			$sitename = escapestring(descript(strip_tags($_POST['newsitename'])));
 			$slogan = escapestring(descript(strip_tags($_POST['newslogan'])));
@@ -96,7 +96,9 @@ if(isset($_POST['submit'])) {
 			if(empty($sitekey)) $output .= write_message(_SITEKEYREQUIRED);
 			else {
 				if($sitekey != $oldsitekey) $output .= write_message(_SITEKEYCHANGED);
-				$result = dbquery("UPDATE ".MPREFIX."fanfiction_settings SET sitekey = '$sitekey', sitename = '$sitename', slogan = '$slogan', url = '$url', MPREFIX = '$MPREFIX', siteemail = '$siteemail', skin = '$skin', language = '$language' WHERE sitekey = '$oldsitekey'");
+                echo "UPDATE ".MPREFIX."fanfiction_settings SET sitekey = '$sitekey', sitename = '$sitename', slogan = '$slogan', url = '$url', tableprefix = '$MPREFIX', siteemail = '$siteemail', skin = '$skin', language = '$language' WHERE sitekey = '$oldsitekey'"; 
+                
+				$result = dbquery("UPDATE ".MPREFIX."fanfiction_settings SET sitekey = '$sitekey', sitename = '$sitename', slogan = '$slogan', url = '$url', tableprefix = '$MPREFIX', siteemail = '$siteemail', skin = '$skin', language = '$language' WHERE sitekey = '$oldsitekey'");
 			}
 		}
 	}
