@@ -31,9 +31,7 @@ if($confirm == "yes") {
 	// For the slow-pokes who haven't updated to 3.1
 	if($version[0] == 3 && $version[1] == 0 ) {
 		list($field) = dbrow(dbquery("SELECT field_id FROM ".TABLEPREFIX."fanfiction_authorfields WHERE field_name = 'betareader'"));
-		dbquery("UPDATE ".TABLEPREFIX."fanfiction_authorinfo SET info = '"._YES."' WHERE field = '$field' AND info = '1'");
-		dbquery("UPDATE ".TABLEPREFIX."fanfiction_authorinfo SET info = '"._NO."' WHERE field = '$field' AND info != '"._YES."'");
-		dbquery("alter table ".TABLEPREFIX."fanfiction_authorinfo add primary key(uid,field);");
+ 
 		dbquery("alter table ".TABLEPREFIX."fanfiction_blocks drop index block_name;");
 		dbquery("alter table ".TABLEPREFIX."fanfiction_blocks add unique index block_name (block_name);");
 		dbquery("alter table ".TABLEPREFIX."fanfiction_categories drop index category;");

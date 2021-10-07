@@ -17,7 +17,6 @@ class efiction_event // plugin-folder + '_event'
 
 	/**
 	 * Configure functions/methods to run when specific e107 events are triggered.
-	 * For a list of events, please visit: http://e107.org/developer-manual/classes-and-methods#events
 	 * Developers can trigger their own events using: e107::getEvent()->trigger('plugin_event',$array);
 	 * Where 'plugin' is the folder of their plugin and 'event' is a unique name of the event.
 	 * $array is data which is sent to the triggered function. eg. myfunction($array) in the example below.
@@ -30,12 +29,12 @@ class efiction_event // plugin-folder + '_event'
 		$event = array();
 
 		$event[] = array(
-			'name'	=> "login", // when this is triggered... (see http://e107.org/developer-manual/classes-and-methods#events)
+			'name'	=> "login", 
 			'function'	=> "create_author_account", // ..run this function (see below).
 		);
         
 		$event[] = array(
-			'name'	=> "user_profile_edit", // when this is triggered... (see http://e107.org/developer-manual/classes-and-methods#events)
+			'name'	=> "user_profile_edit",  
 			'function'	=> "create_author_account", // ..run this function (see below).
 		);        
  
@@ -44,7 +43,7 @@ class efiction_event // plugin-folder + '_event'
         
 /*
 		$event[] = array(
-			'name'	=> "user_comment_deleted", // when this is triggered... (see http://e107.org/developer-manual/classes-and-methods#events)
+			'name'	=> "user_comment_deleted",  
 			'function'	=> "commentCountDown", // ..run this function (see below).
 		);
 */

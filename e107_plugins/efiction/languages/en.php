@@ -161,7 +161,7 @@ define('_SITEADMINS', 'Site Admins');
 
 // News
 define('_COMMENTS', 'Comments');
-define('_NEWS', 'News');
+ 
 
 // Reviews
 define('_ALREADYRESPONDED', 'You have already responded to that review!');

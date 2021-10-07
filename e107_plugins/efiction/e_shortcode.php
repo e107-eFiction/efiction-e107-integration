@@ -47,7 +47,6 @@ class efiction_shortcodes extends e_shortcode
     /*
      Not needed with e107 menus and tablerender 
      {EFICTION_BLOCK_CONTENT: key=info}
-     {EFICTION_BLOCK_CONTENT: key=news}
      {EFICTION_BLOCK_CONTENT: key=categories}
      {EFICTION_BLOCK_CONTENT: key=recent}
      {EFICTION_BLOCK_CONTENT: key=random}

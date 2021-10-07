@@ -53,18 +53,7 @@ $blocks["random"]["status"] = '1';
 /* RECENT STORIES BLOCK
 		By default, the recent stories block is off.*/
 $blocks["recent"]["status"] = '1';
-
-
-/* SKIN CHANGER
-		Status is set to display on all pages. */
-$blocks["skinchange"]["status"] = '1';
-
-
-/* NEWS BLOCK
-		Status is set to display on just the index page. */
-$blocks["news"]["status"] = '1';
-
-
+ 
 /* NEW STORY INDICATOR
 		Styled: Plain text surrounded with the superscript HTML tag with font-size set to extra small and italic.*/
 $new = "<sup style='font-size:small;font-style:bold'>New!</sup>";

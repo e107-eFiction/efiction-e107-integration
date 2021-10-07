@@ -25,7 +25,6 @@ $current = "update";
 
 include("header.php");
 
-$blocks['news']['status'] = 0;
 $blocks['info']['status'] = 0;
 
 //make a new TemplatePower object
@@ -54,10 +53,6 @@ if($oldVersion[0] == 3 && ($oldVersion[1] < 5 || $oldVersion[2] < 3)) {
 if($confirm == "yes") {
 	// For the slow-pokes who haven't updated to 3.1
 	if($oldVersion[1] == 0 ) {
-		list($field) = dbrow(dbquery("SELECT field_id FROM ".TABLEPREFIX."fanfiction_authorfields WHERE field_name = 'betareader'"));
-		dbquery("UPDATE ".TABLEPREFIX."fanfiction_authorinfo SET info = '"._YES."' WHERE field = '$field' AND info = '1'");
-		dbquery("UPDATE ".TABLEPREFIX."fanfiction_authorinfo SET info = '"._NO."' WHERE field = '$field' AND info != '"._YES."'");
-		dbquery("alter table ".TABLEPREFIX."fanfiction_authorinfo add primary key(uid,field);");
 		dbquery("alter table ".TABLEPREFIX."fanfiction_blocks drop index block_name;");
 		dbquery("alter table ".TABLEPREFIX."fanfiction_blocks add unique index block_name (block_name);");
 		dbquery("alter table ".TABLEPREFIX."fanfiction_categories drop index category;");
@@ -111,7 +106,6 @@ CREATE TABLE `".TABLEPREFIX."fanfiction_stats` (
 ) ENGINE=MyISAM");
 		dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_stats(`sitekey`) VALUES('SITEKEY')");
 		dbquery("ALTER TABLE `".TABLEPREFIX."fanfiction_inseries` DROP `updated`");
-		dbquery("ALTER TABLE `".TABLEPREFIX."fanfiction_news` ADD `comments` INT NOT NULL DEFAULT '0'");
 		dbquery("ALTER TABLE `".TABLEPREFIX."fanfiction_series` ADD `numstories` INT NOT NULL DEFAULT '0'");
 		dbquery("ALTER TABLE `".TABLEPREFIX."fanfiction_pagelinks` ADD `link_key` CHAR( 1 ) NULL AFTER `link_text`");
 		if(!isset($allowseries)) dbquery("ALTER TABLE `".$settingsprefix."fanfiction_settings` ADD `allowseries` TINYINT NOT NULL DEFAULT '2' AFTER `roundrobins`");

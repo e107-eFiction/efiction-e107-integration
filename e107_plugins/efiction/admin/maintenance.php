@@ -26,9 +26,7 @@ if(!defined("_CHARSET")) exit( );
 
 $maint = isset($_GET['maint']) ? $_GET['maint'] : false;
 $output .= "<div id='pagetitle'>"._ARCHIVEMAINT."</div>";
-if($maint == "update") {
-	if(file_exists("admin/update.php")) include_once("admin/update.php");
-}
+ 
 if($maint == "reviews") {
 	dbquery("UPDATE ".TABLEPREFIX."fanfiction_stories SET rating = '0', reviews = '0'"); // Set them all to 0 before we re-insert.
 	$stories = dbquery("SELECT AVG(rating) as average, item FROM ".TABLEPREFIX."fanfiction_reviews WHERE type = 'ST' AND rating != '-1' GROUP BY item");
@@ -184,19 +182,7 @@ else if($maint == "panels") {
 	}
 	$output .= write_message(_ACTIONSUCCESSFUL);
 }
-else if($maint == "optimize") {
-	$alltables = dbquery("SHOW TABLES");
-
-	while ($table = dbassoc($alltables)) {
-		foreach ($table as $db => $tablename) {
-			dbquery("OPTIMIZE TABLE `".$tablename."`");
-		}
-	}
- 	if($logging) dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_log (`log_action`, `log_uid`, `log_ip`, `log_type`) VALUES('".escapestring(sprintf(_LOG_OPTIMIZE, USERPENNAME, USERUID))."', '".USERUID."', INET_ATON('".$_SERVER['REMOTE_ADDR']."'), 'AM')");
-	$output .= write_message(_ACTIONSUCCESSFUL);
-}
-else if($maint == "backup") {
-}
+ 
 else {
 	$output .= "
 <ul>
@@ -206,10 +192,6 @@ else {
 	<li><a href='admin.php?action=maintenance&amp;maint=categories2'>"._CATORDER."</a> <A HREF=\"#\" class=\"pophelp\">[?]<span>"._HELP_CATORDER."</span></A></li>
 	<li><a href='admin.php?action=maintenance&amp;maint=stats'>"._STATS."</a> <A HREF=\"#\" class=\"pophelp\">[?]<span>"._HELP_STATS."</span></A></li>
 	<li><a href='admin.php?action=maintenance&amp;maint=panels'>"._PANELORDER."</a> <A HREF=\"#\" class=\"pophelp\">[?]<span>"._HELP_PANELORDER."</span></A></li>
-	<li><a href='admin.php?action=maintenance&amp;maint=optimize'>"._OPTIMIZE."</a> <A HREF=\"#\" class=\"pophelp\">[?]<span>"._HELP_OPTIMIZE."</span></A></li>
-	<li><a href='admin/backup.php' target='_new'>"._BACKUP."</a> <A HREF=\"#\" class=\"pophelp\">[?]<span>"._HELP_BACKUP."</span></A></li>
-	<li><a href='admin/backup_utf8.php' target='_new'>"._BACKUP."</a> (UTF-8) <A HREF=\"#\" class=\"pophelp\">[?]<span>"._HELP_BACKUP."</span></A></li>
-	<li><a href='admin.php?action=maintenance&amp;maint=update'>"._UPDATE."</a>  <A HREF=\"#\" class=\"pophelp\">[?]<span>"._HELP_UPDATE."</span></A></li>
 </ul>";
 }
 ?>

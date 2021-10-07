@@ -1,11 +1,20 @@
 <?php 
 if(!defined("_CHARSET")) exit( );
-list($field_id, $field_title) = dbrow(dbquery("SELECT field_id, field_title FROM ".TABLEPREFIX."fanfiction_authorfields WHERE field_name = 'betareader'"));
+
+ 
 $listOpts .= "<option value=\"authors.php?".($let ? "let=$let&amp;" : "")."list=beta\"".($list == "beta" ? " selected" : "").">$field_title</option>";
-if($list == "beta") {
-	$countquery = "SELECT COUNT(DISTINCT ai.uid) FROM ".TABLEPREFIX."fanfiction_authorinfo as ai, "._AUTHORTABLE." WHERE ai.field = '$field_id' AND ai.info = '"._YES."' AND "._UIDFIELD." = ai.uid".(isset($letter) ? " AND $letter" : "");
-	$authorquery = "SELECT ap.stories as stories, "._PENNAMEFIELD." as penname, "._UIDFIELD." as uid FROM ".TABLEPREFIX."fanfiction_authorinfo as ai, "._AUTHORTABLE." LEFT JOIN ".TABLEPREFIX."fanfiction_authorprefs AS ap ON "._UIDFIELD." = ap.uid WHERE ai.field = '$field_id' AND ai.info = '"._YES."' AND "._UIDFIELD." = ai.uid ".(isset($letter) ? " AND $letter" : "")." GROUP BY "._UIDFIELD;
-	$pagetitle .= $field_title;
+if($list == "beta") { 
+
+	$countquery = "SELECT COUNT(DISTINCT ai.uid) FROM ".TABLEPREFIX."user_extended as ai, 
+    ".TABLEPREFIX."fanfiction_authors AS author WHERE ai.user_plugin_efiction_betareader = 'LAN_YES' AND author.uid = ai.uid".(isset($letter) ? " AND $letter" : "");
+    
+	$authorquery = "SELECT ap.stories as stories, 
+    author.penname  as penname, 
+    author.uid as  user_extended_id FROM ".TABLEPREFIX."user_extended as ai, 
+    ".TABLEPREFIX."fanfiction_authors AS author LEFT JOIN ".TABLEPREFIX."fanfiction_authorprefs AS ap ON "._UIDFIELD." = ap.uid 
+    WHERE ai.user_plugin_efiction_betareader = 'LAN_YES'  AND author.uid = ai.user_extended_id ".(isset($letter) ? " AND $letter" : "")." GROUP BY "._UIDFIELD;
+ 
+    $pagetitle .= $field_title;
 }
 
 ?>

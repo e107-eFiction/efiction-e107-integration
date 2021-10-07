@@ -114,7 +114,6 @@ if (!class_exists('efiction_setup')) {
 							'allowed_tags' => '<b><i><u><center><hr><p><br /><br><blockquote><ol><ul><li><img><strong><em>',
 							'favorites' => 0,
 							'multiplecats' =>0,
-							'newscomments' =>0 ,
 							'logging' =>0 ,
 							'maintenance' =>0 ,
 							'debug' =>0 ,
@@ -216,9 +215,7 @@ if (!class_exists('efiction_setup')) {
 							array("favse","Favorite Series","","0","0","1","U"),
 							array("favau","Favorite Authors","","0","0","1","U"),
 							array("favlist","{author}\'s Favorites","viewuser.php?action=manfavs","0","5","0","F"),
-							array("skins", "Skins", "", "3", "6", "0", "A"),
 							array("maintenance", "Archive Maintenance", "", "1", "10", "0", "A"),
-							array("manual", "Admin Manual", "", "3", "6", "0", "A"),
 							array('modules', 'Modules', '', 1, "11", 0, 'A')
 						);
 
