@@ -22,7 +22,7 @@
 // ----------------------------------------------------------------------
 
 
-if(!defined("_CHARSET")) exit( );
+if(!defined("e107_INIT")) exit( );
 
 if(isset($anonchallenges)) {
 	list($penname) = dbrow(dbquery("SELECT penname FROM ".TABLEPREFIX."fanfiction_authors WHERE uid = '".$uid."' LIMIT 1"));

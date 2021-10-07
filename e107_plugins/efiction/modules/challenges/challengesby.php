@@ -20,7 +20,7 @@
 //
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
-if(!defined("_CHARSET")) exit( );
+if(!defined("e107_INIT")) exit( );
 if(!isset($anonchallenges)) accessDenied( );
 if(!isset($uid)) {
 	$uid = USERUID;
