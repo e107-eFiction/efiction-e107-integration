@@ -31,8 +31,12 @@ if (!defined('e107_INIT'))
 if(e_CURRENT_PLUGIN == "efiction") {
  define("THEME_LAYOUT", "efiction");
 }
- 
-require_once(HEADERF); 
+// Defines the character set for your language/location
+define("_CHARSET", CHARSET); 
+e107::lan("efiction");
+
+
+
 //THEME_LAYOUT is available
 
 $settings = efiction_settings::get_settings();
@@ -63,8 +67,7 @@ if(get_magic_quotes_gpc()){
 	}
 }
 
-// Defines the character set for your language/location
-define("_CHARSET", CHARSET);
+
 
 // Prevent possible XSS attacks via $_GET.
 foreach ($_GET as $v) {
@@ -75,7 +78,7 @@ foreach ($_GET as $v) {
 		preg_match('@<[\/\!]*?[^<>]*?>@si', $v) ||
 		preg_match('@<style[^>]*?>.*?</style>@siU', $v) ||
 		preg_match('@<![\s\S]*?--[ \t\n\r]*>@', $v)) {
-		include("languages/en.php"); // no language set yet, so default to English.	
+ 	
 		die (_POSSIBLEHACK);
 	}
 } 
@@ -102,10 +105,8 @@ else $words = array( );
 if(isset($_GET['action'])) $action = strip_tags($_GET['action']);
 else $action = false;
 
-if(file_exists(_BASEDIR."languages/{$language}.php")) include (_BASEDIR."languages/{$language}.php");
-else include (_BASEDIR."languages/en.php");
-
-
+require_once(HEADERF);
+ 
 include_once(_BASEDIR."includes/corefunctions.php");
 
 // Check and/or set some variables used at various points throughout the script
@@ -169,10 +170,7 @@ if(e107::getSession()->is(SITEKEY."_viewed")) $viewed = e107::getSession()->get(
 
 if(isset($_GET['ageconsent'])) e107::getSession()->set(SITEKEY."_ageconsent", 1);
 if(isset($_GET['warning'])) e107::getSession()->set(SITEKEY."_warned_{$_GET['warning']}", 1);
-
-if(file_exists("languages/{$language}.php")) require_once ("languages/{$language}.php");
-else require_once ("languages/en.php");
-
+ 
 if(USERUID) {
 	$prefs = dbquery("SELECT sortby, storyindex, tinyMCE FROM ".TABLEPREFIX."fanfiction_authorprefs WHERE uid = '".USERUID."'");
 	if(dbnumrows($prefs)) list($defaultsort, $displayindex, $tinyMCE) = dbrow($prefs);

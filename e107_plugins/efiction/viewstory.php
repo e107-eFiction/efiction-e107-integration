@@ -192,7 +192,8 @@ if($action == "printable") {
 	}	
 	$tpl->assign("archivedat", _ARCHIVEDAT." <a href=\"$url/viewstory.php?sid=$sid\">$url/viewstory.php?sid=$sid</a>");
 	$copyquery = dbquery("SELECT message_text FROM ".TABLEPREFIX."fanfiction_messages WHERE message_name = 'printercopyright' LIMIT 1");
-	list($copyright) = dbrow($copyquery);
+	list($copyright) = dbrow($copyquery); 
+    $copyright = e107::getParser()->toHtml($copyright, "BODY");
 	$tpl->assign("copyright", $copyright);
 }
 else if(($displayindex && empty($chapter)) || !empty($_GET['index'])) {
@@ -205,8 +206,8 @@ else if(($displayindex && empty($chapter)) || !empty($_GET['index'])) {
 	while($code = dbassoc($codeblocks)) {
 		eval($code['code_text']);
 	}
-	include(_BASEDIR."includes/storyblock.php");
-	$printicon = "<a href=\"viewstory.php?action=printable&amp;textsize=$textsize&amp;sid=$sid&amp;chapter=all\" target=\"_blank\"><img src='".(isset($printer) ? $printer : "images/print.gif")."' border='0' alt='"._PRINTER."'></a>";
+	include(_BASEDIR."includes/storyblock.php");  
+	$printicon = "<a href=\"viewstory.php?action=printable&amp;textsize=$textsize&amp;sid=$sid&amp;chapter=all\" target=\"_blank\"><img src='".(isset($printer) ? $printer : _BASEDIR."images/print.gif")."' border='0' alt='"._PRINTER."'></a>";
 	if($reviewsallowed && (isMEMBER || $anonreviews))
 			$reviewslink = "<a href=\"reviews.php?action=add&amp;item=$sid&amp;next=2&amptype=ST\">"._SUBMITREVIEW."</a>";
 	$tpl->assign( "reviewslink", $reviewslink );
@@ -228,7 +229,7 @@ else if(($displayindex && empty($chapter)) || !empty($_GET['index'])) {
 		$tpl->assign("chapternumber", $chap['inorder']);
 		$tpl->assign("title", "<a href=\"viewstory.php?sid=$sid&amp;chapter=".$chap['inorder']."\">".$chap['title']."</a>");
 		$tpl->assign("author", "<a href='viewuser.php?uid=".$chap['uid']."'>".$chap['penname']."</a>");
-		$tpl->assign("printicon", "<a href=\"viewstory.php?action=printable&amp;textsize=$textsize&amp;sid=$sid&amp;chapter=".$chap['inorder']."\" target=\"_blank\"><img src='".(isset($printer) ? $printer : "images/print.gif")."' border='0' alt='"._PRINTER."'></a>");
+		$tpl->assign("printicon", "<a href=\"viewstory.php?action=printable&amp;textsize=$textsize&amp;sid=$sid&amp;chapter=".$chap['inorder']."\" target=\"_blank\"><img src='".(isset($printer) ? $printer :  _BASEDIR."images/print.gif")."' border='0' alt='"._PRINTER."'></a>");
 		$tpl->assign("ratingpics", ratingpics($chap['rating']));
 		if($reviewsallowed) {
 			$tpl->assign("reviews", "<a href=\"reviews.php?type=ST&amp;item=$sid&amp;chapid=".$chap['chapid']."\">"._REVIEWS."</a>");
@@ -255,7 +256,7 @@ else {
 	$chapterinfo = dbquery("SELECT chap.*, "._PENNAMEFIELD." as penname FROM (".TABLEPREFIX."fanfiction_chapters as chap, "._AUTHORTABLE.") WHERE sid = '$sid' AND chap.uid = "._UIDFIELD." ORDER BY inorder");
 	$chapters = dbnumrows($chapterinfo);
 	if($chapters > 1) {
-		$printicon = "<img src='".(isset($printer) ? $printer : "images/print.gif")."' border='0' alt='"._PRINTER."'> <a href=\"viewstory.php?action=printable&amp;textsize=$textsize&amp;sid=$sid&amp;chapter=$chapter\" target=\"_blank\">"._CHAPTER."</a> "._OR." <a href=\"viewstory.php?action=printable&amp;textsize=$textsize&amp;sid=$sid&amp;chapter=all\" target=\"_blank\">"._STORY."</a>";
+		$printicon = "<img src='".(isset($printer) ? $printer :  _BASEDIR."images/print.gif")."' border='0' alt='"._PRINTER."'> <a href=\"viewstory.php?action=printable&amp;textsize=$textsize&amp;sid=$sid&amp;chapter=$chapter\" target=\"_blank\">"._CHAPTER."</a> "._OR." <a href=\"viewstory.php?action=printable&amp;textsize=$textsize&amp;sid=$sid&amp;chapter=all\" target=\"_blank\">"._STORY."</a>";
 		$jumpmenu .= "<form name=\"jump\" action=\"\">";
 		if($chapter > 1) 
 			$prev = "<a href=\"viewstory.php?sid=$sid&amp;".($textsize ? "textsize=$textsize&amp;" : "")."chapter=".($chapter-1)."\" class=\"prev\">"._PREVIOUS."</a> ";
@@ -307,7 +308,7 @@ else {
 		while($code = dbassoc($codeblocks)) {
 			eval($code['code_text']);
 		}
-		$printicon = "<a href=\"viewstory.php?action=printable&amp;sid=$sid&amp;textsize=$textsize&amp;chapter=1\" target=\"_blank\"><img src='".(isset($printer) ? $priner : "images/print.gif")."' border='0' alt='"._PRINTER."'></a>";
+		$printicon = "<a href=\"viewstory.php?action=printable&amp;sid=$sid&amp;textsize=$textsize&amp;chapter=1\" target=\"_blank\"><img src='".(isset($printer) ? $priner :  _BASEDIR."images/print.gif")."' border='0' alt='"._PRINTER."'></a>";
 	}
 	// if the *CHAPTER* hasn't been validated and the viewer isn't an admin or the author throw them a warning.  
 	if(!$valid && !isADMIN && USERUID != $chapterauthor && !in_array($chapterauthor, $storyinfo['coauthors'])) {

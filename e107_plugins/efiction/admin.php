@@ -38,8 +38,9 @@ include ("header.php");
 if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/default.tpl" );
 else $tpl = new TemplatePower(_BASEDIR."default_tpls/default.tpl");
 include(_BASEDIR."includes/pagesetup.php");
-if(file_exists("languages/".$language."_admin.php")) include_once("languages/".$language."_admin.php");
-else include_once("languages/en_admin.php");
+
+e107::lan('efiction', true);
+
 // end basic page setup
 
 // check that user has permissions to perform this action before going further.  Otherwise kick 'em

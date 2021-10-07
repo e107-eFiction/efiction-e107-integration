@@ -71,7 +71,7 @@ if(!defined("_CHARSET")) exit( );
 	if(count($storycodeblocks)) foreach($storycodeblocks as $c) { eval($c); } 
 	$tpl->assign("classifications", $allclasslist);
 	$seriesquery = "SELECT series.* FROM ".TABLEPREFIX."fanfiction_inseries as list, ".TABLEPREFIX."fanfiction_series as series WHERE list.sid = '".$stories['sid']."' AND series.seriesid = list.seriesid";
-	var_dump(dbquery($seriesquery));
+ 
     $seriesresult = dbquery($seriesquery);
     /*  or die(_FATALERROR."<br>Query: $seriesquery<br>Error: (".e107::getDb()->getLastErrorNumber().") ".e107::getDb()->getLastErrorText()); */
 	$serieslinks = array( );
