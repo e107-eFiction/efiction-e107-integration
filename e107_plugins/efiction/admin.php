@@ -83,7 +83,7 @@ e107::lan('efiction', true);
 			eval($code['code_text']);
 		}
 		$output .= write_message($adminnotices);
-		$output .= write_message(_RUNNINGVERSION);
+ 
 	}	
 	$tpl->assign( "output", $output );
 	//$tpl->xprintToScreen( );

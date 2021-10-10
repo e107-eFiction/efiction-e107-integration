@@ -201,7 +201,7 @@ define ("_RELEASEMESSAGE", "Hello, the admins of $sitename have opened your acco
 define ("_REVDELETE", "Authors may delete reviews");
 define ("_REVIEWSETTINGS", "Review Settings"); 
 define ("_RULES", "Rules");
-define ("_RUNNINGVERSION", "You are currently running eFiction version ".$version.".");
+ 
 define ("_SAMEWINDOW", "Same Window");
 define ("_SECURITYDELETE", "You have not deleted the install folder! Please do so immediately to prevent a security breach.");
 define ("_SELF", "member selected");
@@ -281,11 +281,11 @@ define ("_HELP_RATINGWARNING", "When this box is checked, a warning will pop-up 
 define ("_HELP_RATINGCONSENT", "If you want people to confirm they are the age of consent (either through a pop-up or within their profile) before viewing stories with this rating check here.  This can be in conjunction with the registered users only setting below or independent of it.  For instance, you may want stories for mature audiences (blood and violence) to be for all registered users but require age consent in addition for sexually explicit materials.  So the permissions options are: everyone, age-consent required, registration-required, age-consent and registration-required.");
 define ("_HELP_RATINGUSERS", "If you want only registered users to be able to view stories with this rating check this box.  This can be in conjunction with the check for age consent or not.  For instance, you may want stories for mature audiences (blood and violence) to be for all registered users but require age consent in addition for sexually explicit materials.  So the permissions options are: everyone, age-consent required, registration-required, age-consent and registration-required.");
 define ("_HELP_RATINGWARNTEXT", "Set the specific text of your warning here.  Default text for age consent and registered users will be placed in front of this warning if those options are checked.");
-define ("_HELP_SITEKEY", "Each eFiction site requires a sitekey under which the site's settings will be stored.  The sitekey also prevents data from two eFiction sites on the same domain from getting crossed.");
-define ("_HELP_SITENAME", "The name of your eFiction site.  It will appear in the title of your pages and in e-mails sent from the site.");
-define ("_HELP_SLOGAN", "Your site's slogan. It will appear in the title of your pages.");
-define ("_HELP_URL", "The URL for your website.  This url <strong>must</strong> be set to your eFiction site and not any 'main' site if such exists. It is used in emails sent from the site to form hyperlinks to pages within the site.");
-define ("_HELP_TABLEPREFIX", "By using a table prefix in conjunction with sitekeys, it is possible to run multiple instances of eFiction using one database.  This setting should be set at installation when the tables are created.");
+ 
+ 
+ 
+ 
+ 
 define ("_HELP_SITEEMAIL", "The e-mail addressed used by the site to send e-mails through the site's contact forms and various e-mail alert options.");
 define ("_HELP_SITESKIN", "The site's skin defines the look of the site.  The script comes with several default skins which you are free to modify or you can create your own.");
 define ("_HELP_LANGUAGE", "The language the site will be displayed in.  The language files are found in the languages/ folder.  You may create your own translations through these files.");

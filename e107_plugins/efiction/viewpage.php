@@ -36,8 +36,8 @@ $page = dbquery("SELECT message_title, message_text FROM ".TABLEPREFIX."fanficti
 if(dbnumrows($page)) list($title, $text) = dbrow($page);
 else $text = write_message(_ERROR);
 
-$title = e107::getParser()->toHTML($title, "TITL");
-$text = e107::getParser()->toHTML($text, "BODY");
+$title = e107::getParser()->toHTML($title, FALSE, "TITLE");
+$text = e107::getParser()->toHTML($text, FALSE, "BODY");
 
 $tpl->assign("output", "<div id='pagetitle'>$title</div>\n\n$text");
  

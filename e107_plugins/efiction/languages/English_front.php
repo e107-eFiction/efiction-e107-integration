@@ -14,7 +14,7 @@ if(!isset($action )) $action  = '';
 if(!isset($pwdsetting )) $pwdsetting  = '';
 if(!isset($imagewidth )) $imagewidth  = '';
 if(!isset($imageheight )) $imageheight = '';
-if(!isset($version)) $version  = '';
+ 
 */
 
 define('_ACTIONSUCCESSFUL', 'The action was successful.');

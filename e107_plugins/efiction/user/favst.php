@@ -50,7 +50,7 @@ if(empty($favorites)) accessDenied( );
 	}
 	if($edit && isset($_POST['submit'])) {
 		$result = dbquery("UPDATE ".TABLEPREFIX."fanfiction_favorites SET comments = '".escapestring(descript(strip_tags(replace_naughty($_POST['comments']), $allowed_tags)))."' WHERE uid = '$uid' AND item = '$edit' AND type = 'ST'");
-		if($result) $output .= write_message(_ACTIONSUCCESSFUL." "._BACK2ACCT);
+		if($result == false) $output .= write_message(_ACTIONSUCCESSFUL." "._BACK2ACCT);
 		else $output .= write_error(_ERROR);
 	}
 	if(($add || $edit) && !isset($_POST['submit'])) {
@@ -93,7 +93,7 @@ if(empty($favorites)) accessDenied( );
 				include(_BASEDIR."includes/storyblock.php");
 				if(!empty($stories['comments']) || USERUID == $uid || isADMIN) {
 				if(file_exists("$skindir/favcomment.tpl")) $cmt = new TemplatePower( "$skindir/favcomment.tpl" );
-				else $cmt = new TemplatePower( BASEDIR."default_tpls/favcomment.tpl" );
+				else $cmt = new TemplatePower(_BASEDIR."default_tpls/favcomment.tpl" );
 				$cmt->prepare( );
 				$cmt->newBlock("comment");
 				$cmt->assign("comment", $stories['comments'] ? "<div class='comments'><span class='label'>"._COMMENTS.": </span>".strip_tags($stories['comments'])."</div>" : "");

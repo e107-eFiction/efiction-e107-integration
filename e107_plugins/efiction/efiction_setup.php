@@ -87,7 +87,6 @@ if (!class_exists('efiction_setup')) {
                 if(e107::getDb()->count($table) == 0)
      			{
 					if($table == 'fanfiction_settings')  {
-						include(e_PLUGIN."efiction/version.php");
 						$insert = array(
 							'sitekey'     => SITEKEY,
 							'sitename' => $pref['sitename'] ,    //fix this
@@ -139,9 +138,6 @@ if (!class_exists('efiction_setup')) {
 							'disablepopups' => '0',
 							'agestatement' => '0',
 							'words' => '',
-							'version' => $version,
-
-
 							'_DUPLICATE_KEY_UPDATE' => 1
 							);
 						e107::getDB()->insert("fanfiction_settings", $insert);

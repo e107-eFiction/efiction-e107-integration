@@ -1,27 +1,11 @@
 <?php
  
-/*
-// General...used in many pages.
-if(!isset($allowed_tags)) $allowed_tags = '';
-if(!isset($recentdays)) $recentdays = '7';
-if(!isset($sitename )) $sitename  = '';
-if(!isset($url )) $url  = '';
-if(!isset($multiplecats )) $multiplecats  = '';
-if(!isset($minwords )) $minwords  = '';
-if(!isset($maxwords )) $maxwords  = '';
-if(!isset($action )) $action  = '';
-if(!isset($pwdsetting )) $pwdsetting  = '';
-if(!isset($imagewidth )) $imagewidth  = '';
-if(!isset($imageheight )) $imageheight = '';
-if(!isset($version)) $version  = '';
-*/
-
 define ("_ACTIONSUCCESSFUL", "Akcia bola úspešná.");
 define ("_ACTIONCANCELLED", "Požadovaná akcia zrušená.");
 define ("_ACTIVE", "Aktívne");
 define ("_ADD", "Pridať");
-define ("_ADDAUTHOR2FAVES", "Zaradiť medzi obľúbených prekladateľov");
-define ("_ADDWRITER2FAVES", "Zaradiť medzi obľúbených autorov");
+define ("_ADDAUTHOR2FAVES", "Zaradiť medzi obľúbených autorov");
+define ("_ADDSTORY2FAVES", "Zaradiť medzi obľúbené poviedky");
 define ("_ADDTOFAVORITES", "Pridať k obľúbeným");
 define ("_ADMINOPTIONS", "Admin Options");
 define ("_AGECHECK", "Vyžadované odsúhlasenie veku");

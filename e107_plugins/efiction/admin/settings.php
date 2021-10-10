@@ -25,28 +25,29 @@
 if(!defined("e107_INIT")) exit( );
 
 function updatePanelOrder( ) {
-	
-	$ptypes = dbquery("SELECT panel_type FROM ".MPREFIX."fanfiction_panels GROUP BY panel_type");
-	while($ptype = dbassoc($ptypes)) {
-		if($ptype['panel_type'] == "A") {
+ 
+    $paneltypes = efiction_panels::get_panel_types();  
+	foreach($paneltypes AS $ptype) {
+		if($ptype['panel_type'] == "A") {  
 			for($x = 1; $x < 5; $x++) {
 				$count = 1;
-				$plist = dbquery("SELECT panel_name, panel_id FROM ".MPREFIX."fanfiction_panels WHERE panel_hidden = '0' AND panel_type = '".$ptype['panel_type']."' AND panel_level = '$x' ORDER BY panel_level, panel_order");
-				while($p = dbassoc($plist)) {
-					dbquery("UPDATE ".MPREFIX."fanfiction_panels SET panel_order = '$count' WHERE panel_id = '".$p['panel_id']."' LIMIT 1");
+				$plist = e107::getDb()->retrieve("SELECT panel_name, panel_id FROM ".MPREFIX."fanfiction_panels WHERE panel_hidden = '0' AND panel_type = '".$ptype['panel_type']."' AND panel_level = '$x' ORDER BY panel_level, panel_order", true);
+				foreach($plist AS $p) {
+					e107::getDb()->gen("UPDATE ".MPREFIX."fanfiction_panels SET panel_order = '$count' WHERE panel_id = '".$p['panel_id']."' LIMIT 1");
 					$count++;
 				}
 			}
 		}
-		else {
+		else {  
 			$count = 1;
-			$plist = dbquery("SELECT panel_name, panel_id FROM ".MPREFIX."fanfiction_panels WHERE panel_hidden = '0' AND panel_type = '".$ptype['panel_type']."' ORDER BY ".($ptype['panel_type'] == "A" ? "panel_level," : "")."panel_order");
-			while($p = dbassoc($plist)) {
-				dbquery("UPDATE ".MPREFIX."fanfiction_panels SET panel_order = '$count' WHERE panel_id = '".$p['panel_id']."' LIMIT 1");
+			$plist = e107::getDb()->retrieve("SELECT panel_name, panel_id FROM ".MPREFIX."fanfiction_panels WHERE panel_hidden = '0' AND panel_type = '".$ptype['panel_type']."' ORDER BY ".($ptype['panel_type'] == "A" ? "panel_level," : "")."panel_order");
+			foreach($plist AS $p) {
+				e107::getDb()->gen("UPDATE ".MPREFIX."fanfiction_panels SET panel_order = '$count' WHERE panel_id = '".$p['panel_id']."' LIMIT 1");
 				$count++;
 			}
 		}
 	}
+
 }
 
 if(isset($action) && $action == "settings") {
@@ -170,15 +171,16 @@ if(isset($_POST['submit'])) {
 		$smtp_password = $_POST['newsmtp_password'];
 		$result = dbquery("UPDATE ".MPREFIX."fanfiction_settings SET smtp_host = '$smtp_host', smtp_username = '$smtp_username', smtp_password = '$smtp_password' WHERE sitekey ='".SITEKEY."'");
 	}
-	if($result) {
+    // 0 is correct value, nothing was changed
+	if($result == false) {
 		$output .= write_message(_ACTIONSUCCESSFUL);
 		$sect = $sects[(array_search($sect, $sects) + 1)];
 		if(!$sect) $sect = $sects[0];
 	}
 	else $output .= write_error(_ERROR);
 }
-	$settingsresults = dbquery("SELECT * FROM ".MPREFIX."fanfiction_settings WHERE sitekey ='".SITEKEY."'");
-	$settings = dbassoc($settingsresults);
+ 
+	$settings = efiction_settings::get_settings();
 	foreach($settings as $var => $val) {
 		$$var = stripslashes($val);
 	}
@@ -188,22 +190,22 @@ if(isset($_POST['submit'])) {
 		$output .= "<h2>"._SITEINFO."</h2>
 		<table class='acp'>
 			<tr>
-				<td><label for='newsitekey'>"._SITEKEY.":</label></td><td><input type='text' class='textbox' name='newsitekey' value='".SITEKEY."'> <a href='#' class='pophelp'>[?]<span>"._HELP_SITEKEY."</span></a></td>
+				<td><label for='newsitekey'>"._SITEKEY.":</label></td><td>".$sitekey."</td>
 			</tr>
 			<tr>
-				<td><label for='newsitename'>"._SITENAME.":</label></td><td><input type='text' class='textbox' name='newsitename' value='".htmlspecialchars($sitename, ENT_QUOTES)."'> <a href='#' class='pophelp'>[?]<span>"._HELP_SITENAME."</span></a></td>
+				<td><label for='newsitename'>"._SITENAME.":</label></td><td>".$sitename."</td>
 			</tr>
 			<tr>
-				<td><label for='newslogan'>"._SITESLOGAN.":</label></td><td><input type='text' class='textbox' name='newslogan' value='".htmlspecialchars($slogan, ENT_QUOTES)."'> <a href='#' class='pophelp'>[?]<span>"._HELP_SLOGAN."</span></a></td>
+				<td><label for='newslogan'>"._SITESLOGAN.":</label></td><td>".$slogan."</td>
 			</tr>
 			<tr>
-				<td><label for='newurl'>"._SITEURL.":</label></td><td><input type='text' class='textbox' name='newsiteurl' value='$url'> <a href='#' class='pophelp'>[?]<span>"._HELP_URL."</span></a></td>
+				<td><label for='newurl'>"._SITEURL.":</label></td><td>".$url."</td>
 			</tr>
 			<tr>				
-				<td><label for='newMPREFIX'>"._TABLEPREFIX.":</label></td><td><input type='text' class='textbox' name='newMPREFIX' value='".MPREFIX."'> <a href='#' class='pophelp'>[?]<span>"._HELP_MPREFIX."</span></a></td>
+				<td><label for='newMPREFIX'>"._TABLEPREFIX.":</label></td><td>".$tableprefix."</td>
 			</tr>
 			<tr>				
-				<td><label for='newsiteemail'>"._ADMINEMAIL.":</label></td><td><input type='text' class='textbox' name='newsiteemail' value='$siteemail'> <a href='#' class='pophelp'>[?]<span>"._HELP_SITEEMAIL."</span></a></td>
+				<td><label for='newsiteemail'>"._ADMINEMAIL.":</label></td><td>".$siteemail."</td>
 			</tr>
 			<tr>				
 				<td><label for='newsiteskin'>"._DEFAULTSKIN.":</label></td><td><select name='newskin'>";
@@ -216,16 +218,7 @@ if(isset($_POST['submit'])) {
 		$output .= "</select> <a href='#' class='pophelp'>[?]<span>"._HELP_SITESKIN."</span></a></td>
 			</tr>
 			<tr>
-				<td><label for='newlanguage'>"._LANGUAGE.":</label></td><td><select name='newlanguage'>";
-		$directory = opendir(_BASEDIR."languages");
-			while($filename = readdir($directory)) {
-				if($filename=="." || $filename==".." || substr($filename, 2) == "_admin.php") continue;
-				$output .= "<option value='".substr($filename, 0, 2)."'".
-					($language == substr($filename, 0, strpos($filename, ".php")) ? " selected" : "").">
-				".substr($filename, 0, strpos($filename, ".php"))."</option>";
-			}
-		closedir($directory);
-		$output .= "</select> <a href='#' class='pophelp'>[?]<span>"._HELP_LANGUAGE."</span></a></td></tr>";
+				<td><label for='newlanguage'>"._LANGUAGE.":</label></td><td>".$language."</td></tr>";
 	}
 	else if($sect == "submissions") {
 		$output .= "<h2>"._SUBMISSIONSETTINGS."</h2>

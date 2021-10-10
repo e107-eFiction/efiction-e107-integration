@@ -80,22 +80,22 @@ else if($maint == "stories") {
 	$output .= write_message(_ACTIONSUCCESSFUL);
 }
 else if($maint == "categories") {
-	dbquery("UPDATE ".TABLEPREFIX."fanfiction_categories SET numitems = '0'");
-	$cats = dbquery("SELECT catid FROM ".TABLEPREFIX."fanfiction_categories ORDER BY leveldown DESC");
-	while($cat = dbrow($cats)) {
+	e107::getDb()->gen("UPDATE ".TABLEPREFIX."fanfiction_categories SET numitems = '0'");
+	$cats = e107::getDb()->retrieve("SELECT catid FROM ".TABLEPREFIX."fanfiction_categories ORDER BY leveldown DESC", true);
+    foreach($cats AS $cat) {
 		unset($subcats);
-		$subs = dbquery("SELECT catid FROM ".TABLEPREFIX."fanfiction_categories WHERE parentcatid = $cat[0]");
+		$subs = e107::getDb()->retrieve("SELECT catid FROM ".TABLEPREFIX."fanfiction_categories WHERE parentcatid = $cat[0]", true);
 		$subcats = array( );
-		while($sub = dbrow($subs)) {
+        foreach($subs AS $sub) {
 			$subcats[] = $sub[0];
 			if($categories[$sub[0]]) $subcats = array_merge($subcats, $categories[$sub[0]]);
 		}
 		$categories[$cat[0]] = $subcats;
-		$countquery = dbquery("SELECT count(sid) FROM ".TABLEPREFIX."fanfiction_stories WHERE FIND_IN_SET('$cat[0]', catid) ".(count($subcats) > 0 ? " OR FIND_IN_SET(". implode(", catid) OR FIND_IN_SET(",$subcats).", catid)" : "")." AND validated > 0");
-		list($count) = dbrow($countquery);
-		dbquery("UPDATE ".TABLEPREFIX."fanfiction_categories SET numitems = $count WHERE catid = $cat[0]");
+		$count = e107::getDb()->retrieve("SELECT count(sid) FROM ".TABLEPREFIX."fanfiction_stories WHERE FIND_IN_SET('$cat[0]', catid) ".(count($subcats) > 0 ? " OR FIND_IN_SET(". implode(", catid) OR FIND_IN_SET(",$subcats).", catid)" : "")." AND validated > 0");
+		 
+		e107::getDb()->gen("UPDATE ".TABLEPREFIX."fanfiction_categories SET numitems = $count WHERE catid = $cat[0]");
 	}
-	if($logging) dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_log (`log_action`, `log_uid`, `log_ip`, `log_type`) VALUES('".escapestring(sprintf(_LOG_CATCOUNTS, USERPENNAME, USERUID))."', '".USERUID."', INET_ATON('".$_SERVER['REMOTE_ADDR']."'), 'AM')");
+ 
 	$output .= write_message(_CATCOUNTSUPDATED);
 }
 else if($maint == "categories2") {
