@@ -6,13 +6,6 @@ if (!defined('SITEKEY'))  define('SITEKEY', $e107->site_path);
  
 require_once(_BASEDIR."includes/dbfunctions.php");
  
-/*
-if(empty($sitekey)) {
-	header("Location: install/install.php");
-	exit( );
-}
-*/
-
 if(e_ADMIN_AREA === true)  {}  //USER_AREA is not defined
 else { 
      

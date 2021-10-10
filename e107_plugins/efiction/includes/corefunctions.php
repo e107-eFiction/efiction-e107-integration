@@ -423,8 +423,8 @@ function check_prefs($uid) {
 
 // Function builds the alphabet links on various pages.
 function build_alphalinks($url, $let) {
-	global $alphabet;
-
+ 
+    $alphabet = efiction_settings::get_alphabet();
 	$alpha = "<div id=\"alphabet\">";
 	foreach( $alphabet as $link ) {
 		// Build a link that calls a function with ($link and 1 (page number) )

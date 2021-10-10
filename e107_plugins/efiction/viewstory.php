@@ -78,8 +78,10 @@ if(empty($chapter)) $chapter = isset($_GET['chapter']) && isNumber($_GET['chapte
 $reviews = ""; $numreviews = ""; $reviewslink = ""; $form = ""; $rr = "";
 
 if($action == "printable") {
-	$settingsresults = dbquery("SELECT store, storiespath FROM ".$settingsprefix."fanfiction_settings WHERE sitekey = '".SITEKEY."'");
-	list($store, $storiespath) = dbrow($settingsresults);
+    $settingsresults = efiction_settings::get_settings();
+    $store = $settingsresults['store'];
+    $storiespath = $settingsresults['storiespath'];
+ 
 	if(file_exists("$skindir/printstory.tpl")) $tpl = new TemplatePower( "$skindir/printstory.tpl" );
 	else $tpl = new TemplatePower(_BASEDIR."default_tpls/printstory.tpl");
 	include(_BASEDIR."includes/pagesetup.php");

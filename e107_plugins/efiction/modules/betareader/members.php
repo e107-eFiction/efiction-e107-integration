@@ -1,7 +1,10 @@
 <?php 
-if(!defined("_CHARSET")) exit( );
-
+if(!defined("e107_INIT")) exit( );
  
+$ue = e107::getUserExt();
+
+$field_title =  $ue->getFieldLabel('user_plugin_efiction_betareader');
+
 $listOpts .= "<option value=\"authors.php?".($let ? "let=$let&amp;" : "")."list=beta\"".($list == "beta" ? " selected" : "").">$field_title</option>";
 if($list == "beta") { 
 

@@ -42,6 +42,12 @@ if (!class_exists('efiction_settings')) {
         public function __construct()
         {
         }
+        
+        
+        public static function get_alphabet() {
+            include_once(e_PLUGIN."efiction/languages/".e_LANGUAGE."_alphabet.php");
+            return $alphabet; 
+        }
 
         public static function get_settings()
         {

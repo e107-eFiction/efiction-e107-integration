@@ -14,6 +14,13 @@ define ("_STORYQUERY",  "SELECT stories.*, "._PENNAMEFIELD." as penname, stories
 define ("_STORYCOUNT", "SELECT count(sid) FROM ".TABLEPREFIX."fanfiction_stories as stories WHERE validated > 0");
 define ("_SERIESQUERY", "SELECT series.*, "._PENNAMEFIELD." as penname FROM "._AUTHORTABLE.", ".TABLEPREFIX."fanfiction_series as series WHERE "._UIDFIELD." = series.uid ");
 define ("_SERIESCOUNT", "SELECT COUNT(seriesid) FROM ".TABLEPREFIX."fanfiction_series as series ");
-define ("_MEMBERLIST", "SELECT "._PENNAMEFIELD." as penname, "._UIDFIELD." as uid, ap.stories FROM "._AUTHORTABLE." LEFT JOIN ".TABLEPREFIX."fanfiction_authorprefs AS ap ON "._UIDFIELD." = ap.uid");
-define ("_MEMBERCOUNT", "SELECT COUNT("._UIDFIELD.") FROM "._AUTHORTABLE." LEFT JOIN ".TABLEPREFIX."fanfiction_authorprefs AS ap ON ap.uid = "._UIDFIELD);
-?>
+
+define ("_MEMBERLIST", "SELECT "._PENNAMEFIELD." as penname, "._UIDFIELD." as uid, ap.stories 
+ FROM  "._AUTHORTABLE." 
+ LEFT JOIN ".TABLEPREFIX."user_extended AS ai ON "._UIDFIELD." = ai.user_plugin_efiction_author_uid  
+ LEFT JOIN ".TABLEPREFIX."fanfiction_authorprefs AS ap ON "._UIDFIELD." = ap.uid");
+ 
+define ("_MEMBERCOUNT", "SELECT COUNT("._UIDFIELD.") FROM "._AUTHORTABLE." 
+LEFT JOIN ".TABLEPREFIX."user_extended AS ai ON "._UIDFIELD." = ai.user_plugin_efiction_author_uid  
+LEFT JOIN ".TABLEPREFIX."fanfiction_authorprefs AS ap ON ap.uid = "._UIDFIELD);
+ 

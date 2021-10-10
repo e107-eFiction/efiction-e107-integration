@@ -106,7 +106,9 @@ if(isset($_GET['action'])) $action = strip_tags($_GET['action']);
 else $action = false;
 
 require_once(HEADERF);
- 
+
+$alphabet = efiction_settings::get_alphabet(); 
+
 include_once(_BASEDIR."includes/corefunctions.php");
 
 // Check and/or set some variables used at various points throughout the script
@@ -131,27 +133,8 @@ if(isset($PHP_SELF)) $PHP_SELF = htmlspecialchars(descript($PHP_SELF), ENT_QUOTE
 
 // Set these variables to start.
 $agecontsent = false; $viewed = false; 
- /*
-$v = explode(".", $version);
-include("version.php");
-$newV = explode(".", $version);
-//if($v[0] == $newV[0] && ($v[1] < $newV[1] || (isset($newV[2]) && $v[2] < $newV[2]))) {
-foreach($newV AS $k => $l) {
-	if($newV[$k] > $v[$k] || (!empty($newV[$k]) && empty($v[$k]))) {
-		if(isADMIN && basename($_SERVER['PHP_SELF']) != "update.php") {
-			header("Location: update.php");
-			exit( );
-		}
-		else if(!isADMIN && basename($_SERVER['PHP_SELF']) != "maintenance.php" && !(isset($_GET['action']) && $_GET['action'] == "login")) {
-			header("Location: maintenance.php");
-			exit( );
-		}
-	}
-}
-
  
-
-
+/*
 if($maintenance && !isADMIN && basename($_SERVER['PHP_SELF']) != "maintenance.php" && !(isset($_GET['action']) && $_GET['action'] == "login")) {
 	header("Location: maintenance.php");
 	exit( );
