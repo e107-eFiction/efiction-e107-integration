@@ -216,7 +216,6 @@ echo "<title>$titleinfo</title>";
 
 if(!isset($_GET['action']) || $_GET['action'] != "printable") {
  
-<link rel=\"alternate\" type=\"application/rss+xml\" title=\"$sitename RSS Feed\" href=\""._BASEDIR."rss.php\">";
 if(!empty($tinyMCE)) {
 	echo "<script language=\"javascript\" type=\"text/javascript\" src=\""._BASEDIR."tinymce/js/tinymce/tinymce.min.js\"></script>
 	<script language=\"javascript\" type=\"text/javascript\"><!--";

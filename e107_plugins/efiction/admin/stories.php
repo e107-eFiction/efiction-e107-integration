@@ -83,7 +83,7 @@ function validate( ) {
 		if($admincats == "0" || sizeof(array_intersect(explode(",", $catid), explode(",", $admincats)))) {
 			include("includes/emailer.php");
 			if($validated != "1") {
-				dbquery("UPDATE ".$tableprefix."fanfiction_stories SET validated = '1', updated = NOW() WHERE sid = '".$_GET['sid']."'");
+				dbquery("UPDATE ".$tableprefix."fanfiction_stories SET validated = '1', updated = ".time()." WHERE sid = '".$_GET['sid']."'");
 				$categories = explode(",", $catid);
 				include("functions.php");
 				foreach($categories as $cat) {
@@ -107,7 +107,7 @@ function validate( ) {
 				}
 			}
 			dbquery("UPDATE ".$tableprefix."fanfiction_chapters SET validated = '1' WHERE chapid = '".$_GET['chapid']."'");
-			dbquery("UPDATE ".$tableprefix."fanfiction_stories SET updated = NOW( ) WHERE sid = '$sid'");
+			dbquery("UPDATE ".$tableprefix."fanfiction_stories SET updated = ".time()." WHERE sid = '$sid'");
 			$output .= "<center><b>"._STORYVALIDATED."</b></center>";
 		}
 		else

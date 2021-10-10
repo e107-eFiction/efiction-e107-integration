@@ -32,7 +32,7 @@ else $textsize = 0;
 if(empty($chapter)) $chapter = isset($_GET['chapter']) && isNumber($_GET['chapter']) ? $_GET['chapter'] : false;
 
 	// Get the story information
-	$storyquery = dbquery("SELECT "._PENNAMEFIELD." as penname, "._UIDFIELD." as uid, story.*, UNIX_TIMESTAMP(story.date) as date, UNIX_TIMESTAMP(story.updated) as updated, story.validated as valid FROM ".TABLEPREFIX."fanfiction_stories as story, "._AUTHORTABLE." WHERE story.sid = '".$sid."' AND story.uid = "._UIDFIELD);
+	$storyquery = dbquery("SELECT "._PENNAMEFIELD." as penname, "._UIDFIELD." as uid, story.*, story.date as date, story.updated as updated, story.validated as valid FROM ".TABLEPREFIX."fanfiction_stories as story, "._AUTHORTABLE." WHERE story.sid = '".$sid."' AND story.uid = "._UIDFIELD);
 	$storyinfo = dbassoc($storyquery);
 	if($storyinfo['coauthors'] == 1) {
 		$coauthors = array();
@@ -268,7 +268,7 @@ else {
 				$notes = isset($chap['notes']) ? format_story($chap['notes']) : false;
 				$endnotes = isset($chap['endnotes']) ? format_story($chap['endnotes']) : false;
 				$chapid = $chap['chapid'];
-				$story = stripslashes($chap['storytext']);
+				$story =  e107::getParser()->toHTML($chap['storytext'], "DESCRIPTION");
 				$chapterauthor = $chap['uid'];
 				$chapterpenname = $chap['penname'];
 				$valid = $chap['validated'];

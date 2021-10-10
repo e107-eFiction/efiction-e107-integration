@@ -124,7 +124,7 @@ if(isset($_POST['submit'])) {
 
 	}
 	else if($sect == "sitesettings") {
-		$tinyMCE = $_POST['newtinyMCE'] == 1 ? 1 : 0;
+		$tinyMCE = e107::getParser()->toDb($_POST['newtinyMCE']);
 		$allowed_tags = $_POST['newallowed_tags'];
 		$favorites = $_POST['newfavorites'] == 1 ? 1 : 0;
 		$multiplecats = $_POST['newmultiplecats'] == 1 ? 1 : 0;
@@ -287,13 +287,16 @@ if(isset($_POST['submit'])) {
 				<label for='newmaxwords'>"._MAX.":</label> <input  type='text' class='textbox=' name='newmaxwords' value='$maxwords' size='7'></fieldset></td></tr>";
 	}
 	else if($sect == "sitesettings") {
+   
+        /* form control is breaking help */
+        $tinymce_field = e107::getForm()->renderElement('newtinyMCE', $tinyMCE, 
+        array( 'type' => 'dropdown', 'data' => 'str',  'writeParms' => array('optArray' =>  efiction_settings::get_available_editors(), 'class'=>'tbox ', 'defaultValue' => 'default', 'style'=>'width: 90%;')) );
+ 
 		$output .= "<h2>"._SITESETTINGS."</h2>
 		<table class='acp'>
 			<tr>
-				<td><label for='newtinyMCE'>"._USETINYMCE.": </label></td><td><select name='newtinyMCE'>
-				<option value='1'".($tinyMCE ? " selected" : "").">"._YES."</option>
-				<option value='0'".(!$tinyMCE ? " selected" : "").">"._NO."</option>
-				</select> <a href='#' class='pophelp'>[?]<span>"._HELP_TINYMCE." "._TINYMCENOTE."</span></a></td>
+				<td><label for='newtinyMCE'>"._USETINYMCE.": </label></td><td>".$tinymce_field."<a href='#' class='pophelp'>[?]<span>".EFICTION_EDITOR_221."</span></a>
+                </td>
 			</tr>
 			<tr>
 				<td><label for='newallowed_tags'>"._TAGS.": </label></td><td><input type='text' class='textbox'  name='newallowed_tags' value='".($allowed_tags ? $allowed_tags : "<strong><em><br /><br><blockquote><strike><font><b><i><u><center><img><a><hr><p><ul><li><ol>")."' size='40'> <a href='#' class='pophelp'>[?]<span>"._HELP_ALLOWEDTAGS." "._TINYMCENOTE."</span></a></td>

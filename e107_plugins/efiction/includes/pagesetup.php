@@ -90,9 +90,14 @@ $tpl->assignGlobal("sitename", $sitename);
 $tpl->assignGlobal("slogan", $slogan);
 $tpl->assignGlobal("page_id", $current);
 $tpl->assignGlobal("basedir", _BASEDIR);
-$tpl->assignGlobal("skindir", $skindir);	
-$tpl->assignGlobal("rss", "<a href='"._BASEDIR.$pagelinks['rss']['url']."'><img src='"._BASEDIR."images/xml.gif' alt='RSS' title = 'RSS' border='0'></a>");
-if(isset($pagelinks['rss'])) $tpl->assignGlobal("columns", $displaycolumns);
+$tpl->assignGlobal("skindir", $skindir);
+$rss_link = efiction_pagelinks::get_single_link('rss');	
+if(e107::isInstalled('rss_menu'))  {
+    $tpl->assignGlobal("rss", "<a href='".$rss_link."'><img src='".e_PLUGIN."efiction/images/xml.gif' alt='RSS' title = 'RSS' border='0'></a>");
+}
+
+if(isset($rss_link)) $tpl->assignGlobal("columns", $displaycolumns);
+
 if($action != "printable") {
 	$tpl->newBlock("footer");
 	$copy = dbquery("SELECT message_text FROM ".TABLEPREFIX."fanfiction_messages WHERE message_name = 'copyright' LIMIT 1");

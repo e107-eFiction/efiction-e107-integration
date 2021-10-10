@@ -356,4 +356,7 @@ define ("_LOG_RECALCREVIEWS", "<a href='viewuser.php?uid=%2\$d'>%1\$s</a> recalc
 define ("_LOG_CATCOUNTS", "<a href='viewuser.php?uid=%2\$d'>%1\$s</a> recalculated the category counts.");
 define ("_LOG_OPTIMIZE", "<a href='viewuser.php?uid=%2\$d'>%1\$s</a> optimized the database tables.");
 define ("_LOG_BACKUP", "<a href='viewuser.php?uid=%2\$d'>%1\$s</a> backed up the database tables.");
-?>
+ 
+define("EFICTION_EDITOR_217", "System default"); 
+define("EFICTION_EDITOR_220", "Post editor");
+define("EFICTION_EDITOR_221", "Which editor should be used to create/edit posts?");

@@ -93,9 +93,9 @@ if(!defined("e107_INIT")) exit( );
 	$numchapsquery = dbquery("SELECT count(sid) FROM ".TABLEPREFIX."fanfiction_chapters WHERE sid = '".$stories['sid']."' AND validated > 0");
 	list($chapters) = dbrow($numchapsquery);
 	$tpl->assign("numchapters", $chapters );
-
-	$tpl->assign("updated"   , date("$dateformat", $stories['updated']) );
-	$tpl->assign("published"   , date("$dateformat", $stories['date']) );
+ 
+	$tpl->assign("updated"   , e107::getDate()->convert_date($stories['updated'], 'short') );
+	$tpl->assign("published"   , e107::getDate()->convert_date($stories['date'], 'short') );
 	if(!empty($recentdays)) {
 		$recent = time( ) - ($recentdays * 24 * 60 *60);
 		if($stories['updated'] > $recent) $tpl->assign("new", isset($new) ? file_exists(_BASEDIR.$new) ? "<img src='$new' alt='"._NEW."'>" : $new : _NEW);

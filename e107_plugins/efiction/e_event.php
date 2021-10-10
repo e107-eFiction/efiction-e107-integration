@@ -61,7 +61,7 @@ class efiction_event // plugin-folder + '_event'
     
 	function create_author_account($data) // the method to run.
 	{
-
+ 
         $efiction_prefs = e107::pref('efiction');
         // $efiction_prefs['pref_author_after_login']
         if(true) {
@@ -69,7 +69,7 @@ class efiction_event // plugin-folder + '_event'
             $userData = e107::user(USERID);
             $author_uid = $userData['user_plugin_efiction_author_uid']; 
             $author_level = $userData['user_plugin_efiction_level'];
-            
+
             if($author_uid)  {
                   /* if already exists author with that penname, unattached to user, it is solved by _DUPLICATE_KEY_UPDATE */
                   /* cheks prefs */
@@ -93,7 +93,7 @@ class efiction_event // plugin-folder + '_event'
                        }
                     }
             }
-            else {
+            else {  
                  /* check penname */
                 $authorquery = "SELECT  
       			author.uid as author_uid, 
@@ -104,16 +104,20 @@ class efiction_event // plugin-folder + '_event'
                 WHERE author.penname = '".$userData['user_name']."' OR author.email = '".$userData['user_email']."' "  ; 
  
                 $authordata = e107::getDb()->retrieve($authorquery);
-                
+             
                 if($authordata = e107::getDb()->retrieve($authorquery))  {
                     /* if the name and email are the same */
+                   
                     if($authordata['email'] ==  $userData['user_email'] && $authordata['penname'] ==  $userData['user_name'])
                     {
  
                         /* not generate author */
                         $ue = new e107_user_extended;
-      	                $ue->user_extended_setvalue(USERID, 'user_plugin_efiction_author_uid', USERID);
+      	                $ue->user_extended_setvalue(USERID, 'user_plugin_efiction_author_uid', $authordata['author_uid']);
                         $ue->user_extended_setvalue(USERID, 'user_plugin_efiction_level', 1);
+                        $message = "Succcesfully added author with penname ".$authordata['penname'];
+                         echo  e107::getMessage()->addSuccess($message)->render();
+                          
                     }  
                     else 
                     {

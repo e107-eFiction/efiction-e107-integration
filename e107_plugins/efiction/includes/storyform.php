@@ -147,8 +147,10 @@ function chapterform($inorder, $notes, $endnotes, $storytext, $chaptertitle, $ui
 	$inorder++;
 	$default = _CHAPTER." ". $inorder;
 	if($chaptertitle != "") $default = $chaptertitle;
-	if($tinyMCE && strpos($storytext, "<br>") === false && strpos($storytext, "<p>") === false && strpos($storytext, "<br />") === false) $storytext = nl2br($storytext);
-	$output = "";
+	
+    //if($tinyMCE && strpos($storytext, "<br>") === false && strpos($storytext, "<p>") === false && strpos($storytext, "<br />") === false) $storytext = nl2br($storytext);
+	
+    $output = "";
 	if($admin && ($action == "newchapter" || $action == "editchapter")) {
 		$authorquery = dbquery("SELECT "._PENNAMEFIELD." as penname, "._UIDFIELD." as uid FROM "._AUTHORTABLE." ORDER BY penname");
 		$output .= "<label for=\"uid\">"._AUTHOR.":</label> <select name=\"uid\" id=\"uid\">";
@@ -159,12 +161,18 @@ function chapterform($inorder, $notes, $endnotes, $storytext, $chaptertitle, $ui
 	}
 	$output .= "<p><label for=\"chaptertitle\">"._CHAPTERTITLE.":</label> <input type=\"text\" class=\"textbox\" id=\"chaptertitle\" maxlength=\"200\" name=\"chaptertitle\" size=\"50\" value=\"".htmlentities($default)."\"> </p>
 		<p>"._ALLOWEDTAGS."</p>
-		<div><label for=\"notes\">"._CHAPTERNOTES.":</label><br /><textarea class=\"textbox\" rows=\"5\" id=\"notes\" name=\"notes\" cols=\"58\">$notes</textarea></div>";
-	if($tinyMCE) 
-		$output .= "<div class='tinytoggle'><input type='checkbox' name='toggle' onclick=\"toogleEditorMode('notes');\" checked><label for='toggle'>"._TINYMCETOGGLE."</label></div>";
-	$output .= "<div><label for=\"storytext\">"._STORYTEXTTEXT.":</label>".(!$storytext ? "<span style=\"font-weight: bold; color: red\">*</span>" : "")."<br><textarea class=\"textbox\" rows=\"15\" id=\"storytext\" name=\"storytext\" cols=\"58\">".$storytext."</textarea></div>";
-	if($tinyMCE) 
-		$output .= "<div class='tinytoggle'><input type='checkbox' name='toggle' onclick=\"toogleEditorMode('storytext');\" checked><label for='toggle'>"._TINYMCETOGGLE."</label></div>";
+		<p><label for=\"notes\">"._CHAPTERNOTES.":</label><br />".e107::getForm()->textarea('notes',$notes)."</p";
+    
+    
+    $editor = efiction_settings::get_single_setting('tinyMCE'); 
+ 
+    $wysiwyg = is_null($editor) ? 'default' : $editor;  
+ 
+    $output .= "<br><div><label for=\"storytext\">"._STORYTEXTTEXT.":</label>".(!$storytext ? "<span style=\"font-weight: bold; color: red\">*</span>" : "")."";
+      
+    $output .=  e107::getForm()->bbarea('storytext',$storytext,'public','efiction','large', array('wysiwyg' => $wysiwyg));
+    $output .= "</div>";
+        
 	$output .= "<p><strong>"._OR."</strong> </p>
 		<p><label for=\"storyfile\">"._STORYTEXTFILE.":</label> <INPUT type=\"file\" id=\"storyfile\" class=\"textbox\" name=\"storyfile\" onClick=\"this.form.storytext.disabled=true\"> </p>
 		<div><label for=\"notes\">"._ENDNOTES.":</label><br><textarea class=\"textbox\" rows=\"5\" id=\"endnotes\" name=\"endnotes\" cols=\"58\">$endnotes</textarea></div>";

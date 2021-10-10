@@ -16,7 +16,8 @@ if(empty($sitekey)) {
 if(e_ADMIN_AREA === true)  {}  //USER_AREA is not defined
 else { 
      
- 
+  e107::lan('efiction');
+  e107::lan('efiction', true);
    /* LOAD CLASSES */
   e107::getSingleton('efiction_blocks', e_PLUGIN.'efiction/classes/blocks.class.php');
   e107::getSingleton('efiction_pagelinks', e_PLUGIN.'efiction/classes/pagelinks.class.php');  

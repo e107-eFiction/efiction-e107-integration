@@ -235,7 +235,8 @@ function newstory( ) {
 		{
 			if(!$newchapter) {
             
-				$insert = dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_stories (title, summary, storynotes, catid, classes, charid,  rid, date, updated, uid, validated, rr, completed, wordcount, featured, coauthors) VALUES ('".addslashes($title)."', '".addslashes(format_story($summary))."', '".addslashes(format_story($storynotes))."', '".($catid ? implode(",", $catid) : "")."', '".($classes? implode(",", $classes) : "")."', '".($charid ? implode(",", $charid) : "")."', '$rid', now(), now(), '$uid', '$validated', '$rr', '$complete', '$wordcount', '$feat', '$coauthors')");
+				$insert = dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_stories (title, summary, storynotes, catid, classes, charid,  rid, date, updated, uid, validated, rr, completed, wordcount, featured, coauthors) 
+                VALUES ('".addslashes($title)."', '".addslashes(format_story($summary))."', '".addslashes(format_story($storynotes))."', '".($catid ? implode(",", $catid) : "")."', '".($classes? implode(",", $classes) : "")."', '".($charid ? implode(",", $charid) : "")."', '$rid', ".time().", ".time(). ", '$uid', '$validated', '$rr', '$complete', '$wordcount', '$feat', '$coauthors')");
 				$sid = dbinsertid( );
 				$inorder = 1;
 			}
@@ -250,14 +251,16 @@ function newstory( ) {
 		else if ($store == "files")
 		{
 			if(!$newchapter) {
-				$insertstory = dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_stories (title, summary, storynotes, catid, classes, charid, rid, date, updated, uid, validated, rr, completed, wordcount, featured, coauthors) VALUES ('".addslashes($title)."', '".addslashes(format_story($summary))."', '".addslashes(format_story($storynotes))."', '".($catid ? implode(",", $catid) : "")."', '".($classes ? implode(",", $classes) : "")."', '".($charid ? implode(",", $charid) : "")."', '$rid', now(), now(), '$uid', '$validated', '$rr', '$complete', '$wordcount', '$feat', '$coauthors')");
+				$insertstory = dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_stories (title, summary, storynotes, catid, classes, charid, rid, date, updated, uid, validated, rr, completed, wordcount, featured, coauthors) 
+                VALUES ('".addslashes($title)."', '".addslashes(format_story($summary))."', '".addslashes(format_story($storynotes))."', '".($catid ? implode(",", $catid) : "")."', '".($classes ? implode(",", $classes) : "")."', '".($charid ? implode(",", $charid) : "")."', '$rid', " .time(). ", " .time(). ", '$uid', '$validated', '$rr', '$complete', '$wordcount', '$feat', '$coauthors')");
 				$sid = dbinsertid( );
 				$inorder = 1;
 			}
 			else {
 				$inorder = $_GET['inorder'] + 1;
 			}
-			$insertchapter = dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_chapters (title, inorder, notes, endnotes, validated, wordcount, sid, uid) VALUES('".addslashes(($chaptertitle != "" ? $chaptertitle : $title))."', '$inorder', '".addslashes(format_story($notes))."', '".addslashes(format_story($endnotes))."', '".($validated ? 1 : 0)."', '$wordcount', '$sid', '$uid')");
+			$insertchapter = dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_chapters (title, inorder, notes, endnotes, validated, wordcount, sid, uid) 
+            VALUES('".addslashes(($chaptertitle != "" ? $chaptertitle : $title))."', '$inorder', '".addslashes(format_story($notes))."', '".addslashes(format_story($endnotes))."', '".($validated ? 1 : 0)."', '$wordcount', '$sid', '$uid')");
 			$chapid = dbinsertid( );
 			if( !file_exists("".STORIESPATH."/$uid/" ) )
 			{
@@ -337,10 +340,11 @@ function newstory( ) {
 					sendemail($favuser['penname'], $favuser['email'], $sitename, $siteemail, $subject, $mailtext, "html");
 				}
 			}
-			$update = dbquery("UPDATE ".TABLEPREFIX."fanfiction_stories SET updated = NOW( ) WHERE sid = '$sid'");
-			list($chapters, $words) = dbrow(dbquery("SELECT COUNT(chapid), SUM(wordcount) FROM ".TABLEPREFIX."fanfiction_chapters WHERE validated > 0"));
+   
+			$update = dbquery("UPDATE ".TABLEPREFIX."fanfiction_stories SET updated = ".time()." WHERE sid = '$sid'");
+			list($num_chapters, $words) = dbrow(dbquery("SELECT COUNT(chapid), SUM(wordcount) FROM ".TABLEPREFIX."fanfiction_chapters WHERE validated > 0"));
 			list($authors) = dbrow(dbquery("SELECT COUNT(uid) FROM ".TABLEPREFIX."fanfiction_authorprefs WHERE stories > 0"));
-			dbquery("UPDATE ".TABLEPREFIX."fanfiction_stats set wordcount = '$words', chapters = '$chapters', authors = '$authors'");
+			dbquery("UPDATE ".TABLEPREFIX."fanfiction_stats set wordcount = '$words', chapters = '$num_chapters', authors = '$authors'");
 			$count =  dbquery("SELECT SUM(wordcount) as totalcount FROM ".TABLEPREFIX."fanfiction_chapters WHERE sid = '$sid' AND validated = '1'");
 			list($totalcount) = dbrow($count);
 			if($totalcount) {
@@ -372,7 +376,7 @@ function newstory( ) {
 		return $output;
 	}
 	if($newchapter) {
-		$storyinfo = dbquery("SELECT s.*, UNIX_TIMESTAMP(s.updated) as updated, UNIX_TIMESTAMP(s.date) as date, "._PENNAMEFIELD." as penname  FROM ".TABLEPREFIX."fanfiction_stories as s, "._AUTHORTABLE." WHERE "._UIDFIELD." = s.uid AND sid = '$sid' LIMIT 1");
+		$storyinfo = dbquery("SELECT s.*,  s.updated  as updated,  s.date as date, "._PENNAMEFIELD." as penname  FROM ".TABLEPREFIX."fanfiction_stories as s, "._AUTHORTABLE." WHERE "._UIDFIELD." = s.uid AND sid = '$sid' LIMIT 1");
 		$stories = dbassoc($storyinfo);
 		$uid = $stories['uid'];
 		$chapterquery = dbquery("SELECT COUNT(sid) FROM ".TABLEPREFIX."fanfiction_chapters WHERE sid = '$sid'");
@@ -393,8 +397,8 @@ function newstory( ) {
 		$stories['rr'] = $rr;
 		$stories['uid'] = $uid;
 		$stories['penname'] = $penname;
-		$stories['date'] = time( );
-		$stories['updated'] = time( );
+		$stories['date'] = time();
+		$stories['updated'] = time();
 		$stories['sid'] = false;
 		$stories['rating'] = 0;
 		$stories['count'] = 0;
@@ -454,24 +458,25 @@ function viewstories( ) {
 	}
 	$output .= "<p style=\"text-align: right; margin: 1em;\"><a href=\"stories.php?action=viewstories&amp;chapters=".($hidechapters != "view" ? "view\">"._VIEWCHAPTERS : "hide\">"._HIDECHAPTERS)."</a></p>
 		<div style=\"width: 90%; margin: 0 auto;\"><table cellpadding=\"3\" cellspacing=\"0\" width=\"100%\" class=\"tblborder\"><tr><th class=\"tblborder\">"._STORIES."</th><th colspan=\"3\" class=\"tblborder\">"._OPTIONS."</th>".($reviewsallowed ? "<th class=\"tblborder\">"._REVIEWS."</th>" : "").($autovalidate ? "" : "<th class=\"tblborder\">"._VALIDATED."</th>")."<th class=\"tblborder\">"._READS."</th></tr>";
-	$sresult = dbquery("SELECT stories.sid, title, reviews, rating, completed, validated, featured, count FROM ".TABLEPREFIX."fanfiction_stories AS stories LEFT JOIN ".TABLEPREFIX."fanfiction_coauthors AS coauth ON stories.sid = coauth.sid WHERE stories.uid = '".USERUID."' OR coauth.uid = '".USERUID."' ORDER BY title");
-	$stories = dbnumrows($sresult);
-	while($story = dbassoc($sresult)) {
-		$query2 = dbquery("SELECT chapid, title, inorder, rating, reviews, validated, count FROM ".TABLEPREFIX."fanfiction_chapters WHERE sid = '".$story['sid']."' ORDER BY inorder"); 
-		$chapters =  dbnumrows($query2);
+	$sresult = "SELECT stories.sid, title, reviews, rating, completed, validated, featured, count FROM ".TABLEPREFIX."fanfiction_stories AS stories LEFT JOIN ".TABLEPREFIX."fanfiction_coauthors AS coauth ON stories.sid = coauth.sid WHERE stories.uid = '".USERUID."' OR coauth.uid = '".USERUID."' ORDER BY title" ;
+	$stories = e107::getDb()->retrieve($sresult, true);
+    foreach($stories AS $story) {  
+		$query2 =  "SELECT chapid, title, inorder, rating, reviews, validated, count FROM ".TABLEPREFIX."fanfiction_chapters WHERE sid = '".$story['sid']."' ORDER BY inorder";
+        $chapters = e107::getDb()->retrieve($query2, true);   
+		$num_chapters =  count($chapters); 
 		$output .= "<tr><td class=\"tblborder\"><a href=\"viewstory.php?sid=".$story['sid']."\">".stripslashes($story['title'])."</a> ".ratingpics($story['rating'])." <strong>"._COMPLETE.":</strong> <a href=\"stories.php?action=viewstories&amp;sid=".$story['sid']."&amp;com=".$story['completed']."\"><a href=\"stories.php?action=viewstories&amp;sid=".$story['sid']."&amp;com=".($story['completed'] == 1 ? "no\">"._YES : "yes\">"._NO)."</a></td>
-			<td class=\"tblborder\" colspan=\"3\"><a href=\"stories.php?action=editstory&amp;sid=".$story['sid']."\">"._EDIT."</a> - <a href=\"stories.php?action=delete&amp;sid=".$story['sid']."\">"._DELETE."</a> - <a href=\"stories.php?action=newchapter&amp;sid=".$story['sid']."&amp;inorder=$chapters\">"._ADDNEWCHAPTER."</a></td>
+			<td class=\"tblborder\" colspan=\"3\"><a href=\"stories.php?action=editstory&amp;sid=".$story['sid']."\">"._EDIT."</a> - <a href=\"stories.php?action=delete&amp;sid=".$story['sid']."\">"._DELETE."</a> - <a href=\"stories.php?action=newchapter&amp;sid=".$story['sid']."&amp;inorder=$num_chapters\">"._ADDNEWCHAPTER."</a></td>
 			";
 		if($reviewsallowed) $output .= "<td class=\"tblborder\" align=\"center\">".($story['reviews'] ? "<a href=\"reviews.php?type=ST&amp;item=".$story['sid']."\">".$story['reviews']."</a>" : "0")."</td>";
 		if(!$autovalidate) $output .= "<td class=\"tblborder\" align=\"center\">".($story['validated'] > 0 ? _YES : _NO)."</td>";
 		$output .= "<td class=\"tblborder\" align=\"center\">".($story['count'] ? $story['count'] : "0")."</td></tr>";
 		if($hidechapters && $hidechapters != "hide") {
-			while($chapter = dbassoc($query2)) {
+		    foreach($chapters AS $chapter) {  
 				$output .="<tr><td  class=\"tblborder\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"viewstory.php?sid=".$story['sid']."&amp;chapter=".$chapter['inorder']."\">$chapter[title]</a></td>";
-				if($chapters > 1) $output .= "<td  class=\"tblborder\" align=\"center\"><a href=\"stories.php?action=viewstories&amp;go=up&amp;sid=".$story['sid']."&amp;chapid=".$chapter['chapid']."&amp;inorder=".$chapter['inorder']."&amp;chapters=view\">$up</a></td>
+				if($num_chapters > 1) $output .= "<td  class=\"tblborder\" align=\"center\"><a href=\"stories.php?action=viewstories&amp;go=up&amp;sid=".$story['sid']."&amp;chapid=".$chapter['chapid']."&amp;inorder=".$chapter['inorder']."&amp;chapters=view\">$up</a></td>
 					<td class=\"tblborder\" align=\"center\"><a href=\"stories.php?action=viewstories&amp;go=down&amp;sid=".$story['sid']."&amp;chapid=".$chapter['chapid']."&amp;inorder=".$chapter['inorder']."&amp;chapters=view\">$down</a></td>";
-				$output .= "<td class=\"tblborder\"".($chapters > 1 ? "" : "colspan=\"3\"")."><a href=\"stories.php?action=editchapter&amp;chapid=".$chapter['chapid']."\">"._EDIT."</a>";
-				if($chapters > 1) $output .= " - <a href=\"stories.php?action=delete&amp;chapid=".$chapter['chapid']."&amp;sid=".$story['sid']."\">"._DELETE."</a>";
+				$output .= "<td class=\"tblborder\"".($num_chapters > 1 ? "" : "colspan=\"3\"")."><a href=\"stories.php?action=editchapter&amp;chapid=".$chapter['chapid']."\">"._EDIT."</a>";
+				if($num_chapters > 1) $output .= " - <a href=\"stories.php?action=delete&amp;chapid=".$chapter['chapid']."&amp;sid=".$story['sid']."\">"._DELETE."</a>";
 				$output .= "</td><td class=\"tblborder\" align=\"center\">";
 				if($reviewsallowed) $output .= ($chapter['reviews'] ? "<a href=\"reviews.php?type=ST&amp;item=".$story['sid']."&amp;chapid=".$chapter['chapid']."\">".$chapter['reviews']."</a>" : "0");
 				if(!$autovalidate) $output .= "</td><td class=\"tblborder\" align=\"center\">".($chapter['validated'] > 0 ? _YES : _NO);
@@ -491,6 +496,7 @@ function editchapter( $chapid ) {
 
 	$output = "<div id=\"pagetitle\">"._EDITCHAPTER."</div>";
 // get variables from $_POST
+ 
 	if(isset($_POST['submit'])) {
 		$chaptertitle = strip_tags(descript($_POST["chaptertitle"]), $allowed_tags);
 		$notes = strip_tags(descript($_POST["notes"]), $allowed_tags);
@@ -509,7 +515,9 @@ function editchapter( $chapid ) {
 			}
 		}
 		else if(isset($_POST['storytext'])) $story = $_POST['storytext'];
-		$storytext = strip_tags(descript($story), $allowed_tags);
+        
+		$storytext = e107::getParser()->toDb($story, "DESCRIPTION"); 
+        
 		$inorder = $_POST["inorder"];
 		$words_to_count = strip_tags($storytext);
 		$pattern = "/[^(\w|\d|\'|\"|\.|\!|\?|;|,|\\|\/|\-\-|:|\&|@)]+/";
@@ -531,8 +539,9 @@ function editchapter( $chapid ) {
 				$uid = $_POST['uid'];
 			}
 			else $uid= USERUID;
-			if($store == "mysql") {
-				dbquery("UPDATE ".TABLEPREFIX."fanfiction_chapters SET uid = '$uid', title = '".addslashes($chaptertitle)."', notes = '".addslashes($notes)."', endnotes = '".addslashes($endnotes)."', wordcount = '$wordcount', storytext = '".addslashes($storytext)."' WHERE chapid = '$chapid' LIMIT 1");
+  
+			if($store == "db") {
+                dbquery("UPDATE ".TABLEPREFIX."fanfiction_chapters SET uid = '$uid', title = '".addslashes($chaptertitle)."', notes = '".addslashes($notes)."', endnotes = '".addslashes($endnotes)."', wordcount = '$wordcount', storytext = '".addslashes($storytext)."' WHERE chapid = '$chapid' LIMIT 1");
 			}
 			else if($store == "files"){
 				$updatequery = dbquery("UPDATE ".TABLEPREFIX."fanfiction_chapters SET uid = '$uid', title = '".addslashes($chaptertitle)."', notes = '".addslashes($notes)."', endnotes = '".addslashes($endnotes)."', wordcount = '$wordcount' WHERE chapid = '$chapid' LIMIT 1");
@@ -581,7 +590,7 @@ function editchapter( $chapid ) {
 			exit;
 		}
 	}
-	$output .= "<div class=\"tblborder\" style=\"width: 550px; margin: 0 auto; padding: 5px;\">
+	$output .= "<div class=\"tblborder\">
 		<form METHOD=\"POST\"  enctype=\"multipart/form-data\" name=\"form\" action=\"stories.php?action=editchapter&amp;chapid=$chapid".($admin ? "&amp;admin=1" : "")."\">";
 	if(!isset($_POST['submit']) || $_POST['submit'] != _PREVIEW) {
 		$storyquery = dbquery("SELECT title, inorder, notes, endnotes, uid, storytext, sid FROM ".TABLEPREFIX."fanfiction_chapters WHERE chapid = '$chapid' LIMIT 1");
@@ -679,8 +688,8 @@ function editstory($sid) {
 				list($olduid) = dbrow($authquery);
 				if($olduid != $uid) {
 					if($store == "files") {
-						$chapters = dbquery("SELECT chapid FROM ".TABLEPREFIX."fanfiction_chapters WHERE sid = '$sid' AND uid = '$olduid'");
-						while($chap = dbassoc($chapters)) {
+						$num_chapters = dbquery("SELECT chapid FROM ".TABLEPREFIX."fanfiction_chapters WHERE sid = '$sid' AND uid = '$olduid'");
+						while($chap = dbassoc($num_chapters)) {
 							$chapid = $chap['chapid'];
 							$storytext = "";
 							if($out = fopen (STORIESPATH."/$olduid/$chapid.txt", "r"))
@@ -755,7 +764,8 @@ function editstory($sid) {
 							sendemail($favuser['penname'], $favuser['email'], $sitename, $siteemail, $subject, $mailtext, "html");
 						}
 					}
-					$update = dbquery("UPDATE ".TABLEPREFIX."fanfiction_stories SET validated = '$validated', updated = NOW( ) WHERE sid = '$sid'");
+  
+					$update = dbquery("UPDATE ".TABLEPREFIX."fanfiction_stories SET validated = '$validated', updated = " .time(). " WHERE sid = '$sid'");
 					$update2 = dbquery("UPDATE ".TABLEPREFIX."fanfiction_chapters SET validated = 1 WHERE sid = '$sid'");
 					$coauths = dbquery("SELECT uid FROM ".TABLEPREFIX."fanfiction_coauthors WHERE sid = '$sid'");
 					while($c = dbassoc($coauths)) {
@@ -793,16 +803,16 @@ function editstory($sid) {
 					dbquery("UPDATE ".TABLEPREFIX."fanfiction_authorprefs SET stories = stories - 1 WHERE uid = '".$c['uid']."'");
 				}
 				dbquery("UPDATE ".TABLEPREFIX."fanfiction_authorprefs SET stories = stories - 1 WHERE uid = '$uid'");
-				list($chapters, $words) = dbrow(dbquery("SELECT COUNT(chapid), SUM(wordcount) FROM ".TABLEPREFIX."fanfiction_chapters WHERE validated > 0"));
+				list($num_chapters, $words) = dbrow(dbquery("SELECT COUNT(chapid), SUM(wordcount) FROM ".TABLEPREFIX."fanfiction_chapters WHERE validated > 0"));
 				list($authors) = dbrow(dbquery("SELECT COUNT(uid) FROM ".TABLEPREFIX."fanfiction_authorprefs WHERE stories > 0"));
-				dbquery("UPDATE ".TABLEPREFIX."fanfiction_stats set wordcount = '$words', chapters = '$chapters', authors = '$authors'");
+				dbquery("UPDATE ".TABLEPREFIX."fanfiction_stats set wordcount = '$words', chapters = '$num_chapters', authors = '$authors'");
 			}
 			else if(!$admin) $validated = $oldvalid;
 			if(!$admin && $oldfeat != $feat) $feat = $oldfeat;
 			// Update the site stats
-			list($chapters, $words) = dbrow(dbquery("SELECT COUNT(chapid), SUM(wordcount) FROM ".TABLEPREFIX."fanfiction_chapters WHERE validated > 0"));
+			list($num_chapters, $words) = dbrow(dbquery("SELECT COUNT(chapid), SUM(wordcount) FROM ".TABLEPREFIX."fanfiction_chapters WHERE validated > 0"));
 			list($authors) = dbrow(dbquery("SELECT COUNT(uid) FROM ".TABLEPREFIX."fanfiction_authorprefs WHERE stories > 0"));
-			dbquery("UPDATE ".TABLEPREFIX."fanfiction_stats set wordcount = '$words', chapters = '$chapters', authors = '$authors'");
+			dbquery("UPDATE ".TABLEPREFIX."fanfiction_stats set wordcount = '$words', chapters = '$num_chapters', authors = '$authors'");
 
 			$updatequery = dbquery("UPDATE ".TABLEPREFIX."fanfiction_stories SET title = '".addslashes($title)."', summary = '".addslashes(format_story($summary))."', storynotes = '".addslashes(format_story($storynotes))."', rr = '".($rr ? 1 : 0)."', completed = '".($complete ? 1 : 0)."', validated = '$validated', rid = '$rid', classes = '".(is_array($classes) ? implode(",", $classes) : $classes)."', charid = '".(is_array($charid) ? implode(",", $charid) : $charid)."', catid = '".(is_array($catid) ? implode(",", $catid) : $catid)."', coauthors = '".(is_array($coauthors) ? implode(",", $coauthors) : $coauthors)."', featured = '$feat' WHERE sid = '$sid'");
 			$clist = array( );
@@ -851,14 +861,14 @@ function editstory($sid) {
 
 	if(isset($_POST['submit']) && $_POST['submit'] != _PREVIEW) {
 		$submit = _PREVIEW;
-		$storyquery = dbquery("SELECT title, summary, storynotes,  rr, completed, rid, classes, charid, catid, featured, uid, coauthors, UNIX_TIMESTAMP(date) as date FROM ".TABLEPREFIX."fanfiction_stories WHERE sid = '$sid' LIMIT 1");
+		$storyquery = dbquery("SELECT title, summary, storynotes,  rr, completed, rid, classes, charid, catid, featured, uid, coauthors,  date  as date FROM ".TABLEPREFIX."fanfiction_stories WHERE sid = '$sid' LIMIT 1");
 		$story = dbassoc($storyquery);
 		$output .= $formbegin.storyform($story, $preview);
 		$output .= "<input type=\"hidden\" name=\"oldcats\" value =\"".$story['catid']."\">";
 	}
 	else {
 		$submit = _PREVIEW;
-		$storyinfo = dbquery("SELECT s.*, UNIX_TIMESTAMP(s.date) as date, UNIX_TIMESTAMP(s.updated) as updated, "._PENNAMEFIELD." as penname FROM ".TABLEPREFIX."fanfiction_stories as s, "._AUTHORTABLE." WHERE "._UIDFIELD." = s.uid AND sid = '$sid' LIMIT 1");
+		$storyinfo = dbquery("SELECT s.*,  s.date as date,  s.updated as updated, "._PENNAMEFIELD." as penname FROM ".TABLEPREFIX."fanfiction_stories as s, "._AUTHORTABLE." WHERE "._UIDFIELD." = s.uid AND sid = '$sid' LIMIT 1");
 		$stories = dbassoc($storyinfo);
 		if($stories['coauthors'] && !isset($_POST['submit'])) {
 			$au = array();
@@ -888,18 +898,18 @@ function editstory($sid) {
 	}
 
 	$chapquery = dbquery("SELECT chapid, title, inorder, rating, reviews, validated, uid FROM ".TABLEPREFIX."fanfiction_chapters WHERE sid = '$sid' ORDER BY inorder");
-	$chapters = dbnumrows($chapquery);
+	$num_chapters = dbnumrows($chapquery);
 	$output .= "<p><input type=\"submit\" class=\"button\" value=\"$submit\" name=\"submit\">&nbsp; <input type=\"submit\" class=\"button\" value=\""._ADDSTORY."\" name=\"submit\"></p></form></div>";
-	$output .= "<br><table class=\"tblborder\" style=\"margin: 0 auto; width: 500px;\"><tr><th>"._CHAPTER."</th>".($chapters > 1 ? "<th>"._MOVE."</th>" : "")."<th>"._OPTIONS."</th></tr>";
+	$output .= "<br><table class=\"tblborder\" style=\"margin: 0 auto; width: 500px;\"><tr><th>"._CHAPTER."</th>".($num_chapters > 1 ? "<th>"._MOVE."</th>" : "")."<th>"._OPTIONS."</th></tr>";
 			while($chapter = dbassoc($chapquery)) {
 				$output .="<tr><td class=\"tblborder\"><a href=\"viewstory.php?sid=$sid&amp;chapter=".$chapter['inorder']."\">".$chapter['title']."</a></td>";
-				if($chapters > 1) $output .= "<td align=\"center\" class=\"tblborder\">".($chapter['inorder'] == 1 ? "" : "<a href=\"stories.php?action=viewstories&amp;go=up&amp;sid=$sid&amp;chapid=".$chapter['chapid']."&amp;inorder=".$chapter['inorder']."\">$up</a>").
-					($chapter['inorder'] == $chapters ? "" : "<a href=\"stories.php?action=viewstories&amp;go=down&amp;sid=$sid&amp;chapid=".$chapter['chapid']."&amp;inorder=".$chapter['inorder']."\">$down</a>")."</td>";
+				if($num_chapters > 1) $output .= "<td align=\"center\" class=\"tblborder\">".($chapter['inorder'] == 1 ? "" : "<a href=\"stories.php?action=viewstories&amp;go=up&amp;sid=$sid&amp;chapid=".$chapter['chapid']."&amp;inorder=".$chapter['inorder']."\">$up</a>").
+					($chapter['inorder'] == $num_chapters ? "" : "<a href=\"stories.php?action=viewstories&amp;go=down&amp;sid=$sid&amp;chapid=".$chapter['chapid']."&amp;inorder=".$chapter['inorder']."\">$down</a>")."</td>";
 				$output .= "<td class=\"tblborder\" align=\"center\"><a href=\"stories.php?action=editchapter&amp;chapid=".$chapter['chapid'].($admin ? "&amp;admin=1&amp;uid=".$chapter['uid'] : "")."\">"._EDIT."</a>";
-				if($chapters > 1) $output .= " - <a href=\"stories.php?action=delete&amp;chapid=".$chapter['chapid']."&amp;sid=$sid".($admin ? "&amp;admin=1&amp;uid=".$chapter['uid'] : "")."\">"._DELETE."</a>";
+				if($num_chapters > 1) $output .= " - <a href=\"stories.php?action=delete&amp;chapid=".$chapter['chapid']."&amp;sid=$sid".($admin ? "&amp;admin=1&amp;uid=".$chapter['uid'] : "")."\">"._DELETE."</a>";
 				$output .= "</td></tr>";
 			}
-	$output .= "<tr><td class=\"tblborder\" colspan=\"3\" align=\"center\"><a href=\"stories.php?action=newchapter&amp;sid=$sid&amp;inorder=$chapters".($admin ? "&amp;admin=1&amp;uid=".$storyuid : "")."\">"._ADDNEWCHAPTER."</a></td></tr></table>";
+	$output .= "<tr><td class=\"tblborder\" colspan=\"3\" align=\"center\"><a href=\"stories.php?action=newchapter&amp;sid=$sid&amp;inorder=$num_chapters".($admin ? "&amp;admin=1&amp;uid=".$storyuid : "")."\">"._ADDNEWCHAPTER."</a></td></tr></table>";
 	return $output;
 }
 // end editstory
@@ -929,14 +939,14 @@ function delete( ) {
 			if(empty($inorder)) { // Shouldn't be possible and yet someone managed to do it.
 				errorExit();
 			}
-			$chapters = dbnumrows($chapterquery);
+			$num_chapters = dbnumrows($chapterquery);
 		}
-		if(isset($chapters) && $chapters > 1) {
+		if(isset($num_chapters) && $num_chapters > 1) {
 			list($valid) = dbrow(dbquery("SELECT validated FROM ".TABLEPREFIX."fanfiction_chapters where chapid = '$chapid' LIMIT 1"));
 			dbquery("DELETE FROM ".TABLEPREFIX."fanfiction_chapters WHERE chapid = '$chapid' LIMIT 1");
 			if($valid) dbquery("UPDATE ".TABLEPREFIX."fanfiction_stats SET chapters = chapters - 1");
 			if($store == "files") unlink(STORIESPATH."/$uid/".$chapid.".txt"); 
-			if($inorder < $chapters) 
+			if($inorder < $num_chapters) 
 				dbquery("UPDATE ".TABLEPREFIX."fanfiction_chapters SET inorder = (inorder - 1) WHERE sid = '$sid' AND inorder > $inorder");
 			$codequery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'delchapter'");
 			while($code = dbassoc($codequery)) {

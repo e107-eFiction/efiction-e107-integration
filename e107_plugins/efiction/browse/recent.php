@@ -22,10 +22,11 @@
 // ----------------------------------------------------------------------
  
 if(!defined("e107_INIT")) exit( );
-	$output .= "<div id=\"pagetitle\">".($recentdays ? _RECENTSTORIES : _MOSTRECENT)." ".$pagelinks['rss']['link']."</div>";
+ 
+	$output .= "<div id=\"pagetitle\">".($recentdays ? _RECENTSTORIES : _MOSTRECENT)." ".efiction_pagelinks::get_single_link('rss')."</div>";
 
-	$countquery .= ($recentdays ? " AND updated > '".date("Y-m-d H:i:s", mktime(0, 0, 0, date("m")  , date("d")-$recentdays, date("Y")))."'" : "");
-	$query = $storyquery.($recentdays ? " AND updated > '".date("Y-m-d H:i:s", mktime(0, 0, 0, date("m")  , date("d")-$recentdays, date("Y")))."'" : "");
+	$countquery .= ($recentdays ? " AND updated > ".strtotime('-7 days')."" : "");
+	$query = $storyquery.($recentdays ? " AND updated > ".strtotime('-7 days')."" : "");
 	$query .= " ORDER BY ".(isset($_REQUEST['sort']) && $_REQUEST['sort'] == "alpha" ? "stories.title" : "updated DESC");
 	$numrows = search(_STORYQUERY.$query, _STORYCOUNT.$countquery, "browse.php?");
 

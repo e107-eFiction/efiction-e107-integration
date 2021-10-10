@@ -471,7 +471,7 @@ CREATE TABLE `fanfiction_settings` (
  `imagewidth` int(11) NOT NULL default '200',
  `roundrobins` tinyint(1) NOT NULL default '0',
  `allowseries` tinyint(4) NOT NULL default '2',
- `tinyMCE` tinyint(1) NOT NULL default '0',
+ `tinyMCE` varchar(10) NOT NULL default 'default',
  `allowed_tags` varchar(200) NOT NULL default '<b><i><u><center><hr><p><br /><br><blockquote><ol><ul><li><img><strong><em>',
  `favorites` tinyint(1) NOT NULL default '0',
  `multiplecats` tinyint(1) NOT NULL default '0',

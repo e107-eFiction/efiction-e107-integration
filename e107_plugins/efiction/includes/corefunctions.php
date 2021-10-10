@@ -549,9 +549,9 @@ function search($storyquery, $countquery, $pagelink = "searching.php?", $pagetit
 		$tpl->gotoBlock("listings");
 		$tpl->assign("stories",  "<div class=\"sectionheader\">"._STORIES."</div>");
 		$storyquery .= " LIMIT $offset, $itemsperpage";
-		$result3 = dbquery($storyquery);     
+		$result3 = e107::getDb()->retrieve($storyquery, true);     
 		$count = 0;                     
-		while($stories = dbassoc($result3)) {       
+        foreach($result3 AS $stories) {     
 			$tpl->newBlock("storyblock");
 			include(_BASEDIR."includes/storyblock.php"); 
 		}

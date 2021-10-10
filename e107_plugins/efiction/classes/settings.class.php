@@ -70,13 +70,29 @@ if (!class_exists('efiction_settings')) {
         public static function get_single_setting($setting_name)
         {
             $settings = self::get_settings();
-
+ 
             if ($setting_name) {
                 return $settings[$setting_name];
             }
 
             return null;
         }
+        
+        /*instead tinymce yes/no */
+        public static function get_available_editors()
+        {
+                $editor['default'] = EFICTION_EDITOR_217; 
+        		$editor['bbcode'] = 'BBCode';
+        
+        		$editors = e107::getPlug()->getInstalledWysiwygEditors();
+        		if (!empty($editors))
+        		{
+        			$editor = array_merge($editor, $editors);
+        		}
+                
+                return $editor;
+        }       
+        
         
         
     }
