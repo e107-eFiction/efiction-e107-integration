@@ -45,8 +45,7 @@ if(empty($uid)) {
 
 if($displayprofile) include(_BASEDIR."user/profile.php");  
 else if(isADMIN && uLEVEL < 3) {
-	$result2 = dbquery("SELECT * FROM "._AUTHORTABLE." LEFT JOIN ".TABLEPREFIX."fanfiction_authorprefs as ap ON ap.uid = "._UIDFIELD." WHERE "._UIDFIELD." = '$uid' LIMIT 1");
-	$userinfo = dbassoc($result2);
+	$userinfo = e107::getDb()->retrieve("SELECT * FROM "._AUTHORTABLE." LEFT JOIN ".TABLEPREFIX."fanfiction_authorprefs as ap ON ap.uid = "._UIDFIELD." WHERE "._UIDFIELD." = '$uid' LIMIT 1" );
 	$adminopts = "<div class=\"adminoptions\"><span class='label'>"._ADMINOPTIONS.":</span> ".(isset($userinfo['validated']) && $userinfo['validated'] ? "[<a href=\"admin.php?action=members&amp;revoke=$uid\" class=\"vuadmin\">"._REVOKEVAL."</a>] " : "[<a href=\"admin.php?action=members&amp;validate=$uid\" class=\"vuadmin\">"._VALIDATE."</a>] ")
     ."[<a href=\"member.php?action=editbio&amp;uid=$uid\" class=\"vuadmin\">"._EDIT."</a>] [<a href=\"admin.php?action=members&amp;delete=$uid\" class=\"vuadmin\">"._DELETE."</a>]";
 	$adminopts .= " [<a href=\"admin.php?action=members&amp;".($userinfo['level'] < 0 ? "unlock=".$userinfo['uid']."\" class=\"vuadmin\">"._UNLOCKMEM : "lock=".$userinfo['uid']."\" class=\"vuadmin\">"._LOCKMEM)."</a>]";
@@ -54,14 +53,12 @@ else if(isADMIN && uLEVEL < 3) {
 	$tpl->assign("adminoptions", $adminopts);
 }
 
-$infoquery = dbquery("SELECT "._PENNAMEFIELD." as penname FROM "._AUTHORTABLE." WHERE "._UIDFIELD." = '$uid' LIMIT 1");
-
-list($penname) = dbrow($infoquery);
-$tpl->assign("pagetitle", "<div id='pagetitle'>$penname</div>");
-$panelquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE ".($action ? "panel_name = '$action' AND (panel_type = 'P' OR panel_type = 'F')" : "panel_type = 'P' AND panel_hidden = 0 ORDER BY panel_order ASC")." LIMIT 1");
+$penname =  e107::getDb()->retrieve("SELECT "._PENNAMEFIELD." as penname FROM "._AUTHORTABLE." WHERE "._UIDFIELD." = '$uid' LIMIT 1");
  
-if($panelquery) {
-	$panel = dbassoc($panelquery);   
+$tpl->assign("pagetitle", "<div id='pagetitle'>$penname</div>");
+$panel =  e107::getDb()->retrieve("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE ".($action ? "panel_name = '$action' AND (panel_type = 'P' OR panel_type = 'F')" : "panel_type = 'P' AND panel_hidden = 0 ORDER BY panel_order ASC")." LIMIT 1") ;
+ 
+if($panel) {
 	if(!empty($panel['panel_url']) && file_exists(_BASEDIR.$panel['panel_url'])) include(_BASEDIR.$panel['panel_url']);
 	else if(file_exists(_BASEDIR."user/".$panel['panel_name'].".php")) include(_BASEDIR."user/".$panel['panel_name'].".php");
 	else $output .= write_error("(1)"._ERROR);
@@ -69,23 +66,22 @@ if($panelquery) {
 else if($action) $output .= write_error("(2)"._ERROR);
 
 $tpl->gotoBlock("_ROOT");
-$panelquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_hidden != '1' AND panel_level = '0' AND (panel_type = 'P'".($favorites ? " OR panel_type = 'F'" : "").") ORDER BY panel_type DESC, panel_order ASC, panel_title ASC");
-$numtabs = dbnumrows($panelquery);
+$panelquery = e107::getDb()->retrieve("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_hidden != '1' AND panel_level = '0' AND (panel_type = 'P'".($favorites ? " OR panel_type = 'F'" : "").") ORDER BY panel_type DESC, panel_order ASC, panel_title ASC", true);
+$numtabs = count($panelquery);
 $tabwidth = floor(100 / $numtabs);
 if(!$panelquery) $output .= write_error("(3)"._ERROR);
 
 // Special tab counts
-$codequery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'userTabs'");
-while($code = dbassoc($codequery)) {
+$codequery = e107::getDb()->retrieve("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'userTabs'", true);
+foreach($codequery AS $code) {
 	eval($code['code_text']);
 }
-
-while($panel = dbassoc($panelquery)) {
+foreach($panelquery AS $panel) {
 	$panellink = "";
 	if(substr($panel['panel_name'], -2, 2) == "by") {
 		$itemcount = 0;
 		if($panel['panel_name'] == "storiesby") {
-			$count = dbquery("SELECT stories FROM ".TABLEPREFIX."fanfiction_authorprefs WHERE uid = '$uid'");
+			$itemcount =  e107::getDb()->retrieve("SELECT stories FROM ".TABLEPREFIX."fanfiction_authorprefs WHERE uid = '$uid'");
 		}
 		else {
 			if(substr($panel['panel_name'], 0, 3) == "val") {
@@ -98,19 +94,18 @@ while($panel = dbassoc($panelquery)) {
 				if(substr($panel['panel_name'], 0, strlen($panel['panel_name']) - 2) == "stories") $valid = 1;
 				else $valid = 0;
 			}
-			$count = dbquery("SELECT COUNT(uid) FROM ".TABLEPREFIX."fanfiction_".substr($table, 0, strlen($panel['panel_name']) - 2)." WHERE (uid = '$uid'".($panel['panel_name'] == "storiesby" ? " OR FIND_IN_SET($uid, coauthors) > 0" : "").")".($valid ? " AND validated > 0" : "").($panel['panel_name'] == "reviewsby" ? " AND review != 'No Review'" : ""));
+			$itemcount =  e107::getDb()->retrieve("SELECT COUNT(uid) FROM ".TABLEPREFIX."fanfiction_".substr($table, 0, strlen($panel['panel_name']) - 2)." WHERE (uid = '$uid'".($panel['panel_name'] == "storiesby" ? " OR FIND_IN_SET($uid, coauthors) > 0" : "").")".($valid ? " AND validated > 0" : "").($panel['panel_name'] == "reviewsby" ? " AND review != 'No Review'" : ""));
 		}
-		list($itemcount) = dbrow($count);
+	 
 	}
 	if(substr($panel['panel_name'], 0, 3) == "fav" && $type = substr($panel['panel_name'], 3)) {
 		$itemcount = 0;
-		$countquery = dbquery("SELECT COUNT(item) FROM ".TABLEPREFIX."fanfiction_favorites WHERE uid = '$uid' AND type = '$type'");
-		list($itemcount) = dbrow($countquery);
+		$itemcount = e107::getDb()->retrieve("SELECT COUNT(item) FROM ".TABLEPREFIX."fanfiction_favorites WHERE uid = '$uid' AND type = '$type'");
+ 
 	}
 	if($panel['panel_name'] == "favlist") {
 		$itemcount = 0;
-		$countquery = dbquery("SELECT COUNT(item) FROM ".TABLEPREFIX."fanfiction_favorites WHERE uid = '$uid'");
-		list($itemcount) = dbrow($countquery);
+		$itemcount = e107::getDb()->retrieve("SELECT COUNT(item) FROM ".TABLEPREFIX."fanfiction_favorites WHERE uid = '$uid'");
 	}
 	if(!empty($tabCounts[$panel['panel_name']])) $itemcount = $tabCounts[$panel['panel_name']];
 	$panellinkplus = "<a href=\"viewuser.php?action=".$panel['panel_name']."&amp;uid=$uid\">".preg_replace("<\{author\}>", $penname, stripslashes($panel['panel_title'])).(isset($itemcount) ? " [$itemcount]" : "")."</a>\n";
@@ -126,7 +121,7 @@ while($panel = dbassoc($panelquery)) {
 $tpl->gotoBlock("_ROOT");	
 $tpl->assign( "output", $output );
 //$tpl->xprintToScreen( );
-dbclose( );
+ 
 $text = $tpl->getOutputContent(); 
 e107::getRender()->tablerender($caption, $text, $current);
 require_once(FOOTERF); 

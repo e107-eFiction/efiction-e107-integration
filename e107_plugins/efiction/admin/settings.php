@@ -129,13 +129,15 @@ if(isset($_POST['submit'])) {
 		$allowed_tags = $_POST['newallowed_tags'];
 		$favorites = $_POST['newfavorites'] == 1 ? 1 : 0;
 		$multiplecats = $_POST['newmultiplecats'] == 1 ? 1 : 0;
-		$newscomments = $_POST['newnewscomments'] == 1 ? 1 : 0;
+ 
 		$logging = $_POST['newlogging'] == 1 ? 1 : 0;
 		$maintenance = $_POST['newmaint'] == 1 ? 1 : 0;
 		$debug = $_POST['newdebug'] == 1 ? 1 : 0;
 		$captcha = $_POST['newcaptcha'] == 1 ? 1 : 0;
-		$result = dbquery("UPDATE ".MPREFIX."fanfiction_settings SET tinyMCE = '$tinyMCE', favorites = '$favorites', multiplecats = '$multiplecats', allowed_tags = '$allowed_tags', newscomments = '$newscomments', logging = '$logging', maintenance = '$maintenance', debug = '$debug', captcha = '$captcha' WHERE sitekey ='".SITEKEY."'");
-	}
+   
+		$result = e107::getDb()->gen("UPDATE ".MPREFIX."fanfiction_settings SET tinyMCE = '$tinyMCE', favorites = '$favorites', multiplecats = '$multiplecats', allowed_tags = '$allowed_tags',   logging = '$logging', maintenance = '$maintenance', debug = '$debug', captcha = '$captcha' WHERE sitekey ='".SITEKEY."'");
+	     
+    }
 	else if($sect == "display") {
 		$dateformat = $_POST['newdateformat'] ? descript(strip_tags($_POST['newdateformat'])) : descript(strip_tags($_POST['customdateformat']));
 		$timeformat = $_POST['newtimeformat'] ? descript(strip_tags($_POST['newtimeformat'])) : descript(strip_tags($_POST['customtimeformat']));
@@ -156,8 +158,10 @@ if(isset($_POST['submit'])) {
 		$rateonly = $_POST['newrateonly'] == 1 ? 1 : 0;
 		$ratings = isset($_POST['newratings']) && isNumber($_POST['newratings']) ? $_POST['newratings'] : 0;
 		$revdelete = isset($_POST['newrevdelete']) && isNumber($_POST['newrevdelete']) ? $_POST['newrevdelete'] : 0;
-		$result = dbquery("UPDATE ".MPREFIX."fanfiction_settings SET reviewsallowed = '$reviewsallowed', anonreviews = '$anonreviews', rateonly = '$rateonly', ratings = '$ratings', revdelete = '$revdelete' WHERE sitekey ='".SITEKEY."'");
-	}
+ 
+		$result = e107::getDb()->gen("UPDATE ".MPREFIX."fanfiction_settings SET reviewsallowed = '$reviewsallowed', anonreviews = '$anonreviews', rateonly = '$rateonly', ratings = '$ratings', revdelete = '$revdelete' WHERE sitekey ='".SITEKEY."'");
+ 
+    }
 	else if($sect == "useropts") {
 		$alertson = $_POST['newalertson'] == 1 ? 1 : 0;
 		$disablepopups = $_POST['newdisablepops'] == 1 ? 1 : 0;
@@ -172,12 +176,12 @@ if(isset($_POST['submit'])) {
 		$result = dbquery("UPDATE ".MPREFIX."fanfiction_settings SET smtp_host = '$smtp_host', smtp_username = '$smtp_username', smtp_password = '$smtp_password' WHERE sitekey ='".SITEKEY."'");
 	}
     // 0 is correct value, nothing was changed
-	if($result == false) {
+	if($result >= 0 ) {
 		$output .= write_message(_ACTIONSUCCESSFUL);
 		$sect = $sects[(array_search($sect, $sects) + 1)];
 		if(!$sect) $sect = $sects[0];
 	}
-	else $output .= write_error(_ERROR);
+	else $output .= write_error("(4)"._ERROR);
 }
  
 	$settings = efiction_settings::get_settings();
@@ -306,12 +310,7 @@ if(isset($_POST['submit'])) {
 				<option value='0'".($multiplecats == "0" ? "selected" : "").">"._ONLYONE."</option>
 				</select> <a href='#' class='pophelp'>[?]<span>"._HELP_NUMCATS."</span></a></td>
 			</tr>
-			<tr>
-				<td><label for='newnewscomments'>"._NEWSCOMMENTS.": </label></td><td><select name='newnewscomments'>
-				<option value='1'".($newscomments == "1" ? " selected" : "").">"._YES."</option>
-				<option value='0'".($newscomments == "0" ? " selected" : "").">"._NO."</option>
-				</select> <a href='#' class='pophelp'>[?]<span>"._HELP_NEWSCOMMENTS."</span></a></td>
-			</tr>
+ 
 			<tr>
 				<td><label for='newlogging'>"._LOGGING.": </label></td><td><select name='newlogging'>
 				<option value='1'".($logging == "1" ? " selected" : "").">"._YES."</option>

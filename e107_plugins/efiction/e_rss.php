@@ -17,7 +17,7 @@ class efiction_rss // plugin-folder + '_rss'
 		$config = array();
 
 		$config[] = array(
-			'name'			=> 'Last updated Storie',
+			'name'			=> 'Last updated Stories',
 			'url'			=> 'efiction',
 			'topic_id'		=> '',
 			'description'	=> 'this is the rss feed for the efiction plugin', // that's 'description' not 'text'

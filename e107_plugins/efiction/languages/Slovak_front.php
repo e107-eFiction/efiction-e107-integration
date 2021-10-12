@@ -74,7 +74,7 @@ define('_NO', 'No');
 define('_NODBFUNCTIONALITY', 'It appears no applicable database functionality for PHP has not been enabled in the php configuration for this website.  Please consult the PHP documentation or ask your hosting provider.');
 define('_NOMAILSENT', 'We encountered an error.  No e-mail was sent.');
 define('_NONE', 'None');
-define('_NORESULTS', 'No results found.');
+define('_NORESULTS', 'Nenájdené žiadne výsledky');
 define('_NOSTORIES', 'No stories found for this author.');
 define('_NOTAUTHORIZED', 'You are not authorized to access that function.');
 define('_NOTCONNECTED', 'ERROR: Failed to connect to the database!');

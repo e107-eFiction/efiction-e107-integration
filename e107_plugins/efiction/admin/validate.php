@@ -25,9 +25,11 @@
 if(!defined("_CHARSET")) exit( );
 
 function preview_story($stories) {
-	global $extendcats, $skindir, $catlist, $charlist, $store, $storiespath, $classlist, $featured, $retired, $rr, $reviewsallowed, $star, $halfstar, $ratingslist, $classtypelist, $dateformat, $recentdays, $current;
+	global $extendcats, $skindir, $catlist,  $store, $storiespath, $classlist, $featured, $retired, $rr, $reviewsallowed, $star, $halfstar, $ratingslist, $classtypelist, $dateformat, $recentdays, $current;
 		$count = 0;
 
+        $catlist = efiction_categories::get_catlist();
+    
 		if(isset($_GET['textsize'])) $textsize = $_GET['textsize'];
 		else $textsize = 0;
 		

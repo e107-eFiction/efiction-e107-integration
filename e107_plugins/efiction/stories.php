@@ -36,13 +36,13 @@ if($_GET['action'] != "newchapter") $displayform = 1;
 if($_GET['action'] == "newstory" || $_GET['action'] == "editstory") $current = "addstory";
 
 include ("header.php");
-
+print_a($_POST);
 $tpl = new TemplatePower( file_exists("$skindir/default.tpl") ?  "$skindir/default.tpl" : _BASEDIR."default_tpls/default.tpl");
 $tpl->assignInclude( "header", "$skindir/header.tpl" );
 $tpl->assignInclude( "footer", "$skindir/footer.tpl" );
 
-include(_BASEDIR."includes/pagesetup.php");
-include(_BASEDIR."includes/storyform.php");
+include(_BASEDIR."includes/pagesetup.php");  
+include(_BASEDIR."includes/storyform.php");  
 
 
 // before doing anything else check if the visitor is logged in.  If they are, check if they're an admin.  If not, check that they're 
@@ -76,8 +76,10 @@ include(_BASEDIR."includes/storyform.php");
 	}
 
 function preview_story($stories) {
-	global $current, $new, $extendcats, $skindir, $catlist, $charlist, $classlist, $featured, $retired, $rr, $reviewsallowed, $star, $halfstar, $classtypelist, $dateformat, $ratingslist, $recentdays;
+	global $current, $new, $extendcats, $skindir,  $charlist, $classlist, $featured, $retired, $rr, $reviewsallowed, $star, $halfstar, $classtypelist, $dateformat, $ratingslist, $recentdays;
 
+    $catlist = efiction_categories::get_catlist();
+    
 	$count = 0;
 	if(file_exists("$skindir/listings.tpl")) $tpl = new TemplatePower( "$skindir/listings.tpl" );
 	else $tpl = new TemplatePower(_BASEDIR."default_tpls/listings.tpl");
@@ -128,7 +130,10 @@ function preview_story($stories) {
 // function to add new story to archives.
 function newstory( ) {
 
-	global $autovalidate, $sid, $action, $sid, $store, $tpl, $admin, $sitename, $siteemail, $allowed_tags, $admincats, $alertson, $dateformat, $url, $minwords, $maxwords, $charlist, $catlist, $classtypelist;
+	global $autovalidate, $sid, $action, $sid, $store, $tpl, $admin, $sitename, $siteemail, $allowed_tags, $admincats, $alertson, $dateformat, $url, $minwords, $maxwords, $charlist, $classtypelist;
+    
+    $catlist = efiction_categories::get_catlist();
+        
 	$newchapter = $action == "newchapter";
 	$output = "<div id=\"pagetitle\">".($newchapter ? _ADDNEWCHAPTER : _ADDNEWSTORY)."</div>";
 // to avoid problems with register globals and hackers declare variables and do some clean up.
@@ -145,8 +150,12 @@ function newstory( ) {
 	$title = isset($_POST['title']) ? descript(strip_tags($_POST['title'], $allowed_tags)) : "";
 	$summary = isset($_POST['summary']) ? replace_naughty(descript(strip_tags($_POST['summary'], $allowed_tags))) : "";
 	$storynotes = isset($_POST['storynotes']) ? descript(strip_tags($_POST['storynotes'], $allowed_tags)) : "";
-	$catid = isset($_POST['catid']) ? array_filter(explode(",", $_POST['catid']), "isNumber") : array( );
+    
+    /* IMPORTANT e107 checkboxes returns array directly */
+	$catid = isset($_POST['catid']) ? $_POST['catid'] : array( );
+    
 	$charid = isset($_POST['charid']) ? array_filter($_POST['charid'], "isNumber") : array( );
+    
 	$coauthors = isset($_POST['coauthors']) ? array_filter(explode(",", $_POST['coauthors']), "isNumber") : array( );
 	$classes = array( );
 	$classquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_classtypes");
@@ -428,7 +437,7 @@ function newstory( ) {
 
 	$submit = isset($_POST['submit']) ? $_POST['submit'] : false;
 	if(!$submit) $submit = _PREVIEW;
-	$output .= "<div class=\"tblborder\" style=\"width: 500px; padding: 10px; margin: 1em auto;\">
+	$output .= "<div class=\"tblborder\" style=\"width: 90%; padding: 10px; margin: 1em auto;\">
 	<form METHOD=\"POST\" name=\"form\" enctype=\"multipart/form-data\" action='stories.php?action=$action".($newchapter ? "&amp;sid=$sid&amp;inorder=$inorder" : "").($admin == 1 ? "&amp;admin=1&amp;uid=$uid" : "")."'>";
 	if(!$newchapter) $output .= storyform($stories, $submit);
 	$output .= chapterform($inorder, $notes, $endnotes, $storytext, $chaptertitle, $uid);
@@ -456,7 +465,7 @@ function viewstories( ) {
 		}
 		if($com)  dbquery("UPDATE ".TABLEPREFIX."fanfiction_stories SET completed = ".($com == "yes" ? "1" : "0")." WHERE sid = '$sid'");
 	}
-	$output .= "<p style=\"text-align: right; margin: 1em;\"><a href=\"stories.php?action=viewstories&amp;chapters=".($hidechapters != "view" ? "view\">"._VIEWCHAPTERS : "hide\">"._HIDECHAPTERS)."</a></p>
+	$output .= "<p style=\"text-align: right; margin: 1em;\"><a class=\"btn btn-outline-primary\" href=\"stories.php?action=viewstories&amp;chapters=".($hidechapters != "view" ? "view\">"._VIEWCHAPTERS : "hide\">"._HIDECHAPTERS)."</a></p>
 		<div style=\"width: 90%; margin: 0 auto;\"><table cellpadding=\"3\" cellspacing=\"0\" width=\"100%\" class=\"tblborder\"><tr><th class=\"tblborder\">"._STORIES."</th><th colspan=\"3\" class=\"tblborder\">"._OPTIONS."</th>".($reviewsallowed ? "<th class=\"tblborder\">"._REVIEWS."</th>" : "").($autovalidate ? "" : "<th class=\"tblborder\">"._VALIDATED."</th>")."<th class=\"tblborder\">"._READS."</th></tr>";
 	$sresult = "SELECT stories.sid, title, reviews, rating, completed, validated, featured, count FROM ".TABLEPREFIX."fanfiction_stories AS stories LEFT JOIN ".TABLEPREFIX."fanfiction_coauthors AS coauth ON stories.sid = coauth.sid WHERE stories.uid = '".USERUID."' OR coauth.uid = '".USERUID."' ORDER BY title" ;
 	$stories = e107::getDb()->retrieve($sresult, true);
@@ -499,7 +508,9 @@ function editchapter( $chapid ) {
  
 	if(isset($_POST['submit'])) {
 		$chaptertitle = strip_tags(descript($_POST["chaptertitle"]), $allowed_tags);
-		$notes = strip_tags(descript($_POST["notes"]), $allowed_tags);
+      
+        $notes = e107::getParser()->toDb($_POST["notes"], "DESCRIPTION"); 
+
 		$endnotes = strip_tags(descript($_POST["endnotes"]), $allowed_tags);
 		if(!empty($_FILES['storyfile']['name'])) {
 			if ($_FILES['storyfile']['type'] != 'text/html' && $_FILES['storyfile']['type'] != 'text/plain') {
@@ -644,7 +655,10 @@ function editstory($sid) {
 	}
 	if(isset($_POST['submit'])) {
 		$title = isset($_POST['title']) ? strip_tags(descript($_POST['title']), $allowed_tags) : "";
-		$summary = isset($_POST['summary']) ? strip_tags(descript($_POST['summary']), $allowed_tags) : "";
+		//$summary = isset($_POST['summary']) ? strip_tags(descript($_POST['summary']), $allowed_tags) : "";
+        $summary = e107::getParser()->toDb($_POST["summary"], "DESCRIPTION"); 
+         
+        
 		$storynotes = strip_tags(descript($_POST['storynotes']), $allowed_tags);
 		$rr = isset($_POST['rr']) && isNumber($_POST['rr']) ? $_POST['rr'] : 0;
 		$feat = isset($_POST['feature']) && isNumber($_POST['feature']) ? $_POST['feature'] : 0;
@@ -654,7 +668,8 @@ function editstory($sid) {
 		$notes = isset($_POST['notes']) ? strip_tags(descript($_POST['notes']), $allowed_tags) : "";
 		$endnotes = isset($_POST['endnotes']) ? strip_tags(descript($_POST['endnotes']), $allowed_tags) : "";
 		$rid = isset($_POST['rid']) && isNumber($_POST['rid']) ? $_POST['rid'] : 0;
-		$catid = isset($_POST['catid']) ? array_filter(explode(",", $_POST['catid']), "isNumber") : array( );
+		$catid = isset($_POST['catid']) ? $_POST['catid'] : array( );
+        
 		$charid = isset($_POST['charid']) ? array_filter($_POST['charid'], "isNumber") : array( );
 		$coauthors = isset($_POST['coauthors']) ? array_filter(explode(",", $_POST['coauthors']), "isNumber") : array( );
 		if(isset($_POST['uid']) && isNumber($_POST['uid'])) $uid = $_POST['uid'];
@@ -677,8 +692,20 @@ function editstory($sid) {
 	}
 	if(isset($_POST['submit']) && $_POST['submit'] == _ADDSTORY) {
 		$oldcats = isset($_POST['oldcats']) ? array_filter(explode(",", $_POST['oldcats']), "isNumber") : array( );
-		if (!$rid || !$title || !$summary || !$catid) {
-			$output .= write_error(_MISSINGFIELDS);
+        if (!$rid) {
+        		  $output .= write_error(_MISSINGFIELDS);  $output .=  "- Rating";
+                  $submit = _PREVIEW;
+        }
+        elseif(!$title) {
+                  $output .= write_error(_MISSINGFIELDS);  $output .=  "- Title";
+                  $submit = _PREVIEW;
+        }
+        elseif(!$summary ) {
+                  $output .= write_error(_MISSINGFIELDS);  $output .=  "- Summary";
+                  $submit = _PREVIEW;
+        } 
+        elseif (!$catid) {
+			$output .= write_error(_MISSINGFIELDS); $output .=  "- Category";
 			$submit = _PREVIEW;
 		}
 		else {

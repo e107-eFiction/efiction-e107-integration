@@ -41,8 +41,7 @@ if($user_id) {
     }
     else if(ADMIN && getperms("4") && !$userData['user_admin'])
     {
-    	
-        
+    
         $url =  e_ADMIN_ABS."users.php?mode=main&action=edit&id=".$user_id;
         print_a($url); die;
         e107::redirect($url); 
@@ -56,7 +55,7 @@ if($user_id) {
 }
 else {
  
-   $output .= write_error("(2)"._ERROR);
+   $output .= write_error("(2) Informácie o autorovi nie sú dostupné");
 } 
 
 

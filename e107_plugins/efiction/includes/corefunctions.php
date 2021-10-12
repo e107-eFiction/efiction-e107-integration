@@ -50,7 +50,9 @@ function categoryitems($catid, $value)
 
 // Function to recurse through categories to build a list of the category and all it's sub-categories.
 function recurseCategories($catid) {
-	global $catlist;
+ 
+    $catlist = efiction_categories::get_catlist();
+        
 	$$catid = $catlist;
 	$categorylist[] = $catid;
 	foreach($$catid as $cat => $info) {
@@ -492,8 +494,10 @@ function ratingpics($rating) {
 
 // This function builds the list of category links (including the breadcrumb depending on settings)
 function catlist($catid) {
-	global $extendcats, $catlist, $action;
+	global $extendcats,  $action;
 
+    $catlist = efiction_categories::get_catlist();
+    
 	if(!is_array($catid)) $catid = explode(",", $catid);
 	$categorylinks = array();
 	foreach($catid as $cat) {

@@ -69,7 +69,7 @@ if (!class_exists('efiction_settings')) {
             $settings['language'] = e_LANGUAGE;
 
             unset($settings['smtp_host'], $settings['smtp_username'], $settings['smtp_password']);
-
+ 
             return $settings;
         }
 

@@ -30,11 +30,15 @@ if(!defined("e107_INIT")) exit( );
 //function to build story data section of the form.
 function storyform($stories, $preview = 0){
 
-	global $admin, $allowed_tags, $multiplecats,  $roundrobins, $catlist, $coauthallowed, $tinyMCE, $action, $sid;
-
+	global $admin, $allowed_tags,    $roundrobins, $coauthallowed, $tinyMCE, $action, $sid;
+    
+    $catlist = efiction_categories::get_catlist();
+    $multiplecats = efiction_settings::get_single_setting('multiplecats');
+ 
 	$classes = explode(",", $stories['classes']);
 	$charid = explode(",", $stories['charid']);
 	$catid = explode(",", $stories['catid']);
+    
 	$title = $stories['title'];
 	$summary = $stories['summary'];
 	$storynotes = $stories['storynotes'];
@@ -56,6 +60,7 @@ function storyform($stories, $preview = 0){
 		}
 		$output .= "<br /><label for=\"uid\">"._AUTHOR.":</label> <select name=\"uid\" id=\"uid\">$authors</select><br /><br />";
 	}
+ 
 	if($coauthallowed) {
 	$output .= "<script language=\"javascript\" type=\"text/javascript\" src=\""._BASEDIR."includes/userselect.js\"></script>
 		<script language=\"javascript\" type=\"text/javascript\" src=\""._BASEDIR."includes/xmlhttp.js\"></script><div style=\"text-align: center;\">"._COAUTHORSEARCH."</div>";
@@ -76,16 +81,23 @@ function storyform($stories, $preview = 0){
 	$output .= "</select></label>
 		<input type='hidden' name='coauthors' id='coauthors' value='$couids'></div>";
 	}
-	$output .= "<p><label for=\"summary\">"._SUMMARY.":</label> ".(!$summary ? "<span style=\"font-weight: bold; color: red\">*</span>" : "")."<br><textarea class=\"textbox\" rows=\"6\" name=\"summary\" id=\"summary\" cols=\"58\">$summary</textarea>";
-	if($tinyMCE) 
-		$output .= "<div class='tinytoggle'><input type='checkbox' name='toggle' onclick=\"toogleEditorMode('summary');\" checked><label for='toggle'>"._TINYMCETOGGLE."</label></div>";
-	$output .= "</p>
-		<p><label for=\"storynotes\">"._STORYNOTES.":</label> <br /><textarea class=\"textbox\" rows=\"6\" name=\"storynotes\" id=\"storynotes\" cols=\"58\">$storynotes</textarea></p>";
-	if($tinyMCE) 
+    
+	$output .= "<p><label for=\"summary\">"._SUMMARY.":</label> ".(!$summary ? "<span style=\"font-weight: bold; color: red\">*</span>" : "")."<br>";	
+    $output .= e107::getForm()->textarea('summary',$summary); 
+    $output .= "</p>"; 
+    
+    $output .= "<p><label class='efiction-label' for=\"storynotes\">"._STORYNOTES.":</label> <br />";
+
+    $output .=  e107::getForm()->bbarea('storynotes',$storynotes,'public','efiction','small', array('wysiwyg' => $wysiwyg));
+    $output .= "</p>";
+    
+    if($tinyMCE) 
 		$output .= "<div class='tinytoggle'><input type='checkbox' name='toggle' onclick=\"toogleEditorMode('storynotes');\" checked><label for='toggle'>"._TINYMCETOGGLE."</label></div>";
+ 
 	if(!$multiplecats) $output .= "<input type=\"hidden\" name=\"catid\" id=\"catid\" value=\"1\">";
 	else {
-		include("includes/categories.php");
+ 
+		require_once(_BASEDIR."includes/categories.php");
 		$output .= "<input type=\"hidden\" name=\"formname\" value=\"stories\">";
 	}
 	$output .= "<div style='float: left; width: 100%;'>";

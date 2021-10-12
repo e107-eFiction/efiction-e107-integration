@@ -17,7 +17,8 @@ else {
   e107::getSingleton('efiction_settings', e_PLUGIN.'efiction/classes/settings.class.php');
   e107::getSingleton('efiction_authors', e_PLUGIN.'efiction/classes/authors.class.php');  
   e107::getSingleton('efiction_panels', e_PLUGIN.'efiction/classes/panels.class.php'); 
-
+  e107::getSingleton('efiction_categories', e_PLUGIN.'efiction/classes/categories.class.php'); 
+  
   /**************  LOAD EFICTION SETTINGS ***************************************/    
   $settings = efiction_settings::get_settings();
  

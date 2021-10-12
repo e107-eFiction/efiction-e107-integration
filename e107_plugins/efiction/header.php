@@ -40,7 +40,7 @@ e107::lan("efiction");
 //THEME_LAYOUT is available
 
 $settings = efiction_settings::get_settings();
-//print_a($settings);
+//print_xa($settings);
 foreach($settings as $var => $val) {
   	$$var = stripslashes($val);
 }

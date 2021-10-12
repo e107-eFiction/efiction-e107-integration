@@ -362,7 +362,7 @@ if (!class_exists('efiction_setup')) {
             
                         if (!empty($ret['failed'])) {
                             e107::getMessage()->addError(LAN_EFICTION_ADMIN_002);
-                            e107::getMessage()->addDebug(print_a($ret['failed'], true));
+                            e107::getMessage()->addDebug(print_xa($ret['failed'], true));
                         }
                     }
                     */
@@ -396,7 +396,7 @@ if (!class_exists('efiction_setup')) {
 
         public function uninstall_post($var)
         {
-            // print_a($var);
+            // print_xa($var);
         }
 
         public function upgrade_post($var)
