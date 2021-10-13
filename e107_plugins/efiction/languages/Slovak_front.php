@@ -65,42 +65,42 @@ define(
 <u>Please be aware that when you select a category in the drop-down menu below, the options in the list will change to display that category's sub-categories.</u>
  Press the 'Select >' button to add it to your choices. You may clear your selections at any time using the 'Clear' button."
 );
-define('_MULTIPLESELECT', 'Hold the CTRL key to make multiple selections.');
-define('_NAME', 'Name');
-define('_NAUGHTYWORDS', 'You have triggered our bad language filters.  We require that all content not behind an age verification warning be suitable for all audiences.  This includes titles, summaries, and names (for anonymous reviews, challenges, etc.). Please <a href="javascript: history.back(1)">try again.</a>');
-define('_NEXT', 'Next');
-define('_NEW', 'New!');
-define('_NO', 'No');
-define('_NODBFUNCTIONALITY', 'It appears no applicable database functionality for PHP has not been enabled in the php configuration for this website.  Please consult the PHP documentation or ask your hosting provider.');
-define('_NOMAILSENT', 'We encountered an error.  No e-mail was sent.');
-define('_NONE', 'None');
+define('_MULTIPLESELECT', 'Podržaním klávesy CTRL vykonáte viacero výberov.');
+define('_NAME', 'Názov');
+define('_NAUGHTYWORDS', 'Zachytil vás náš filter neslušných slov.  Vyžadujeme, aby všetok obsah, ktorý nie je za varovaním o overení veku, bol vhodný pre všetky skupiny divákov.  To zahŕňa názvy, zhrnutia a mená (pre anonymné recenzie, výzvy atď.). Prosím, <a href="javascript: history.back(1)">skúšajte to znova.</a>');
+define('_NEXT', 'Ďalej');
+define('_NEW', 'Nový!');
+define('_NO', 'Nie');
+define('_NODBFUNCTIONALITY', 'Zdá sa, že v konfigurácii php pre túto webovú stránku nebola povolená žiadna použiteľná funkcia databázy pre PHP.  Pozrite si prosím dokumentáciu PHP alebo sa opýtajte svojho poskytovateľa hostingu.');
+define('_NOMAILSENT', 'Vyskytla sa chyba. Nebol odoslaný žiadny e-mail.');
+define('_NONE', 'Žiaden');
 define('_NORESULTS', 'Nenájdené žiadne výsledky');
-define('_NOSTORIES', 'No stories found for this author.');
-define('_NOTAUTHORIZED', 'You are not authorized to access that function.');
-define('_NOTCONNECTED', 'ERROR: Failed to connect to the database!');
-define('_OPTIONS', 'Options');
-define('_OR', 'or');
-define('_ORPHAN', 'Orphan');
-define('_OTHERRESULTS', 'Other Results');
-define('_PENNAME', 'Penname');
+define('_NOSTORIES', 'Pre tohto autora neboli nájdené žiadne príbehy.');
+define('_NOTAUTHORIZED', 'Nemáte oprávnenie na prístup k tejto funkcii.');
+define('_NOTCONNECTED', 'ERROR: Nepodarilo sa pripojiť k databáze!');
+define('_OPTIONS', 'Možnosti');
+define('_OR', 'alebo');
+define('_ORPHAN', 'Opustené');
+define('_OTHERRESULTS', 'Ďalšie výsledky');
+define('_PENNAME', 'Prezývka');
 define('_PFSTORY', 'Past Featured Story');
-define('_POSSIBLEHACK', 'A hacking attempt has been detected.');
+define('_POSSIBLEHACK', 'Bol zistený pokus o hacking.');
 define('_PREVIEW', 'Preview');
-define('_PREVIOUS', 'Previous');
-define('_PRINTER', 'Printer');
-define('_ORDER', 'Order');
-define('_RATING', 'Rating');
-define('_RATINGS', 'Ratings');
-define('_REMOVE', 'Remove');
-define('_REQUIREDINFO', 'Some of the required information is missing.  Please check your input.');
-define('_REVIEW', 'Review');
-define('_REVIEWNOTE', '<span style="text-decoration: underline; font-weight: bold;">Note:</span> You may submit either a rating or a review or both.');
+define('_PREVIOUS', 'Prech.');
+define('_PRINTER', 'Tlačiareň');
+define('_ORDER', 'Poradie');
+define('_RATING', 'Prístupnosť');
+define('_RATINGS', 'Prístupnosť');
+define('_REMOVE', 'Odstrániť');
+define('_REQUIREDINFO', 'Chýbajú niektoré z požadovaných informácií.  Skontrolujte, prosím, svoj vstup.');
+define('_REVIEW', 'Hodnotenie');
+define('_REVIEWNOTE', '<span style="text-decoration: underline; font-weight: bold;">Poznámka:</span> Môžete zadať buď hodnotenie, alebo recenziu, alebo oboje.');
 define('_REVIEWRATING', _RATING);
-define('_REVIEWS', 'Reviews');
+define('_REVIEWS', 'Recenzie');
 define('_RETIRE', 'Retire');
 define('_RETIRED', 'Retired');
-define('_RUSERSONLY', 'Registered Users Only');
-define('_SELECT', 'Select');
+define('_RUSERSONLY', 'Len registrovaní užívatelia');
+define('_SELECT', 'Vybrať');
 define('_SELECTCATS', 'Selected Categories');
 define('_SERIES', 'Series');
 define('_SORT', 'Sort');
@@ -110,13 +110,14 @@ define('_STORY', 'Story');
 define('_SUBMIT', 'Submit');
 define('_SUMMARY', 'Summary');
 define('_TEXT', 'Text');
-define('_TINYMCETOGGLE', 'Use tinyMCE');
-define('_TITLE', 'Title');
+define('_TINYMCETOGGLE', 'Použiť tinyMCE');
+define('_TITLE', 'Názov');
 define('_TOC', 'Table of Contents');
-define('_TOPLEVEL', 'Top Level Category'); // Really only used in the admin, but needs to load with the header.
-define('_UP', 'up arrow');
-define('_WIP', 'Work in Progress Only'); // Added 01/12/07
-define('_YES', 'Yes');
+define('_TOPLEVEL', 'Top Level Category'); // V skutočnosti sa používa len v administrácii, ale musí sa načítať spolu so záhlavím.
+define('_UP', 'šípka nahor');
+define('_WIP', 'Work in Progress Only'); // Pridané 01/12/07
+define('_YES', 'Áno');
+ 
 
 // Login
 

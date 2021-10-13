@@ -43,12 +43,7 @@ CREATE TABLE `fanfiction_authors` (
  KEY `admincreated` (`admincreated`),
  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB;
-
--- --------------------------------------------------------
-
--- 
--- Table structure for table `fanfiction_blocks`
--- 
+ 
 
 CREATE TABLE `fanfiction_blocks` (
  `block_id` int(11) NOT NULL auto_increment,
@@ -61,11 +56,7 @@ CREATE TABLE `fanfiction_blocks` (
  KEY `block_name` (`block_name`)
 ) ENGINE=InnoDB;
 
--- --------------------------------------------------------
-
--- 
--- Table structure for table `fanfiction_categories`
--- 
+ 
 
 CREATE TABLE `fanfiction_categories` (
  `catid` int(11) NOT NULL auto_increment,
@@ -81,11 +72,7 @@ CREATE TABLE `fanfiction_categories` (
  KEY `byparent` (`parentcatid`,`displayorder`)
 ) ENGINE=InnoDB;
 
--- --------------------------------------------------------
-
--- 
--- Table structure for table `fanfiction_chapters`
--- 
+ 
 
 CREATE TABLE `fanfiction_chapters` (
  `chapid` int(11) NOT NULL auto_increment,

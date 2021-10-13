@@ -37,8 +37,8 @@ if(dbnumrows($page)) list($title, $text) = dbrow($page);
 else $text = write_message(_ERROR);
 
 $title = e107::getParser()->toHTML($title, FALSE, "TITLE");
-$text = e107::getParser()->toHTML($text, FALSE, "BODY");
-
+$text = e107::getParser()->toHTML($text, TRUE, 'DESCRIPTION');
+ 
 $tpl->assign("output", "<div id='pagetitle'>$title</div>\n\n$text");
  
  

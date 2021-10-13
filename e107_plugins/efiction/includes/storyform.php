@@ -100,32 +100,42 @@ function storyform($stories, $preview = 0){
 		require_once(_BASEDIR."includes/categories.php");
 		$output .= "<input type=\"hidden\" name=\"formname\" value=\"stories\">";
 	}
-	$output .= "<div style='float: left; width: 100%;'>";
-	$count = 0;
-	$result4 = dbquery("SELECT charname, catid, charid FROM ".TABLEPREFIX."fanfiction_characters ORDER BY charname");
-	if(dbnumrows($result4)) {
-		$output .= "<div style=\"float: left; width: 49%;\"><label for=\"charid\">"._CHARACTERS.":</label><br><select size=\"5\"  style=\"width: 99%;\" id=\"charid\" name=\"charid[]\" multiple><option value=\"\">"._NONE."</option>";
-		while ($charresults = dbassoc($result4)) {
-			if((is_array($catid) && in_array($charresults['catid'], $catid)) || $charresults['catid'] == -1) {
-				$output .= "<option value=\"".$charresults['charid']."\"".($charid != "" && in_array(stripslashes($charresults['charid']), $charid) ? " selected" : "").">".stripslashes($charresults['charname'])."</option>";
-			}
-		}
-		$output .= "</select></div>";
-		$count++;
-	}
-	unset($result4);
-	$result = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_classtypes ORDER BY classtype_name");
-	while($type = dbassoc($result)) {
-		$result2 = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_classes WHERE class_type = '$type[classtype_id]' ORDER BY class_name");
-		$select = "";
-		while ($class = dbassoc($result2)) {
-				$select .= "<option value=\"$class[class_id]\"".(is_array($classes) && in_array($class['class_id'], $classes) ? " selected" : "").">$class[class_name]</option>";
-		}
-		$output .= "<div style=\"float: ".($count % 2 ? "right" : "left")."; width: 49%; margin-bottom: 1em;\"><label for=\"class_".$type['classtype_id']."\">$type[classtype_title]:</label><br />
-				 <select name=\"class_".$type['classtype_id']."[]\" id=\"class_".$type['classtype_id']."\"  style=\"width: 99%;\" multiple size=\"5\">$select</select></div>";
-		if($count % 2) $output .= "<div style=\"clear: both; height: 1px;\">&nbsp;</div>";
-		$count++;
-	}
+ 
+    $query = 'SELECT charname, catid, charid FROM #fanfiction_characters ORDER BY charname';
+    $result4 = e107::getDb()->retrieve($query, true);
+      foreach ($result4 as $charresults) {
+          if ((is_array($catid) && in_array($charresults['catid'], $catid)) || $charresults['catid'] == -1) {
+              $characters[$charresults['charid']] = stripslashes($charresults['charname']);
+          }
+      }
+      $options = array('title' => _CHARACTERS, 'inline' => true,  'useKeyValues' => 1);
+      $text = e107::getForm()->checkboxes('charid', $characters, $charid, $options);
+    
+    $output .= "<div class='column form-check-inline mt-2'><label for=\"charid\">"._CHARACTERS.":</label><br>".$text. "</div>";
+        
+    
+    $classrows = e107::getDb()->retrieve('SELECT * FROM #fanfiction_classtypes ORDER BY classtype_name', true);
+        $ret .= '<style> .form-check {min-width: 300px;}
+		#characters-container .checkbox-inline  {margin-left: 20px!important; } 
+		#catid-container .checkbox-inline  {margin-left: 20px!important; }  
+		#classes-container .checkbox-inline  {margin-left: 20px!important; } 
+		</style>';
+        foreach ($classrows as $type) {
+            $ret .= "<div class='column form-check-inline mt-2'><label for=\"class_".$type['classtype_id']."\"><b>$type[classtype_title]:</b></label>:<br>";
+            $result2 = e107::getDb()->retrieve("SELECT * FROM #fanfiction_classes WHERE class_type = '$type[classtype_id]' ORDER BY class_name", true);
+            $values = array();
+            foreach ($result2 as $row) {
+                $values[$row['class_id']] = $row['class_name'] ;
+            }
+            $options['useKeyValues'] = true;
+            $options['inline'] = true;
+            $ret .= e107::getForm()->checkboxes('classes', $values, $classes, $options);
+            $ret .= '</div>';
+        }
+    
+    $output .= $ret; 
+      
+ 
 	$output .= "<div style=\"clear: both; height: 1px;\">&nbsp;</div></div>";
 	$result5 = dbquery("SELECT rid, rating FROM ".TABLEPREFIX."fanfiction_ratings");
 	$output .= "<label for=\"rid\">"._RATING.":</label>".(!$rid ? " <span style=\"font-weight: bold; color: red\">*</span>" : "")." <select size=\"1\" id=\"rid\" name=\"rid\">";

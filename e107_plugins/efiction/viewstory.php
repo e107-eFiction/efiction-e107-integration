@@ -195,7 +195,7 @@ if($action == "printable") {
 	$tpl->assign("archivedat", _ARCHIVEDAT." <a href=\"$url/viewstory.php?sid=$sid\">$url/viewstory.php?sid=$sid</a>");
 	$copyquery = dbquery("SELECT message_text FROM ".TABLEPREFIX."fanfiction_messages WHERE message_name = 'printercopyright' LIMIT 1");
 	list($copyright) = dbrow($copyquery); 
-    $copyright = e107::getParser()->toHtml($copyright, "BODY");
+    $copyright = e107::getParser()->toHtml($copyright, true, "BODY");
 	$tpl->assign("copyright", $copyright);
 }
 else if(($displayindex && empty($chapter)) || !empty($_GET['index'])) {
@@ -270,7 +270,7 @@ else {
 				$notes = isset($chap['notes']) ? format_story($chap['notes']) : false;
 				$endnotes = isset($chap['endnotes']) ? format_story($chap['endnotes']) : false;
 				$chapid = $chap['chapid'];
-				$story =  e107::getParser()->toHTML($chap['storytext'], "DESCRIPTION");
+				$story =  e107::getParser()->toHTML($chap['storytext'], true, "DESCRIPTION");
 				$chapterauthor = $chap['uid'];
 				$chapterpenname = $chap['penname'];
 				$valid = $chap['validated'];

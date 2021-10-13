@@ -36,7 +36,7 @@ if($_GET['action'] != "newchapter") $displayform = 1;
 if($_GET['action'] == "newstory" || $_GET['action'] == "editstory") $current = "addstory";
 
 include ("header.php");
-print_a($_POST);
+//print_a($_POST);
 $tpl = new TemplatePower( file_exists("$skindir/default.tpl") ?  "$skindir/default.tpl" : _BASEDIR."default_tpls/default.tpl");
 $tpl->assignInclude( "header", "$skindir/header.tpl" );
 $tpl->assignInclude( "footer", "$skindir/footer.tpl" );
@@ -883,7 +883,7 @@ function editstory($sid) {
 	}
 	$query = dbquery("SELECT DATE_FORMAT(date, '$dateformat') as date, wordcount, uid FROM ".TABLEPREFIX."fanfiction_stories WHERE sid = '$sid' LIMIT 1");
 	list($published, $wordcount, $storyuid) = dbrow($query);
-	$formbegin = "<div class=\"tblborder\" style=\"margin: 10px auto; width: 550px; padding: 10px;\">
+	$formbegin = "<div class=\"tblborder\" style=\"margin: 10px auto;  padding: 10px;\">
 		<form METHOD=\"POST\" name=\"form\" action=\"stories.php?action=editstory".($admin ? "&amp;admin=1" : "")."&amp;sid=$sid\">";
 
 	if(isset($_POST['submit']) && $_POST['submit'] != _PREVIEW) {
