@@ -9,7 +9,7 @@ define ("_ADDSTORY2FAVES", "Zaradiť medzi obľúbené poviedky");
 define ("_ADDTOFAVORITES", "Pridať k obľúbeným");
 define ("_ADMINOPTIONS", "Admin Options");
 define ("_AGECHECK", "Vyžadované odsúhlasenie veku");
-define ("_AGECONSENT", "Podľa zákonov štátu, kde žijem, som dosiahol plnoletosť a tak môžem vidieť veci s obsahom pre dospelých. &nbsp; Súčasne si uvedomujem, že týmto potvrdením obídem podobné varovania aj u ďalších poviedok.");
+define ("_AGECONSENT", "Podľa zákonov štátu, kde žijem, som dosiahol plnoletosť a tak môžem vidieť veci s obsahom pre dospelých. &nbsp; Súčasne si uvedomujem, že týmto potvrdením obídem podobné varovania aj u ostatných poviedok.");
 define ("_ALL", "All");
 define ("_ALLOWEDTAGS", "<span style=\"font-weight: bold; text-decoration: underline;\">Poznámka:</span> Povolené HTML tagy sú: ".htmlentities(preg_replace("/></", "> <", $allowed_tags)));
 define ("_ALLSTORIES", "Všetky preklady");
@@ -105,10 +105,10 @@ define('_SELECTCATS', 'Selected Categories');
 define('_SERIES', 'Series');
 define('_SORT', 'Sort');
 define('_STAR', 'star');
-define('_STORIES', 'Stories');
-define('_STORY', 'Story');
-define('_SUBMIT', 'Submit');
-define('_SUMMARY', 'Summary');
+define('_STORIES', 'Poviedky');
+define('_STORY', 'Poviedka');
+define('_SUBMIT', 'Odoslať');
+define('_SUMMARY', 'Zhrnutie');
 define('_TEXT', 'Text');
 define('_TINYMCETOGGLE', 'Použiť tinyMCE');
 define('_TITLE', 'Názov');
@@ -126,7 +126,7 @@ define('_MEMBERLOGIN', 'Member Login');
 
 // Browse
 define('_BROWSE', 'Browse');
-define('_RECENTSTORIES', 'Stories updated in the last '.$recentdays.' days.');
+define('_RECENTSTORIES', 'Poviedky aktualizované za posledných [x] dní.');
 define('_EMAILSENT', 'Your e-mail has been sent.');
 define('_TITLES', 'Titles');
 // Contact Us
@@ -262,13 +262,13 @@ define('_WORDCOUNTFAILED', 'Your story failed to meet the required minimum or ma
 define('_USERACCOUNT', 'Member Account');
 
 // User --  Edit prefs
-define('_ALERTSON2', 'Contact when favorites are updated.');
+define('_ALERTSON2', 'Kontaktovať pri zmene v obľúbených.');
 define('_BETANOTE', 'I would like to volunteer to be a beta-reader for others.');
-define('_CONTACTREVIEWS', 'Contact for new reviews');
-define('_CONTACTRESPOND', 'Contact when author responds to review');
-define('_DEFAULTSORT', 'Default Story Sort');
-define('_DISPLAYINDEX', 'Display table of contents for stories.');
-define('_EDITPREFS', 'Edit Preferences');
+define('_CONTACTREVIEWS', 'Kontaktovať, ak dostanete nový komentár/hodnotenie');
+define('_CONTACTRESPOND', 'Kontaktovať, ak autor odpovie na váš komentár');
+define('_DEFAULTSORT', 'Prednastavené radenie poviedok');
+define('_DISPLAYINDEX', 'Pri viackapitolových poviedkach zobraziť zoznam kapitol ako prvý.');
+define('_EDITPREFS', 'Upraviť preferencie');
 define('_REQUIREDFIELDS', 'Indicates required fields.');
 define('_USETINYMCE', 'Use tinyMCE WYSWYG editor');
 
@@ -399,14 +399,14 @@ define('_UNLOCKMEM', 'Unlock Account');
 define('_VALIDATE', 'Validate');
 
 // Tooltip help for various items.
-define('_HELP_NEWREV', 'Check this box if you wish to receive an e-mail notice each time you get a new review.');
-define('_HELP_NEWRESP', 'Check this box if you wish to receive an e-mail notice each time an author resonds to your review.');
-define('_HELP_FAVALERT', "Check this box if you wish to receive an e-mail notice each time one of your favorite stories is updated or when one of your favorites author's publishes a new story.");
+define("_HELP_NEWREV", "Zaškrtnite, ak chcete dostať upozornenie mailom zakaždým, keď dostanete nový komentár.");
+define("_HELP_NEWRESP", "Zaškrtnite, ak chcete dostať upozornenie mailom, ak autor odpovie na váš komentár.");
+define("_HELP_FAVALERT", "Zaškrtnite, ak chcete dostávať upozornenia mailom zakaždým, keď je aktualizovaná vaša obľúbená poviedka alebo keď obľúbený autor pridá niečo nové.");
 define('_HELP_BETA', "Check this box if you are willing to have other author's contact you to read their stories before they are published and provide the feedback and help the author requests.");
-define('_HELP_TOC', 'Check this box if you wish to see the story index first rather than the first chapter of the story on multi-chapters.');
+define('_HELP_TOC', 'Pri zaškrtnutí sa ako zobrazí ako prvý zoznam kapitol danej poviedky a nie hneď obsah prvej kapitoly');
 define('_HELP_TINYMCE', 'Check this box if you wish to use the tinyMCE editor when entering content in forms.  You will have the option to toggle the editor on/off if need be.');
-define('_HELP_AGE', 'By agreeing, you are confirming you are above the age of majority in your locality and that you wish to view the adult oriented material on this site.');
-define('_HELP_DEFAULTSORT', 'Select the order in which to sort stories by default.  Your choices are Alphabetically or Most Recent (newest to oldest).');
+define('_HELP_AGE', 'Týmto súhlasom potvrdzujete, že ste dosiahli plnoletosť a že si želáte zobrazovať obsah pre dospelých bez upozorňovania.');
+define('_HELP_DEFAULTSORT', 'Nastavte si poradie, v ktorom vám budú zobrazované poviedky. Buď to bude podľa abecedy alebo podľa pridania (od najnovších po najstaršie).');
 
 // Log strings
 define('_LOG_ADMIN_DEL', "<a href='viewuser.php?uid=%2\$d'>%1\$s</a> deleted <a href='viewstory.php?sid=%4\$d'>%3\$s</a> by <a href='viewuser.php?uid=%6\$d'>%5\$s</a>.");

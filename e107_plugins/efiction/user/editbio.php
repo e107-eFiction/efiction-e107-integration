@@ -43,11 +43,11 @@ if($user_id) {
     {
     
         $url =  e_ADMIN_ABS."users.php?mode=main&action=edit&id=".$user_id;
-        print_a($url); die;
+       // print_a($url); die;
         e107::redirect($url); 
     }
     else {
-       var_dump(ADMIN);   var_dump(getperms("4")); var_dump($userData['user_admin']);  die;
+       //var_dump(ADMIN);   var_dump(getperms("4")); var_dump($userData['user_admin']);  die;
        $output .= write_error("(1)"._ERROR);
     }
  

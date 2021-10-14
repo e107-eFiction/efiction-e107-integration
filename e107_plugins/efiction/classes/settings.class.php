@@ -67,6 +67,17 @@ if (!class_exists('efiction_settings')) {
             $settings['tableprefix'] = e107::getDB()->mySQLPrefix;
             $settings['siteemail'] = ADMINEMAIL;
             $settings['language'] = e_LANGUAGE;
+            
+            /* defalt values */
+            $settings['recentdays'] = varset($settings['recentdays'], 7);
+            if(USERUID) {
+            	
+                $user_prefs = e107::getDb()->retrieve("SELECT sortby, storyindex, tinyMCE FROM ".MPREFIX."fanfiction_authorprefs WHERE uid = '".USERUID."'");
+               
+            	if(dbnumrows($prefs)) list($defaultsort, $displayindex, $tinyMCE) = dbrow($prefs);
+            }
+
+      
 
             unset($settings['smtp_host'], $settings['smtp_username'], $settings['smtp_password']);
  

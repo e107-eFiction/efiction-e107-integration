@@ -4,7 +4,7 @@
 
 // General...used in many pages.
 if(!isset($allowed_tags)) $allowed_tags = '';
-if(!isset($recentdays)) $recentdays = '7';
+ 
 if(!isset($sitename )) $sitename  = '';
 if(!isset($url )) $url  = '';
 if(!isset($multiplecats )) $multiplecats  = '';
@@ -141,7 +141,7 @@ define('_MEMBERLOGIN', 'Member Login');
 
 // Browse
 define('_BROWSE', 'Browse');
-define('_RECENTSTORIES', 'Stories updated in the last '.$recentdays.' days.');
+define('_RECENTSTORIES', 'Stories updated in the last [x] days.');
 define('_EMAILSENT', 'Your e-mail has been sent.');
 define('_TITLES', 'Titles');
 // Contact Us

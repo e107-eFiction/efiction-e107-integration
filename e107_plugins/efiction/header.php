@@ -38,6 +38,8 @@ e107::lan("efiction");
 
 
 //THEME_LAYOUT is available
+include_once(_BASEDIR."includes/queries.php");
+require_once(_BASEDIR."includes/get_session_vars.php");
 
 $settings = efiction_settings::get_settings();
 //print_xa($settings);
@@ -45,9 +47,7 @@ foreach($settings as $var => $val) {
   	$$var = stripslashes($val);
 }
  
-include_once(_BASEDIR."includes/queries.php");
 
-require_once(_BASEDIR."includes/get_session_vars.php");
  
 
 @ ini_set('arg_separator.output','&amp;'); 
@@ -154,10 +154,7 @@ if(e107::getSession()->is(SITEKEY."_viewed")) $viewed = e107::getSession()->get(
 if(isset($_GET['ageconsent'])) e107::getSession()->set(SITEKEY."_ageconsent", 1);
 if(isset($_GET['warning'])) e107::getSession()->set(SITEKEY."_warned_{$_GET['warning']}", 1);
  
-if(USERUID) {
-	$prefs = dbquery("SELECT sortby, storyindex, tinyMCE FROM ".TABLEPREFIX."fanfiction_authorprefs WHERE uid = '".USERUID."'");
-	if(dbnumrows($prefs)) list($defaultsort, $displayindex, $tinyMCE) = dbrow($prefs);
-}
+
 if(isset($_REQUEST['sort'])) $defaultsort = $_REQUEST['sort'] == "update" ? 1 : 0;
 define("_ORDERBY", " ORDER BY ".($defaultsort == 1 ? "updated DESC" : "stories.title ASC"));
 if($current == "viewstory"){

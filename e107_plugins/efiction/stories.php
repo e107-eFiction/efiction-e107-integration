@@ -36,7 +36,7 @@ if($_GET['action'] != "newchapter") $displayform = 1;
 if($_GET['action'] == "newstory" || $_GET['action'] == "editstory") $current = "addstory";
 
 include ("header.php");
-//print_a($_POST);
+
 $tpl = new TemplatePower( file_exists("$skindir/default.tpl") ?  "$skindir/default.tpl" : _BASEDIR."default_tpls/default.tpl");
 $tpl->assignInclude( "header", "$skindir/header.tpl" );
 $tpl->assignInclude( "footer", "$skindir/footer.tpl" );
@@ -47,34 +47,34 @@ include(_BASEDIR."includes/storyform.php");
 
 // before doing anything else check if the visitor is logged in.  If they are, check if they're an admin.  If not, check that they're 
 // trying to edit/delete/etc. their own stuff then get the penname 
-	if(!isMEMBER || ($submissionsoff && !isADMIN) || (!isADMIN && isset($uid))) accessDenied( );
-	if(!isADMIN || uLEVEL > 3) {
-		if(isset($chapid)) {
-			$result = dbquery("SELECT sid, uid FROM ".TABLEPREFIX."fanfiction_chapters WHERE chapid='$chapid' LIMIT 1");
-			if($result) list($sid, $author) = dbrow($result);
-		}
-		if(isset($sid)) {
-			$coauthors = array( );
-			$authorquery = dbquery("SELECT uid, rr, coauthors FROM ".TABLEPREFIX."fanfiction_stories WHERE sid='$sid' LIMIT 1");
-			$story = dbassoc($authorquery);
-			if($story['coauthors']) {
-				$cQuery = dbquery("SELECT uid FROM ".TABLEPREFIX."fanfiction_coauthors WHERE sid = '$sid'");
-				while($c = dbassoc($cQuery)) {
-					$coauthors[] = $c['uid'];
-				}
+if(!isMEMBER || ($submissionsoff && !isADMIN) || (!isADMIN && isset($uid))) accessDenied( );
+if(!isADMIN || uLEVEL > 3) {
+	if(isset($chapid)) {
+		$result = dbquery("SELECT sid, uid FROM ".TABLEPREFIX."fanfiction_chapters WHERE chapid='$chapid' LIMIT 1");
+		if($result) list($sid, $author) = dbrow($result);
+	}
+	if(isset($sid)) {
+		$coauthors = array( );
+		$authorquery = dbquery("SELECT uid, rr, coauthors FROM ".TABLEPREFIX."fanfiction_stories WHERE sid='$sid' LIMIT 1");
+		$story = dbassoc($authorquery);
+		if($story['coauthors']) {
+			$cQuery = dbquery("SELECT uid FROM ".TABLEPREFIX."fanfiction_coauthors WHERE sid = '$sid'");
+			while($c = dbassoc($cQuery)) {
+				$coauthors[] = $c['uid'];
 			}
-			if($story['uid'] != USERUID && (is_array($coauthors) && !in_array(USERUID, $coauthors)) && !$story['rr']) accessDenied( );
 		}
+		if($story['uid'] != USERUID && (is_array($coauthors) && !in_array(USERUID, $coauthors)) && !$story['rr']) accessDenied( );
 	}
-	else if(isADMIN && uLEVEL < 4 && isset($_GET['admin'])) {
-		$admin = 1;
-		$uid = isset($_GET['uid']) && isNumber($_GET['uid']) ? $_GET['uid'] : USERUID;
-	}
-	else {
-		$admin = 0;
-		$uid = USERUID;
-	}
-
+}
+else if(isADMIN && uLEVEL < 4 && isset($_GET['admin'])) {
+	$admin = 1;
+	$uid = isset($_GET['uid']) && isNumber($_GET['uid']) ? $_GET['uid'] : USERUID;
+}
+else {
+	$admin = 0;
+	$uid = USERUID;
+}
+ 
 function preview_story($stories) {
 	global $current, $new, $extendcats, $skindir,  $charlist, $classlist, $featured, $retired, $rr, $reviewsallowed, $star, $halfstar, $classtypelist, $dateformat, $ratingslist, $recentdays;
 
@@ -131,7 +131,7 @@ function preview_story($stories) {
 function newstory( ) {
 
 	global $autovalidate, $sid, $action, $sid, $store, $tpl, $admin, $sitename, $siteemail, $allowed_tags, $admincats, $alertson, $dateformat, $url, $minwords, $maxwords, $charlist, $classtypelist;
-    
+   print_a($_POST); 
     $catlist = efiction_categories::get_catlist();
         
 	$newchapter = $action == "newchapter";
@@ -150,7 +150,7 @@ function newstory( ) {
 	$title = isset($_POST['title']) ? descript(strip_tags($_POST['title'], $allowed_tags)) : "";
 	$summary = isset($_POST['summary']) ? replace_naughty(descript(strip_tags($_POST['summary'], $allowed_tags))) : "";
 	$storynotes = isset($_POST['storynotes']) ? descript(strip_tags($_POST['storynotes'], $allowed_tags)) : "";
-    
+   
     /* IMPORTANT e107 checkboxes returns array directly */
 	$catid = isset($_POST['catid']) ? $_POST['catid'] : array( );
     
@@ -240,18 +240,19 @@ function newstory( ) {
 			}
 		}
  
-		if($store == "db")
+		if($store == "mysql")
 		{
 			if(!$newchapter) {
             
 				$insert = dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_stories (title, summary, storynotes, catid, classes, charid,  rid, date, updated, uid, validated, rr, completed, wordcount, featured, coauthors) 
                 VALUES ('".addslashes($title)."', '".addslashes(format_story($summary))."', '".addslashes(format_story($storynotes))."', '".($catid ? implode(",", $catid) : "")."', '".($classes? implode(",", $classes) : "")."', '".($charid ? implode(",", $charid) : "")."', '$rid', ".time().", ".time(). ", '$uid', '$validated', '$rr', '$complete', '$wordcount', '$feat', '$coauthors')");
-				$sid = dbinsertid( );
+				$sid = dbinsertid( ); 
 				$inorder = 1;
 			}
 			else {
 				$inorder = $_GET['inorder'] + 1;
 			}
+
 			$query2 = dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_chapters (title, inorder, notes, endnotes, validated, wordcount, sid, uid, storytext) VALUES('".addslashes(($chaptertitle != "" ? $chaptertitle : $title))."', '$inorder', '".addslashes(format_story($notes))."', '".addslashes(format_story($endnotes))."', '$validated', '$wordcount', '$sid', '$uid', '".addslashes($storytext)."')");
  
             if(!$admin) $output = write_message(_STORYADDED).viewstories( );

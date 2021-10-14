@@ -31,7 +31,7 @@ if (!isset($catid)) {
     $catid = array();
 }
 
-$output .= "<div class='column form-check-inline'><label class='col-form-label fw-bold' for='catid'>"._CATOPTIONS.'</label> <br />';
+$output .= "<div class='row form-check-inline'><label class='col-form-label fw-bold' for='catid'>"._CATOPTIONS.'</label> <br />';
  
 $categories = efiction_categories::get_categories();
  

@@ -31,7 +31,7 @@ if(!defined("e107_INIT")) exit( );
 function storyform($stories, $preview = 0){
 
 	global $admin, $allowed_tags,    $roundrobins, $coauthallowed, $tinyMCE, $action, $sid;
-    
+ 
     $catlist = efiction_categories::get_catlist();
     $multiplecats = efiction_settings::get_single_setting('multiplecats');
  
@@ -111,7 +111,7 @@ function storyform($stories, $preview = 0){
       $options = array('title' => _CHARACTERS, 'inline' => true,  'useKeyValues' => 1);
       $text = e107::getForm()->checkboxes('charid', $characters, $charid, $options);
     
-    $output .= "<div class='column form-check-inline mt-2'><label for=\"charid\">"._CHARACTERS.":</label><br>".$text. "</div>";
+    $output .= "<div class='row form-check-inline mt-2'><label for=\"charid\">"._CHARACTERS.":</label><br>".$text. "</div>";
         
     
     $classrows = e107::getDb()->retrieve('SELECT * FROM #fanfiction_classtypes ORDER BY classtype_name', true);
@@ -120,8 +120,8 @@ function storyform($stories, $preview = 0){
 		#catid-container .checkbox-inline  {margin-left: 20px!important; }  
 		#classes-container .checkbox-inline  {margin-left: 20px!important; } 
 		</style>';
-        foreach ($classrows as $type) {
-            $ret .= "<div class='column form-check-inline mt-2'><label for=\"class_".$type['classtype_id']."\"><b>$type[classtype_title]:</b></label>:<br>";
+        foreach ($classrows as $type) {   
+            $ret .= "<div class='row form-check-inline mt-2'><label for=\"class_".$type['classtype_id']."\"><b>$type[classtype_title]:</b></label><br>";
             $result2 = e107::getDb()->retrieve("SELECT * FROM #fanfiction_classes WHERE class_type = '$type[classtype_id]' ORDER BY class_name", true);
             $values = array();
             foreach ($result2 as $row) {
