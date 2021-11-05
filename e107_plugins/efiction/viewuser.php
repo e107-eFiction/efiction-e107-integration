@@ -26,16 +26,22 @@ $current = "viewuser";
 // Include some files for page setup and core functions
 
 include ("header.php");
+ 
+$favorites = efiction_settings::get_single_setting('favorites'); 
+$alertson = efiction_settings::get_single_setting('alertson'); 
+$agestatement =  efiction_settings::get_single_setting('agestatement'); 
+$displayprofile =  efiction_settings::get_single_setting('displayprofile');
 
 //make a new TemplatePower object
 if(file_exists("$skindir/user.tpl")) $tpl = new TemplatePower( "$skindir/user.tpl" );
 else $tpl = new TemplatePower(_BASEDIR."default_tpls/user.tpl");
+
 if(file_exists("$skindir/listings.tpl")) $tpl->assignInclude( "listings", "./$skindir/listings.tpl" );
 else $tpl->assignInclude( "listings",_BASEDIR."default_tpls/listings.tpl" );
 $tpl->assignInclude( "header", "$skindir/header.tpl" );
 $tpl->assignInclude( "footer", "$skindir/footer.tpl" );
-if(file_exists("$skindir/profile.tpl")) $tpl->assignInclude("profile", "$skindir/profile.tpl");
-else $tpl->assignInclude("profile", _BASEDIR."default_tpls/profile.tpl");
+ 
+
 include(_BASEDIR."includes/pagesetup.php");
 // If uid isn't a number kill the script with an error message.  The only way this happens is a hacker.
 if(empty($uid)) {
@@ -43,9 +49,19 @@ if(empty($uid)) {
 	else $uid = USERUID;
 } 
 
-if($displayprofile) include(_BASEDIR."user/profile.php");  
-else if(isADMIN && uLEVEL < 3) {
-	$userinfo = e107::getDb()->retrieve("SELECT * FROM "._AUTHORTABLE." LEFT JOIN ".TABLEPREFIX."fanfiction_authorprefs as ap ON ap.uid = "._UIDFIELD." WHERE "._UIDFIELD." = '$uid' LIMIT 1" );
+$userinfo = efiction_authors::get_single_author($uid);    
+
+if($displayprofile) {
+  /*************************** originally profile.php *************************/
+  $tmp = '{EFICTION_AUTHOR_PROFILE: type=author&template=author}'; 
+  $sc_profile = e107::getScBatch('profile', 'efiction');
+  $sc_profile->setVars($userinfo);
+  $profile_content = e107::getParser()->parseTemplate($tmp, true, $sc_profile);
+  e107::getRender()->tablerender('', $profile_content);
+  /**************************** end of profile.php ****************************/
+}
+elseif(isADMIN && uLEVEL < 3) {
+ 
 	$adminopts = "<div class=\"adminoptions\"><span class='label'>"._ADMINOPTIONS.":</span> ".(isset($userinfo['validated']) && $userinfo['validated'] ? "[<a href=\"admin.php?action=members&amp;revoke=$uid\" class=\"vuadmin\">"._REVOKEVAL."</a>] " : "[<a href=\"admin.php?action=members&amp;validate=$uid\" class=\"vuadmin\">"._VALIDATE."</a>] ")
     ."[<a href=\"member.php?action=editbio&amp;uid=$uid\" class=\"vuadmin\">"._EDIT."</a>] [<a href=\"admin.php?action=members&amp;delete=$uid\" class=\"vuadmin\">"._DELETE."</a>]";
 	$adminopts .= " [<a href=\"admin.php?action=members&amp;".($userinfo['level'] < 0 ? "unlock=".$userinfo['uid']."\" class=\"vuadmin\">"._UNLOCKMEM : "lock=".$userinfo['uid']."\" class=\"vuadmin\">"._LOCKMEM)."</a>]";

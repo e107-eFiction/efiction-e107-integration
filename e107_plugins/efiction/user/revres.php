@@ -35,8 +35,8 @@ if(!defined("e107_INIT")) exit( );
 			$prefsquery = dbquery("SELECT "._UIDFIELD." as uid, "._EMAILFIELD." as email, "._PENNAMEFIELD." as penname, newrespond FROM ".TABLEPREFIX."fanfiction_authorprefs as ap LEFT JOIN "._AUTHORTABLE." ON ap.uid = "._UIDFIELD." WHERE ap.uid = "._UIDFIELD." AND "._UIDFIELD." = '$uid' LIMIT 1");
 			$prefs = dbassoc($prefsquery);
 			if(isset($prefs['newrespond']) && $prefs['newrespond'] == 1) {
-				include("includes/emailer.php");
-				sendemail($prefs['penname'], $prefs['email'], $sitename, $siteemail, _RESPONSESUBJECT, preg_replace(array("@\{penname\}@", "@\{review\}@"), array(USERPENNAME, $reviewid), _RESPONSETEXT), "html");
+			 
+				$result = efiction_core::sendemail($prefs['penname'], $prefs['email'], $sitename, $siteemail, _RESPONSESUBJECT, preg_replace(array("@\{penname\}@", "@\{review\}@"), array(USERPENNAME, $reviewid), _RESPONSETEXT), "html");
 			}
 		}
 		$back = sprintf(_BACK2REVIEWS, "item=$item&amp;type=$type".(isset($chapid) ? "&amp;chapid=$chapid" : ""));

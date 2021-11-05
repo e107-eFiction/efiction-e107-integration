@@ -61,8 +61,8 @@ $listOpts = ""; $countquery = "";
     }
 	else if($list == "admins") {
 		$pagetitle .= _SITEADMINS;
-		$countquery = _MEMBERCOUNT." WHERE ai.user_plugin_efiction_level > 0 AND ai.user_plugin_efiction_level < 4".(isset($letter) ? " AND $letter" : "");
-		$authorquery = _MEMBERLIST." WHERE ai.user_plugin_efiction_level > 0 AND ai.user_plugin_efiction_level < 4".(isset($letter) ? " AND $letter" : "")." GROUP BY "._UIDFIELD;
+		$countquery = _MEMBERCOUNT." WHERE ap.level > 0 AND ap.level < 4".(isset($letter) ? " AND $letter" : "");
+		$authorquery = _MEMBERLIST." WHERE ap.level > 0 AND ap.level < 4".(isset($letter) ? " AND $letter" : "")." GROUP BY "._UIDFIELD;
   
 	}
 	$codequery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_codeblocks WHERE code_type = 'membersList'");

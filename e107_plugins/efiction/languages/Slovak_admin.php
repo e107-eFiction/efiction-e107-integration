@@ -150,7 +150,7 @@ define ("_MAXMINWORDS", "Chapter word count limits");
 define ("_MAXMINNOTE", "<strong>Note:</strong> To impose no limits, leave blank or enter 0.  Suggested limits are a minimum of 100 words and a maximum of 16000.");
 define ("_MEMLOCK", "Lock/Ban Member");
 define ("_MESSAGESENT", "Messages sent: "); 
-define ("_MESSAGESETTINGS", "Message Settings");
+define ("_MESSAGESETTINGS", "Nastavenie správ");
 define ("_MIN", "Minimum");
 define ("_MODNOTINSTALLED", "This module is not installed.");
 define ("_MORETHANONE", "More than one");
@@ -167,7 +167,7 @@ define ("_NEWRAT", "New Rating");
 define ("_NEWREG", "New Registrations");
 define ("_NEWWINDOW", "New Window");
 define ("_NEXTPREV", "Next and Previous Links");
-define ("_NOLETTER", "Rejection Letter");
+define ("_NOLETTER", "Email o odmietnutí");
 define ("_NONVALMEMBERS", "Non-validated Members");
 define ("_NOPANELS", "No admin panels found!"); 
 define ("_NOFIELDTYPE", "No field type set.");
@@ -258,7 +258,7 @@ define ("_WARNINGPOP", "Warning Pop-up");
 define ("_WARNINGTEXT", "Warning text");
 define ("_WELCOME", "Welcome message");
 define ("_WHATRATINGS", "Ratings system");
-define ("_YESLETTER", "Acceptance Letter");
+define ("_YESLETTER", "Email o schválení");
 
 // Blocks
 define("_DEFAULT", "Default");
@@ -360,3 +360,5 @@ define ("_LOG_BACKUP", "<a href='viewuser.php?uid=%2\$d'>%1\$s</a> backed up the
 define("EFICTION_EDITOR_217", "System default"); 
 define("EFICTION_EDITOR_220", "Post editor");
 define("EFICTION_EDITOR_221", "Which editor should be used to create/edit posts?");
+
+define("EFICTION_ADMIN_001", "Administrácia"); 

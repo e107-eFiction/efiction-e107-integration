@@ -189,10 +189,10 @@ else if($action == "edit" || $action == "add") {
 				$mailquery= dbquery("SELECT ap.newreviews,"._EMAILFIELD." as email, "._PENNAMEFIELD." as penname FROM "._AUTHORTABLE." LEFT JOIN ".TABLEPREFIX."fanfiction_authorprefs as ap ON ap.uid = "._UIDFIELD." WHERE "._UIDFIELD." = '$author' ".(!empty($coauthors) ? " OR ".findclause(_UIDFIELD, $coauthors) : ""));
 				while($mail = dbassoc($mailquery)) {
 					if($mail['newreviews']) {
-						include_once("includes/emailer.php");
+					 ;
 						$subject = _REVEMAIL1.$title;
 						$mailtext = sprintf(_REVEMAIL2, "type=$type&amp;item=$item");
-						$result = sendemail($mail['penname'], $mail['email'], $sitename, $siteemail, $subject, $mailtext, "html");
+						$result = efiction_core::sendemail($mail['penname'], $mail['email'], $sitename, $siteemail, $subject, $mailtext, "html");
 					}
 				}
 				dbquery("UPDATE ".TABLEPREFIX."fanfiction_stats SET reviews = reviews + 1");

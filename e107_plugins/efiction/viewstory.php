@@ -85,6 +85,7 @@ if($action == "printable") {
 	if(file_exists("$skindir/printstory.tpl")) $tpl = new TemplatePower( "$skindir/printstory.tpl" );
 	else $tpl = new TemplatePower(_BASEDIR."default_tpls/printstory.tpl");
 	include(_BASEDIR."includes/pagesetup.php");
+    
 	$tpl->assign("title", stripslashes($storyinfo['title']));
 	$tpl->assign("author", author_link($storyinfo));
 	if(empty($chapter)) $chapter = "all"; // shouldn't happen but just in case
@@ -412,5 +413,8 @@ while($code = dbassoc($codeblocks)) {
 dbclose( );
 $text = $tpl->getOutputContent(); 
 e107::getRender()->tablerender($caption, $text, $current);
+
+if($action != "printable") {
 require_once(FOOTERF); 
+}
 exit;

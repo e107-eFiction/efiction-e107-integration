@@ -16,7 +16,7 @@ define ("_ALLSTORIES", "Všetky preklady");
 define ("_ALPHA", "Abecedne");
 define ("_ANONYMOUS", "Anonymne");
 define ("_AUTHORSNOTES", "Poznámky autora");
-define ("_BACK2ACCT", "Návrat do <a href=\"member.php\">your account</a> area.");
+define ("_BACK2ACCT", "Návrat do <a class='text-primary' href=\"member.php\">vášho účtu</a>.");
 define ("_BACK2ADMIN", "Návrat do <a href=\"admin.php\">Admin</a> area.");
 define ("_BACK2CATS", "Späť na hlavné kategórie");
 define ("_BACK2PREVIOUS", "Späť na predchádzajúce.");
@@ -32,6 +32,7 @@ define ("_CATLOCKED", "Táto kategória je uzavratá.");
 define ("_CATOPTIONS", "Dostupné kategórie");
 define ("_CLEAR", "Clear");
 define ("_CHAPTER", "Kapitola");
+define ("_CHAPTER2", "Kapitolu");  
 define ("_CHAPTERS", "Kapitoly");
 define ("_CHARACTERS", "Postavy");
 define ("_CHOOSECAT", "Choose a Category");
@@ -73,16 +74,16 @@ define('_NEW', 'Nový!');
 define('_NO', 'Nie');
 define('_NODBFUNCTIONALITY', 'Zdá sa, že v konfigurácii php pre túto webovú stránku nebola povolená žiadna použiteľná funkcia databázy pre PHP.  Pozrite si prosím dokumentáciu PHP alebo sa opýtajte svojho poskytovateľa hostingu.');
 define('_NOMAILSENT', 'Vyskytla sa chyba. Nebol odoslaný žiadny e-mail.');
-define('_NONE', 'Žiaden');
+define('_NONE', 'Neuvedené');
 define('_NORESULTS', 'Nenájdené žiadne výsledky');
-define('_NOSTORIES', 'Pre tohto autora neboli nájdené žiadne príbehy.');
+define('_NOSTORIES', 'Pre tohto autora neboli nájdené žiadne poviedky.');
 define('_NOTAUTHORIZED', 'Nemáte oprávnenie na prístup k tejto funkcii.');
 define('_NOTCONNECTED', 'ERROR: Nepodarilo sa pripojiť k databáze!');
 define('_OPTIONS', 'Možnosti');
 define('_OR', 'alebo');
 define('_ORPHAN', 'Opustené');
 define('_OTHERRESULTS', 'Ďalšie výsledky');
-define('_PENNAME', 'Prezývka');
+define('_PENNAME', 'Nick');
 define('_PFSTORY', 'Past Featured Story');
 define('_POSSIBLEHACK', 'Bol zistený pokus o hacking.');
 define('_PREVIEW', 'Preview');
@@ -107,6 +108,7 @@ define('_SORT', 'Sort');
 define('_STAR', 'star');
 define('_STORIES', 'Poviedky');
 define('_STORY', 'Poviedka');
+define('_STORY2', 'Poviedku');
 define('_SUBMIT', 'Odoslať');
 define('_SUMMARY', 'Zhrnutie');
 define('_TEXT', 'Text');
@@ -140,7 +142,7 @@ define('_ALLMEMBERS', 'All Members');
 define('_SITEADMINS', 'Site Admins');
 
 // News
-define('_COMMENTS', 'Comments');
+define('_COMMENTS', 'Komentár');
  
 
 // Reviews
@@ -166,18 +168,18 @@ define('_VIEWALLREVIEWS', 'View All Reviews');
 
 // Search
 
-define('_10LISTS', 'Top Ten Lists');
-define('_10LARGESERIES', 'Ten Largest Series');
-define('_10SMALLSERIES', 'Ten Smallest Series');
-define('_10REVIEWEDSERIES', 'Ten Most Reviewed Series');
-define('_10FAVSERIES', 'Ten Favorite Series');
-define('_10SHORTSTORY', 'Ten Shortest Stories');
-define('_10LONGSTORY', 'Ten Longest Stories');
-define('_10REVIEWEDSTORY', 'Ten Most Reviewed Stories');
-define('_10FAVSTORY', 'Ten Favorite Stories');
-define('_10FAVAUTHOR', 'Ten Favorite Authors');
-define('_10PROLIFICAUTHOR', 'Ten Most Prolific Authors');
-define('_10PROLIFICREVIEWER', 'Ten Most Prolific Reviewers');
+define('_10LISTS', 'Top desať');
+define('_10LARGESERIES', '10 najväčších sérií');
+define('_10SMALLSERIES', '10 najkratších sérii');
+define('_10REVIEWEDSERIES', '10 najobľúbenejších sérii');
+define('_10FAVSERIES', '10 najkomentovanejších sérii');
+define('_10SHORTSTORY', '10 najkratších poviedok');
+define('_10LONGSTORY', '10 najdlhších poviedok');
+define('_10REVIEWEDSTORY', '10 najčítanejších poviedok');
+define('_10FAVSTORY', '10 najobľúbenejších poviedok');
+define('_10FAVAUTHOR', '10 najtvorivejších autorov');
+define('_10PROLIFICAUTHOR', '10 najobľúbenejších autorov');
+define('_10PROLIFICREVIEWER', '10 najaktívnejších komentujúcich');
 define('_ADVANCED', 'Advanced Search');
 define('_COMPLETEONLY', 'Completed Only');
 define('_EXCLUDE', 'to Exclude');
@@ -186,9 +188,9 @@ define('_INCLUDE', 'to Include');
 define('_RESULTS', 'Search Results');
 define('_SEARCHTERM', 'Search term');
 define('_SEARCHTERMTOOSHORT', "Your search term was too short.  Your search term must be a minimum of three characters long. <a href='searching.php'>Try again.</a>");
-define('_SIMPLE', 'Simple Search');
-define('_WORDCOUNT', 'Word count');
-define('_SEARCH', 'Search');
+define('_SIMPLE', 'Jednoduché vyhľadávanie');
+define('_WORDCOUNT', 'Počet slov');
+define('_SEARCH', 'Hľadať');
 
 // Series
 define('_ADD2SERIES', 'Add to Series');
@@ -259,7 +261,7 @@ define('_WORDCOUNTFAILED', 'Your story failed to meet the required minimum or ma
 
 // User
 
-define('_USERACCOUNT', 'Member Account');
+define('_USERACCOUNT', 'Užívateľský účet');
 
 // User --  Edit prefs
 define('_ALERTSON2', 'Kontaktovať pri zmene v obľúbených.');
@@ -269,7 +271,7 @@ define('_CONTACTRESPOND', 'Kontaktovať, ak autor odpovie na váš komentár');
 define('_DEFAULTSORT', 'Prednastavené radenie poviedok');
 define('_DISPLAYINDEX', 'Pri viackapitolových poviedkach zobraziť zoznam kapitol ako prvý.');
 define('_EDITPREFS', 'Upraviť preferencie');
-define('_REQUIREDFIELDS', 'Indicates required fields.');
+define('_REQUIREDFIELDS', 'Označuje povinné polia');
 define('_USETINYMCE', 'Use tinyMCE WYSWYG editor');
 
 // User - Edit Bio/Registration (default)
@@ -290,7 +292,7 @@ define('_PASSWORDTWICE', 'You must enter your new password twice. Please <a href
 define('_PWDREQUIRED', 'A password is required to access this function.');
 define('_PENEMAILREQUIRED', 'You must fill out the penname and email fields. Please <a href="member.php?action=newaccount">try again</a>.');
 define('_PENNAMEINUSE', 'This penname is already in use.');
-define('_REALNAME', 'Real name');
+define('_REALNAME', 'Skutočné meno');
 define('_REGISTER', 'Register');
 define('_REGLOG', '%1$s (%2$d) registered from IP address %3$s.');
 define('_SIGNUPSUBJECT', "Welcome to $sitename");
@@ -337,20 +339,20 @@ define('_PASSWORDSENT', 'A new password has been sent to your e-mail address.');
 
 // User - Stats
 
-define('_AUTHOROF', 'Author of:');
-define('_FAVOF', 'Favorite author of');
-define('_FAVORITE', 'Favorite');
-define('_MANAGEREVIEWS', 'Manage Your Reviews');
-define('_STATSFOR', 'Statistics for ');
+define('_AUTHOROF', 'Ste autorom:');
+define('_FAVOF', 'Ste obľúbeným autorom');
+define('_FAVORITE', 'Obľúbené');
+define('_MANAGEREVIEWS', 'Správa vašich komentárov');
+define('_STATSFOR', 'Štatistiky pre ');
 define('_UNRESPONDED', 'Unresponded');
-define('_YOURFAVORITES', 'Your Favorites');
-define('_YOURSTATS', 'Your Statistics');
-define('_YOURREVIEWS', 'Your Reviews');
+define('_YOURFAVORITES', 'Vaše obľúbené');
+define('_YOURSTATS', 'Vaše štatistiky');
+define('_YOURREVIEWS', 'Vaše komentáre');
 
 // User - Manage Favorites
 
-define('_MANAGEFAVORITES', 'Manage Favorites');
-define('_REMOVEFAV', 'Remove Favorite');
+define('_MANAGEFAVORITES', 'Správa obľúbených');
+define('_REMOVEFAV', 'Vyradiť z obľúbených');
 
 // User - Login
 
@@ -377,13 +379,13 @@ define('_TEXTSIZE', 'Text Size');
 
 // View User
 
-define('_ADMINISTRATOR', 'Administrator');
-define('_CONTACT', 'Contact');
-define('_CONTACTAUTHOR', 'Contact Author:');
+define('_ADMINISTRATOR', 'Administrátor');
+define('_CONTACT', 'Kontakt');
+define('_CONTACTAUTHOR', 'Kontaktovať autora:');
 define('_EDITADMIN', 'Edit Admin Privileges');
-define('_FAVORITEAUTHORS', 'Favorite Authors'); // Added for 3.0
-define('_FAVORITESERIES', 'Favorite Series'); // Added for 3.0
-define('_FAVORITESTORIES', 'Favorite Stories'); // Added for 3.0
+define('_FAVORITEAUTHORS', 'Obľúbení autori'); // Added for 3.0
+define('_FAVORITESERIES', 'Obľúbené série'); // Added for 3.0
+define('_FAVORITESTORIES', 'Obľúbené poviedky'); // Added for 3.0
 define('_FAVORITESOF', 'Favorites of '); // Added for 3.0
 define('_LOCKMEM', 'Lock Account');
 define('_MAKEADMIN', 'Make User an Admin');
@@ -430,4 +432,12 @@ define('_REPORT', 'Report');
 define('_MISSING', 'Missing Information');
 define('_RULESVIOLATION', 'Violation of Rules');
 define('_BUGREPORT', 'Bug Report');
-define('_REPORTTHIS', 'Report This');
+define('_REPORTTHIS', 'Nahlásiť');
+
+
+define ("LAN_EFICTION_AUTHOR_PROFILE", "Profil autora");
+// Hardcoded in .tpl 
+define ("LAN_EFICTION_MEMBER_SINCE", "Člen od");
+define ("LAN_EFICTION_MEMBERSHIP_STATUS", "Status členstva");
+
+define ("LAN_EFICTION_BY", "Od");

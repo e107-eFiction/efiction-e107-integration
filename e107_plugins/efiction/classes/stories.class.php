@@ -36,35 +36,24 @@
  * #######################################
  */
 
-if (!class_exists('efiction_blocks')) {
-    class efiction_blocks
+if (!class_exists('efiction_stories')) {
+    class efiction_stories
     {
-
-		public static function get_blocks()
-		{
-			$blockquery = "SELECT * FROM ".MPREFIX."fanfiction_blocks";
-			$result = e107::getDb()->retrieve($blockquery, true);
-		
-			foreach($result AS $block) {
-				$blocks[$block['block_name']] = unserialize($block['block_variables']);
-				$blocks[$block['block_name']]['title'] = $block['block_title'];
-				$blocks[$block['block_name']]['file'] = $block['block_file'];
-				$blocks[$block['block_name']]['status'] = $block['block_status'];
-			}
-			return $blocks;
-		}
+  
+       public static function get_submissions() {
         
-        
-        public static function get_single_block($block_name)
-        {
-            $blocks = self::get_blocks();
-
-            if ($block_name) {
-                return $blocks[$block_name];
-            }
-
-            return null;
-        }
-        
-  	}
+         $query =  "SELECT story.title as storytitle, chapter.uid, chapter.sid, story.catid, chapter.chapid, chapter.inorder, chapter.title, "._PENNAMEFIELD." as penname FROM (".TABLEPREFIX."fanfiction_chapters as chapter, "._AUTHORTABLE.") LEFT JOIN ".TABLEPREFIX."fanfiction_stories as story ON story.sid = chapter.sid WHERE chapter.validated = '0' AND chapter.uid = "._UIDFIELD." ORDER BY story.title";
+         
+         $result = e107::getDb()->retrieve($query, true); 
+         
+         
+         return $result; 
+         
+       }
+    
+    }
+    
+    
+    
+    new efiction_stories();
 }

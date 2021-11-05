@@ -1,5 +1,5 @@
 <?php
-
+// ALTER TABLE `e107_fanfiction_authorprefs` ADD `level` TINYINT(1) NOT NULL DEFAULT '0' AFTER `validated`;
 // ----------------------------------------------------------------------
 // Copyright (c) 2007 by Tammy Keefer
 // Based on eFiction 1.1
@@ -69,11 +69,7 @@ if (!class_exists('efiction_setup')) {
 			$query = "UPDATE `".MPREFIX."user_extended_struct` SET `user_extended_struct_write` = '250' WHERE `e107_user_extended_struct`.`user_extended_struct_name` = 'plugin_efiction_author_uid'";
 
 			e107::getDB()->gen($query); 
-
-			$query = "UPDATE `".MPREFIX."user_extended_struct` SET `user_extended_struct_write` = '250' WHERE `e107_user_extended_struct`.`user_extended_struct_name` = 'plugin_efiction_level'";
-			
-			e107::getDB()->gen($query); 
-
+ 
 		}
 
 
@@ -323,7 +319,7 @@ if (!class_exists('efiction_setup')) {
 						     
                             $ue = new e107_user_extended;
         	                $ue->user_extended_setvalue(USERID, 'user_plugin_efiction_author_uid', $dbinsertid);
-                            $ue->user_extended_setvalue(USERID, 'user_plugin_efiction_level', 1); 
+              
                         }	
                     
 					}	

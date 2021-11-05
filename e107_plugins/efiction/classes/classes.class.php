@@ -36,35 +36,35 @@
  * #######################################
  */
 
-if (!class_exists('efiction_blocks')) {
-    class efiction_blocks
+if (!class_exists('efiction_classes')) {
+    class efiction_classes
     {
-
-		public static function get_blocks()
-		{
-			$blockquery = "SELECT * FROM ".MPREFIX."fanfiction_blocks";
-			$result = e107::getDb()->retrieve($blockquery, true);
-		
-			foreach($result AS $block) {
-				$blocks[$block['block_name']] = unserialize($block['block_variables']);
-				$blocks[$block['block_name']]['title'] = $block['block_title'];
-				$blocks[$block['block_name']]['file'] = $block['block_file'];
-				$blocks[$block['block_name']]['status'] = $block['block_status'];
-			}
-			return $blocks;
-		}
+  
+      public static function classtypelist()
+      {
+          $classtypelist = array();
+          $classlistquery = 'SELECT * FROM #fanfiction_classtypes ORDER BY classtype_name';
+          $result = e107::getDb()->retrieve($classlistquery, true);
+          foreach ($result as $type) {
+              $classtypelist[$type['classtype_id']] = array('name' => $type['classtype_name'], 'title' => stripslashes($type['classtype_title']));
+          }
+          return $classtypelist;
+      }
         
-        
-        public static function get_single_block($block_name)
+        public static function classlist()
         {
-            $blocks = self::get_blocks();
-
-            if ($block_name) {
-                return $blocks[$block_name];
+            $classlist = array();
+            $classquery = 'SELECT * FROM #fanfiction_classes ORDER BY class_name';
+            $result = e107::getDb()->retrieve($classquery, true);
+            foreach ($result as $class) {
+                $classlist[$class['class_id']] = array('type' => $class['class_type'], 'name' => stripslashes($class['class_name']));
             }
-
-            return null;
+            return $classlist;
         }
-        
-  	}
+    
+    }
+    
+    
+    
+    new efiction_classes();
 }

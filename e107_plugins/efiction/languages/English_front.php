@@ -49,6 +49,7 @@ define('_CATLOCKED', 'This category is locked.');
 define('_CATOPTIONS', 'Category Options');
 define('_CLEAR', 'Clear');
 define('_CHAPTER', 'Chapter');
+define('_CHAPTER2', 'Chapter');  
 define('_CHAPTERS', 'Chapters');
 define('_CHARACTERS', 'Characters');
 define('_CHOOSECAT', 'Choose a Category');
@@ -123,6 +124,7 @@ define('_SORT', 'Sort');
 define('_STAR', 'star');
 define('_STORIES', 'Stories');
 define('_STORY', 'Story');
+define('_STORY2', 'Story');
 define('_SUBMIT', 'Submit');
 define('_SUMMARY', 'Summary');
 define('_TEXT', 'Text');
@@ -446,3 +448,14 @@ define('_MISSING', 'Missing Information');
 define('_RULESVIOLATION', 'Violation of Rules');
 define('_BUGREPORT', 'Bug Report');
 define('_REPORTTHIS', 'Report This');
+
+
+define ("LAN_EFICTION_AUTHOR_PROFILE", "Author profile");
+
+// Hardcoded in .tpl 
+define ("LAN_EFICTION_MEMBER_SINCE", "Member Since");
+define ("LAN_EFICTION_MEMBERSHIP_STATUS", "Membership status");
+
+
+define ("LAN_EFICTION_BY", "By");
+

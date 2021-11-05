@@ -27,10 +27,13 @@ if (!defined('e107_INIT'))
 	require_once(__DIR__.'/../../class2.php');
 }
 
+
  //e_ROUTE is available
+ /*
 if(e_CURRENT_PLUGIN == "efiction") {
  define("THEME_LAYOUT", "efiction");
 }
+ */
 // Defines the character set for your language/location
 define("_CHARSET", CHARSET); 
 e107::lan("efiction");
@@ -105,7 +108,9 @@ else $words = array( );
 if(isset($_GET['action'])) $action = strip_tags($_GET['action']);
 else $action = false;
 
+ 
 require_once(HEADERF);
+ 
 
 $alphabet = efiction_settings::get_alphabet(); 
 

@@ -360,3 +360,5 @@ define ("_LOG_BACKUP", "<a href='viewuser.php?uid=%2\$d'>%1\$s</a> backed up the
 define("EFICTION_EDITOR_217", "System default"); 
 define("EFICTION_EDITOR_220", "Post editor");
 define("EFICTION_EDITOR_221", "Which editor should be used to create/edit posts?");
+
+define("EFICTION_ADMIN_001", "Administration"); 

@@ -216,11 +216,11 @@ if($add == "stories") {
 		if($admin || USERUID == $owner || $isopen == 2 ) $confirmed = 1;
 		else {
 			$confirmed = 0;
-			include("includes/emailer.php");
+			 
 			$seriesMail = sprintf(_NEWSERIESITEMS, stripslashes($title));
 			$subject = sprintf("_SERIESITEMSSUBS", stripslashes($title));
 			$mailInfo = dbassoc(dbquery("SELECT "._PENNAMEFIELD." as penname, "._EMAILFIELD." as email FROM "._AUTHORTABLE." WHERE "._UIDFIELD." = '$owner' LIMIT 1"));
-			sendemail($mailInfo['penname'], $mailInfo['email'], $sitename, $siteemail, $subject, $seriesMail, "html");
+			$result = efiction_core::sendemail($mailInfo['penname'], $mailInfo['email'], $sitename, $siteemail, $subject, $seriesMail, "html");
 		}
 		if(!empty($_POST["sid"])) {
 			foreach($_POST["sid"] as $story) {

@@ -30,22 +30,7 @@ if(deftrue('USER_AREA') && (e_PAGE != "menus.php") )    // prevents inclusion of
 		.column { float: left; width: ".($colwidth - 1)."%; }
 		html>body .column { width: $colwidth%; }
 		.cleaner { clear: both; height: 1px; font-size: 1px; margin: 0; padding: 0; background: transparent; }
-		#settingsform { margin: auto; padding: 0; border: none;  }
-		#settingsform form { width: 100%; margin: 0 10%; }
-		#settingsform label { float: left; display: block; width: 30%; text-align: right; padding-right: 10px; clear: left; }
-		#settingsform div { clear: both;}
-		#settingsform .fieldset SPAN { float: left; display: block; width: 30%; text-align: right; padding-right: 10px; clear: left;}
-		#settingsform .fieldset LABEL { float: none; width: auto; display: inline; text-align: left; clear: none; }
  
-		#settingsform .tinytoggle { text-align: center; }
-		#settingsform .tinytoggle LABEL { float: none; display: inline; width: auto; text-align: center; padding: 0; clear: none; }
-		#settingsform #submitdiv { text-align: center; width: 100%;clear: both; height: 3em; }
-		#settingsform #submitdiv #submit { position: absolute; z-index: 10001; margin: 1em; }
-		a.pophelp{
-			position: relative;  
-			vertical-align: super;
-		}
-		
 		a.pophelp:hover{z-index:100; border: none; text-decoration: none;}
 		
 		a.pophelp span{display: none; position: absolute; top: -25em; left: 20em; }
@@ -126,6 +111,8 @@ if(deftrue('USER_AREA') && (e_PAGE != "menus.php") )    // prevents inclusion of
 		if(file_exists("$skindir/printable.css")) e107::css("efiction", "$skinfolder/printable.css");
 		else e107::css("efiction", "default_tpls/printable.css");
         
+        define("e_IFRAME", true);
+        
         $inline_code = "if (window.print) {
                       window.print() ;  
                   } else {
@@ -139,6 +126,10 @@ if(deftrue('USER_AREA') && (e_PAGE != "menus.php") )    // prevents inclusion of
 		
 		e107::css("inline", $inline_css) ;
 	}	
+    if(!empty($_GET['action']) && $_GET['action'] == "yesletter") { 
+       define("e_IFRAME", true);
+    }
+ 
  	
 }
  

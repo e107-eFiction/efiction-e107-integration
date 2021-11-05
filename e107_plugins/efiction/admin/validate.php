@@ -22,7 +22,7 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 
-if(!defined("_CHARSET")) exit( );
+if(!defined("e107_INIT")) exit( );
 
 function preview_story($stories) {
 	global $extendcats, $skindir, $catlist,  $store, $storiespath, $classlist, $featured, $retired, $rr, $reviewsallowed, $star, $halfstar, $ratingslist, $classtypelist, $dateformat, $recentdays, $current;
@@ -77,10 +77,15 @@ function preview_story($stories) {
 
 	$output .= "<div id='pagetitle'>"._VIEWSUBMITTED."</div>";
 	if(isset($_GET['validate']) && $_GET['validate'] == "yes") {
-		$storyquery = dbquery("SELECT story.validated, story.catid, story.sid, story.title, story.summary, story.uid, "._PENNAMEFIELD." as penname, chapter.inorder, story.coauthors FROM ".TABLEPREFIX."fanfiction_stories as story, ".TABLEPREFIX."fanfiction_chapters  as chapter, "._AUTHORTABLE." WHERE "._UIDFIELD." = story.uid AND chapter.sid = story.sid AND chapter.chapid ='$_GET[chapid]' LIMIT 1");
+		$storyquery = dbquery("SELECT story.validated, story.catid, story.sid, story.title, story.summary, story.uid, "._PENNAMEFIELD." as penname, chapter.inorder, story.coauthors 
+        FROM ".TABLEPREFIX."fanfiction_stories as story, ".TABLEPREFIX."fanfiction_chapters  as chapter, "._AUTHORTABLE." 
+        WHERE "._UIDFIELD." = story.uid AND chapter.sid = story.sid AND chapter.chapid ='$_GET[chapid]' LIMIT 1");
+        
 		list($storyvalid, $catid, $sid, $title, $summary, $authoruid, $author, $inorder, $coauthors) = dbrow($storyquery);
+        
+        
 		if(uLEVEL == 1 || (empty($admincats) || sizeof(array_intersect(explode(",", $catid), explode(",", $admincats))))) {
-			include(_BASEDIR."includes/emailer.php");
+		 
 			if(!$storyvalid) {
 				dbquery("UPDATE ".TABLEPREFIX."fanfiction_stories SET validated = '1', updated = ".time()." WHERE sid = '$_GET[sid]'");
 				foreach(explode(",", $catid) as $cat) {
@@ -107,7 +112,7 @@ function preview_story($stories) {
 					$mailtext = sprintf(_AUTHORALERTNOTE, $title, $author, $summary, $sid);
 					$favorites = dbquery("SELECT "._UIDFIELD." as uid, "._EMAILFIELD." as email, "._PENNAMEFIELD." as penname, alertson FROM ".TABLEPREFIX."fanfiction_favorites as fav, ".TABLEPREFIX."fanfiction_authorprefs as ap, "._AUTHORTABLE." WHERE $cond AND fav.type = 'AU' AND fav.uid = "._UIDFIELD." AND ap.uid = "._UIDFIELD." AND ap.alertson = '1'");
 					while($favuser = dbassoc($favorites)) { 
-						sendemail($favuser['penname'], $favuser['email'], $sitename, $siteemail, $subject, $mailtext, "html");
+						$result = efiction_core::sendemail($favuser['penname'], $favuser['email'], $sitename, $siteemail, $subject, $mailtext, "html");
 					}				
 				}
 				if($logging) dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_log (`log_action`, `log_uid`, `log_ip`, `log_type`) VALUES('".escapestring(sprintf(_LOG_VALIDATE_STORY, USERPENNAME, USERUID, $title, $sid, $author, $authoruid))."', '".USERUID."', INET_ATON('".$_SERVER['REMOTE_ADDR']."'), 'VS')");
@@ -122,7 +127,7 @@ function preview_story($stories) {
 				}
 				$favorites = dbquery("SELECT "._UIDFIELD." as uid, "._EMAILFIELD." as email, "._PENNAMEFIELD." as penname, alertson FROM ".TABLEPREFIX."fanfiction_favorites as fav, ".TABLEPREFIX."fanfiction_authorprefs as ap, "._AUTHORTABLE." WHERE fav.item = '$sid' AND fav.type = 'ST' AND fav.uid = "._UIDFIELD." AND ap.uid = "._UIDFIELD." AND ap.alertson = '1'");
 				while($favuser = dbassoc($favorites)) { 
-					sendemail($favuser['penname'], $favuser['email'], $sitename, $siteemail, $subject, $mailtext, "html");
+					$result = efiction_core::sendemail($favuser['penname'], $favuser['email'], $sitename, $siteemail, $subject, $mailtext, "html");
 				}
 				if($logging) dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_log (`log_action`, `log_uid`, `log_ip`, `log_type`) VALUES('".escapestring(sprintf(_LOG_VALIDATE_CHAPTER, USERPENNAME, USERUID, $title, $sid, $author, $authoruid, $inorder))."', '".USERUID."', INET_ATON('".$_SERVER['REMOTE_ADDR']."'), 'VS')");
 			}

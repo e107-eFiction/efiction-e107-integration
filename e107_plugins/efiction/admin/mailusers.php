@@ -24,7 +24,7 @@
 // ----------------------------------------------------------------------
 
 if(!defined("_CHARSET")) exit( );
-	include("includes/emailer.php");
+ 
 	$cat = isset($_GET['cat']) ? $_GET['cat'] : -1;
 
 	$output .= "<div style='text-align: center;'><h4>"._MAILUSERS."</h4></div>";
@@ -40,7 +40,7 @@ if(!defined("_CHARSET")) exit( );
 		$mailtext = descript($_POST['mailtext']);
 		$sent = 0;
 		while($result = dbassoc($query)){
-			$mailresult = sendemail($result['penname'], $result['email'], $sitename, $siteemail, $subject, $mailtext, "html");
+			$mailresult = efiction_core::sendemail($result['penname'], $result['email'], $sitename, $siteemail, $subject, $mailtext, "html");
 			if($mailresult) $sent++;
 			$output .= $result['penname']." <img src=\"".BASEDIR."images/".($mailresult ? "check.gif\" alt=\"check\" title=\"check\"" : "X.gif\" alt=\"X\" title=\"X\"")."><br />";		
 		}

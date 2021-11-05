@@ -131,7 +131,7 @@ function preview_story($stories) {
 function newstory( ) {
 
 	global $autovalidate, $sid, $action, $sid, $store, $tpl, $admin, $sitename, $siteemail, $allowed_tags, $admincats, $alertson, $dateformat, $url, $minwords, $maxwords, $charlist, $classtypelist;
-   print_a($_POST); 
+ //  print_xa($_POST); 
     $catlist = efiction_categories::get_catlist();
         
 	$newchapter = $action == "newchapter";
@@ -315,7 +315,7 @@ function newstory( ) {
 		}
 		// validate fic, send story alerts, and mail admins
 		if($validated) {
-			include(_BASEDIR."includes/emailer.php");
+		 
 			if(!isset($storytitle)) $storytitle = $title;
 			if(!$newchapter) {
 				foreach($catid as $cat) { categoryitems($cat, 1); }
@@ -329,7 +329,7 @@ function newstory( ) {
 					$mailtext = sprintf(_AUTHORALERTNOTE, $title, implode(", ", $pennames), $summary, $sid);
 					$favorites = dbquery("SELECT "._UIDFIELD." as uid, "._EMAILFIELD." as email, "._PENNAMEFIELD." as penname, alertson FROM ".TABLEPREFIX."fanfiction_favorites as fav, ".TABLEPREFIX."fanfiction_authorprefs as ap, "._AUTHORTABLE." WHERE FIND_IN_SET(fav.item,'".implode(",", $au)."') > 0 AND fav.type = 'AU' AND fav.uid = "._UIDFIELD." AND ap.uid = "._UIDFIELD." AND ap.alertson = '1'");
 					while($favuser = dbassoc($favorites)) { 
-						sendemail($favuser['penname'], $favuser['email'], $sitename, $siteemail, $subject, $mailtext, "html");
+				         efiction_core::sendemail($favuser['penname'], $favuser['email'], $sitename, $siteemail, $subject, $mailtext, "html");
 					}				
 				}
 				dbquery("UPDATE ".TABLEPREFIX."fanfiction_stats SET stories = stories + 1");
@@ -347,7 +347,7 @@ function newstory( ) {
 				$mailtext = sprintf(_STORYALERTNOTE, $title, implode(", ", $pennames), $sid, $inorder);
 				$favorites = dbquery("SELECT "._UIDFIELD." as uid, "._EMAILFIELD." as email, "._PENNAMEFIELD." as penname, alertson FROM ".TABLEPREFIX."fanfiction_favorites as fav, ".TABLEPREFIX."fanfiction_authorprefs as ap, "._AUTHORTABLE." WHERE fav.item = '$sid' AND fav.type = 'ST' AND fav.uid = "._UIDFIELD." AND ap.uid = "._UIDFIELD." AND ap.alertson = '1'");
 				while($favuser = dbassoc($favorites)) { 
-					sendemail($favuser['penname'], $favuser['email'], $sitename, $siteemail, $subject, $mailtext, "html");
+					 efiction_core::sendemail($favuser['penname'], $favuser['email'], $sitename, $siteemail, $subject, $mailtext, "html");
 				}
 			}
    
@@ -364,20 +364,20 @@ function newstory( ) {
 		else {
 			$adminquery = dbquery("SELECT "._EMAILFIELD." as email, "._PENNAMEFIELD." as penname, contact,categories FROM ".TABLEPREFIX."fanfiction_authorprefs as ap, "._AUTHORTABLE." WHERE "._UIDFIELD." = ap.uid AND level > 0 AND level < 4");
 			if(empty($storytitle)) $storytitle = $title;
-			include(_BASEDIR."includes/emailer.php");
+			 
 			while($admins = dbassoc($adminquery)) {
 				global $sitename, $siteemail;
 				if($admins['contact'] == 1) {
 					if(!$admins['categories']) {
 						$subject = _NEWSTORYAT.$sitename;
 						$mailtext = sprintf(_NEWSTORYAT2, $storytitle, $authorpenname, $summary)."\n <a href='$url/admin.php?action=submitted'>$url/admin.php?action=submitted</a>";							
-						$mailresult = sendemail($admins['penname'], $admins['email'], $sitename, $siteemail, $subject, $mailtext, "html");
+						$mailresult = efiction_core::sendemail($admins['penname'], $admins['email'], $sitename, $siteemail, $subject, $mailtext, "html");
 					}	
 					else {
 						if(count(array_intersect($catid, explode(",", $admins['categories'])))) {
 							$subject = _NEWSTORYAT.$sitename;
 							$mailtext = sprintf(_NEWSTORYAT2, $storytitle, $authorpenname, $summary)."\n <a href='$url/admin.php?action=submitted'>$url/admin.php?action=submitted</a>";
-							sendemail($admins['penname'], $admins['email'], $sitename, $siteemail, $subject, $mailtext, "html");
+							efiction_core::sendemail($admins['penname'], $admins['email'], $sitename, $siteemail, $subject, $mailtext, "html");
 						}
 					}
 				}
@@ -675,14 +675,9 @@ function editstory($sid) {
 		$coauthors = isset($_POST['coauthors']) ? array_filter(explode(",", $_POST['coauthors']), "isNumber") : array( );
 		if(isset($_POST['uid']) && isNumber($_POST['uid'])) $uid = $_POST['uid'];
 		else $uid = USERUID;
-		$classes = array( );
-		$classquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_classtypes");
-		while($type = dbassoc($classquery)) {
-			if(isset($_POST["class_".$type['classtype_id']])) {
-				$opts = is_array($_POST["class_".$type['classtype_id']]) ? array_filter($_POST["class_".$type['classtype_id']], "isNumber") : "";
-				$classes = array_merge($opts, $classes);
-			}
-		}
+		 
+        $classes = isset($_POST['classes']) ? array_filter($_POST['classes'], "isNumber") : array( );
+         
 		if(!$admin && $authorvalid && !$validated) $validated = 2;
 		$au[] = $uid;
 		if(count($coauthors)) {
@@ -759,7 +754,7 @@ function editstory($sid) {
 			$oldcats = explode(",", $oldcats);
 			if($validated) {
 				if(!$oldvalid) {
-					include(_BASEDIR."includes/emailer.php");
+				 
 					list($newchapter) = dbrow(dbquery("SELECT validated FROM ".TABLEPREFIX."fanfiction_chapters WHERE sid = '$sid' AND inorder = '1'"));
 					if(!$newchapter) {
 						if($alertson) {
@@ -772,7 +767,7 @@ function editstory($sid) {
 							$mailtext = sprintf(_AUTHORALERTNOTE, $title, implode(", ", $pennames), $summary, $sid);
 							$favorites = dbquery("SELECT "._UIDFIELD." as uid, "._EMAILFIELD." as email, "._PENNAMEFIELD." as penname, alertson FROM ".TABLEPREFIX."fanfiction_favorites as fav, ".TABLEPREFIX."fanfiction_authorprefs as ap, "._AUTHORTABLE." WHERE fav.item = $uid AND fav.type = 'AU' AND fav.uid = "._UIDFIELD." AND ap.uid = "._UIDFIELD." AND ap.alertson = '1'");
 							while($favuser = dbassoc($favorites)) { 
-								sendemail($favuser['penname'], $favuser['email'], $sitename, $siteemail, $subject, $mailtext, "html");
+								efiction_core::sendemail($favuser['penname'], $favuser['email'], $sitename, $siteemail, $subject, $mailtext, "html");
 							}				
 						}
 					}
@@ -789,7 +784,7 @@ function editstory($sid) {
 						$mailtext = sprintf(_STORYALERTNOTE, $storytitle, implode(", ", $pennames), $sid, $inorder);
 						$favorites = dbquery("SELECT "._UIDFIELD." as uid, "._EMAILFIELD." as email, "._PENNAMEFIELD." as penname, alertson FROM ".TABLEPREFIX."fanfiction_favorites as fav, ".TABLEPREFIX."fanfiction_authorprefs as ap, "._AUTHORTABLE." WHERE fav.item = '$sid' AND fav.type = 'ST' AND fav.uid = "._UIDFIELD." AND ap.uid = "._UIDFIELD." AND ap.alertson = '1'");
 						while($favuser = dbassoc($favorites)) { 
-							sendemail($favuser['penname'], $favuser['email'], $sitename, $siteemail, $subject, $mailtext, "html");
+							efiction_core::sendemail($favuser['penname'], $favuser['email'], $sitename, $siteemail, $subject, $mailtext, "html");
 						}
 					}
   
@@ -841,7 +836,7 @@ function editstory($sid) {
 			list($num_chapters, $words) = dbrow(dbquery("SELECT COUNT(chapid), SUM(wordcount) FROM ".TABLEPREFIX."fanfiction_chapters WHERE validated > 0"));
 			list($authors) = dbrow(dbquery("SELECT COUNT(uid) FROM ".TABLEPREFIX."fanfiction_authorprefs WHERE stories > 0"));
 			dbquery("UPDATE ".TABLEPREFIX."fanfiction_stats set wordcount = '$words', chapters = '$num_chapters', authors = '$authors'");
-
+ 
 			$updatequery = dbquery("UPDATE ".TABLEPREFIX."fanfiction_stories SET title = '".addslashes($title)."', summary = '".addslashes(format_story($summary))."', storynotes = '".addslashes(format_story($storynotes))."', rr = '".($rr ? 1 : 0)."', completed = '".($complete ? 1 : 0)."', validated = '$validated', rid = '$rid', classes = '".(is_array($classes) ? implode(",", $classes) : $classes)."', charid = '".(is_array($charid) ? implode(",", $charid) : $charid)."', catid = '".(is_array($catid) ? implode(",", $catid) : $catid)."', coauthors = '".(is_array($coauthors) ? implode(",", $coauthors) : $coauthors)."', featured = '$feat' WHERE sid = '$sid'");
 			$clist = array( );
 			$coauths = dbquery("SELECT uid FROM ".TABLEPREFIX."fanfiction_coauthors WHERE sid = '$sid'");

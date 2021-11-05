@@ -24,8 +24,7 @@
 
 if(!defined("e107_INIT")) exit( );
 
-$alertson = efiction_settings::get_single_setting('alertson'); 
-$agestatement =  efiction_settings::get_single_setting('agestatement'); 
+
 
 	$output = "<div id='pagetitle'>".($action == "register" ? _SETPREFS : _EDITPREFS)."</div>";
 	if(isset($_POST['submit'])) {

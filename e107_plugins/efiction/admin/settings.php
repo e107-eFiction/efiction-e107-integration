@@ -58,7 +58,6 @@ $output .= "<h1>"._SETTINGS."</h1><div style='text-align: center;'>
 	<a href='admin.php?action=settings&amp;sect=display'>"._DISPLAYSETTINGS."</a> |
 	<a href='admin.php?action=settings&amp;sect=reviews'>"._REVIEWSETTINGS."</a> |
 	<a href='admin.php?action=settings&amp;sect=useropts'>"._USERSETTINGS."</a> |
-	<a href='admin.php?action=settings&amp;sect=email'>"._EMAILSETTINGS."</a> |
 	<a href='admin.php?action=censor'>"._CENSOR."</a> <br />
 	<a href='admin.php?action=messages&message=copyright'>"._COPYRIGHT."</a> | 
 	<a href='admin.php?action=messages&message=printercopyright'>"._PRINTERCOPYRIGHT."</a> | 
@@ -73,10 +72,16 @@ $output .= "<h1>"._SETTINGS."</h1><div style='text-align: center;'>
 $output .= "</div> ";
 }	
 
-$sects = array("main", "submissions", "sitesettings", "display", "reviews", "useropts", "email");
+$sects = array("main", "submissions", "sitesettings", "display", "reviews", "useropts" );
 //if(!isset($_GET['sect'])) $sect = "main";
 //else $sect = $_GET['sect'];
 $sect = isset($_GET['sect']) ? $_GET['sect'] : "main";
+
+if(!in_array($sect, $sects  )) {
+  e107::redirect();
+}
+
+
 if(isset($_POST['submit'])) {
 	if($sect == "main") {
 		if(!preg_match("!^[a-z0-9_]{3,30}$!i", $_POST['newsitekey'])) $output .= write_error(_BADSITEKEY);
@@ -169,12 +174,7 @@ if(isset($_POST['submit'])) {
 		$pwdsetting = $_POST['newpwdsetting'] == 1 ? 1 : 0;
 		$result = dbquery("UPDATE ".MPREFIX."fanfiction_settings SET alertson = '$alertson', disablepopups = '$disablepopups', agestatement = '$agestatement', pwdsetting = '$pwdsetting' WHERE sitekey ='".SITEKEY."'");
 	}
-	else if($sect == "email") {
-		$smtp_host = $_POST['newsmtp_host'];
-		$smtp_username = $_POST['newsmtp_username'];
-		$smtp_password = $_POST['newsmtp_password'];
-		$result = dbquery("UPDATE ".MPREFIX."fanfiction_settings SET smtp_host = '$smtp_host', smtp_username = '$smtp_username', smtp_password = '$smtp_password' WHERE sitekey ='".SITEKEY."'");
-	}
+ 
     // 0 is correct value, nothing was changed
 	if($result >= 0 ) {
 		$output .= write_message(_ACTIONSUCCESSFUL);
@@ -463,18 +463,6 @@ if(isset($_POST['submit'])) {
 				<option value='0'".(!$pwdsetting ? " selected" : "").">"._RANDOM."</option>
 			</select> <a href='#' class='pophelp'>[?]<span>"._HELP_PWD."</span></a></td></tr>";
 	}
-	else if($sect == "email") {
-		$output .= "<h2>"._EMAILSETTINGS."</h2>
-		<table class='acp'>
-			<tr>
-				<td><label for='newsmtp_host'>"._SMTPHOST.":</label></td><td><input name='newsmtp_host' type='text' value='$smtp_host'> <a href='#' class='pophelp'>[?]<span>"._HELP_SMTPHOST."</span></a></td>
-		</tr>
-		<tr>
-				<td><label for='newsmtp_username'>"._SMTPUSER.":</label></td><td><input name='newsmtp_username' type='text' value='$smtp_username'> <a href='#' class='pophelp'>[?]<span>"._HELP_SMTPUSER."</span></a></td>
-		</tr>
-		<tr>
-				<td><label for='newsmtp_password'>"._SMTPPASS.":</label></td><td><input name='newsmtp_password' type='password' value='$smtp_password'> <a href='#' class='pophelp'>[?]<span>"._HELP_SMTPPWD."</span></a></td></tr>";		
-		$output .= 	write_message(_SMTPOFF);
-	}
+ 
 	$output .= "<tr><td colspan='2'><div align='center'><input type='submit' id='submit' class='button' name='submit' value='"._SUBMIT."'></div></form></td></tr></table>";
 ?>

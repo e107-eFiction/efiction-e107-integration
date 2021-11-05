@@ -12,13 +12,17 @@ else {
   e107::lan('efiction');
   e107::lan('efiction', true);
    /* LOAD CLASSES */
+  e107::getSingleton('efiction_core', e_PLUGIN.'efiction/classes/efiction.class.php');
   e107::getSingleton('efiction_blocks', e_PLUGIN.'efiction/classes/blocks.class.php');
   e107::getSingleton('efiction_pagelinks', e_PLUGIN.'efiction/classes/pagelinks.class.php');  
   e107::getSingleton('efiction_settings', e_PLUGIN.'efiction/classes/settings.class.php');
   e107::getSingleton('efiction_authors', e_PLUGIN.'efiction/classes/authors.class.php');  
   e107::getSingleton('efiction_panels', e_PLUGIN.'efiction/classes/panels.class.php'); 
   e107::getSingleton('efiction_categories', e_PLUGIN.'efiction/classes/categories.class.php'); 
-  
+  e107::getSingleton('efiction_classes', e_PLUGIN.'efiction/classes/classes.class.php');   
+  e107::getSingleton('efiction_ratings', e_PLUGIN.'efiction/classes/ratings.class.php'); 
+  e107::getSingleton('efiction_stories', e_PLUGIN.'efiction/classes/stories.class.php'); 
+    
   /**************  LOAD EFICTION SETTINGS ***************************************/    
   $settings = efiction_settings::get_settings();
  

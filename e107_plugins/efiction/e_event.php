@@ -55,7 +55,7 @@ class efiction_event // plugin-folder + '_event'
 	{
             $userData = e107::user(USERID);
             $author_uid = $userData['user_plugin_efiction_author_uid']; 
-            $author_level = $userData['user_plugin_efiction_level'];
+            
  
     }
     
@@ -68,8 +68,7 @@ class efiction_event // plugin-folder + '_event'
         
             $userData = e107::user(USERID);
             $author_uid = $userData['user_plugin_efiction_author_uid']; 
-            $author_level = $userData['user_plugin_efiction_level'];
-
+ 
             if($author_uid)  {
                   /* if already exists author with that penname, unattached to user, it is solved by _DUPLICATE_KEY_UPDATE */
                   /* cheks prefs */
@@ -114,7 +113,6 @@ class efiction_event // plugin-folder + '_event'
                         /* not generate author */
                         $ue = new e107_user_extended;
       	                $ue->user_extended_setvalue(USERID, 'user_plugin_efiction_author_uid', $authordata['author_uid']);
-                        $ue->user_extended_setvalue(USERID, 'user_plugin_efiction_level', 1);
                         $message = "Succcesfully added author with penname ".$authordata['penname'];
                          echo  e107::getMessage()->addSuccess($message)->render();
                           
@@ -136,7 +134,7 @@ class efiction_event // plugin-folder + '_event'
   					'email' => $userData['user_email'],  
   					'password' => '', //delete 
   					'date' => $userData['user_join'], 
-                      'user_id' => USERID,  
+                     'user_id' => USERID,  
   					'_DUPLICATE_KEY_UPDATE' => 1
     				);
     				$dbinsertid = e107::getDB()->insert("fanfiction_authors", $insert);
@@ -145,14 +143,14 @@ class efiction_event // plugin-folder + '_event'
    
   					$insert2 = array(
   						'uid'    =>  $dbinsertid,
+                        'level'  => 1,
   						'_DUPLICATE_KEY_UPDATE' => 1
   					);
   					e107::getDB()->insert("fanfiction_authorprefs", $insert2);
   				
                      $ue = new e107_user_extended;
   	                 $ue->user_extended_setvalue(USERID, 'user_plugin_efiction_author_uid', $dbinsertid);
-                     $ue->user_extended_setvalue(USERID, 'user_plugin_efiction_level', 1);
-                          
+  
                      e107::getDb()->gen($qry);
                           
                      e107::setRegistry('core/e107/user/'.USERID);

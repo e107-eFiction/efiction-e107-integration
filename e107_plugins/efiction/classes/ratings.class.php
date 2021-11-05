@@ -36,35 +36,59 @@
  * #######################################
  */
 
-if (!class_exists('efiction_blocks')) {
-    class efiction_blocks
+if (!class_exists('efiction_ratings')) {
+    class efiction_ratings
     {
-
-		public static function get_blocks()
-		{
-			$blockquery = "SELECT * FROM ".MPREFIX."fanfiction_blocks";
-			$result = e107::getDb()->retrieve($blockquery, true);
-		
-			foreach($result AS $block) {
-				$blocks[$block['block_name']] = unserialize($block['block_variables']);
-				$blocks[$block['block_name']]['title'] = $block['block_title'];
-				$blocks[$block['block_name']]['file'] = $block['block_file'];
-				$blocks[$block['block_name']]['status'] = $block['block_status'];
-			}
-			return $blocks;
-		}
-        
-        
-        public static function get_single_block($block_name)
+        public function __construct()
         {
-            $blocks = self::get_blocks();
+        }
+ 
 
-            if ($block_name) {
-                return $blocks[$block_name];
+		/* all data, id => array() */
+		public static function get_ratings()
+		{
+			$ratingslist = array();
+
+			$table_name = MPREFIX.'fanfiction_ratings';
+			$$query = 'SELECT * FROM '.$table_name  ;
+
+			$result = e107::getDb()->retrieve($ratlist, true);
+
+			foreach ($result as $rate) {
+				$ratingslist[$rate['rid']] = array('name' => $rate['rating'], 'ratingwarning' => $rate['ratingwarning'], 'warningtext' => $rate['warningtext']);
+			}
+
+			return $ratingslist;
+		}
+
+
+		/* used for ratings select in storyform */
+		/* ID => NAME */
+		// used in story_shortcodes.php, series_shortcodes.php
+		public function get_ratings_list()
+		{
+			$authors = array();
+			$ratingquery = 'SELECT rid, rating FROM #fanfiction_ratings';
+			$ratingsarray = e107::getDb()->retrieve($ratingquery, true);
+
+			foreach ($ratingsarray as $ratingresult) {
+				$ratings[$ratingresult['rid']] = $ratingresult['rating'];
+			}
+
+			return $ratings;
+		}
+
+        public static function get_single_rating($rating_name)
+        {
+            $ratings = self::get_ratings();
+
+            if ($rating_name) {
+                return $ratings[$rating_name];
             }
 
             return null;
         }
-        
-  	}
+    }
+
+    new efiction_ratings();
 }

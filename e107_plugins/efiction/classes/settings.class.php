@@ -70,7 +70,7 @@ if (!class_exists('efiction_settings')) {
             
             /* defalt values */
             $settings['recentdays'] = varset($settings['recentdays'], 7);
-            if(USERUID) {
+            if(defined("USERUID") AND USERID) {
             	
                 $user_prefs = e107::getDb()->retrieve("SELECT sortby, storyindex, tinyMCE FROM ".MPREFIX."fanfiction_authorprefs WHERE uid = '".USERUID."'");
                
