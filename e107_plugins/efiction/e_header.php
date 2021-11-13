@@ -81,7 +81,9 @@ if(deftrue('USER_AREA') && (e_PAGE != "menus.php") )    // prevents inclusion of
 
 	if(!isset($_GET['action']) || $_GET['action'] != "printable") 
 	{
-		e107::js("url", _BASEDIR."includes/javascript.js", "jquery" ); 
+		if(e_CURRENT_PLUGIN === "efiction") {
+            e107::js("url", _BASEDIR."includes/javascript.js", "jquery" );
+        } 
 	}
 
  

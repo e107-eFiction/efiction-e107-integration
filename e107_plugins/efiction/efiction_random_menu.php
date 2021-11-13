@@ -44,11 +44,11 @@ if (!defined('e107_INIT')) {
 include ("includes/queries.php");
  
 if (class_exists('efiction_blocks')) {
-   /* if (e_DEBUG) {
+ /*  if (e_DEBUG) {
         echo e107::getMessage()->addInfo('efiction class is available')->render();
     }*/
 
-	$template = e107::getTemplate('efiction', 'blocks', 'recent', true, true);
+	$template = e107::getTemplate('efiction', 'blocks', 'random', true, true);
 
     $blocks['recent'] = efiction_blocks::get_single_block('recent');
 
@@ -62,13 +62,14 @@ if (class_exists('efiction_blocks')) {
     $limit 		= isset($blocks['recent']['num']) && $blocks['recent']['num'] > 0 ? $blocks['recent']['num'] : 10;
 	$sumlength  = isset($blocks['recent']['sumlength']) && $blocks['recent']['sumlength'] > 0 ? $blocks['recent']['sumlength'] :75;
 
-    $query = _STORYQUERY." ORDER BY stories.updated DESC LIMIT 0,$limit";
+    $query = _STORYQUERY." ORDER BY rand( ) DESC LIMIT $limit";
     $result = e107::getDb()->retrieve($query, true);
  
 	$start = $template['start']; 
 	$end = $template['end'];
     $tablerender= varset($template['tablerender'], '');
  
+
     foreach ($result as $stories) {
         if (!isset($blocks['recent']['allowtags'])) {
             $stories['summary'] = e107::getParser()->toText($stories['summary']);
@@ -79,6 +80,12 @@ if (class_exists('efiction_blocks')) {
         $sc->setVars($stories);
         $text .= e107::getParser()->parseTemplate($template['item'], true, $sc);
     }
+ 
+    /* fill empty, some designs needs exact counts of divs */
+    for ($i = count($result); $i <= $limit; $i++) {
+         $text .= e107::getParser()->parseTemplate($template['item-empty']);
+    }
+    
 } else {
     if (e_DEBUG) {
         echo e107::getMessage()->addError('efiction class is not set')->render();
@@ -86,3 +93,4 @@ if (class_exists('efiction_blocks')) {
 }
  
 e107::getRender()->tablerender($caption, $start.$text.$end, $tablerender);
+ 

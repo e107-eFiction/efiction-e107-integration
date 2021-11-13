@@ -51,7 +51,9 @@ function updatePanelOrder( ) {
 }
 
 if(isset($action) && $action == "settings") {
-$output .= "<h1>"._SETTINGS."</h1><div style='text-align: center;'>
+
+$caption =  _SETTINGS ;
+$output .= "<div style='text-align: center;'>
 	<a href='admin.php?action=settings&amp;sect=main'>"._MAINSETTINGS."</a> |
 	<a href='admin.php?action=settings&amp;sect=submissions'>"._SUBMISSIONSETTINGS."</a> |
 	<a href='admin.php?action=settings&amp;sect=sitesettings'>"._SITESETTINGS."</a> |
@@ -70,6 +72,10 @@ $output .= "<h1>"._SETTINGS."</h1><div style='text-align: center;'>
 	}
 	if(isset($othersettings)) $output .= implode(" | ", $othersettings);
 $output .= "</div> ";
+    
+    e107::getRender()->tablerender($caption, $output, $current);
+    $output ='';
+    $caption = '';
 }	
 
 $sects = array("main", "submissions", "sitesettings", "display", "reviews", "useropts" );
@@ -190,9 +196,10 @@ if(isset($_POST['submit'])) {
 	}
 
 	$output .= "<form method='POST' class='tblborder' style='' enctype='multipart/form-data' action='".(isset($action) &&  $action == "settings" ? "admin.php?action=settings" : $_SERVER['PHP_SELF']."?step=".$_GET['step'])."&amp;sect=$sect'>";
-	if($sect == "main") {
-		$output .= "<h2>"._SITEINFO."</h2>
-		<table class='acp'>
+	$output .= "<div class='table-responsive'>";
+    if($sect == "main") {
+		$caption = _SITEINFO;
+		$output .= "<table class='acp'>
 			<tr>
 				<td><label for='newsitekey'>"._SITEKEY.":</label></td><td>".$sitekey."</td>
 			</tr>
@@ -211,22 +218,11 @@ if(isset($_POST['submit'])) {
 			<tr>				
 				<td><label for='newsiteemail'>"._ADMINEMAIL.":</label></td><td>".$siteemail."</td>
 			</tr>
-			<tr>				
-				<td><label for='newsiteskin'>"._DEFAULTSKIN.":</label></td><td><select name='newskin'>";
-		$directory = opendir(_BASEDIR."skins");
-		while($filename = readdir($directory)) {
-			if($filename=="." || $filename==".." || !is_dir(_BASEDIR."skins/".$filename)) continue;
-			$output .= "<option value='$filename'".($skin == $filename ? " selected" : "").">$filename</option>";
-		}
-		closedir($directory);
-		$output .= "</select> <a href='#' class='pophelp'>[?]<span>"._HELP_SITESKIN."</span></a></td>
-			</tr>
-			<tr>
-				<td><label for='newlanguage'>"._LANGUAGE.":</label></td><td>".$language."</td></tr>";
+        ";
 	}
 	else if($sect == "submissions") {
-		$output .= "<h2>"._SUBMISSIONSETTINGS."</h2>
-		<table class='acp'>
+		$caption .= _SUBMISSIONSETTINGS;
+		$output .= "<table class='acp'>
 			<tr>
 				<td><label for='newsubmissionsoff'>"._NOSUBS.":</label></td><td><select name='newsubmissionsoff'>
 				<option value='1'".($submissionsoff == "1" ? " selected" : "").">"._YES."</option>
@@ -289,7 +285,8 @@ if(isset($_POST['submit'])) {
         $tinymce_field = e107::getForm()->renderElement('newtinyMCE', $tinyMCE, 
         array( 'type' => 'dropdown', 'data' => 'str',  'writeParms' => array('optArray' =>  efiction_settings::get_available_editors(), 'class'=>'tbox ', 'defaultValue' => 'default', 'style'=>'width: 90%;')) );
  
-		$output .= "<h2>"._SITESETTINGS."</h2>
+		$caption  = _SITESETTINGS;
+        $output .= "
 		<table class='acp'>
 			<tr>
 				<td><label for='newtinyMCE'>"._USETINYMCE.": </label></td><td>".$tinymce_field."<a href='#' class='pophelp'>[?]<span>".EFICTION_EDITOR_221."</span></a>
@@ -336,13 +333,17 @@ if(isset($_POST['submit'])) {
 				</select><a href='#' class='pophelp'>[?]<span>"._HELP_CAPTCHA."</span></a></td></tr>";
 	}
 	else if($sect == "display") {
+    
 		$settings = dbquery("SELECT defaultsort, displayindex FROM ".MPREFIX."fanfiction_settings WHERE sitekey ='".SITEKEY."'");
-		list($sitedefaultsort, $sitedisplayindex) = dbrow($settings);
-		$defaultdates = array("m/d/y", "m/d/Y", "m/d/Y", "d/m/Y", "d/m/y", "d M Y", 
+		
+        list($sitedefaultsort, $sitedisplayindex) = dbrow($settings);
+		
+        $defaultdates = array("m/d/y", "m/d/Y", "m/d/Y", "d/m/Y", "d/m/y", "d M Y", 
 				"d.m.y", "Y.m.d", "m.d.Y", "d-m-y", "m-d-y", "M d Y", "M d, Y", "F d Y", "F d, Y");
 		$defaulttimes = array("h:i a", "h:i A", "H:i", "g:i a", "g:i A", "G:i", "h:i:s a", "H:i:s", "g:i:s a", "g:i:s A", "G:i:s");
-		$output .= "<h2>"._DISPLAYSETTINGS."</h2>
-		<table class='acp'>
+		
+        $caption = _DISPLAYSETTINGS;
+		$output .= "<table class='acp'>
 			<tr>
 				<td><label for='newdateformat'>"._DATEFORMAT.":</label></td><td><select name='newdateformat'><option value=''>"._SELECTONE."</option>";
 		foreach($defaultdates as $date) {
@@ -402,8 +403,8 @@ if(isset($_POST['submit'])) {
 			<td><label for='newlinkrange'>"._LINKRANGE.":</label></td><td><input  type='text' class='textbox=' name='newlinkrange' size='3' value='$linkrange'> <a href='#' class='pophelp'>[?]<span>"._HELP_LINKRANGE."</span></a></td></tr>";
 	}
 	else if($sect == "reviews") {
-		$output .= "<h2>"._REVIEWSETTINGS."</h2>
-		<table class='acp'>
+		$caption =_REVIEWSETTINGS;
+		$output .= "<table class='acp'>
 			<tr>
 				<td><label for='newreviewsallowed'>"._ONREVIEWS.":</label></td><td><select name='newreviewsallowed'>
 				<option value='1'".($reviewsallowed == "1" ? " selected" : "").">"._YES."</option>
@@ -437,8 +438,8 @@ if(isset($_POST['submit'])) {
 				</select> <a href='#' class='pophelp'>[?]<span>"._HELP_RATEONLY."</span></a></td></tr>";
 	}
 	else if($sect == "useropts") {
-		$output .= "<h2>"._USERSETTINGS."</h2>
-		<table class='acp'>
+		$caption = _USERSETTINGS;
+		$output .= "<table class='acp'>
 			<tr>
 				<td><label for='newalertson'>"._ALERTSON.":</label></td><td><select name='newalertson'>
 				<option value='1'".($alertson == "1" ? " selected" : "").">"._YES."</option>
@@ -464,5 +465,5 @@ if(isset($_POST['submit'])) {
 			</select> <a href='#' class='pophelp'>[?]<span>"._HELP_PWD."</span></a></td></tr>";
 	}
  
-	$output .= "<tr><td colspan='2'><div align='center'><input type='submit' id='submit' class='button' name='submit' value='"._SUBMIT."'></div></form></td></tr></table>";
+	$output .= "<tr><td colspan='2'><div align='center'><input type='submit' id='submit' class='button btn btn-default' name='submit' value='"._SUBMIT."'></div></form></td></tr></table></div>";
 ?>

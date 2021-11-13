@@ -39,6 +39,7 @@ $BLOCKS_TEMPLATE['recent']['item'] =
   "<div class='recentstory'>{STORY_TITLE_LINK} {LAN=LAN_EFICTION_BY} {STORY_AUTHORS_LINK}  {STORY_RATING_NAME} <br> 
   {STORY_SUMMARY}</div>";
 $BLOCKS_TEMPLATE['recent']['end'] = ''; 
+$BLOCKS_TEMPLATE['recent']['item-empty'] = ''; 
 
 $BLOCKS_TEMPLATE['random']['caption'] = '{BLOCK_CAPTION}'; 
 $BLOCKS_TEMPLATE['random']['start'] = "";
@@ -46,6 +47,7 @@ $BLOCKS_TEMPLATE['random']['item'] =
   "<div class='randomstory'>{STORY_TITLE_LINK} {LAN=LAN_EFICTION_BY} {STORY_AUTHORS_LINK}  {STORY_RATING_NAME} <br> 
   {STORY_SUMMARY}</div>";
 $BLOCKS_TEMPLATE['random']['end'] = ''; 
+$BLOCKS_TEMPLATE['random']['item-empty'] = '';
  
 $BLOCKS_TEMPLATE['featured']['caption'] = '{BLOCK_CAPTION}'; 
 $BLOCKS_TEMPLATE['featured']['start'] = "";
@@ -53,6 +55,6 @@ $BLOCKS_TEMPLATE['featured']['item'] =
   "<div class='featuredstory'>{STORY_TITLE_LINK} {LAN=LAN_EFICTION_BY} {STORY_AUTHORS_LINK}  {STORY_RATING_NAME} <br> 
   {STORY_SUMMARY}</div>";
 $BLOCKS_TEMPLATE['featured']['end'] = ''; 
-    
+$BLOCKS_TEMPLATE['featured']['item-empty'] = ''; 
     
  

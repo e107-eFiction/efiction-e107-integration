@@ -9,7 +9,7 @@
 
 /* import fonts */
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700|Courgette);
-@import url(https://use.fontawesome.com/releases/v5.3.1/css/all.css);
+ 
 
 /* import basic settings, IE-fixes and grids */
 @import url(base.css);

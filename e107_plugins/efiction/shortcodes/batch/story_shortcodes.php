@@ -145,6 +145,38 @@
           }
           return $text;     
         }
+        
+        /* {STORY_AUTHOR_LINK} TODO: TEMPLATE */
+
+        public function sc_story_author_link($parm)
+        {
+             return $this->sc_story_author();
+        }
+        
+         /* {STORY_AUTHOR_NAME} {author} */
+        public function sc_story_author_name($parm = null)
+    	{
+          $stories = $this->var;
+          if ($stories['coauthors'] > 0) {
+              $authlink[] =  $stories['penname'] ;
+              $coauth_query = 'SELECT '._PENNAMEFIELD.' as penname, co.uid FROM #fanfiction_coauthors AS co LEFT JOIN '._AUTHORTABLE.' ON co.uid = '._UIDFIELD." WHERE co.sid = '".$stories['sid']."'" ;
+
+              $records = e107::getDb()->retrieve($coauth_query, true);
+
+              foreach ($records as $coauth) {
+                  $v = $coauth['penname'];
+                  $authlink[] =  $v ;
+              }
+          }
+          if (isset($authlink)) {
+              return implode(', ', $authlink);
+          } else {
+              return $stories['penname'];
+          }
+          return $text;     
+        }
+              
+        
         /* {STORY_CATEGORY} {category} */
         public function sc_story_category($parm = null)
     	{
@@ -371,12 +403,8 @@
             }
         }
    
-        /* {STORY_TITLE} {title}  */
-        public function sc_story_title($parm = null)
-    	{
-          $text = $this->var['title'];   
-          return $text;     
-        }
+
+        
         /* {STORY_TOC} {toc} */
         public function sc_story_toc($parm = null)
     	{
@@ -434,74 +462,46 @@
           }
 
 
-        /* {STORY_AUTHORS_LINK} TODO: TEMPLATE */
 
-        public function sc_story_authors_link($parm)
-        {
-             return $this->sc_story_author();
+
+        /* {STORY_TITLE} {title}  */
+        public function sc_story_title($parm = null)
+    	{
+          $text = $this->var['title'];   
+          return $text;     
         }
 
-
-
+        
+        
         /* {STORY_TITLE_LINK} */
         /* TODO: sessions */
-        public function sc_story_title_link($parm)
+        public function sc_story_title_link($parm = NULL)
         {
             global $ageconsent, $disablepopups;
             
             $tp = e107::getParser();
             $stories = $this->var;
             
-            $title = $this->title_link($stories);
+            $class =  varset($parm['class'],"viewstory");
+            
+            $link = $this->title_link($stories, $parm );
+            
+        //    $title = "<a class='.$class.' href='.$link.'>".$stories['title']."</a>";
+            
             return $title;
- 
-            /* too soon */
-            $ratingslist = efiction::ratingslist();
-		 
-            $rating = $stories['rid'];
-			$row['story_sef'] = eHelper::title2sef($stories['title'],'dashl');
-
-        	$warningtext = !empty($ratingslist[$rating]['warningtext']) ? addslashes(strip_tags($ratingslist[$rating]['warningtext'])) : "";
-			
-			if(empty($ratingslist[$rating]['ratingwarning'])) {
-			    $row['story_query'] = "sid=".$stories['sid'];
-				$url = e107::url("efiction", "viewstory", $row, "full");  
-      			$title = "<a href='{$url}'>".$stories['title']."</a>";
-			}	  
-      		else {
-      	 
-      			$warninglevel = sprintf("%03b", $ratingslist[$rating]['ratingwarning']);
-				 
-      			if($warninglevel[2] && !e107::getSession()->is(SITEKEY."_warned_{$rating}")) {
-					$row['story_query'] = "sid=".$stories['sid']."&warning=$rating"; 
-      				$location = e107::url("efiction", "viewstory", $row, "full"); 
-      				$warning = $warningtext;
-      			}
-      			elseif($warninglevel[1] && !$ageconsent && !e107::getSession()->is(SITEKEY."_ageconsent")) {
-					$row['story_query'] = "sid=".$stories['sid']."&ageconsent=ok&warning=$rating";
-      				$location = e107::url("efiction", "viewstory", $row, "full"); 
-      				$warning = _AGECHECK." - "._AGECONSENT." ".$warningtext." -- 1";
-      			}
-      			elseif($warninglevel[0] && !isMEMBER) {
-      				$location = "member.php?action=login&amp;sid=".$stories['sid'];
-      				$warning = _RUSERSONLY." - $warningtext";		
-      			}
-      			
-				if(!empty($warning)) {
-      				$warning = preg_replace("@'@", "\'", $warning);
-
-      				$title = "<a href=\"javascript:if(confirm('".$warning."')) location = '$location'\">".$stories['title']."</a>";
-      			}
-      			else {
-					  $row['story_query'] = "sid=".$stories['sid'];
-					  $url = e107::url("efiction", "viewstory", $row, "full");  
-					  $title = "<a href='{$url}'>".$stories['title']."</a>";
-				}
-      		}
-            return $title;
+  
         }
 
-
+        
+        /* {STORY_TITLE_URL} */
+        public function sc_story_title_url($parm = NULL)
+        {
+          $stories = $this->var;
+          $link = $this->title_link($stories, $parm );
+          return $link;
+        }
+        
+        
         /* {STORY_RATING_NAME} */
         public function sc_story_rating_name($parm)
         {
@@ -537,16 +537,20 @@
     
     
         // Because this is used in places other than the listings of stories, we're setting it up as a function to be called as needed.
-        function title_link($stories) {
+        function title_link($stories, $parm = NULL) {
             
             $ageconsent =  efiction_settings::get_single_setting('ageconsent');
             $disablepopups =  efiction_settings::get_single_setting('disablepopups');
             
+            $class =  varset($parm['class'],"viewstory");
+            
             $ratingslist = efiction_ratings::get_ratings_list();
         	$rating = $stories['rid'];
         	$warningtext = !empty($ratingslist[$rating]['warningtext']) ? addslashes(strip_tags($ratingslist[$rating]['warningtext'])) : "";
-        		if(empty($ratingslist[$rating]['ratingwarning']))
-        			$title = "<a href=\"viewstory.php?sid=".$stories['sid']."\">".$stories['title']."</a>";
+        		if(empty($ratingslist[$rating]['ratingwarning'])) {
+                    $link = "viewstory.php?sid=".$stories['sid'];
+        			$title = "<a class=\"".$class."\" href=\"viewstory.php?sid=".$stories['sid']."\">".$stories['title']."</a>";
+                }    
         		else {
         			$warning = "";
         			$warninglevel = sprintf("%03b", $ratingslist[$rating]['ratingwarning']);
@@ -568,11 +572,17 @@
         			}
         			if(!empty($warning)) {
         				$warning = preg_replace("@'@", "\'", $warning);
-        				$title = "<a href=\"javascript:if(confirm('".$warning."')) location = '$location'\">".$stories['title']."</a>";
+                        $link = "javascript:if(confirm('".$warning."')) location = '$location'";
+        				$title = "<a class='".$class."'  href=\"javascript:if(confirm('".$warning."')) location = '$location'\">".$stories['title']."</a>";
         			}
-        			else $title = "<a href=\"viewstory.php?sid=".$stories['sid']."\">".$stories['title']."</a>";
-        		}
-        	return $title;
+        			else {
+                      $link = "viewstory.php?sid=".$stories['sid'];
+                      $title = "<a class=\".$class.\" href=\"viewstory.php?sid=".$stories['sid']."\">".$stories['title']."</a>";
+        		    }  
+                }
+ 
+        	//return $title;
+            return $link;
         }
         
         
