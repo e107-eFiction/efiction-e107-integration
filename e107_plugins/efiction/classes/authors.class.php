@@ -115,6 +115,18 @@ if (!class_exists('efiction_authors')) {
         }
         
 */
+        public function get_author_avatar($uid = null, $parm = NULL) {
+          $avatar = '';
+          $author = self::get_single_author($uid);
+          
+          if( isset($author['user_id'])) {
+          
+            $parm['type'] = 'url';
+            $avatar =  e107::getParser()->toAvatar($author, $parm);
+          }
+           
+          return $avatar;
+        }
         
     }
 

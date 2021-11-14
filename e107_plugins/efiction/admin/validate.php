@@ -110,7 +110,10 @@ function preview_story($stories) {
 					else $cond = "fav.item = $authoruid";
 					$subject = _NEWSTORYAT." $sitename";
 					$mailtext = sprintf(_AUTHORALERTNOTE, $title, $author, $summary, $sid);
-					$favorites = dbquery("SELECT "._UIDFIELD." as uid, "._EMAILFIELD." as email, "._PENNAMEFIELD." as penname, alertson FROM ".TABLEPREFIX."fanfiction_favorites as fav, ".TABLEPREFIX."fanfiction_authorprefs as ap, "._AUTHORTABLE." WHERE $cond AND fav.type = 'AU' AND fav.uid = "._UIDFIELD." AND ap.uid = "._UIDFIELD." AND ap.alertson = '1'");
+
+					$favorites = dbquery("SELECT "._UIDFIELD." as uid, "._EMAILFIELD." as email, "._PENNAMEFIELD." as penname, alertson FROM ".TABLEPREFIX."fanfiction_favorites as fav, 
+					".TABLEPREFIX."fanfiction_authorprefs as ap, 
+					"._AUTHORTABLE." WHERE $cond AND fav.type = 'AU' AND fav.uid = "._UIDFIELD." AND ap.uid = "._UIDFIELD." AND ap.alertson = '1'");
 					while($favuser = dbassoc($favorites)) { 
 						$result = efiction_core::sendemail($favuser['penname'], $favuser['email'], $sitename, $siteemail, $subject, $mailtext, "html");
 					}				
@@ -125,7 +128,10 @@ function preview_story($stories) {
 				while($code = dbassoc($codequery)) {
 					eval($code['code_text']);
 				}
+				/* notification that author added new story */
 				$favorites = dbquery("SELECT "._UIDFIELD." as uid, "._EMAILFIELD." as email, "._PENNAMEFIELD." as penname, alertson FROM ".TABLEPREFIX."fanfiction_favorites as fav, ".TABLEPREFIX."fanfiction_authorprefs as ap, "._AUTHORTABLE." WHERE fav.item = '$sid' AND fav.type = 'ST' AND fav.uid = "._UIDFIELD." AND ap.uid = "._UIDFIELD." AND ap.alertson = '1'");
+
+
 				while($favuser = dbassoc($favorites)) { 
 					$result = efiction_core::sendemail($favuser['penname'], $favuser['email'], $sitename, $siteemail, $subject, $mailtext, "html");
 				}

@@ -39,7 +39,8 @@
 if (!class_exists('efiction_panels')) {
     class efiction_panels
     {
-        public static function get_panel_types() {
+        public static function get_panel_types() 
+        {
         
           $panelquery =  "SELECT panel_type FROM ".MPREFIX."fanfiction_panels GROUP BY panel_type";
           $records = e107::getDb()->retrieve($panelquery, true);
@@ -48,6 +49,25 @@ if (!class_exists('efiction_panels')) {
         
         }
             
-    }
+
+        public static function favorites_panel()  
+        {
+           $panelquery =  "SELECT * FROM ".MPREFIX."fanfiction_panels WHERE panel_type = 'F' AND panel_name != 'favlist' ORDER BY panel_title ASC";
+           $records = e107::getDb()->retrieve($panelquery, true);
+    
+    	   return $records;
+        }
+        
+        public static function member_panel()  
+        {
+           $submissionsoff = efiction_settings::get_single_setting('submissionsoff');
+           $favorites =   efiction_settings::get_single_setting('favorites');
+           $panelquery =  "SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_hidden != '1' AND panel_level = '1' AND (panel_type = 'U' ".(!$submissionsoff || isADMIN ? " OR panel_type = 'S'" : "").($favorites ? " OR panel_type = 'F'" : "").") ORDER BY panel_type, panel_order, panel_title ASC";
+           $records = e107::getDb()->retrieve($panelquery, true);
+    
+    	   return $records;
+        }
+        
+     }
     new efiction_panels();
 }

@@ -241,9 +241,9 @@ define('_INVALIDUPLOAD', 'Invalid Upload!  File uploads must be in plain text or
 define('_LOCKED', 'This category is locked.');
 define('_MANAGESTORIES', 'Manage Stories');
 define('_MISSINGFIELDS', 'Some of the required information is missing.  Please check your input.  Required fields are title, summary, '.($multiplecats ? strtolower(_CATEGORIES.', ') : '').'rating, and story text.'); // Modified 11/06/05 - If categories are turned off don't show category as required field. :)
-define('_NEWSTORYAT', 'New Story at ');
-define('_NEWSTORYAT2', "A new story has been submitted to the validation queue at $sitename.<br><br> %1\$s by %2\$s<br><br>%3\$s\n\nIf you no longer wish to receive e-mails such as this, please go to <a href='$url/user.php'>your account</a>\r\n
-on $sitename, and edit your profile.");  // Modified 2-3-10 to add reminder for turning off alerts
+define('_NEWSTORYAT', 'Nová poviedka ');
+define('_NEWSTORYAT2', "Nová poviedka zaradená do zoznamu na schválenie $sitename.<br><br> %1\$s by %2\$s<br><br>%3\$s\n\nAk si viac neželáte dostávať tieto maily, prihláste sa do  <a href='$url/member.php'>svojho účtu</a>\r\n
+na stránke $sitename, a zmeňte nastavenia svojich notifikácií.");  // Modified 2-3-10 to add reminder for turning off alerts
 define('_NOSTORYTEXT', 'You must include the text of your story either as an upload or as input into the textarea.');
 define('_READS', 'Read Count');
 define('_ROUNDROBIN', 'Round robin');

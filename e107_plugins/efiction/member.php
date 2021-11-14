@@ -45,8 +45,11 @@ if((empty($action) || $action == "login") && isMEMBER) {
 	$output .= "<div id=\"pagetitle\">"._USERACCOUNT."</div>
 		<div class=\"tblborder\" id=\"useropts\" style=\"padding: 5px; width: 50%; margin: 1em 25%;\">";
 	$panelquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_hidden != '1' AND panel_level = '1' AND (panel_type = 'U' ".(!$submissionsoff || isADMIN ? " OR panel_type = 'S'" : "").($favorites ? " OR panel_type = 'F'" : "").") ORDER BY panel_type, panel_order, panel_title ASC");
-	if(!dbnumrows($panelquery)) $output .= _FATALERROR;
-	while($panel = dbassoc($panelquery)) {
+	
+    $panels = efiction_panels::member_panel();
+    
+    foreach($panels AS $panel) 
+    {
 		if(!$panel['panel_url']) $output .=  "<a href=\"member.php?action=".$panel['panel_name']."\">".$panel['panel_title']."</a><br />\n";
 		else $output .= "<a href=\"".$panel['panel_url']."\">".$panel['panel_title']."</a><br />\n";
 	}
