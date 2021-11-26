@@ -29,7 +29,9 @@ else include_once(_BASEDIR."blocks/info/en.php");
 		$tpl->assignGlobal("totalauthors", $stats['authors']);
 		$tpl->assignGlobal("totalmembers", $stats['members']);
 		$tpl->assignGlobal("totalreviews", $stats['reviews']);
-		$tpl->assignGlobal("totalreviewers", $stats['reviewers']);	
+		$tpl->assignGlobal("totalreviewers", $stats['reviewers']);
+		$tpl->assignGlobal("totalcomments", $stats['comments']);
+		$tpl->assignGlobal("totalcommenters", $stats['commenters']);        	
 		$tpl->assignGlobal("totalwords", $stats['wordcount']);
 		$tpl->assignGlobal("totalchapters", $stats['chapters']);
 		$tpl->assignGlobal("totalseries", $stats['series']);
@@ -47,10 +49,12 @@ else include_once(_BASEDIR."blocks/info/en.php");
 <div><span class='label'>"._STORIES.": </span>".$stats['stories']."</div>
 <div><span class='label'>"._CHAPTERS.": </span>".$stats['chapters']."</div>
 <div><span class='label'>"._WORDCOUNT.": </span>".$stats['wordcount']."</div>
-<div><span class='label'>"._AUTHORS.": </span>".$stats['authors']."</div>
-<div><span class='label'>"._REVIEWS.": </span>".$stats['reviews']."</div>
-<div><span class='label'>"._REVIEWERS.": </span>".$stats['reviewers']."</div>
-<div><span class='label'>"._NEWESTMEMBER.": </span><a href=\""._BASEDIR."viewuser.php?uid=".$stats['newestmember']."\">$newmember</a></div>";
+<div><span class='label'>"._AUTHORSCOUNT.": </span>".$stats['authors']."</div>
+<div><span class='label'>"._REVIEWSCOUNT.": </span>".$stats['reviews']."</div>
+<div><span class='label'>"._REVIEWERSCOUNT.": </span>".$stats['reviewers']."</div>
+<div><span class='label'>"._COMMENTSCOUNT.": </span>".$stats['comments']."</div>
+<div><span class='label'>"._COMMENTERSCOUNT.": </span>".$stats['commenters']."</div>
+<div><span class='label'>"._NEWESTMEMBERCOUNT.": </span><a href=\""._BASEDIR."viewuser.php?uid=".$stats['newestmember']."\">$newmember</a></div>";
 		}
 		else if($blocks["info"]["style"] == 1) {
 			$replace = array($stats['authors'], $stats['members'], $stats['reviews'], $stats['reviewers'], $stats['wordcount'], $stats['chapters'], $stats['stories'], $stats['series'],"<a href=\""._BASEDIR."viewuser.php?uid=".$stats['newestmember']."\">$newmember</a>", $loggedinas, $adminnotices);

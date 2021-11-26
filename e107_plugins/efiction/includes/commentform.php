@@ -22,7 +22,7 @@
 
 if(!defined("e107_INIT")) exit( );
  
-$plugin = 'fanfiction_chapters';
+$type = 'fanfiction_chapters';
 $subject = $chaptertitle;
 $item = $chapid;
 if($chapid) {
@@ -30,7 +30,7 @@ if($chapid) {
     $prevStyle = e107::getRender()->getStyle(); 
     e107::getRender()->setStyle('nocaption'); 
     
-    $form .= e107::getSingleton('efiction_comments')->render($plugin, $item, $subject, $rate);
+    $form .= e107::getSingleton('efiction_comments')->render($type, $item, $subject, $rate);
 
 	e107::getRender()->setStyle($prevStyle); 
  

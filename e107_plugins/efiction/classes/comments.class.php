@@ -27,13 +27,9 @@ if (!class_exists('efiction_comments')) {
     class efiction_comments
 {
 	public $known_types = array(
-			0	=> "news",
-			1	=> 'content',
-			2	=> 'download',
-			3	=> 'faq',
-			4	=> 'poll',
-			5	=> 'docs',
-			6	=> 'bugtrack'
+			"ST"	=> "fanfiction_stories",
+			"CH"	=> "fanfiction_chapters",
+			"SE"	=> "fanfiction_series"
 	);
 
 	private $template;
@@ -868,9 +864,21 @@ if (!class_exists('efiction_comments')) {
 	 */
 	function getCommentType($table)
 	{
- 
-		$type = e107::getParser()->toDB($table, true);
-
+ 		switch ($table)
+		{
+    		case "fanfiction_stories":
+    			$type = "ST";
+    			break;
+    		case "fanfiction_series":
+    			$type = "SE";
+    			break;
+    		case "fanfiction_chapters":
+    			$type = "CH";
+    			break;
+    		default :
+    			$type = e107::getParser()->toDB($table, true);
+    			break;
+        }
 		return $type;
 	}
 

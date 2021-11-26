@@ -52,6 +52,7 @@ class efiction_shortcodes extends e_shortcode
      {EFICTION_BLOCK_CONTENT: key=random}
 	 {EFICTION_BLOCK_CONTENT: key=featured}
      {EFICTION_BLOCK_CONTENT: key=menu}
+     {EFICTION_BLOCK_CONTENT: key=info}
     */
     
     public function sc_efiction_block_content($parm = NULL)
@@ -76,7 +77,7 @@ class efiction_shortcodes extends e_shortcode
             $block_content =  $content;
             return $block_content;  
         }
-           
+       
         return $block_content;    
     }
     

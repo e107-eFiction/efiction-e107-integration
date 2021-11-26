@@ -461,3 +461,18 @@ define ("LAN_EFICTION_MEMBERSHIP_STATUS", "Membership status");
 
 define ("LAN_EFICTION_BY", "By");
 
+define ("_NUMCHAPTERS", "Number of chapters");
+define ("_RATED", "Rated");
+define ("_STATS", "Statistics");
+define ("_HITS", "Hits");
+define ("_PUBLISHED", "Published");
+define ("_UPDATED", "Updated");
+define ("_WORDCOUNT", "WordCount");
+define ("_COMPLETED", "Completed");
+
+define ("_AUTHORSCOUNT", _AUTHORS);
+define ("_REVIEWSCOUNT", _REVIEWS);
+define ("_REVIEWERSCOUNT", _REVIEWERS);
+define ("_COMMENTSCOUNT", _COMMENTS);
+define ("_COMMENTERSCOUNT", _COMMENTERS);
+define ("_NEWESTMEMBERCOUNT", _NEWESTMEMBER);
