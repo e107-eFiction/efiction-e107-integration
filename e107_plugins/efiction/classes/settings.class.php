@@ -45,6 +45,7 @@ if (!class_exists('efiction_settings')) {
         
         
         public static function get_alphabet() {
+            global $alphabet;
             include_once(e_PLUGIN."efiction/languages/".e_LANGUAGE."_alphabet.php");
             return $alphabet; 
         }
@@ -77,21 +78,21 @@ if (!class_exists('efiction_settings')) {
             	if(dbnumrows($prefs)) list($defaultsort, $displayindex, $tinyMCE) = dbrow($prefs);
             }
 
-      
+ 
 
             unset($settings['smtp_host'], $settings['smtp_username'], $settings['smtp_password']);
- 
+  
             return $settings;
         }
 
-        public static function get_single_setting($setting_name)
+        public static function get_single_setting($setting_name = '')
         {
             $settings = self::get_settings();
- 
-            if ($setting_name) {
+
+            if ($setting_name) {     
                 return $settings[$setting_name];
             }
-
+    
             return null;
         }
         

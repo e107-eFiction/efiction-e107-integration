@@ -60,7 +60,7 @@ if(empty($chapter)) $chapter = isset($_GET['chapter']) && isNumber($_GET['chapte
 
 	// if the above checks came back with a warning, output an error page.
 	if(!empty($warning)) {
-		$current = "storyerror";
+		$current = "storyerror";   var_dump($warning);
 		// load our template files to set up the page.
 		if(file_exists("$skindir/default.tpl")) $tpl = new TemplatePower( "$skindir/default.tpl" );
 		else $tpl = new TemplatePower(_BASEDIR."default_tpls/default.tpl");
@@ -150,7 +150,7 @@ if($action == "printable") {
 			require_once(FOOTERF); 
 			exit;
 		}
-
+        $chapid = $c['$chapid'];
 		if($c['inorder'] == 1 && !empty($storyinfo['storynotes'])) {
 			$tpl->newBlock("storynotes");
 			$tpl->assign( "storynotes", format_story($storyinfo['storynotes']));
@@ -251,6 +251,7 @@ else if(($displayindex && empty($chapter)) || !empty($_GET['index'])) {
 else {
 	if(file_exists("$skindir/viewstory.tpl")) $tpl = new TemplatePower( "$skindir/viewstory.tpl" );
 	else $tpl = new TemplatePower(_BASEDIR."default_tpls/viewstory.tpl");
+    
 	include(_BASEDIR."includes/pagesetup.php");
 	$jumpmenu = "";
 	$jumpmenu2 = "";
@@ -320,7 +321,7 @@ else {
 	$stories = $storyinfo;
 	$tpl->gotoBlock("_ROOT");
 	$jumpmenu2 = ""; 
-	include(_BASEDIR."includes/storyblock.php");
+ 	include(_BASEDIR."includes/storyblock.php");
 	unset($adminlinks);
 	if(isADMIN && uLEVEL < 3) 
 		$adminlinks = "<div class=\"adminoptions\"><span class='label'>"._ADMINOPTIONS.":</span> "._EDIT." - <a href=\"stories.php?action=editstory&amp;sid=$sid&amp;admin=1\">"._STORY."</a> "._OR." <a href=\"stories.php?action=editchapter&amp;chapid=$chapid&amp;admin=1\">"._CHAPTER."</a> | "._DELETE." - <a href=\"stories.php?action=delete&amp;sid=$sid&amp;admin=1\">"._STORY."</a> "._OR." <a href=\"stories.php?action=delete&amp;chapid=$chapid&amp;sid=$sid&amp;admin=1\">"._CHAPTER."</a></div>";
@@ -341,14 +342,18 @@ else {
 		$jumpmenu2 .= "<option value=\"stories.php?action=newchapter&amp;sid=".$sid."\">"._CONTRIBUTE2RR."</option>";
 	}
 	if(isset($jumpmenu2)) $jumpmenu2 = "<form name=\"jump2\" action=\"\"><select class=\"textbox\" name=\"jump2\" onchange=\"if(this.selectedIndex.value != 'false') document.location = document.jump2.jump2.options[document.jump2.jump2.selectedIndex].value\"><option value=\"false\">"._OPTIONS."</option>".$jumpmenu2."</select></form>";
-	if($reviewsallowed) {
+/*	if($reviewsallowed) {
 		if(isMEMBER || $anonreviews) {
 			$item = $sid;
 			$type = "ST";
-			include(_BASEDIR."includes/reviewform.php");  
+            include(_BASEDIR."includes/reviewform.php");  
 		}
 		else $form = write_message(sprintf(_LOGINTOREVIEW, strtolower($pagelinks['login']['link']), strtolower($pagelinks['register']['link'])));
 	}
+*/    
+    /* e107 comments system */
+    include(_BASEDIR."includes/commentform.php");  
+    
 	$textsizer = "<a href=\"viewstory.php?sid=$sid".($inorder ? "&amp;chapter=$inorder" : "")."&amp;textsize=".($textsize - 1)."\">-</a> <strong>". _TEXTSIZE. "</strong> <a href=\"viewstory.php?sid=$sid".($inorder ? "&amp;chapter=$inorder" : "")."&amp;textsize=".($textsize + 1)."\">+</a> ";
 	// okay now that we know they can see the story and the chapter add 1 to the story and chapter counts;
 	if(empty($viewed) || (is_array($viewed) && !in_array($sid, $viewed))) {
@@ -391,6 +396,7 @@ else {
 		$tpl->gotoBlock("_ROOT");
 	}
 	$tpl->gotoBlock("_ROOT");
+ 
 	$tpl->assign("chaptertitle", $chaptertitle);
 	$tpl->assign("chapternumber", $inorder);
 	$tpl->assign( "story", "<span style=\"font-size: ".(100 + ($textsize * 20))."%;\">$story</span>" );

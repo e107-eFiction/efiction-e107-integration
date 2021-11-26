@@ -101,7 +101,7 @@ while($ao = dbassoc($aocode)) {
 if(empty($stat)) $output .= "<div class='authorstats'><span class='label'>"._AUTHOROF."</span> ". implode(", ", $authorof)."</div>";
 
 /* list of author favorites */  
-print_a($_GET); print_a($stat);
+ 
 if($favorites) {
 
 
@@ -146,7 +146,7 @@ if($favorites) {
  
 	$panels = efiction_panels::favorites_panel();
 	foreach($panels AS $panel)
- 	{   print_a($thislink);
+ 	{    
 		$panellink = "";
 		if(substr($panel['panel_name'], 0, 3) == "fav" && $type = substr($panel['panel_name'], 3)) {
 			if($panel['panel_name'] == "favlist") continue;

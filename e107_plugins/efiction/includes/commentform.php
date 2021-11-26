@@ -1,7 +1,6 @@
 <?php
 // ----------------------------------------------------------------------
 // Copyright (c) 2007 by Tammy Keefer
-// Valid HTML 4.01 Transitional
 // Based on eFiction 1.1
 // Copyright (C) 2003 by Rebecca Smallwood.
 // http://efiction.sourceforge.net/
@@ -20,17 +19,22 @@
 //
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
- 
+
 if(!defined("e107_INIT")) exit( );
  
- $recentdays = efiction_settings::get_single_setting('recentdays');
- $title =  e107::getParser()->lanVars(_RECENTSTORIES, array($recentdays ), true);
- 
- $output .=  ($recentdays ? $title : _MOSTRECENT)." ".efiction_pagelinks::get_single_link('rss') ;
+$plugin = 'fanfiction_chapters';
+$subject = $chaptertitle;
+$item = $chapid;
+if($chapid) {
 
- $countquery .= ($recentdays ? " AND updated > ".strtotime('-7 days')."" : "");
- $query = $storyquery.($recentdays ? " AND updated > ".strtotime('-7 days')."" : "");
- $query .= " ORDER BY ".(isset($_REQUEST['sort']) && $_REQUEST['sort'] == "alpha" ? "stories.title" : "updated DESC");
- $numrows = search_new(_STORYQUERY.$query, _STORYCOUNT.$countquery, "browse.php?");
+    $prevStyle = e107::getRender()->getStyle(); 
+    e107::getRender()->setStyle('nocaption'); 
+    
+    $form .= e107::getSingleton('efiction_comments')->render($plugin, $item, $subject, $rate);
+
+	e107::getRender()->setStyle($prevStyle); 
+ 
+}
+
 
  
