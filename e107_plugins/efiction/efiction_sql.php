@@ -8,7 +8,6 @@ CREATE TABLE `fanfiction_authorprefs` (
  `sortby` tinyint(1) NOT NULL default '0',
  `storyindex` tinyint(1) NOT NULL default '0',
  `validated` tinyint(1) NOT NULL default '0',
- `level` tinyint(1) NOT NULL DEFAULT 0, 
  `categories` varchar(200) NOT NULL default '0',
  `contact` tinyint(1) NOT NULL default '0',
  `stories` int(11) NOT NULL default '0',
@@ -63,7 +62,7 @@ CREATE TABLE `fanfiction_chapters` (
  `title` varchar(250) NOT NULL default '',
  `inorder` int(11) NOT NULL default '0',
  `notes` text NOT NULL,
- `storytext` longtext NOT NULL,
+ `storytext` text NOT NULL,
  `endnotes` text,
  `validated` tinyint(4) NOT NULL default '0',
  `wordcount` int(11) NOT NULL default '0',
@@ -72,10 +71,6 @@ CREATE TABLE `fanfiction_chapters` (
  `sid` int(11) NOT NULL default '0',
  `uid` int(11) NOT NULL default '0',
  `count` int(11) NOT NULL default '0',
- `chapter_datestamp` int(10) UNSIGNED NOT NULL DEFAULT 0, 
- `chapter_start` int(10) UNSIGNED NOT NULL DEFAULT 0,
- `chapter_end` int(10) UNSIGNED NOT NULL DEFAULT 0,
- 
  PRIMARY KEY (`chapid`),
  KEY `sid` (`sid`),
  KEY `uid` (`uid`),
@@ -125,6 +120,16 @@ CREATE TABLE `fanfiction_codeblocks` (
  `code_module` varchar(60) default NULL,
  PRIMARY KEY (`code_id`),
  KEY `code_type` (`code_type`)
+) ENGINE=InnoDB;
+ 
+CREATE TABLE `fanfiction_comments` (
+ `cid` int(11) NOT NULL auto_increment,
+ `nid` int(11) NOT NULL default '0',
+ `uid` int(11) NOT NULL default '0',
+ `comment` text NOT NULL,
+ `time` int(11) NOT NULL default '0',
+ PRIMARY KEY (`cid`),
+ KEY `commentlist` (`nid`,`time`)
 ) ENGINE=InnoDB;
  
 CREATE TABLE `fanfiction_favorites` (
@@ -361,23 +366,4 @@ CREATE TABLE `fanfiction_settings` (
  PRIMARY KEY (`sitekey`)
 ) ENGINE=InnoDB;
 
-
-CREATE TABLE `fanfiction_comments` (
-  `comment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, 
-  `comment_pid` int(10) UNSIGNED NOT NULL DEFAULT 0,   
-  `comment_item_id` int(10) UNSIGNED NOT NULL DEFAULT 0,   
-  `comment_subject` varchar(100) NOT NULL DEFAULT '',
-  `comment_author_id` int(10) UNSIGNED NOT NULL DEFAULT 0,   
-  `comment_author_name` varchar(100) NOT NULL DEFAULT '',    
-  `comment_author_email` varchar(200) NOT NULL DEFAULT '',
-  `comment_datestamp` int(10) UNSIGNED NOT NULL DEFAULT 0,
-  `comment_comment` text NOT NULL,
-  `comment_blocked` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
-  `comment_ip` varchar(45) NOT NULL DEFAULT '',
-  `comment_type` varchar(20) NOT NULL DEFAULT '0',
-  `comment_lock` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
-  `comment_share` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
- PRIMARY KEY (`comment_id`),
- KEY `comment_blocked` (`comment_blocked`),
- KEY `comment_author_id` (`comment_author_id`)
-) ENGINE=InnoDB; 
+ 

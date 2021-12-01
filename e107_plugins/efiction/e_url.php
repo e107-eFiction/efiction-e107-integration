@@ -39,13 +39,6 @@ class efiction_url // plugin-folder + '_url'
 			'sef'			=> '{alias}', 
 			'redirect'		=> '{e_PLUGIN}efiction/reviews.php$1', 	  
 		);
-        
-		$config['comments'] = array(
-            'alias'         => 'comments.php',
-			'regex'			=> '^{alias}\/?([\?].*)?\/?$', 
-			'sef'			=> '{alias}', 
-			'redirect'		=> '{e_PLUGIN}efiction/comments.php$1', 	  
-		);        
 
 		$config['report'] = array(
             'alias'         => 'report.php',

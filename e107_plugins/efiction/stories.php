@@ -76,10 +76,9 @@ else {
 }
  
 function preview_story($stories) {
-	global $current, $new, $extendcats, $skindir,   $classlist, $featured, $retired, $rr, $reviewsallowed, $star, $halfstar, $classtypelist, $dateformat, $ratingslist, $recentdays;
+	global $current, $new, $extendcats, $skindir,  $charlist, $classlist, $featured, $retired, $rr, $reviewsallowed, $star, $halfstar, $classtypelist, $dateformat, $ratingslist, $recentdays;
 
     $catlist = efiction_categories::get_catlist();
-    $charlist = efiction_characters::charlist(); 
     
 	$count = 0;
 	if(file_exists("$skindir/listings.tpl")) $tpl = new TemplatePower( "$skindir/listings.tpl" );
@@ -129,17 +128,15 @@ function preview_story($stories) {
 }
 
 // function to add new story to archives.
-function newstory($current = '') {
+function newstory( ) {
 
-	global $autovalidate, $sid, $action, $sid, $store, $tpl, $admin, $sitename, $siteemail, $allowed_tags, $admincats, $alertson, $dateformat, $url, $minwords, $maxwords,   $classtypelist;
+	global $autovalidate, $sid, $action, $sid, $store, $tpl, $admin, $sitename, $siteemail, $allowed_tags, $admincats, $alertson, $dateformat, $url, $minwords, $maxwords, $charlist, $classtypelist;
  //  print_xa($_POST); 
     $catlist = efiction_categories::get_catlist();
-    $charlist = efiction_characters::charlist(); 
-           
+        
 	$newchapter = $action == "newchapter";
-	$caption =  $newchapter ? _ADDNEWCHAPTER : _ADDNEWSTORY  ;
-    
-    // to avoid problems with register globals and hackers declare variables and do some clean up.
+	$output = "<div id=\"pagetitle\">".($newchapter ? _ADDNEWCHAPTER : _ADDNEWSTORY)."</div>";
+// to avoid problems with register globals and hackers declare variables and do some clean up.
 	if(isset($admin) && isset($_POST['uid']) && isNumber($_POST['uid'])) {
 		$uid = $_POST['uid'];
 		$author = dbquery("SELECT "._PENNAMEFIELD." FROM "._AUTHORTABLE." WHERE "._UIDFIELD." = '$uid' LIMIT 1");
@@ -155,7 +152,8 @@ function newstory($current = '') {
 	$storynotes = isset($_POST['storynotes']) ? descript(strip_tags($_POST['storynotes'], $allowed_tags)) : "";
    
     /* IMPORTANT e107 checkboxes returns array directly */
-	$catid = isset($_POST['catid']) ? array_filter($_POST['catid'], "isNumber") : array( );
+	$catid = isset($_POST['catid']) ? $_POST['catid'] : array( );
+    
 	$charid = isset($_POST['charid']) ? array_filter($_POST['charid'], "isNumber") : array( );
     
 	$coauthors = isset($_POST['coauthors']) ? array_filter(explode(",", $_POST['coauthors']), "isNumber") : array( );
@@ -167,9 +165,7 @@ function newstory($current = '') {
 			$classes = array_merge($opts, $classes);
 		}
 	}
- 
-    $rid = isset($_POST['rid']) && descript(strip_tags(($_POST['rid']))) ? descript(strip_tags(($_POST['rid']))) : 0;
- 
+	$rid = isset($_POST['rid']) ? descript($_POST['rid']) : "";
 	$rr = isset($_POST['rr']) && isNumber($_POST['rr']) ? $_POST['rr'] : 0;
 	$feat = isset($_POST['feature']) && isNumber($_POST['feature']) ? $_POST['feature'] : 0;
 	$complete = isset($_POST['complete']) && isNumber($_POST['complete']) ? $_POST['complete'] : 0;
@@ -208,31 +204,10 @@ function newstory($current = '') {
 
 	if(isset($_POST['submit']) && $_POST['submit'] == _ADDSTORY && ((!$newchapter && (!$rid || !$title || !$summary || !$catid) || $storytext == "")))
 			$submit = _PREVIEW;
-	if (isset($_POST['submit'])) { 
-    
+	if (isset($_POST['submit'])) {
 		if(empty($failed)) $failed = "";
 		if(!$storytext) $failed .= "<br />"._NOSTORYTEXT;
- 
-        if(!$newchapter) {
-          if (!$rid) {
-          		  $output .= write_error(_MISSINGFIELDS);  $output .=  "- Rating";
-                    $submit = _PREVIEW;
-          }
-          elseif(!$title) {
-                    $output .= write_error(_MISSINGFIELDS);  $output .=  "- Title";
-                    $submit = _PREVIEW;
-          }
-          elseif(!$summary ) {
-                    $output .= write_error(_MISSINGFIELDS);  $output .=  "- Summary";
-                    $submit = _PREVIEW;
-          } 
-          elseif (!$catid) {
-  			$output .= write_error(_MISSINGFIELDS); $output .=  "- Category";
-  			$submit = _PREVIEW;
-  		}
-        }
-      //  if(!$newchapter && ($rid == "" || $title == "" || $summary == "" || !$catid)) $failed .= "<br />". _MISSINGFIELDS;
-        
+		if(!$newchapter && ($rid == "" || $title == "" || $summary == "" || !$catid)) $failed .= "<br />". _MISSINGFIELDS;
 		if(find_naughty($title)) $failed .= "<br />"._NAUGHTYWORDS;
 		if(($minwords && $wordcount < $minwords) || ($maxwords && $wordcount > $maxwords)) $failed .= "<br />"._WORDCOUNTFAILED;
 		$storyvalid = 0;
@@ -265,13 +240,12 @@ function newstory($current = '') {
 			}
 		}
  
-		if($store == "db")
+		if($store == "mysql")
 		{
 			if(!$newchapter) {
             
-             	$insert = dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_stories (title, summary, storynotes, catid, classes, charid,  rid, date, updated, uid, validated, rr, completed, wordcount, featured, coauthors) 
-                VALUES ('".addslashes($title)."', '".addslashes(format_story($summary))."', '".addslashes(format_story($storynotes))."', '".($catid ? implode(",", $catid) : "")."', 
-                '".($classes? implode(",", $classes) : "")."', '".($charid ? implode(",", $charid) : "")."', '$rid', ".time().", ".time(). ", '$uid', '$validated', '$rr', '$complete', '$wordcount', '$feat', '$coauthors')");
+				$insert = dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_stories (title, summary, storynotes, catid, classes, charid,  rid, date, updated, uid, validated, rr, completed, wordcount, featured, coauthors) 
+                VALUES ('".addslashes($title)."', '".addslashes(format_story($summary))."', '".addslashes(format_story($storynotes))."', '".($catid ? implode(",", $catid) : "")."', '".($classes? implode(",", $classes) : "")."', '".($charid ? implode(",", $charid) : "")."', '$rid', ".time().", ".time(). ", '$uid', '$validated', '$rr', '$complete', '$wordcount', '$feat', '$coauthors')");
 				$sid = dbinsertid( ); 
 				$inorder = 1;
 			}
@@ -279,32 +253,11 @@ function newstory($current = '') {
 				$inorder = $_GET['inorder'] + 1;
 			}
 
-            $insert = array( 
-              'title' => addslashes(($chaptertitle != "" ? $chaptertitle : $title)),
-              'inorder' => $inorder,
-              'notes' => addslashes(format_story($notes)),
-              'endnotes' => addslashes(format_story($endnotes)),
-              'validated' => $validated,
-              'wordcount' => $wordcount,
-              'sid' => $sid,
-              'uid' => $uid,
-              'storytext' => addslashes($storytext),    
-              'chapter_datestamp' => time(),         
-            '_DUPLICATE_KEY_UPDATE' => 1
-					);
-                            
-            $newuid = e107::getDB()->insert("fanfiction_chapters", $insert);    
-              /*              
-			$query2 = dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_chapters (title, inorder, notes, endnotes, validated, wordcount, sid, uid, storytext) 
-            VALUES('".addslashes(($chaptertitle != "" ? $chaptertitle : $title))."', '$inorder', '".addslashes(format_story($notes))."', '".addslashes(format_story($endnotes))."', 
-            '$validated', '$wordcount', '$sid', '$uid', '".addslashes($storytext)."')");
-             */
-             $output = write_message(_STORYADDED).viewstories( );
-             
+			$query2 = dbquery("INSERT INTO ".TABLEPREFIX."fanfiction_chapters (title, inorder, notes, endnotes, validated, wordcount, sid, uid, storytext) VALUES('".addslashes(($chaptertitle != "" ? $chaptertitle : $title))."', '$inorder', '".addslashes(format_story($notes))."', '".addslashes(format_story($endnotes))."', '$validated', '$wordcount', '$sid', '$uid', '".addslashes($storytext)."')");
+ 
             if(!$admin) $output = write_message(_STORYADDED).viewstories( );
 			else $output .= write_message(_ACTIONSUCCESSFUL).editstory( $sid );
-		     
-        }
+		}
 		else if ($store == "files")
 		{
 			if(!$newchapter) {
@@ -464,11 +417,8 @@ function newstory($current = '') {
 		$stories['validated'] = 0;
 	}
 	if(!isADMIN || uLEVEL == 4) {
-		$rquery = e107::getDb()->retrieve("SELECT message_title, message_text FROM ".TABLEPREFIX."fanfiction_messages WHERE message_name = 'rules' LIMIT 1");
-        
-        $ruletitle = $rquery['message_title'];
-        $ruletext = e107::getParser()->toHTML($rquery['message_text'], "DESCRIPTION");
-	 
+		$rquery = dbquery("SELECT message_title, message_text FROM ".TABLEPREFIX."fanfiction_messages WHERE message_name = 'rules' LIMIT 1");
+		list($ruletitle, $ruletext) = dbrow($rquery);
 		$output .= "<div class=\"sectionheader\">$ruletitle</div>$ruletext";
 	}	
 	if($storytext){
@@ -488,24 +438,15 @@ function newstory($current = '') {
 
 	$submit = isset($_POST['submit']) ? $_POST['submit'] : false;
 	if(!$submit) $submit = _PREVIEW;
-    
 	$output .= "<div class=\"tblborder\" style=\"width: 90%; padding: 10px; margin: 1em auto;\">
 	<form METHOD=\"POST\" name=\"form\" enctype=\"multipart/form-data\" action='stories.php?action=$action".($newchapter ? "&amp;sid=$sid&amp;inorder=$inorder" : "").($admin == 1 ? "&amp;admin=1&amp;uid=$uid" : "")."'>";
-	
-    if(!$newchapter) $output .= storyform($stories, $submit);
-	 
-    $output .= chapterform($inorder, $notes, $endnotes, $storytext, $chaptertitle, $uid);
-    
-	$output .= "<div style=\"text-align: center;\"><input type=\"submit\" class=\"button btn btn-default\" value=\""._PREVIEW."\" name=\"submit\">&nbsp; 
-    <input type=\"submit\" class=\"button btn btn-success\" 
+	if(!$newchapter) $output .= storyform($stories, $submit);
+	$output .= chapterform($inorder, $notes, $endnotes, $storytext, $chaptertitle, $uid);
+	$output .= "<div style=\"text-align: center;\"><input type=\"submit\" class=\"button\" value=\""._PREVIEW."\" name=\"submit\">&nbsp; <input type=\"submit\" class=\"button\" 
                  value=\""._ADDSTORY."\" name=\"submit\"></div></form></div>";
-                 
-                 
-    e107::getRender()->tablerender($caption, $output, $current);             
-    //	return $output;
+	return $output;
 }
 // end newstory function
-
 
 function viewstories( ) {
 	global $storiespath, $ratings, $autovalidate, $reviewsallowed, $sid, $chapid, $up, $down;
@@ -745,7 +686,6 @@ function editstory($sid) {
 		}
 		else $coauthors = 0;
 	}
-    
 	if(isset($_POST['submit']) && $_POST['submit'] == _ADDSTORY) {
 		$oldcats = isset($_POST['oldcats']) ? array_filter(explode(",", $_POST['oldcats']), "isNumber") : array( );
         if (!$rid) {
@@ -853,7 +793,7 @@ function editstory($sid) {
 					$coauths = dbquery("SELECT uid FROM ".TABLEPREFIX."fanfiction_coauthors WHERE sid = '$sid'");
 					while($c = dbassoc($coauths)) {
 						dbquery("UPDATE ".TABLEPREFIX."fanfiction_authorprefs SET stories = stories + 1 WHERE uid = '".$c['uid']."'");
-                    }
+					}
 					dbquery("UPDATE ".TABLEPREFIX."fanfiction_authorprefs SET stories = stories + 1 WHERE uid = '$uid'");
 					$count =  dbquery("SELECT SUM(wordcount) as totalcount FROM ".TABLEPREFIX."fanfiction_chapters WHERE sid = '$sid' AND validated = '1'");
 					list($totalcount) = dbrow($count);
@@ -958,7 +898,7 @@ function editstory($sid) {
 			$coauths = dbquery("SELECT uid FROM ".TABLEPREFIX."fanfiction_coauthors WHERE sid = '".$stories['sid']."'");
 			while($c = dbassoc($coauths)) {
 				$au[] = $c['uid'];
-  	}
+			}
 			$stories['coauthors'] = $au;
 		}
 		if(isset($_POST['submit'])) {
@@ -1067,7 +1007,7 @@ function delete( ) {
 	
 switch($action) {
 	case "newstory":
-		$output .= newstory($current);
+		$output .= newstory( );
 		break;
 	case "newchapter":
 		$output .= newstory( );
@@ -1087,7 +1027,10 @@ switch($action) {
 		break;
 }
 
- 
-	e107::getRender()->tablerender($caption, $output, $current);
+	$tpl->assign( "output", $output );
+	//$tpl->xprintToScreen( );
+	dbclose( );
+	$text = $tpl->getOutputContent(); 
+	e107::getRender()->tablerender($caption, $text, $current);
 	require_once(FOOTERF); 
 	exit;

@@ -73,9 +73,7 @@ if (!class_exists('efiction_authors')) {
             $var = array();
 
             if ($authordata) {
-                unset($authordata['user_prefs']);
                 $var = $authordata;
-                
             }
  
             return $var;
@@ -98,22 +96,6 @@ if (!class_exists('efiction_authors')) {
             $authordata = e107::getDb()->retrieve($authorquery);
 
             return $authordata;
-        }
-        
-        public static function get_penname_by_uid($uid = NULL) 
-        {
-             $uid = intval($uid);
-
-            if (empty($uid)) {
-                return false;
-            }
-            
-           
-           $authorquery = "SELECT "._PENNAMEFIELD." FROM "._AUTHORTABLE." WHERE "._UIDFIELD." = '$uid' LIMIT 1 ";
-           
-           $penname = e107::getDb()->retrieve($authorquery);
-           
-           return $penname;
         }
  
         /*
@@ -145,7 +127,6 @@ if (!class_exists('efiction_authors')) {
            
           return $avatar;
         }
- 
         
     }
 

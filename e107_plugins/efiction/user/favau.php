@@ -129,14 +129,15 @@ if(empty($favorites)) accessDenied( );
         if($count) {
                 $author_list = e107::getDb()->retrieve($query."  LIMIT $offset, $itemsperpage", true) ;
                 
-				$template = e107::getTemplate('efiction', 'favcomment', 'favau', true, true);
-
 				foreach($author_list AS $author)
 				{ 
- 					$avatar = efiction_authors::get_author_avatar($author['uid']);
+ 
+                    $template = e107::getTemplate('efiction', 'favcomment', 'favau', true, true);
+                    
+                    $avatar = efiction_authors::get_author_avatar($author['uid']);
                     $vars["x"] = $x;   
                     $vars["avatar"] = $avatar;
-                    $vars["comment"] = format_story($author['comments']);
+                    $vars["comment"] =  format_story($author['comments']);
                     $vars["author"] = $author['penname'];
                     $vars["authorlink"] = "<a href=\"viewuser.php?uid=".$author['uid']."\">".$author['penname']."</a>";
 					 

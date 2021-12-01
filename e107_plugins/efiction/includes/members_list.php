@@ -23,8 +23,7 @@
 if(!defined("e107_INIT")) exit( );
 
 		$output .= build_alphalinks($pagelink, $let);
- 
-		$count = e107::getDb()->retrieve($countquery);
+		$count = dbquery($countquery);
 		list($numrows)= dbrow($count);
 		$limit = $itemsperpage *  $displaycolumns;
 		$total = ($numrows > $limit ? $limit : $numrows);
@@ -34,10 +33,9 @@ if(!defined("e107_INIT")) exit( );
 		$count = 0;
 		$column = 1;
 		$authorquery = $authorquery. " ORDER BY "._PENNAMEFIELD." LIMIT $offset,$limit";
- 
-		$result2 = e107::getDb()->retrieve($authorquery, true);   
+		$result2 = dbquery($authorquery);   
 		$output .= "<div id=\"columncontainer\"><div id=\"memberblock\">".($displaycolumns ? "<div class=\"column\">" : "");
-        foreach($result2 AS $author) {
+		while($author = dbassoc($result2)) {
 			$count++;
 			if(empty($author['stories'])) $author['stories'] = 0; // For bridges site that may not have author prefs set.
 			$output .= (isset($authorlink) ? $authorlink : "<a href=\"viewuser.php?uid=").$author['uid']."\">".stripslashes($author['penname'])."</a> [".$author['stories']."]<br />\n";

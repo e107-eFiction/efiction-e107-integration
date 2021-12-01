@@ -24,12 +24,10 @@ if(!defined("e107_INIT")) exit( );
 
 // Page Setup
 $current = "titles";
-$caption =   _TITLES.($let ? " - $let" : "") ;
-$output .= build_alphalinks("browse.php?$terms&amp;", $let); 
-  
-if($let == _OTHER) $storyquery .= " AND stories.title REGEXP '^[^a-z]'";
-else if(!empty($let)) $storyquery .= " AND stories.title LIKE '$let%'";
-$storyquery  .= _ORDERBY;
-$numrows = search_new(_STORYQUERY.$storyquery, _STORYCOUNT.$storyquery, "browse.php?");
- 
+	$output .= "<div id=\"pagetitle\">"._TITLES.($let ? " - $let" : "")."</div>".build_alphalinks("browse.php?$terms&amp;", $let);
+
+	if($let == _OTHER) $storyquery .= " AND stories.title REGEXP '^[^a-z]'";
+	else if(!empty($let)) $storyquery .= " AND stories.title LIKE '$let%'";
+	$storyquery  .= _ORDERBY;
+	$numrows = search(_STORYQUERY.$storyquery, _STORYCOUNT.$storyquery, "browse.php?");
 ?>

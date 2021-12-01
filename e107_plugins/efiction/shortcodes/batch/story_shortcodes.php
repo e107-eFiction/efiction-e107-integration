@@ -64,16 +64,6 @@
 {published} - {STORY_PUBLISHED} 
 {updated} - {STORY_UPDATED}
 {comment} - {STORY_COMMENT}
-
-{storynotes} - {STORY_STORYNOTES}
-{notes} - {STORY_NOTES} 
-{printicon} 
-{textsizer}
-{jumpmenu}
-{endnotes} - {STORY_ENDNOTES}
-{prev}
-{next}
-{story}
 */
 
 
@@ -132,57 +122,6 @@
     
           return $text;     
         }
-        
-         /* {STORY_ADMINLINKS_VALIDATE} {adminlinks} in validate.php */
-        public function sc_story_adminlinks_validate($parm = null)
-    	{
-            $stories = $this->var;
-            
-            $adminlinks = "<div class=\"adminoptions\">
-              <span class='label'>"._ADMINOPTIONS.":</span> 
-              <a class='btn btn-sm btn-success' href=\"admin.php?action=validate&amp;sid=$stories[sid]&amp;chapid=$stories[chapid]&amp;validate=yes\">"._VALIDATE."</a> | 
-              "._EDIT." - <a class='btn btn-sm btn-outline-warning' href=\"stories.php?action=editstory&amp;sid=$stories[sid]&amp;admin=1\">"._STORY."</a> "._OR." 
-              <a class='btn btn-sm btn-warning' href=\"stories.php?action=editchapter&amp;chapid=$stories[chapid]&amp;admin=1\">"._CHAPTER."</a> | "._DELETE." - 
-              <a class='btn btn-sm btn-outline-danger' href=\"stories.php?action=delete&amp;sid=$stories[sid]\">"._STORY."</a> "._OR." 
-              <a class='btn btn-sm btn-danger' href=\"stories.php?action=delete&amp;chapid=$stories[chapid]&amp;sid=$stories[sid]&amp;admin=1&amp;uid=$stories[uid]\">"._CHAPTER."</a> | 
-              <a class='btn btn-sm btn-outline-info' href=\"javascript:pop('admin.php?action=yesletter&amp;uid=$stories[uid]&amp;chapid=$stories[chapid]', 400, 350, 'yes')\">"._YESLETTER."</a> | 
-              <a class='btn btn-sm btn-secondary' href=\"javascript:pop('admin.php?action=noletter&amp;uid=$stories[uid]&amp;chapid=$stories[chapid]',400, 350, 'yes')\">"._NOLETTER."</a></div>";
-		    
-            return $adminlinks;
-        
-        /*
-        $output .= "<td><a class='btn btn-sm btn-success'  href=\"admin.php?action=validate&amp;chapid=$story[chapid]\">"._VALIDATE."</a><br />"._DELETE.": 
-            <a class='btn btn-sm btn-danger' href=\"stories.php?action=delete&amp;chapid=$story[chapid]&amp;sid=$story[sid]&amp;admin=1&amp;uid=$story[uid]\">"._CHAPTER2."</a> "._OR." 
-            <a class='btn btn-sm btn-danger' href=\"stories.php?action=delete&amp;sid=$story[sid]&amp;admin=1\">"._STORY2."</a>
-            <br /><a  class='btn btn-sm btn-info'  href=\"javascript:pop('".SITEURL."admin.php?action=yesletter&uid=$story[uid]&chapid=$story[chapid]', 600, 500, 'yes')\">"._YESLETTER."</a> | 
-            <a class='btn btn-sm btn-secondary' href=\"javascript:pop('admin.php?action=noletter&uid=$story[uid]&chapid=$story[chapid]', 600, 500, 'yes')\">"._NOLETTER."</a>
-            */
-            
-            $chapters = $this->sc_story_numchapters();
-          	if((isADMIN && uLEVEL < 4) || USERUID == $stories['uid'] || (is_array($stories['coauthors']) && array_key_exists(USERUID, $stories['coauthors']))) {
-		    $adminlinks .= "[<a href=\"stories.php?action=editstory&amp;sid=".$stories['sid'].(isADMIN ? "&amp;admin=1" : "")."\">"._EDIT."</a>] 
-            [<a href=\"stories.php?action=delete&amp;sid=".$stories['sid'].(isADMIN ? "&amp;admin=1" : "")."\">"._DELETE."</a>]";
-            $adminlinks .= 
-            "[<a href=\"stories.php?action=newchapter&amp;sid=".$stories['sid']."&amp;inorder=$chapters".(isADMIN ?  '&amp;admin=1&amp;uid='.$stories['uid'] : '').'">'._ADDNEWCHAPTER."</a>]";
-            }
-            
-            if($stories['featured'] == 1) {
-        		if(isADMIN && uLEVEL < 4) $adminlinks .= " ["._FEATURED.": <a href=\"admin.php?action=featured&amp;retire=".$stories['sid']."\">"._RETIRE."</a> | <a href=\"admin.php?action=featured&amp;remove=".$stories['sid']."\">"._REMOVE."</a>]";
-        	}
-        	else if($stories['featured'] == 2) {
-        		if(isADMIN && uLEVEL < 4) $adminlinks .= " [<a href=\"admin.php?action=featured&amp;remove=".$stories['sid']."\">"._REMOVE."</a>]";
-        	}
-        	else if(isADMIN && uLEVEL < 4) $adminlinks .= " [<a href=\"admin.php?action=featured&amp;feature=".$stories['sid']."\">"._FEATURED."</a>]";
-  
-  
-            if(isADMIN && uLEVEL < 4) $text = "<div class=\"adminoptions\"><span class='label'>"._ADMINOPTIONS.":</span> ".$adminlinks."</div>";
-	        else if(isMEMBER && (USERUID == $stories['uid'] || array_key_exists(USERUID, $stories['coauthors']))) 
-        	$text = "<div class=\"adminoptions\"><span class='label'>"._OPTIONS.":</span> ".$adminlinks."</div>";
-    
-          return $text;     
-        }       
-        
-        
         /* {STORY_AUTHOR} {author} */
         public function sc_story_author($parm = null)
     	{
@@ -306,19 +245,6 @@
        
         }
         
-        
-        /* {STORY_ENDNOTES} {endnotes} */
-        public function sc_story_endnotes($parm = null)
-    	{
-            $text = '';
-            if(!empty($this->var['endnotes'])) 
-            {
-                $text = e107::getParser()->toHTML($this->var['endnotes'], true, 'BODY');
-            }
-            return $text;
-             
-        } 
-        
         /* {STORY_FEATUREDTEXT}  } */
         public function sc_story_featuredtext($parm = null)
     	{
@@ -354,9 +280,7 @@
         public function sc_story_numchapters($parm = null)
     	{
     
-          $stories = $this->var;
           $numchapters = e107::getDb()->retrieve("SELECT count(sid) AS numchapters FROM ".TABLEPREFIX."fanfiction_chapters WHERE sid = '".$stories['sid']."' AND validated > 0"); 
- 
           $text = $this->var['numchapters'];   
           return $numchapters;     
         }
@@ -371,7 +295,7 @@
         /* {STORY_NEW} {new}  */
         public function sc_story_new($parm = null)
     	{
-        	$new =  e107::pref('theme', 'new');
+        	$new = '';
             $recentdays =  efiction_settings::get_single_setting('recentdays');
             if(!empty($recentdays)) {
         		$recent = time( ) - ($recentdays * 24 * 60 *60);
@@ -411,8 +335,6 @@
         /* {STORY_RATINGPICS} {ratingpics} */
         public function sc_story_ratingpics($parm = null)
     	{
-           global $ratings, $like, $dislike, $star, $halfstar;
- 
            $text = ratingpics($this->var['rating']);
            return  $text;  
             
@@ -435,16 +357,14 @@
         }
         /* {STORY_SCORE} {score} */
         public function sc_story_score($parm = null)
-    	{   //print_a($this->var['rating']);
+    	{
             $reviewsallowed =  efiction_settings::get_single_setting('reviewsallowed');
             $anonreviews   =  efiction_settings::get_single_setting('anonreviews');
             if($reviewsallowed && (isMEMBER || $anonreviews)) {
                 $score = ratingpics($this->var['rating']);
             }
-            else $score = "-";
             return $score;  
         }
-        
         /* {STORY_SERIESLINKS} {serieslinks} */
         public function sc_story_serieslinks($parm = null)
     	{
@@ -461,33 +381,6 @@
   
             return $serieslinks ;     
         }
-        
-        
-        /* {STORY_NOTES} {notes} */
-        public function sc_story_notes($parm = null)
-    	{
-            $text = '';
-            if($this->var['inorder'] == 1 && !empty($this->var['notes'])) 
-            {
-                $text = e107::getParser()->toHTML($this->var['notes'], true, 'BODY');
-            }
-            return $text;
-             
-        }        
-        
-        
-        /* {STORY_STORYNOTES} {storynotes} */
-        public function sc_story_storynotes($parm = null)
-    	{
-            $text = '';
-            if($this->var['inorder'] == 1 && !empty($this->var['storynotes'])) 
-            {
-                $text = e107::getParser()->toHTML($this->var['storynotes'], true, 'BODY');
-            }
-            return $text;
-             
-       }
-             
         /* {STORY_SUMMARY} {summary} */
         // ex. {STORY_SUMMARY: limit=100}
         // ex. {STORY_SUMMARY: limit=full}
@@ -509,30 +402,6 @@
                 return $text;
             }
         }
-        
-        
-         /* {STORY_STORYTEXT} {story} */
-        public function sc_story_storytext($parm = null)
-    	{
-            $store = efiction_settings::get_single_setting('store');
-            $storiespath = efiction_settings::get_single_setting('storiespath');
-            
-            if($store == "files")
-    		{
-    			$file = STORIESPATH."/$this->var[uid]/$this->var[chapid].txt";
-    			$log_file = fopen($file, "r");
-    			$file_contents = fread($log_file, filesize($file));
-    			$storytext = $file_contents;
-    			fclose($log_file);
-    		}
-    		else if($store == "mysql")
-    		{
-    			$storytext = $this->var['storytext'];
-    		}
-    		$storytext = format_story($storytext);
-        
-            return $storytext; 
-        }       
    
 
         
@@ -575,7 +444,7 @@
 			}
 		} 
         
-        /* {STORIESBY_SORT} */
+            /* {STORIESBY_SORT} */
           public function sc_storiesby_sort($parm = null)
       	{
       		$action = $this->var['action'];
@@ -617,7 +486,7 @@
             
             $link = $this->title_link($stories, $parm );
             
-           $title = "<a class='".$class."' href='".$link."'>".$stories['title']."</a>";
+        //    $title = "<a class='.$class.' href='.$link.'>".$stories['title']."</a>";
             
             return $title;
   
@@ -637,12 +506,11 @@
         public function sc_story_rating_name($parm)
         {
             $stories = $this->var;
-     
-            $ratingslist = efiction_ratings::get_ratings_list(); 
-               
-            $rating_name = $ratingslist[$stories['rid']]['name']; 
-            return $rating_name;
-            
+            if (class_exists('efiction')) { 
+                $ratingslist = efiction::ratingslist();  
+                $rating_name = $ratingslist[$stories['rid']]['name']; 
+                return $rating_name;
+            }
             return '';
         }
         
@@ -650,7 +518,7 @@
     public function sc_story_image($parm)
     {
              
-            $category_icon = $this->var['topicimage'];  
+            $category_icon = $this->var['image'];  
             if($category_icon != '' ) {
                 $settings =  array('w'=> 0, 'h'=>0);
              
@@ -718,5 +586,7 @@
         }
         
         
-  
+        
+        
+    
     }

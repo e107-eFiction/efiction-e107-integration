@@ -32,9 +32,7 @@ if(file_exists("$skindir/listings.tpl")) $tpl->assignInclude( "listings", "$skin
 else $tpl->assignInclude( "listings", _BASEDIR."default_tpls/listings.tpl" );
 $tpl->assignInclude( "header", "$skindir/header.tpl" );
 $tpl->assignInclude( "footer", "$skindir/footer.tpl" );
-
 include(_BASEDIR."includes/pagesetup.php");
-$charlist = efiction_characters::charlist(); 
 
 $chalid = isset($_GET['chalid']) ? $_GET['chalid'] : false;
 if($chalid && !isNumber($chalid)) unset($chalid, $action);

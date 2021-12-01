@@ -50,12 +50,12 @@ if (!class_exists('efiction_ratings')) {
 			$ratingslist = array();
 
 			$table_name = MPREFIX.'fanfiction_ratings';
-			$query = 'SELECT * FROM '.$table_name  ;
+			$$query = 'SELECT * FROM '.$table_name  ;
 
-			$result = e107::getDb()->retrieve($query, true);
- 
+			$result = e107::getDb()->retrieve($ratlist, true);
+
 			foreach ($result as $rate) {
-				$ratingslist[$rate['rid']] = array('rid' => $rate['rid'], 'name' => $rate['rating'], 'ratingwarning' => $rate['ratingwarning'], 'warningtext' => $rate['warningtext']);
+				$ratingslist[$rate['rid']] = array('name' => $rate['rating'], 'ratingwarning' => $rate['ratingwarning'], 'warningtext' => $rate['warningtext']);
 			}
 
 			return $ratingslist;
@@ -74,6 +74,7 @@ if (!class_exists('efiction_ratings')) {
 			foreach ($ratingsarray as $ratingresult) {
 				$ratings[$ratingresult['rid']] = $ratingresult['rating'];
 			}
+
 			return $ratings;
 		}
 

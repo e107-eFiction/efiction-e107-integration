@@ -26,11 +26,11 @@ if(!defined("e107_INIT")) exit( );
  $recentdays = efiction_settings::get_single_setting('recentdays');
  $title =  e107::getParser()->lanVars(_RECENTSTORIES, array($recentdays ), true);
  
- $output .=  ($recentdays ? $title : _MOSTRECENT)." ".efiction_pagelinks::get_single_link('rss') ;
+ $output .= "<div id=\"pagetitle\">".($recentdays ? $title : _MOSTRECENT)." ".efiction_pagelinks::get_single_link('rss')."</div>";
 
  $countquery .= ($recentdays ? " AND updated > ".strtotime('-7 days')."" : "");
  $query = $storyquery.($recentdays ? " AND updated > ".strtotime('-7 days')."" : "");
  $query .= " ORDER BY ".(isset($_REQUEST['sort']) && $_REQUEST['sort'] == "alpha" ? "stories.title" : "updated DESC");
- $numrows = search_new(_STORYQUERY.$query, _STORYCOUNT.$countquery, "browse.php?");
+ $numrows = search(_STORYQUERY.$query, _STORYCOUNT.$countquery, "browse.php?");
 
  

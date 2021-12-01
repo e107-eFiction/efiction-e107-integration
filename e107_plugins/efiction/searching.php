@@ -49,7 +49,6 @@ if (file_exists("$skindir/listings.tpl")) {
 }
 
 include 'includes/pagesetup.php';
-$charlist = efiction_characters::charlist(); 
 
 $searchtype = (isset($_REQUEST['searchtype']) ? $_REQUEST['searchtype'] : 'simple');
 $searchterm = (isset($_REQUEST['searchterm']) ? escapestring($_REQUEST['searchterm']) : false);

@@ -27,37 +27,24 @@ if(!defined("e107_INIT")) exit( );
 if(empty($favorites)) accessDenied( );
 
 if(!isset($uid)) {
-	$caption = _MANAGEFAVORITES;
+	$output .= "<div id=\"pagetitle\">"._MANAGEFAVORITES."</div>";
 	$uid = USERUID;
 }
 else {
-	
-	$penname = efiction_authors::get_penname_by_uid($uid);
-
 	$authquery = dbquery("SELECT "._PENNAMEFIELD." FROM "._AUTHORTABLE." WHERE "._UIDFIELD." = '$uid'");
 	list($penname) = dbrow($authquery);
-	$caption  = _FAVORITESOF." ".$penname ;
+	 $output .= "<div class='sectionheader'>"._FAVORITESOF." $penname</div>";
 }
-	
-
-$output .= "<div class=\"tblborder\" style=\"padding: 5px; width: 200px; margin: 0 auto;\">";
-
-
+	$output .= "<div class=\"tblborder\" style=\"padding: 5px; width: 200px; margin: 0 auto;\">";
 	$panelquery = dbquery("SELECT * FROM ".TABLEPREFIX."fanfiction_panels WHERE panel_type = 'F' AND panel_name != 'favlist' ORDER BY panel_title ASC");
 	if(!$panelquery) $output .= write_error(_ERROR);
-
-	$panels = efiction_panels::favorite_panels();
-
-    foreach($panels AS $panel) {
- 
+	while($panel = dbassoc($panelquery)) {
 		$panellink = "";
 		if(substr($panel['panel_name'], 0, 3) == "fav" && $type = substr($panel['panel_name'], 3)) {
-		if($panel['panel_name'] == "favlist") continue;
+			if($panel['panel_name'] == "favlist") continue;
 			$itemcount = 0;
-
-			$countquery = "SELECT COUNT(item) FROM ".TABLEPREFIX."fanfiction_favorites WHERE uid = '$uid' AND type = '$type'";
-			$itemcount = e107::getDb()->retrieve($countquery);
-		 
+			$countquery = dbquery("SELECT COUNT(item) FROM ".TABLEPREFIX."fanfiction_favorites WHERE uid = '$uid' AND type = '$type'");
+			list($itemcount) = dbrow($countquery);
 			if(empty($panel['panel_url'])) $output .=  "<a href=\"member.php?action=".$panel['panel_name']."\">".$panel['panel_title']." [$itemcount]</a><br />\n";
 			else $output .= "<a href=\"".$panel['panel_url']."\">".$panel['panel_title']." [$itemcount]</a><br />\n";
 		}
