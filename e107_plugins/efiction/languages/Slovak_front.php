@@ -455,12 +455,3 @@ define ("_PUBLISHED", "Vydané");
 define ("_UPDATED", "Aktualizované");
 define ("_WORDCOUNT", "Počet slov");
 define ("_COMPLETED", "Dokončené");
-
-define ("_AUTHORSCOUNT", "Počet autorov");
-define ("_REVIEWSCOUNT", "Počet hodnotení");
-define ("_REVIEWERSCOUNT", "Počet hodnotiacich");
-define ("_COMMENTSCOUNT", "Počet komentárov");
-define ("_COMMENTERSCOUNT", "Počet komentujúcich");
-define ("_NEWESTMEMBERCOUNT", "Najnovší člen");
-
- 

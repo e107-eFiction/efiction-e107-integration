@@ -107,7 +107,7 @@ class plugin_efiction_comment_shortcodes extends e_shortcode
 		$pref = e107::getPref();
 		$REPLY = '';
  
-	//	print_a($this->var);
+		print_a($this->var);
 		if($this->var['comment_type'] == "fanfiction_stories")  {
               return "";
 
